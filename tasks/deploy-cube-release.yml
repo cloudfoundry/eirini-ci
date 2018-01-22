@@ -1,0 +1,25 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: diegoteam/bosh-kube-docker
+
+params:
+  BOSH_DIRECTOR: ~
+  BOSH_CLIENT: ~
+  BOSH_CRT: ibmlgshCA*.crt
+  BOSH_CLIENT_SECRET: ~
+  BOSH2_ENV_ALIAS: lite
+  DIRECTOR_IP: ~
+  KUBE_PEM: ~
+  PEM_NAME: ~
+
+inputs:
+- name: ci-resources
+- name: cube-release
+- name: cf-deployment
+
+run:
+  path: ci-resources/scripts/deploy-cube-release.sh

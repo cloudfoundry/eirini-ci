@@ -1,0 +1,8 @@
+# Currently not working because aviator tries to resolve enviornment variables"
+fly:
+  name: cube-release-ci
+  config: pipeline.yml
+  target: flintstone
+  vars:
+  - vars.yml
+  - "kube_conf=$(cat ~/.kube/config)"

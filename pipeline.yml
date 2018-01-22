@@ -1,0 +1,37 @@
+jobs:
+- name: deploy-cube-release
+  plan:
+  - get: ci-resources
+  - get: cube-release
+    trigger: true
+  - get: cf-deployment
+  - task: deploy
+    params:
+      BOSH_DIRECTOR: ((bosh_director))
+      BOSH_CLIENT: ((bosh_client))
+      BOSH_CLIENT_SECRET: ((bosh_client_secret))
+      BOSH_CRT: ((bosh_crt))
+      KUBE_CONF: ((cube_conf))
+      DIRECTOR_IP: ((director_ip))
+      KUBE_PEM: ((kube_pem))
+      PEM_NAME: ((kube_pem_name))
+    file: ci-resources/tasks/deploy-cube-release.yml
+
+resources:
+- name: ci-resources
+  type: git
+  source:
+    uri: https://github.com/JulzDiverse/cube-release-ci.git
+    branch: master
+
+- name: cube-release
+  type: git
+  source:
+    uri: https://github.com/andrew-edgar/cube-release.git
+    branch: master
+
+- name: cf-deployment
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment.git
+    branch: master
