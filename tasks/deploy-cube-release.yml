@@ -15,6 +15,7 @@ params:
   DIRECTOR_IP: ~
   KUBE_PEM: ~
   PEM_NAME: ~
+  CC_API: ~
 
 inputs:
 - name: ci-resources

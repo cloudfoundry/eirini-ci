@@ -15,6 +15,7 @@ jobs:
       DIRECTOR_IP: ((director_ip))
       KUBE_PEM: ((kube_pem))
       PEM_NAME: ((kube_pem_name))
+      CC_API: ((cc_api))
     file: ci-resources/tasks/deploy-cube-release.yml
 
 resources:
