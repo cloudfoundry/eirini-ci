@@ -6,6 +6,7 @@ jobs:
     trigger: true
   - get: cf-deployment
   - task: deploy
+    privileged: true
     params:
       BOSH_DIRECTOR: ((bosh_director))
       BOSH_CLIENT: ((bosh_client))
