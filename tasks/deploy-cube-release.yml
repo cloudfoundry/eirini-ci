@@ -13,8 +13,6 @@ params:
   BOSH_CLIENT_SECRET: ~
   BOSH2_ENV_ALIAS: lite
   DIRECTOR_IP: ~
-  KUBE_PEM: ~
-  PEM_NAME: ~
   CC_API: ~
 
 inputs:

@@ -12,11 +12,9 @@ jobs:
       BOSH_CLIENT: ((bosh_client))
       BOSH_CLIENT_SECRET: ((bosh_client_secret))
       BOSH_CRT: ((bosh_crt))
-      KUBE_CONF: ((cube_conf))
       DIRECTOR_IP: ((director_ip))
-      KUBE_PEM: ((kube_pem))
-      PEM_NAME: ((kube_pem_name))
       CC_API: ((cc_api))
+      KUBE_CONF: ((cube_conf))
     file: ci-resources/tasks/deploy-cube-release.yml
 
 resources:

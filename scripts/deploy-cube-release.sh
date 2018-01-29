@@ -24,3 +24,8 @@ bosh -e lite -d cf deploy -n ../cf-deployment/cf-deployment.yml \
      -v system_domain=bosh-lite-cube.dynamic-dns.net \
      -v cc_api=$CC_API \
      -v cube_local_path=./
+
+echo "::::::::::::::CLEAN-UP:::::::;::::::::::"
+bosh -e lite clean-up --non-interactive --all
+
+popd
