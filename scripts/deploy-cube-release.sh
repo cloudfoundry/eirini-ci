@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
