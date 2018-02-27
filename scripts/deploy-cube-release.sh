@@ -17,7 +17,7 @@ bosh -e lite -d cf deploy -n ../cf-deployment/cf-deployment.yml \
      -o ../cf-deployment/operations/bosh-lite.yml \
      -o ../cf-deployment/operations/use-compiled-releases.yml \
      -o ./operations/cube-bosh-operations.yml \
-     -o ./operations/dev-version.yml
+     -o ./operations/dev-version.yml \
      --var=k8s_flatten_cluster_config="$(kubectl config view --flatten=true)" \
      -v system_domain=bosh-lite-cube.dynamic-dns.net \
      -v cc_api=$CC_API \
