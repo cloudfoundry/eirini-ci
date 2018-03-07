@@ -19,6 +19,7 @@ inputs:
 - name: ci-resources
 - name: cube-release
 - name: cf-deployment
+- name: bosh-lite-softlayer
 
 run:
   path: ci-resources/scripts/deploy-cube-release.sh

@@ -5,6 +5,8 @@ jobs:
   - get: cube-release
     trigger: true
   - get: cf-deployment
+    trigger: true
+  - get: bosh-lite-softlayer
   - task: deploy
     privileged: true
     params:
@@ -34,4 +36,10 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-deployment.git
+    branch: master
+
+- name: bosh-lite-softlayer
+  type: git
+  source:
+    uri: http://github.com/JulzDiverse/bosh-lite-softlayer.git
     branch: master
