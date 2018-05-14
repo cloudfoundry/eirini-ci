@@ -1,7 +1,22 @@
 jobs:
+- name: run-unit-tests
+  plan:
+  - get: eirini
+  - get: ci-resources
+  - task: run-tests
+    file: ci-resources/tasks/run-unit-tests.yml
+
+- name: update-eirini-release-develop
+  plan:
+  - get: ci-resources
+    passed: [run-unit-tests]
+  - task: update-eirini-submodule
+    file: ci-resources/tasks/update-eirini-submodule.yml
+
 - name: deploy-cube-release
   plan:
   - get: ci-resources
+    passed: [update-eirini-release-develop]
   - get: cube-release
     trigger: true
   - get: cf-deployment
@@ -18,8 +33,14 @@ jobs:
       CC_API: ((cc_api))
       KUBE_CONF: ((cube_conf))
     file: ci-resources/tasks/deploy-cube-release.yml
-
+# - name: run-smoke-tests
 resources:
+- name: eirini
+  type: git
+  source:
+    uri: https://github.com/julz/cube.git
+    branch: master
+
 - name: ci-resources
   type: git
   source:

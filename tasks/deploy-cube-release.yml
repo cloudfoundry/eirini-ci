@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: diegoteam/bosh-kube-docker
+    repository: diegoteam/eirini
 
 params:
   BOSH_DIRECTOR: ~
