@@ -1,0 +1,24 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - (( append ))
+  - run-smoke-tests
+
+resources:
+- name: cf-smoke-tests
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-smoke-tests.git
+
+jobs:
+- name: run-smoke-tests
+  plan:
+  - get: cf-smoke-tests
+  - get: ci-resources
+    trigger: true
+    passed:
+    - deploy-eirini-release
+  - task: run-smoke-tests
+    params:
+        SYSTEM_DOMAIN: ((system_domain))
+    file: ci-resources/tasks/run-smoke-tests.yml

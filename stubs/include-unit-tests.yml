@@ -1,0 +1,22 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - deploy-eirini-release
+- name: eirini-ci
+  jobs:
+  - run-unit-tests
+
+jobs:
+- name: run-unit-tests
+  plan:
+  - get: eirini
+  - get: ci-resources
+  - task: run-tests
+    file: ci-resources/tasks/run-unit-tests.yml
+
+resources:
+- name: eirini
+  type: git
+  source:
+    uri: https://github.com/julz/cube.git
+    branch: master

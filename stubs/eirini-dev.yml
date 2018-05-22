@@ -1,0 +1,84 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - deploy-eirini-release
+- name: manage-cf
+  jobs:
+  - delete-cf-deployment
+- name: manage-director
+  jobs: []
+
+jobs:
+- name: deploy-eirini-release
+  plan:
+  - get: state
+    passed: []
+    trigger: false
+  - get: ci-resources
+  - get: eirini-release
+    trigger: true
+  - get: cf-deployment
+    trigger: true
+  - task: create-manifest
+    params:
+      BOSH_DIRECTOR: ((bosh_director))
+      DIRECTOR_NAME: ((bosh_lite_name))
+      CC_API: ((cc_api))
+      KUBE_CONF: ((kube_conf))
+      KUBE_ENDPOINT: ((kube_endpoint))
+      KUBE_NAMESPACE: ((kube_namespace))
+      NATS_IP: ((nats_ip))
+      SYSTEM_DOMAIN: ((system_domain))
+      EIRINI_IP: ((eirini_ip))
+      EIRINI_ADDRESS: ((eirini_address))
+      REGISTRY_ADDRESS: ((registry_address))
+    privileged: true
+    file: ci-resources/tasks/create-manifest.yml
+  - task: upload-stemcell
+    privileged: true
+    params:
+      BOSH_DIRECTOR: ((bosh_director))
+      DIRECTOR_NAME: ((bosh_lite_name))
+    file: ci-resources/tasks/upload-stemcell.yml
+  - task: deploy
+    privileged: true
+    params:
+      BOSH_DIRECTOR: ((bosh_director))
+      DIRECTOR_NAME: ((bosh_lite_name))
+    file: ci-resources/tasks/deploy-eirini-release.yml
+
+- name: delete-cf-deployment
+  plan:
+  - get: ci-resources
+  - get: state
+  - task: delete
+    params:
+      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((bosh_director))
+    file: ci-resources/tasks/delete-cf-deployment.yml
+
+resources:
+- name: ci-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: master
+
+- name: eirini-release
+  type: git
+  source:
+    uri: https://github.com/andrew-edgar/cube-release.git
+    branch: develop
+
+- name: cf-deployment
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-deployment.git
+    branch: ((cf-deployment-version))
+
+- name: state
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    private_key: ((github-private-key))

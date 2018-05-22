@@ -8,6 +8,10 @@ RUN apt-get update && \
       wget \
       curl
 
+# EirniFS
+RUN mkdir /eirini
+COPY cubefs.tar /eirini/eirinifs.tar
+
 # bosh2
 RUN wget --quiet https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 -O /usr/bin/bosh && chmod +x /usr/bin/bosh
 

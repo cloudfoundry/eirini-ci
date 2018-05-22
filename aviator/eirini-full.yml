@@ -1,0 +1,27 @@
+spruce:
+- base: $ONE_CLICK/template.yml
+  merge:
+  - with:
+      files:
+      - stubs/eirini-dev.yml
+  modify:
+    set:
+    - path: jobs.name:deploy-eirini-release.plan.get:state.passed.+
+      value: update-cloud-config-((bosh_lite_name))
+    - path: jobs.name:deploy-eirini-release.plan.get:state.trigger
+      value: true
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((bosh_lite_name))-cf-deployment
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: recreate-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: update-cloud-config-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: clean-up-((bosh_lite_name))
+    - path: groups.name:manage-cf.jobs.+
+      value: cancel-cf-deployment-task-in-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: "Show BOSH summary for ((bosh_lite_name))"
+  to: eirini-full.yml
