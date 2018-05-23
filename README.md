@@ -45,7 +45,7 @@ fly -t <alias> login \
 1. Execute the provided `./fly.sh` script as follows:
 
 ```
-$ ./fly.sh <CONCOURSE-ALIAS> <eirini-ci|eirini-dev> <PATH-TO-PRIVATE-REPO>
+$ ./fly.sh <CONCOURSE-ALIAS> <eirini-ci|eirini-dev> <PATH-TO-PRIVATE-REPO> <PATH-TO-ONE-CLICK-REPO>
 ```
 
 This will use aviator to spruce the required pipeline.yml and fly the pipeline to your concourse target.
