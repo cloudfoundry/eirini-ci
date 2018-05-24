@@ -4,6 +4,7 @@ spruce:
   - with:
       files:
       - stubs/eirini-dev.yml
+      - stubs/include-smoke-tests.yml
   modify:
     set:
     - path: jobs.name:deploy-eirini-release.plan.get:state.passed.+
