@@ -1,0 +1,10 @@
+# Copy this file and edit it to create a full development pipeline, including director + cf + eirini
+kube_namespace: <PROVIDE>
+eirini_address: <PROVIDE>
+system_domain:  <PROVIDE>
+bosh_director: <PROVIDE>
+bosh_lite_name: <PROVIDE>
+cc_api: <PROVIDE>
+cf-deployment-version: <PROVIDE>
+registry_address: <PROVIDE>
+eirini-release-branch: <PROVIDE>

@@ -10,7 +10,7 @@ PIPELINE_CONFIG_FILE="pipeline.yml"
 
 help(){
   cat << EOF
-  $ ./set-pipeline <CONCOURSE_TARGET> <PIPELINE_NAME:eirni-ci|eirini-dev> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE>
+  $ ./set-pipeline <CONCOURSE_TARGET> <PIPELINE_NAME> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE>
 EOF
   exit 1
 }
@@ -21,7 +21,7 @@ set-pipeline(){
 	--config "$PIPELINE_CONFIG_FILE" \
 	--var "kube_conf=$(kubectl config view --flatten)" \
 	-v bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
-  --load-vars-from "$PRIVATE_REPO/concourse/env/common.yml" \
+  --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
   --load-vars-from "$1"
 }
 
@@ -32,10 +32,7 @@ main(){
 
 	if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
 	  aviator
-		set-pipeline "$PRIVATE_REPO/concourse/env/${PIPELINE_NAME}.yml"
-	elif [ "$PIPELINE_NAME" = "eirini-dev" ]; then
-		aviator
-		set-pipeline "$PRIVATE_REPO/concourse/env/${PIPELINE_NAME}.yml"
+		set-pipeline env/eirini-ci.yml
   else
 		aviator
 		set-pipeline custom.yml

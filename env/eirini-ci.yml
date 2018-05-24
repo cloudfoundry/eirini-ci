@@ -1,0 +1,9 @@
+kube_namespace: eirini-ci
+eirini_address: http://eirini.eirini.dynamic-dns.net:8090
+system_domain: eirini.dynamic-dns.net
+bosh_director: eirini-ci.softlayer.com
+bosh_lite_name: eirini-ci
+cc_api: https://api.eirini.dynamic-dns.net
+cf-deployment-version: v1.20.0
+registry_address: registry.eirini.dynamic-dns.net:8089
+eirini-release-branch: develop
