@@ -68,7 +68,7 @@ resources:
   type: git
   source:
     uri: https://github.com/andrew-edgar/cube-release.git
-    branch: develop
+    branch: ((eirini-release-branch))
 
 - name: cf-deployment
   type: git
