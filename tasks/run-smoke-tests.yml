@@ -5,10 +5,9 @@ image_resource:
   source:
     repository: flintstonecf/ci
 
-input:
+inputs:
 - name: ci-resources
 - name: ci-smoke-tests
 
 run:
   path: ci-resources/tasks/run-smoke-tests.sh
-     
