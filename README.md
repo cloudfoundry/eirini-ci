@@ -37,48 +37,20 @@ fly -t <alias> login \
 
 - Access to private repo, which contains environment specific vars
 - Install [Aviator](https://github.com/JulzDiverse/aviator) (used to merge pipeline YAML files)
+- Clone the following repositories to your local workstation:
+	- [1-click-pipeline](https://github.com/petergtz/1-click-bosh-lite-pipeline)
+	- [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment)
+	- [eirini-private-config](https://github.com/cloudfoundry/eirini-private-config)
+- Make sure you have `pass` configured (see `eirini-private-config`)
 
-### Fly `eirini-ci`/`eirini-dev`
+### Set the CI Pipeline
 
-1. export the `KUBECONFIG` environment variable and point it to corresponding kubernetes config file
+1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
+1. Execute the provided `./set-pipeline` script. Use the `help` parameter to get details on the required parameters.
 
-1. Execute the provided `./fly.sh` script as follows:
+### Set a Development Pipeline
 
-```
-$ ./fly.sh <CONCOURSE-ALIAS> <eirini-ci|eirini-dev> <PATH-TO-PRIVATE-REPO> <PATH-TO-ONE-CLICK-REPO>
-```
+1. Copy `eirini-private-config/concourse/env/custom-sample.yml` to `custom.yml`
+1. Edit the file and provide the necessary information
+1. Run `set-pipeline` as above
 
-This will use aviator to spruce the required pipeline.yml and fly the pipeline to your concourse target.
-
-### Create a full new Development pipeline
-
-**Further Prereqs**
-
-- Clone [1-click-pipeline](https://github.com/petergtz/1-click-bosh-lite-pipeline) to your local machine
-- Make sure you have access to the Flintstone Softlayer account with rights to create VMs. 
-
-**Fly**
-
-1. Create the director manifest as described in the [1-click-pipeline](https://github.com/petergtz/1-click-bosh-lite-pipeline/#creating-a-bosh-lite-using-a-concourse-management-pipeline) README.
-
-1. Create the `eirini-full.yml` file using aviator:
-
-`$ ONE_CLICK=<path-to-1-click-pipeline> aviator -f aviator/eirini-full.yml`
-
-
-1. In the `eirini-private-config` repo you can find a `eirini-full.yml` property file (located in the `concourse/env` dir). Copy the file and provide the necessary information. 
-
-1. export the `KUBECONFIG` environment variable and point it to corresponding kubernetes config file
-
-1. Run fly as follows:
-
-```
-$ fly -t flintstone \
-  set-pipeline \
-    -p <PIPELINE-NAME> \
-    -c eirini-full.yml \
-    -v bosh-manifest="$(sed -e 's/((/_(_(/g' <PATH-TO-DIRECTOR-MANIFEST> )" \
-    -l <PATH-TO-VARS-FILE> \
-    -l <PATH-TO-COMMON-VARS-FILE> \
-    --var "kube_conf=$(kubectl config view --flatten)"
-```

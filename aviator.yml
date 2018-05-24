@@ -25,4 +25,4 @@ spruce:
       value: cancel-cf-deployment-task-in-((bosh_lite_name))
     - path: groups.name:manage-director.jobs.+
       value: "Show BOSH summary for ((bosh_lite_name))"
-  to: eirini-full.yml
+  to: pipeline.yml

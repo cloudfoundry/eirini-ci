@@ -1,26 +1,12 @@
 #!/bin/bash
 
-readonly ALIAS=$1
-readonly PIPELINE_NAME=$2
-readonly PRIVATE_REPO=$3
-readonly BOSH_DEPLOYMENT=${4?Path to bosh deployment repository is required}
-export ONE_CLICK=$5
+readonly ALIAS="$1"
+readonly PIPELINE_NAME="$2"
+readonly PRIVATE_REPO="$3"
+readonly BOSH_DEPLOYMENT="${4?Path to bosh deployment repository is required}"
+export ONE_CLICK="$5"
 
-PIPELINE_CONFIG_FILE=""
-
-usage(){
-	cat << EOF
-		Pipeline not found, but you can set a eirini-pipeline using the following command:
-
-		fly -t $ALIAS set-pipeline
-		--pipeline $PIPELINE_NAME
-		--config <PROVIDE>
-		--var "kube_conf=\$(kubectl config view --flatten)"
-		--load-vars-from $PRIVATE_REPO
-EOF
-
-	exit 1
-}
+PIPELINE_CONFIG_FILE="pipeline.yml"
 
 help(){
   cat << EOF
@@ -29,16 +15,14 @@ EOF
   exit 1
 }
 
-detect_pipeline(){
-	if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
-	  aviator
-	  PIPELINE_CONFIG_FILE=eirini-full.yml
-	elif [ "$PIPELINE_NAME" = "eirini-dev" ]; then
-		aviator
-    PIPELINE_CONFIG_FILE=eirini-full.yml
-  else
-		usage
-  fi
+set-pipeline(){
+  fly -t "$ALIAS" set-pipeline \
+	--pipeline "$PIPELINE_NAME" \
+	--config "$PIPELINE_CONFIG_FILE" \
+	--var "kube_conf=$(kubectl config view --flatten)" \
+	-v bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
+  --load-vars-from "$PRIVATE_REPO/concourse/env/common.yml" \
+  --load-vars-from "$1"
 }
 
 main(){
@@ -46,15 +30,16 @@ main(){
 		help
 	fi
 
-  detect_pipeline
-
-  fly -t $ALIAS set-pipeline \
-	--pipeline $PIPELINE_NAME \
-	--config $PIPELINE_CONFIG_FILE \
-	--var "kube_conf=$(kubectl config view --flatten)" \
-	-v bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh $PIPELINE_NAME $BOSH_DEPLOYMENT $ONE_CLICK ) )" \
-  --load-vars-from $PRIVATE_REPO/concourse/env/${PIPELINE_NAME}.yml \
-  --load-vars-from $PRIVATE_REPO/concourse/env/common.yml
+	if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
+	  aviator
+		set-pipeline "$PRIVATE_REPO/concourse/env/${PIPELINE_NAME}.yml"
+	elif [ "$PIPELINE_NAME" = "eirini-dev" ]; then
+		aviator
+		set-pipeline "$PRIVATE_REPO/concourse/env/${PIPELINE_NAME}.yml"
+  else
+		aviator
+		set-pipeline custom.yml
+  fi
 }
 
-main $@
+main "$@"
