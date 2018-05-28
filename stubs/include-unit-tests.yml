@@ -18,5 +18,5 @@ resources:
 - name: eirini
   type: git
   source:
-    uri: https://github.com/julz/cube.git
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: master

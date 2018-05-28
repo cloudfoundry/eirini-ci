@@ -21,7 +21,7 @@ bosh int ../cf-deployment/cf-deployment.yml \
      -o ../cf-deployment/operations/use-compiled-releases.yml \
      -o ../cf-deployment/operations/bosh-lite.yml \
      -o ../cf-deployment/operations/experimental/use-bosh-dns.yml \
-     -o ./operations/cube-bosh-operations.yml \
+     -o ./operations/eirini-bosh-operations.yml \
      -o ./operations/dev-version.yml \
      -o ../cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
      --var=k8s_flatten_cluster_config="$(kubectl config view --flatten=true)" \
@@ -32,7 +32,7 @@ bosh int ../cf-deployment/cf-deployment.yml \
      -v nats_ip=$NATS_IP \
      -v nats_password=$nats_password \
      -v registry_address=$REGISTRY_ADDRESS \
-     -v cube_ip=$EIRINI_IP \
-     -v cube_address=$EIRINI_ADDRESS \
-     -v cube_local_path=./ > ../manifest/manifest.yml
+     -v eirini_ip=$EIRINI_IP \
+     -v eirini_address=$EIRINI_ADDRESS \
+     -v eirini_local_path=./ > ../manifest/manifest.yml
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 readonly BASEDIR="$(cd $(dirname $0)/.. && pwd)"
-readonly DEFAULTS="launcher blobondemand vendor scripts cmd opi cubefakes"
+readonly DEFAULTS="launcher blobondemand vendor scripts cmd opi eirinifakes"
 readonly EXCLUDE="$DEFAULTS $@"
-readonly WORKSPACE="$GOPATH/src/github.com/julz/cube"
+readonly WORKSPACE="$GOPATH/src/github.com/cloudfoundry-incubator/eirini"
 
 setupTestEnv(){
 	mkdir -p $WORKSPACE

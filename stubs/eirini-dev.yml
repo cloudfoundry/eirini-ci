@@ -67,7 +67,7 @@ resources:
 - name: eirini-release
   type: git
   source:
-    uri: https://github.com/andrew-edgar/cube-release.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
 
 - name: cf-deployment
