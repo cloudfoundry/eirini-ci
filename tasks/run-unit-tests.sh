@@ -3,7 +3,7 @@
 readonly BASEDIR="$(cd $(dirname $0)/.. && pwd)"
 readonly DEFAULTS="launcher blobondemand vendor scripts cmd opi eirinifakes"
 readonly EXCLUDE="$DEFAULTS $@"
-readonly WORKSPACE="$GOPATH/src/github.com/cloudfoundry-incubator/eirini"
+readonly WORKSPACE="$GOPATH/src/code.cloudfoundry.org/eirini"
 
 setupTestEnv(){
 	mkdir -p $WORKSPACE

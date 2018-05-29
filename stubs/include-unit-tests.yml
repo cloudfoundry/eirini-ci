@@ -18,5 +18,5 @@ resources:
 - name: eirini
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    uri: https://code.cloudfoundry.org/eirini.git
     branch: master

@@ -61,13 +61,13 @@ resources:
 - name: ci-resources
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    uri: https://code.cloudfoundry.org/eirini-ci.git
     branch: master
 
 - name: eirini-release
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    uri: https://code.cloudfoundry.org/eirini-release.git
     branch: ((eirini-release-branch))
 
 - name: cf-deployment
