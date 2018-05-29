@@ -8,6 +8,7 @@ image_resource:
 inputs:
 - name: ci-resources
 - name: cf-smoke-tests
+- name: state
 
 run:
   path: ci-resources/tasks/run-smoke-tests.sh

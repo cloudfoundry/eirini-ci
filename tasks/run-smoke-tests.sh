@@ -7,7 +7,7 @@ export PATH=$PATH:$GOPATH/bin
 
 cf version
 
-cf_admin_password=$(bosh2 int state/cf-deployment/vars.yml --path /cf_admin_password)
+cf_admin_password=$(bosh2 int state/cf-deployment/deployment-vars.yml --path /cf_admin_password)
 
 cat > config.json <<EOF
 {
