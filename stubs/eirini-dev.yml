@@ -21,29 +21,25 @@ jobs:
     trigger: true
   - task: create-manifest
     params:
-      BOSH_DIRECTOR: ((bosh_director))
+      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
       DIRECTOR_NAME: ((bosh_lite_name))
-      CC_API: ((cc_api))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
-      KUBE_NAMESPACE: ((kube_namespace))
+      KUBE_NAMESPACE: ((bosh_lite_name))
       NATS_IP: ((nats_ip))
-      SYSTEM_DOMAIN: ((system_domain))
       EIRINI_IP: ((eirini_ip))
-      EIRINI_ADDRESS: ((eirini_address))
-      REGISTRY_ADDRESS: ((registry_address))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - task: upload-stemcell
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_director))
+      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
       DIRECTOR_NAME: ((bosh_lite_name))
     file: ci-resources/tasks/upload-stemcell.yml
   - task: deploy
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_director))
+      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
       DIRECTOR_NAME: ((bosh_lite_name))
     file: ci-resources/tasks/deploy-eirini-release.yml
 
@@ -54,7 +50,7 @@ jobs:
   - task: delete
     params:
       DIRECTOR_NAME: ((bosh_lite_name))
-      BOSH_DIRECTOR: ((bosh_director))
+      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
     file: ci-resources/tasks/delete-cf-deployment.yml
 
 resources:

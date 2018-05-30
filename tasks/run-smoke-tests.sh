@@ -8,12 +8,13 @@ export PATH=$PATH:$GOPATH/bin
 cf version
 
 cf_admin_password=$(bosh2 int state/cf-deployment/deployment-vars.yml --path /cf_admin_password)
+director_ip=`cat state/environments/softlayer/director/$DIRECTOR_NAME/ip`
 
 cat > config.json <<EOF
 {
   "suite_name"                      : "CF_SMOKE_TESTS",
-  "api"                             : "api.${SYSTEM_DOMAIN}",
-  "apps_domain"                     : "${SYSTEM_DOMAIN}",
+  "api"                             : "api.${director_ip}.nip.io",
+  "apps_domain"                     : "${director_ip}.nip.io",
   "user"                            : "admin",
   "password"                        : "${cf_admin_password}",
   "cleanup"                         : false,
