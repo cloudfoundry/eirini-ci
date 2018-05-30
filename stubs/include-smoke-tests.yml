@@ -13,6 +13,7 @@ resources:
 jobs:
 - name: run-smoke-tests
   plan:
+  - get: state
   - get: cf-smoke-tests
   - get: ci-resources
     trigger: true

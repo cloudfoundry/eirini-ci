@@ -6,4 +6,4 @@ bosh_lite_name: eirini-ci
 cc_api: https://api.eirini.dynamic-dns.net
 cf-deployment-version: v1.20.0
 registry_address: registry.eirini.dynamic-dns.net:8089
-eirini-release-branch: master
+eirini-release-branch: develop
