@@ -15,10 +15,11 @@ jobs:
   plan:
   - get: state
   - get: cf-smoke-tests
-  - get: ci-resources
+  - get: eirini-release
     trigger: true
     passed:
     - deploy-eirini-release
+  - get: ci-resources
   - task: run-smoke-tests
     params:
       DIRECTOR_NAME: ((bosh_lite_name))
