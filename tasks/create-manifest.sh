@@ -11,14 +11,16 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 ./ci-resources/scripts/bosh-login.sh
 
 director_ip=`cat $DIRECTOR_PATH/ip`
+mkdir -p $DIRECTOR_PATH/cf-deployment/
 
 pushd ./eirini-release
 
 nats_password=`bosh int ../state/cf-deployment/deployment-vars.yml --path /nats_password`
 
+
 echo "::::::::::::::CREATING MANIFEST:::::::"
 bosh int ../cf-deployment/cf-deployment.yml \
-     --vars-store ../state/cf-deployment/deployment-vars.yml \
+     --vars-store ../$DIRECTOR_PATH/cf-deployment/vars.yml \
      -o ../cf-deployment/operations/experimental/enable-bpm.yml \
      -o ../cf-deployment/operations/use-compiled-releases.yml \
      -o ../cf-deployment/operations/bosh-lite.yml \
@@ -37,4 +39,18 @@ bosh int ../cf-deployment/cf-deployment.yml \
      -v eirini_ip=$EIRINI_IP \
      -v eirini_address="http://eirini.$director_ip.nip.io:8090" \
      -v eirini_local_path=./ > ../manifest/manifest.yml
+popd
 
+pushd state
+  if git status --porcelain | grep .; then
+     echo "Repo is dirty"
+     git add ../$DIRECTOR_PATH/cf-deployment/vars.yml
+     git config --global user.email "CI.BOT@de.ibm.com"
+     git config --global user.name "Come-On Eirini"
+     git commit -am "update/add deployment vars.yml"
+  else
+     echo "Repo is clean"
+  fi
+popd
+
+cp -r state/. new-state

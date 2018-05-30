@@ -30,6 +30,9 @@ jobs:
       EIRINI_IP: ((eirini_ip))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
+  - put: state
+    params:
+      repository: new-state
   - task: upload-stemcell
     privileged: true
     params:
