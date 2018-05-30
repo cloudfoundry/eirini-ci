@@ -14,7 +14,7 @@ pushd ./eirini-release
 
 bosh sync-blobs
 
-bosh add-blob /eirini/eirinifs.tar cubefs/cubefs.tar
+bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
 
 git submodule update --init --recursive
 
