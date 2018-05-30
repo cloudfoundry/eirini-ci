@@ -10,10 +10,11 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
+director_ip=`cat $DIRECTOR_PATH/ip`
+
 pushd ./eirini-release
 
 nats_password=`bosh int ../state/cf-deployment/deployment-vars.yml --path /nats_password`
-director_ip=`cat $DIRECTOR_PATH/ip`
 
 echo "::::::::::::::CREATING MANIFEST:::::::"
 bosh int ../cf-deployment/cf-deployment.yml \
