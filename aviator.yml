@@ -9,8 +9,6 @@ spruce:
     set:
     - path: jobs.name:deploy-eirini-release.plan.get:cf-deployment.passed.+
       value: update-cloud-config-((bosh_lite_name))
-    - path: jobs.name:deploy-eirini-release.plan.get:state.trigger
-      value: true
     - path: groups.name:manage-director.jobs.+
       value: delete-((bosh_lite_name))-cf-deployment
     - path: groups.name:manage-director.jobs.+

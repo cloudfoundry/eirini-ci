@@ -12,7 +12,6 @@ jobs:
 - name: deploy-eirini-release
   plan:
   - get: state
-    trigger: false
   - get: ci-resources
   - get: eirini-release
     trigger: true
