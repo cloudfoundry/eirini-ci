@@ -12,13 +12,13 @@ jobs:
 - name: deploy-eirini-release
   plan:
   - get: state
-    passed: []
     trigger: false
   - get: ci-resources
   - get: eirini-release
     trigger: true
   - get: cf-deployment
     trigger: true
+    passed: []
   - task: create-manifest
     params:
       BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
