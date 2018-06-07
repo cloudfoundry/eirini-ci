@@ -21,11 +21,11 @@ nats_password=`bosh int ../state/cf-deployment/deployment-vars.yml --path /nats_
 echo "::::::::::::::CREATING MANIFEST:::::::"
 bosh int ../cf-deployment/cf-deployment.yml \
      --vars-store ../$DIRECTOR_PATH/cf-deployment/vars.yml \
-		 -o ./operations/capi-dev-version.yml \
      -o ../cf-deployment/operations/experimental/enable-bpm.yml \
      -o ../cf-deployment/operations/use-compiled-releases.yml \
      -o ../cf-deployment/operations/bosh-lite.yml \
      -o ../cf-deployment/operations/experimental/use-bosh-dns.yml \
+		 -o ./operations/capi-dev-version.yml \
      -o ./operations/eirini-bosh-operations.yml \
      -o ./operations/dev-version.yml \
      -o ../cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
