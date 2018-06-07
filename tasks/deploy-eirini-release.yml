@@ -18,6 +18,7 @@ inputs:
 - name: eirini-release
 - name: manifest
 - name: state
+- name: capi
 
 run:
   path: ci-resources/tasks/deploy-eirini-release.sh
