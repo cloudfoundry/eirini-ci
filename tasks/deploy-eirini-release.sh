@@ -10,6 +10,10 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
+pushd ./capi
+  git submodule update --init --recursive
+popd
+
 pushd ./eirini-release
 
 bosh sync-blobs
