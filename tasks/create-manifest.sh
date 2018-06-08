@@ -17,8 +17,8 @@ mkdir -p $DIRECTOR_PATH/cf-deployment/
 nats_password=`bosh int ./state/cf-deployment/deployment-vars.yml --path /nats_password`
 
 echo "::::::::::::::CREATING MANIFEST:::::::"
-bosh int ../cf-deployment/cf-deployment.yml \
-     --vars-store ../$DIRECTOR_PATH/cf-deployment/vars.yml \
+bosh int ./cf-deployment/cf-deployment.yml \
+     --vars-store ./$DIRECTOR_PATH/cf-deployment/vars.yml \
      -o ./cf-deployment/operations/experimental/enable-bpm.yml \
      -o ./cf-deployment/operations/use-compiled-releases.yml \
      -o ./cf-deployment/operations/bosh-lite.yml \
