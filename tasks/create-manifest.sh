@@ -11,7 +11,9 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 ./ci-resources/scripts/bosh-login.sh
 
 director_ip=`cat $DIRECTOR_PATH/ip`
-capi_local_path="$(pwd)/capi"
+current_dir="$(pwd)"
+capi_path="$current_dir/capi"
+echo "CAPI PATH: $capi_path"
 
 mkdir -p $DIRECTOR_PATH/cf-deployment/
 
@@ -41,7 +43,7 @@ bosh int ../cf-deployment/cf-deployment.yml \
      -v registry_address="registry.$director_ip.nip.io:8089" \
      -v eirini_ip=$EIRINI_IP \
      -v eirini_address="http://eirini.$director_ip.nip.io:8090" \
-		 -v capi_local_path=$capi_local_path \
+		 -v capi_local_path=$capi_path \
      -v eirini_local_path=./ > ../manifest/manifest.yml
 popd
 
