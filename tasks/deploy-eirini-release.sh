@@ -13,6 +13,7 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 echo ":::::::::::::PREPARE CAPI RELEASE"
 pushd ./capi
   git submodule update --init --recursive
+	bosh sync-blobs
 popd
 
 echo "::::::::::::::PREPARE EIRINI_RELEASE"
