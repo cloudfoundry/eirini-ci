@@ -6,7 +6,16 @@ RUN apt-get update && \
     apt-get install -y \
       git-all \
       wget \
-      curl
+      curl \
+			ruby
+
+
+RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
+
+RUN gem install bundler
+
+RUN wget https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.7/spiff_linux_amd64.zip && \
+    unzip spiff_linux_amd64.zip && mv spiff /usr/local/bin/ && rm spiff_linux_amd64.zip
 
 # EirniFS
 RUN mkdir /eirini
