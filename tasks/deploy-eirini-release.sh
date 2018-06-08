@@ -10,20 +10,22 @@ export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_passwo
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
+echo ":::::::::::::PREPARE CAPI RELEASE"
 pushd ./capi
   git submodule update --init --recursive
 popd
 
+echo "::::::::::::::PREPARE EIRINI_RELEASE"
 pushd ./eirini-release
 
 bosh sync-blobs
-
 bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
-
 git submodule update --init --recursive
 
-bosh -e lite -d cf deploy -n ../manifest/manifest.yml
+popd
+
+echo "::::::::::::::DEPLOY CF"
+bosh -e lite -d cf deploy -n ./manifest/manifest.yml
 
 echo "::::::::::::::CLEAN-UP"
 bosh -e lite clean-up --non-interactive --all
-popd
