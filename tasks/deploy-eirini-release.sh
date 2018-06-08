@@ -25,7 +25,7 @@ git submodule update --init --recursive
 popd
 
 echo "::::::::::::::DEPLOY CF"
-bosh -e lite -d cf deploy -n ./manifest/manifest.yml
+bosh -e lite -d cf deploy -n ./manifest/manifest.yml -v capi_local_path="$(pwd)/capi"
 
 echo "::::::::::::::CLEAN-UP"
 bosh -e lite clean-up --non-interactive --all

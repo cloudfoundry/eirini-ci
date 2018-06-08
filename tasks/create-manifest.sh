@@ -37,7 +37,6 @@ bosh int ./cf-deployment/cf-deployment.yml \
      -v registry_address="registry.$director_ip.nip.io:8089" \
      -v eirini_ip=$EIRINI_IP \
      -v eirini_address="http://eirini.$director_ip.nip.io:8090" \
-		 -v capi_local_path=./capi \
      -v eirini_local_path=./eirini-release > ./manifest/manifest.yml
 
 pushd state
