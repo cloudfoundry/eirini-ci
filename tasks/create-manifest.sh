@@ -14,8 +14,6 @@ director_ip=`cat $DIRECTOR_PATH/ip`
 
 mkdir -p $DIRECTOR_PATH/cf-deployment/
 
-nats_password=`bosh int $DIRECTOR_PATH/cf-deployment/vars.yml --path /nats_password`
-
 echo "::::::::::::::CREATING MANIFEST:::::::"
 bosh int ./cf-deployment/cf-deployment.yml \
      --vars-store ./$DIRECTOR_PATH/cf-deployment/vars.yml \
@@ -33,7 +31,6 @@ bosh int ./cf-deployment/cf-deployment.yml \
      -v kube_namespace=$KUBE_NAMESPACE \
      -v kube_endpoint=$KUBE_ENDPOINT \
      -v nats_ip=$NATS_IP \
-     -v nats_password=$nats_password \
      -v registry_address="registry.$director_ip.nip.io:8089" \
      -v eirini_ip=$EIRINI_IP \
      -v eirini_address="http://eirini.$director_ip.nip.io:8090" \
