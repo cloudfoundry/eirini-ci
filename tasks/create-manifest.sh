@@ -14,7 +14,7 @@ director_ip=`cat $DIRECTOR_PATH/ip`
 
 mkdir -p $DIRECTOR_PATH/cf-deployment/
 
-nats_password=`bosh int ./state/cf-deployment/deployment-vars.yml --path /nats_password`
+nats_password=`bosh int $DIRECTOR_PATH/cf-deployment/deployment-vars.yml --path /nats_password`
 
 echo "::::::::::::::CREATING MANIFEST:::::::"
 bosh int ./cf-deployment/cf-deployment.yml \
