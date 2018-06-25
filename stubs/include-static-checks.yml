@@ -1,16 +1,19 @@
 groups:
 - name: eirini-ci
   jobs:
-  - run-unit-tests
+  - (( append ))
+  - run-static-checks
 
 jobs:
-- name: run-unit-tests
+- name: run-static-checks
   plan:
   - get: eirini
     trigger: true
+    passed:
+      - run-unit-tests
   - get: ci-resources
-  - task: run-tests
-    file: ci-resources/tasks/run-unit-tests.yml
+  - task: run-static-checks
+    file: ci-resources/tasks/run-static-checks.yml
 
 resources:
 - name: eirini

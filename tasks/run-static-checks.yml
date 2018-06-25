@@ -7,8 +7,8 @@ image_resource:
     repository: diegoteam/eirini
 
 inputs:
-- name: eirini
 - name: ci-resources
+- name: eirini
 
 run:
-  path: ci-resources/tasks/run-unit-tests.sh
+  path: ci-resources/tasks/run-static-checks.sh
