@@ -5,6 +5,8 @@ spruce:
       files:
       - stubs/eirini-dev.yml
       - stubs/include-smoke-tests.yml
+      - stubs/include-unit-tests.yml
+      - stubs/include-static-checks.yml
   modify:
     set:
     - path: jobs.name:deploy-eirini-release.plan.get:cf-deployment.passed.+
