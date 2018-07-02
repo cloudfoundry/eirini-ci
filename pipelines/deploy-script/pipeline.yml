@@ -1,0 +1,73 @@
+groups:
+- name: deploy-job
+  jobs:
+  - run-deploy-script
+  - clean-eirini-state
+- name: manage-eirini-bm
+  jobs:
+  - install-eirini-deps
+
+jobs:
+- name: install-eirini-deps
+  plan:
+  - task: install-deps
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" -i /tmp/eirini-bm resc run deploy-eirini-deps
+
+- name: clean-eirini-state
+  plan:
+  - get: pipeline-resources
+  - task: clean-up
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" -i /tmp/eirini-bm "/bin/bash -s" < pipeline-resources/pipelines/deploy-script/clean-state.sh
+
+- name: run-deploy-script
+  plan:
+  - task: run-script
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" -i /tmp/eirini-bm resc run deploy-eirini
