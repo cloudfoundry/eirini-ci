@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 # shellcheck source=/dev/null
 source "${EIRINI_LITE?"please set EIRINI_LITE env variable"}/eirini-release/scripts/set-env.sh"
 
@@ -24,7 +26,11 @@ destroy_bosh() {
 	vboxmanage controlvm "$vm_cid" poweroff
 	vboxmanage unregistervm "$vm_cid" --delete
 
+  ssh-keygen -f "/root/.ssh/known_hosts" -R 192.168.50.6
+	ssh-add -D
+
 	rm -rf "$HOME/.bosh"
+	rm -rf "$HOME/.bosh_virtualbox_cpi"
 }
 
 remove_repos() {
