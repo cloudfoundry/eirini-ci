@@ -30,3 +30,6 @@ RUN wget --quiet https://storage.googleapis.com/kubernetes-release/release/$(cur
 # ginkgo
 RUN go get github.com/onsi/ginkgo/ginkgo
 RUN go get github.com/onsi/gomega/...
+
+# helm
+RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz -O /usr/bin/helm && chmod +x /usr/bin/helm

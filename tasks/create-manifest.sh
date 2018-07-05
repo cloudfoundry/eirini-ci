@@ -2,44 +2,31 @@
 
 set -e
 
-export DIRECTOR_PATH=state/environments/softlayer/director/$DIRECTOR_NAME
+DIRECTOR_PATH="state/environments/softlayer/director/$DIRECTOR_NAME"
+BOSH_CLIENT_SECRET=$(bosh int "$DIRECTOR_PATH/vars.yml" --path /admin_password)
+DIRECTOR_IP=$(cat "$DIRECTOR_PATH/ip")
 
 export BOSH_CLIENT=admin
-export BOSH_CLIENT_SECRET=`bosh int $DIRECTOR_PATH/vars.yml --path /admin_password`
+export DIRECTOR_PATH
+export BOSH_CLIENT_SECRET
+export DIRECTOR_IP
 
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
-director_ip=`cat $DIRECTOR_PATH/ip`
-
-mkdir -p $DIRECTOR_PATH/cf-deployment/
+mkdir -p "$DIRECTOR_PATH/cf-deployment/"
 
 echo "::::::::::::::CREATING MANIFEST:::::::"
-bosh int ./cf-deployment/cf-deployment.yml \
-     --vars-store ./$DIRECTOR_PATH/cf-deployment/vars.yml \
-     -o ./cf-deployment/operations/experimental/enable-bpm.yml \
-     -o ./cf-deployment/operations/use-compiled-releases.yml \
-     -o ./cf-deployment/operations/bosh-lite.yml \
-     -o ./cf-deployment/operations/experimental/use-bosh-dns.yml \
-		 -o ./eirini-release/operations/capi-dev-version.yml \
-     -o ./eirini-release/operations/eirini-bosh-operations.yml \
-     -o ./eirini-release/operations/dev-version.yml \
-     -o ./cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
-     --var=k8s_flatten_cluster_config="$(kubectl config view --flatten=true)" \
-     -v system_domain="$director_ip.nip.io" \
-     -v cc_api="https://api.$director_ip.nip.io" \
-     -v kube_namespace=$KUBE_NAMESPACE \
-     -v kube_endpoint=$KUBE_ENDPOINT \
-     -v nats_ip=$NATS_IP \
-     -v registry_address="registry.$director_ip.nip.io:8089" \
-     -v eirini_ip=$EIRINI_IP \
-     -v eirini_address="http://eirini.$director_ip.nip.io:8090" \
-     -v eirini_local_path=./eirini-release > ./manifest/manifest.yml
+if [ "$USE_EIRINI_RELEASE" = true ]; then
+  ./ci-resources/scripts/create_manifest_eirini.sh
+else
+  ./ci-resources/scripts/create_manifest_cf.sh
+fi
 
 pushd state
   if git status --porcelain | grep .; then
      echo "Repo is dirty"
-     git add environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml
+     git add "environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml"
      git config --global user.email "CI.BOT@de.ibm.com"
      git config --global user.name "Come-On Eirini"
      git commit -am "update/add deployment vars.yml"

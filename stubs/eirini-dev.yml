@@ -28,6 +28,7 @@ jobs:
       KUBE_NAMESPACE: ((bosh_lite_name))
       NATS_IP: ((nats_ip))
       EIRINI_IP: ((eirini_ip))
+      USE_EIRINI_RELEASE: false
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - put: state
@@ -44,7 +45,8 @@ jobs:
     params:
       BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
       DIRECTOR_NAME: ((bosh_lite_name))
-    file: ci-resources/tasks/deploy-eirini-release.yml
+      USE_EIRINI_RELEASE: false
+    file: ci-resources/tasks/deploy-cf.yml
 
 - name: delete-cf-deployment
   plan:

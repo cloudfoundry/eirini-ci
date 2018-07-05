@@ -1,0 +1,28 @@
+spruce:
+- base: $ONE_CLICK/template.yml
+  merge:
+  - with:
+      files:
+      - stubs/kube-release.yml
+      - stubs/include-smoke-tests.yml
+      - stubs/include-unit-tests.yml
+      - stubs/include-static-checks.yml
+  modify:
+    set:
+    - path: jobs.name:deploy-eirini-release.plan.get:cf-deployment.passed.+
+      value: update-cloud-config-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((bosh_lite_name))-cf-deployment
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: recreate-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: update-cloud-config-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: clean-up-((bosh_lite_name))
+    - path: groups.name:manage-cf.jobs.+
+      value: cancel-cf-deployment-task-in-((bosh_lite_name))
+    - path: groups.name:manage-director.jobs.+
+      value: "Show BOSH summary for ((bosh_lite_name))"
+  to: pipeline.yml

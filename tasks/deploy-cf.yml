@@ -21,4 +21,4 @@ inputs:
 - name: capi
 
 run:
-  path: ci-resources/tasks/deploy-eirini-release.sh
+  path: ci-resources/tasks/deploy-cf.sh
