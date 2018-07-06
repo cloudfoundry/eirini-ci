@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: diegoteam/eirini
+
+inputs:
+- name: state
+
+outputs:
+- name: configs
+
+run:
+  path: ci-resources/tasks/create-eirini-config.yml

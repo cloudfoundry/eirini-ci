@@ -18,7 +18,7 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - deploy-eirini-release
+    - deploy-cf
   - get: ci-resources
   - task: run-smoke-tests
     params:

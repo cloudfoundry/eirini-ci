@@ -1,7 +1,7 @@
 groups:
 - name: eirini-cd
   jobs:
-  - deploy-eirini-release
+  - deploy-cf
 - name: manage-cf
   jobs:
   - delete-cf-deployment
@@ -9,7 +9,7 @@ groups:
   jobs: []
 
 jobs:
-- name: deploy-eirini-release
+- name: deploy-cf
   plan:
   - get: state
   - get: ci-resources
@@ -28,7 +28,7 @@ jobs:
       KUBE_NAMESPACE: ((bosh_lite_name))
       NATS_IP: ((nats_ip))
       EIRINI_IP: ((eirini_ip))
-      USE_EIRINI_RELEASE: false
+      USE_EIRINI_RELEASE: ((use_eirini_release))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - put: state
@@ -45,7 +45,7 @@ jobs:
     params:
       BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
       DIRECTOR_NAME: ((bosh_lite_name))
-      USE_EIRINI_RELEASE: false
+      USE_EIRINI_RELEASE: ((use_eirini_release))
     file: ci-resources/tasks/deploy-cf.yml
 
 - name: delete-cf-deployment
@@ -63,7 +63,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: wip-script-pipeline
 
 - name: eirini-release
   type: git

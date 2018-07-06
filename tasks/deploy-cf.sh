@@ -16,7 +16,7 @@ pushd ./capi
 	bosh sync-blobs
 popd
 
-if [ "$USE_EIRINI_RELEASE" = false ]; then
+if [ "$USE_EIRINI_RELEASE" = true ]; then
   echo "::::::::::::::PREPARE EIRINI_RELEASE"
   pushd ./eirini-release
     bosh sync-blobs
