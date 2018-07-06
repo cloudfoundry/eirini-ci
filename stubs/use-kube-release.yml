@@ -12,18 +12,11 @@ jobs:
     trigger: true
     passed:
     - deploy-cf
-  - task: name
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: ubuntu
-      run:
-        path: /bin/bash
-        args:
-        - echo
-        - "TODO"
+  - get: ci-resources
+  - task: create images
+    params:
+      TAG: feature-((eirini-release-branch))
+    file: ci-resources/tasks/create-docker-images.yml
 
 - name: deploy-eirini-helm
   plan:
@@ -31,8 +24,18 @@ jobs:
     trigger: true
     passed:
     - create-docker-image
+  - get: ci-resrouces
   - get: state
   - task: create eirini config
+    params:
+      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
+      DIRECTOR_NAME: ((bosh_lite_name))
+      KUBE_CONF: ((kube_conf))
+      KUBE_ENDPOINT: ((kube_endpoint))
+      KUBE_NAMESPACE: ((bosh_lite_name))
+      NATS_IP: ((nats_ip))
     file: ci-resources/tasks/create-eirini-config.yml
   - task: deploy
+    params:
+      USE_EIRINI_RELEASE: ((use_eirini_release))
     file: ci-resources/tasks/helm-install.yml
