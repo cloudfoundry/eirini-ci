@@ -18,9 +18,9 @@ mkdir -p "$DIRECTOR_PATH/cf-deployment/"
 
 echo "::::::::::::::CREATING MANIFEST:::::::"
 if [ "$USE_EIRINI_RELEASE" = true ]; then
-  ./ci-resources/scripts/create_manifest_eirini.sh
+  ./ci-resources/scripts/create-manifest-eirini.sh
 else
-  ./ci-resources/scripts/create_manifest_cf.sh
+  ./ci-resources/scripts/create-manifest-cf.sh
 fi
 
 pushd state
