@@ -7,7 +7,9 @@ image_resource:
     repository: diegoteam/eirini
 
 inputs:
+- name: ci-resources
 - name: eirini-release
+- name: configs
 
 run:
   path: ci-resources/tasks/helm-install.sh
