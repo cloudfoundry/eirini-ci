@@ -3,8 +3,8 @@
 set -ex
 
 # Due to issue with the docker version used in this image, it needs to be donwgraded until this issue is resolved (https://github.com/docker/for-linux/issues/219#issuecomment-375199143)
-apt remove docker-ce
-apt install docker-ce=17.09.1~ce-0~ubuntu
+apt remove -y docker-ce
+apt install -y docker-ce=17.09.1~ce-0~ubuntu
 
 # Start Docker Daemon (and set a trap to stop it once this script is done)
 echo 'DOCKER_OPTS="--data-root /scratch/docker --max-concurrent-downloads 10"' > /etc/default/docker
