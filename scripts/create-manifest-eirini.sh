@@ -8,6 +8,7 @@ bosh interpolate ./cf-deployment/cf-deployment.yml \
      --ops-file ./cf-deployment/operations/experimental/use-bosh-dns.yml \
      --ops-file ./eirini-release/operations/capi-dev-version.yml \
      --ops-file ./eirini-release/operations/eirini-bosh-operations.yml \
+     --ops-file ./eirini-release/operations/enable-opi.yml \
      --ops-file ./eirini-release/operations/dev-version.yml \
      --ops-file ./cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
      --var=k8s_flatten_cluster_config="$(kubectl config view --flatten=true)" \
