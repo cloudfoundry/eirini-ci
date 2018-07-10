@@ -2,30 +2,28 @@ groups:
 - name: eirini-cd
   jobs:
   - (( append ))
-  #- create-docker-image
+  - create-docker-image
   - deploy-eirini-helm
 
 
 jobs:
-#- name: create-docker-image
-  #plan:
-  #- get: eirini-release
-    #trigger: true
-    #passed:
-    #- deploy-cf
-  #- get: ci-resources
-  #- task: create images
-    #params:
-      #TAG: feature-((eirini-release-branch))
-    #file: ci-resources/tasks/create-docker-images.yml
+- name: create-docker-image
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed: []
+  - get: ci-resources
+  - task: create images
+    params:
+      TAG: feature-((eirini-release-branch))
+    file: ci-resources/tasks/create-docker-images.yml
 
 - name: deploy-eirini-helm
   plan:
   - get: eirini-release
     trigger: true
     passed:
-    #- create-docker-image
-    - deploy-cf
+    - create-docker-image
   - get: ci-resources
   - get: state
   - task: create eirini config
