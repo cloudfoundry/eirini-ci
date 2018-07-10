@@ -4,7 +4,7 @@ set -euox pipefail
 IFS=$'\n\t'
 
 main(){
-  CF_PASSWORD=$(bosh int "./state/environments/softlayer/director/$DIRECTOR_NAME/vars.yml" --path /cf_admin_password)
+  CF_PASSWORD=$(bosh int "./state/environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml" --path /cf_admin_password)
   DIRECTOR_IP=$(cat "./state/environments/softlayer/director/ip")
   create_config
 }
