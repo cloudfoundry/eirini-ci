@@ -29,6 +29,7 @@ jobs:
       NATS_IP: ((nats_ip))
       EIRINI_IP: ((eirini_ip))
       USE_EIRINI_RELEASE: ((use_eirini_release))
+      OPI_URL: ((opi_url))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - put: state

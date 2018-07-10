@@ -25,24 +25,27 @@ set-pipeline(){
   --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
   --load-vars-from "$1" \
 	--var use_eirini_release="$USE_EIRINI_RELEASE" \
-	--var docker_password="$(pass eirini/docker-hub)"
+	--var opi_url="$2" \
+	--var docker_hub_password="$(pass eirini/docker-hub)"
 }
 
 main(){
+	local cf_eirini_url=http://eirini.service.cf.internal:8085
+
 	if [ "$1" = "help" ]; then
 		help
 	fi
 
 	if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
 	  aviator
-		set-pipeline env/eirini-ci.yml
+		set-pipeline env/eirini-ci.yml $cf_eirini_url
   else
 		if [ "$USE_EIRINI_RELEASE" = true ]; then
       aviator
-			set-pipeline custom.yml
-		else
+			set-pipeline custom.yml $cf_eirini_url
+	 	else
 		  aviator -f aviator-kube.yml
-		  set-pipeline custom.yml
+		  set-pipeline custom.yml http://eirini-opi.cube-kube.uk-south.containers.mybluemix.net
 		fi
   fi
 }

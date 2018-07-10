@@ -16,8 +16,8 @@ jobs:
   - task: create images
     privileged: true
     params:
-      DOCKER_USER: ((docker_user))
-      DOCKER_PASSWORD: ((docker_password))
+      DOCKER_HUB_USER: ((docker_hub_user))
+      DOCKER_HUB_PASSWORD: ((docker_hub_password))
       TAG: feature-((eirini-release-branch))
     file: ci-resources/tasks/create-docker-images.yml
 

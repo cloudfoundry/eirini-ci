@@ -9,4 +9,5 @@ bosh interpolate ./cf-deployment/cf-deployment.yml \
      --ops-file ./eirini-release/operations/capi-dev-version.yml \
      --ops-file ./cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
      --var system_domain="$DIRECTOR_IP.nip.io" \
+		 --var opi_url="$OPI_URL" \
      > ./manifest/manifest.yml
