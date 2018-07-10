@@ -24,7 +24,8 @@ set-pipeline(){
 	-v bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
   --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
   --load-vars-from "$1" \
-	--var use_eirini_release="$USE_EIRINI_RELEASE"
+	--var use_eirini_release="$USE_EIRINI_RELEASE" \
+	--var docker_password="$(pass eirini/docker-hub)"
 }
 
 main(){
