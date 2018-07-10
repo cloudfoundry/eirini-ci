@@ -11,7 +11,7 @@ cp ./configs/opi.yaml $HELM_DIR/configs/
 kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
 
 set +e
-helm delete --purge --name "$TAG"
+helm delete --purge "$TAG"
 set -e
 
 helm install \
