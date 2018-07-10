@@ -31,4 +31,7 @@ RUN go get github.com/onsi/ginkgo/ginkgo
 RUN go get github.com/onsi/gomega/...
 
 # helm
-RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz -O /usr/bin/helm && chmod +x /usr/bin/helm
+RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz && tar xfz helm-v2.9.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
+
+# goml
+RUN wget --quiet -O /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.4.0/goml-linux-amd64 && chmod +x /usr/bin/goml

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euox pipefail
+IFS=$'\n\t'
 
 main(){
   CF_PASSWORD=$(bosh int "./state/environments/softlayer/director/$DIRECTOR_NAME/vars.yml" --path /cf_admin_password)
@@ -24,3 +26,5 @@ opi:
   insecure_skip_verify: true
 EOF
 }
+
+main
