@@ -8,6 +8,6 @@ helm install \
 	--set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
   --set-string "config.opi_image=eirini/opi:$TAG" \
 	--debug \
-	--name \
+	--name "$TAG" \
 	./eirini-release/kube-release/helm/eirini
 
