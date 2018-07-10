@@ -9,7 +9,6 @@ RUN apt-get update && \
       curl \
 			ruby
 
-
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
 
 RUN gem install bundler

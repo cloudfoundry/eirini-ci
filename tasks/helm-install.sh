@@ -4,8 +4,10 @@ mkdir -p ~/.kube
 echo "$KUBE_CONF" > ~/.kube/config
 
 helm install \
-	--set-string \
-	  ingress.opi.host=\"eirini-opi."$KUBE_ENDPOINT"\",ingress.registry.host=\"eirini-registry."$KUBE_ENDPOINT"\" \
+	--set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
+	--set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
+  --set-string "config.opi_image=eirini/opi:$TAG" \
 	--debug \
 	--name \
 	./eirini-release/kube-release/helm/eirini
+

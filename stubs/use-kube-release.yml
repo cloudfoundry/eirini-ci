@@ -18,7 +18,7 @@ jobs:
     params:
       DOCKER_HUB_USER: ((docker_hub_user))
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
-      TAG: feature-((eirini-release-branch))
+      TAG: feature-((eirini-release-branch)) #TODO: remove prefix
     file: ci-resources/tasks/create-docker-images.yml
 
 - name: deploy-eirini-helm
@@ -43,4 +43,5 @@ jobs:
       USE_EIRINI_RELEASE: ((use_eirini_release))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
+      TAG: feature-((eirini-release-branch)) #TODO: remove prefix
     file: ci-resources/tasks/helm-install.yml
