@@ -10,15 +10,15 @@ echo "$KUBE_CONF" > ~/.kube/config
 cp ./configs/opi.yaml $HELM_DIR/configs/
 kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
 
-set +e
-helm delete --purge "$TAG"
-set -e
-
-helm install \
-	--set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
-	--set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
-  --set-string "config.opi_image=eirini/opi:$TAG" \
-	--debug \
-	--name "$TAG" \
-	./eirini-release/kube-release/helm/eirini
-
+if helm history "$TAG"; then
+	echo Deployment "$TAG" already exists.
+else
+  helm install \
+		--namespace "$KUBE_NAMESPACE" \
+	  --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
+	  --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
+    --set-string "config.opi_image=eirini/opi:$TAG" \
+	  --debug \
+	  --name "$TAG" \
+	  ./eirini-release/kube-release/helm/eirini
+fi

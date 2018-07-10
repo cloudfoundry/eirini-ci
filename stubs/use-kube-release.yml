@@ -43,5 +43,6 @@ jobs:
       USE_EIRINI_RELEASE: ((use_eirini_release))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
+      KUBE_NAMESPACE: ((bosh_lite_name))
       TAG: feature-((eirini-release-branch)) #TODO: remove prefix
     file: ci-resources/tasks/helm-install.yml
