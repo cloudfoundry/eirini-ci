@@ -7,8 +7,9 @@ main(){
   create_config
 }
 
+# TODO: use goml and modify stub
 create_config(){
-  cat eirini-conf << EOF
+  cat > configs/opi.yaml << EOF
 opi:
   kube_config: "/workspace/jobs/opi/config/kube.conf"
   kube_namespace: "$KUBE_NAMESPACE"

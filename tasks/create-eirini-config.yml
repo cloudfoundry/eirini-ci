@@ -14,4 +14,4 @@ outputs:
 - name: configs
 
 run:
-  path: ci-resources/tasks/create-eirini-config.yml
+  path: ci-resources/tasks/create-eirini-config.sh
