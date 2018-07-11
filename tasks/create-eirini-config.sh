@@ -26,7 +26,7 @@ opi:
   api_endpoint: "https://api.$DIRECTOR_IP.nip.io"
   cf_username: admin
   cf_password: "$CF_PASSWORD"
-  external_eirini_address: "eirini-registry.cube-kube.uk-south.containers.mybluemix.net"
+  external_eirini_address: "eirini-registry.cube-kube.uk-south.containers.mybluemix.net:80"
   skip_ssl_validation: true
   insecure_skip_verify: true
 EOF

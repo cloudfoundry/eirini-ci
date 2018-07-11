@@ -16,13 +16,13 @@ if helm history "$TAG"; then
     ./eirini-release/kube-release/helm/eirini \
     --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
     --set-string "config.opi_image=eirini/opi:$TAG" \
-    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT:80"
+    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT"
 else
   helm install \
     ./eirini-release/kube-release/helm/eirini \
     --namespace "$KUBE_NAMESPACE" \
     --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
-    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT:80" \
+    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
     --set-string "config.opi_image=eirini/opi:$TAG" \
     --debug \
     --name "$TAG"
