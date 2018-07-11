@@ -20,7 +20,7 @@ create_config(){
 opi:
   kube_config: "/workspace/jobs/opi/config/kube.conf"
   kube_namespace: "$KUBE_NAMESPACE"
-  kube_endpoint: "$KUBE_NAMESPACE"
+  kube_endpoint: "$KUBE_ENDPOINT"
   nats_password: "$NATS_PASSWORD"
   nats_ip: "$NATS_IP"
   api_endpoint: "https://api.$DIRECTOR_IP.nip.io"
