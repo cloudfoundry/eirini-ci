@@ -21,13 +21,13 @@ set_rules() {
 
 check_and_set(){
 	local check_rule="sudo iptables -t nat -C PREROUTING"
-	local set_rule="sudo iptables -t nat -C PREROUTING 2"
+	local insert_rule="sudo iptables -t nat -I PREROUTING 2"
 
 	if ssh -o "StrictHostKeyChecking no" "jumpbox@$DIRECTOR_IP" -i "$JUMPBOX_KEY" "$check_rule" "$1"; then
     echo "IPTABLES RULE: $1 already exists. Skipping..."
 	else
 	  ssh -o "StrictHostKeyChecking no" "jumpbox@$DIRECTOR_IP" -i "$JUMPBOX_KEY" \
-      "$set_rule" \
+      "$insert_rule" \
 		  "$1"
 	fi
 }
