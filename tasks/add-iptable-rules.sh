@@ -19,6 +19,7 @@ set_rules() {
 	check_and_set "$registry_rule"
 }
 
+# shellcheck disable=SC2029
 check_and_set(){
 	local check_rule="sudo iptables -t nat -C PREROUTING"
 	local insert_rule="sudo iptables -t nat -I PREROUTING 2"
@@ -29,8 +30,9 @@ check_and_set(){
 	  ssh -o "StrictHostKeyChecking no" "jumpbox@$DIRECTOR_IP" -i "$JUMPBOX_KEY" \
       "$insert_rule" \
 		  "$1"
+
+		echo "IPTABLES RULE: $1 SET"
 	fi
 }
 
 main
-
