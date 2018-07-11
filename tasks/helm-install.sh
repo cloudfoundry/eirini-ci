@@ -21,8 +21,8 @@ else
   helm install \
     ./eirini-release/kube-release/helm/eirini \
     --namespace "$KUBE_NAMESPACE" \
-    --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
-    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT" \
+    --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
+    --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
     --set-string "config.opi_image=eirini/opi:$TAG" \
     --debug \
     --name "$TAG"

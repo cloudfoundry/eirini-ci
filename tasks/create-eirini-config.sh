@@ -14,22 +14,15 @@ main(){
   create_config
 }
 
-# TODO: use goml and modify stub
-create_config(){
-  cat > configs/opi.yaml << EOF
-opi:
-  kube_config: "/workspace/jobs/opi/config/kube.conf"
-  kube_namespace: "$KUBE_NAMESPACE"
-  kube_endpoint: "$KUBE_ENDPOINT"
-  nats_password: "$NATS_PASSWORD"
-  nats_ip: "$NATS_IP"
-  api_endpoint: "https://api.$DIRECTOR_IP.nip.io"
-  cf_username: admin
-  cf_password: "$CF_PASSWORD"
-  external_eirini_address: "eirini-registry.cube-kube.uk-south.containers.mybluemix.net:80"
-  skip_ssl_validation: true
-  insecure_skip_verify: true
-EOF
+create_config() {
+	cp ci-resources/stubs/opi.yaml configs
+	goml set -f configs/opi.yaml -p opi.kube_namespace -v "$KUBE_NAMESPACE"
+	goml set -f configs/opi.yaml -p opi.kube_endoint -v "$KUBE_ENDPOINT"
+	goml set -f configs/opi.yaml -p opi.nats_password -v "$NATS_PASSWORD"
+	goml set -f configs/opi.yaml -p opi.nats_ip -v "$NATS_IP"
+	goml set -f configs/opi.yaml -p opi.api_endpoint -v "https://api.$DIRECTOR_IP.nip.io"
+	goml set -f configs/opi.yaml -p opi.cf_password -v "$CF_PASSWORD"
+	goml set -f configs/opi.yaml -p opi.external_eirini_address -v "registry-$DIRECTOR_NAME.$KUBE_NAMESPACE:80"
 }
 
 main

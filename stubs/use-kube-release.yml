@@ -4,6 +4,7 @@ groups:
   - (( append ))
   - create-docker-image
   - deploy-eirini-helm
+  - set-iptable-rules
 
 
 jobs:
@@ -18,7 +19,7 @@ jobs:
     params:
       DOCKER_HUB_USER: ((docker_hub_user))
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
-      TAG: feature-((eirini-release-branch)) #TODO: remove prefix
+      TAG: ((eirini-release-branch))
     file: ci-resources/tasks/create-docker-images.yml
 
 - name: deploy-eirini-helm
@@ -42,7 +43,17 @@ jobs:
     params:
       USE_EIRINI_RELEASE: ((use_eirini_release))
       KUBE_CONF: ((kube_conf))
+      DIRECTOR_NAME: ((bosh_lite_name))
       KUBE_ENDPOINT: ((kube_endpoint))
       KUBE_NAMESPACE: ((bosh_lite_name))
-      TAG: feature-((eirini-release-branch)) #TODO: remove prefix
+      TAG: ((eirini-release-branch))
     file: ci-resources/tasks/helm-install.yml
+
+- name: set-iptable-rules
+  plan:
+  - get: ci-resources
+  - get: state
+  - task: set rules
+    params:
+      DIRECTOR_NAME: ((bosh_lite_name))
+    file: ci-resources/tasks/add-iptable-rules.yml
