@@ -7,7 +7,7 @@ readonly JUMPBOX_KEY="$DIRECTOR_DIR/jumpbox.key"
 readonly DIRECTOR_IP="$(cat "$DIRECTOR_DIR/ip")"
 
 main() {
-	chmod +x "$JUMPBOX_KEY"
+	chmod 600 "$JUMPBOX_KEY"
   set_rules
 }
 
