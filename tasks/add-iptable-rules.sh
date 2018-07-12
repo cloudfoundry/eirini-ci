@@ -12,7 +12,7 @@ main() {
 
 silence_login_message(){
 	ssh -o "StrictHostKeyChecking no" "jumpbox@$DIRECTOR_IP" -i "$JUMPBOX_KEY" \
-		touch .hush_login
+		touch .hushlogin
 }
 
 set_rules() {
