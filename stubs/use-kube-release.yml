@@ -6,7 +6,6 @@ groups:
   - deploy-eirini-helm
   - set-iptable-rules
 
-
 jobs:
 - name: create-docker-image
   plan:
@@ -51,12 +50,3 @@ jobs:
       KUBE_NAMESPACE: ((bosh_lite_name))
       TAG: ((eirini-release-branch))
     file: ci-resources/tasks/helm-install.yml
-
-- name: set-iptable-rules
-  plan:
-  - get: ci-resources
-  - get: state
-  - task: set rules
-    params:
-      DIRECTOR_NAME: ((bosh_lite_name))
-    file: ci-resources/tasks/add-iptable-rules.yml

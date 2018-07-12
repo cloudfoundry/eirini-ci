@@ -59,6 +59,17 @@ jobs:
       BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
     file: ci-resources/tasks/delete-cf-deployment.yml
 
+- name: set-iptable-rules
+  plan:
+  - get: ci-resources
+  - get: state
+    passed: [deploy-cf]
+    trigger: true
+  - task: set rules
+    params:
+      DIRECTOR_NAME: ((bosh_lite_name))
+    file: ci-resources/tasks/add-iptable-rules.yml
+
 resources:
 - name: ci-resources
   type: git
