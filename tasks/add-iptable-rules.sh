@@ -6,13 +6,7 @@ readonly DIRECTOR_IP="$(cat "$DIRECTOR_DIR/ip")"
 
 main() {
 	chmod 600 "$JUMPBOX_KEY"
-  silence_login_message
   set_rules
-}
-
-silence_login_message(){
-	ssh -o "StrictHostKeyChecking no" "jumpbox@$DIRECTOR_IP" -i "$JUMPBOX_KEY" \
-		touch .hushlogin
 }
 
 set_rules() {
