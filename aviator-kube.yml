@@ -11,21 +11,21 @@ spruce:
   modify:
     set:
     - path: jobs.name:deploy-cf.plan.get:cf-deployment.passed.+
-      value: update-cloud-config-((bosh_lite_name))
+      value: update-cloud-config-((world_name))
     - path: jobs.name:run-smoke-tests.plan.get:eirini-release.passed.:deploy-cf
       value: deploy-eirini-helm
     - path: groups.name:manage-director.jobs.+
-      value: delete-((bosh_lite_name))-cf-deployment
+      value: delete-((world_name))-cf-deployment
     - path: groups.name:manage-director.jobs.+
-      value: delete-((bosh_lite_name))
+      value: delete-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: recreate-((bosh_lite_name))
+      value: recreate-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: update-cloud-config-((bosh_lite_name))
+      value: update-cloud-config-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: clean-up-((bosh_lite_name))
+      value: clean-up-((world_name))
     - path: groups.name:manage-cf.jobs.+
-      value: cancel-cf-deployment-task-in-((bosh_lite_name))
+      value: cancel-cf-deployment-task-in-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: "Show BOSH summary for ((bosh_lite_name))"
+      value: "Show BOSH summary for ((world_name))"
   to: pipeline.yml

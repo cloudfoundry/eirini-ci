@@ -1,4 +1,4 @@
-bosh_lite_name: eirini-ci
+world_name: eirini-ci
 cf-deployment-version: v1.20.0
 eirini-release-branch: develop
 eirini-branch: develop

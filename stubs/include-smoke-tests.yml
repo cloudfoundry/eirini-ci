@@ -22,5 +22,5 @@ jobs:
   - get: ci-resources
   - task: run-smoke-tests
     params:
-      DIRECTOR_NAME: ((bosh_lite_name))
+      DIRECTOR_NAME: ((world_name))
     file: ci-resources/tasks/run-smoke-tests.yml

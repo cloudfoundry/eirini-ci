@@ -34,19 +34,19 @@ jobs:
   - get: state
   - task: create eirini config
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
-      KUBE_NAMESPACE: ((bosh_lite_name))
+      KUBE_NAMESPACE: ((world_name))
       NATS_IP: ((nats_ip))
     file: ci-resources/tasks/create-eirini-config.yml
   - task: deploy
     params:
       USE_EIRINI_RELEASE: ((use_eirini_release))
       KUBE_CONF: ((kube_conf))
-      DIRECTOR_NAME: ((bosh_lite_name))
+      DIRECTOR_NAME: ((world_name))
       KUBE_ENDPOINT: ((kube_endpoint))
-      KUBE_NAMESPACE: ((bosh_lite_name))
+      KUBE_NAMESPACE: ((world_name))
       TAG: ((eirini-release-branch))
     file: ci-resources/tasks/helm-install.yml

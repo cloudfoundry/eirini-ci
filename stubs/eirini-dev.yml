@@ -21,11 +21,11 @@ jobs:
   - get: capi
   - task: create-manifest
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
-      KUBE_NAMESPACE: ((bosh_lite_name))
+      KUBE_NAMESPACE: ((world_name))
       NATS_IP: ((nats_ip))
       USE_EIRINI_RELEASE: ((use_eirini_release))
       OPI_PORT: ((opi_port))
@@ -38,14 +38,14 @@ jobs:
   - task: upload-stemcell
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
     file: ci-resources/tasks/upload-stemcell.yml
   - task: deploy
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
       USE_EIRINI_RELEASE: ((use_eirini_release))
     file: ci-resources/tasks/deploy-cf.yml
 
@@ -55,8 +55,8 @@ jobs:
   - get: state
   - task: delete
     params:
-      DIRECTOR_NAME: ((bosh_lite_name))
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
     file: ci-resources/tasks/delete-cf-deployment.yml
 
 - name: set-iptable-rules
@@ -67,7 +67,7 @@ jobs:
     trigger: true
   - task: set rules
     params:
-      DIRECTOR_NAME: ((bosh_lite_name))
+      DIRECTOR_NAME: ((world_name))
     file: ci-resources/tasks/add-iptable-rules.yml
 
 resources:

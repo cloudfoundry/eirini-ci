@@ -1,5 +1,5 @@
 # Copy this file and edit it to create a full development pipeline, including director + cf + eirini
-bosh_lite_name: <PROVIDE>
+world_name: <PROVIDE>
 cf-deployment-version: <PROVIDE>
 eirini-release-branch: <PROVIDE>
 eirini-branch: <PROVIDE>
