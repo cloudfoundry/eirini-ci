@@ -19,6 +19,8 @@ jobs:
     trigger: true
     passed: []
   - get: capi
+  - get: ((world_name))-cf-deployment-events
+    params: { bump: major }
   - task: create-manifest
     params:
       BOSH_DIRECTOR: ((world_name)).softlayer.com
@@ -48,6 +50,10 @@ jobs:
       DIRECTOR_NAME: ((world_name))
       USE_EIRINI_RELEASE: ((use_eirini_release))
     file: ci-resources/tasks/deploy-cf.yml
+    on_success:
+      put: ((world_name))-cf-deployment-events
+      params:
+        file: ((world_name))-cf-deployment-events/number
 
 - name: delete-cf-deployment
   plan:
@@ -63,8 +69,9 @@ jobs:
   plan:
   - get: ci-resources
   - get: state
-    passed: [deploy-cf]
+  - get: ((world_name))-cf-deployment-events
     trigger: true
+    passed: [deploy-cf]
   - task: set rules
     params:
       DIRECTOR_NAME: ((world_name))

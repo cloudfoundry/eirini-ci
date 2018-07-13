@@ -4,16 +4,14 @@ spruce:
   - with:
       files:
       - stubs/eirini-dev.yml
-      - stubs/use-kube-release.yml
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
+      - stubs/use-kube-release.yml
   modify:
     set:
     - path: jobs.name:deploy-cf.plan.get:cf-deployment.passed.+
       value: update-cloud-config-((world_name))
-    - path: jobs.name:run-smoke-tests.plan.get:eirini-release.passed.:deploy-cf
-      value: deploy-eirini-helm
     - path: groups.name:manage-director.jobs.+
       value: delete-((world_name))-cf-deployment
     - path: groups.name:manage-director.jobs.+

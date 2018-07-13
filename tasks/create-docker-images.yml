@@ -8,7 +8,7 @@ image_resource:
 
 inputs:
 - name: ci-resources
-- name: eirini-release
+- name: eirini-helm-release
 
 run:
   path: ci-resources/tasks/create-docker-images.sh

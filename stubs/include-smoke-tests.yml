@@ -14,11 +14,11 @@ jobs:
 - name: run-smoke-tests
   plan:
   - get: state
-  - get: cf-smoke-tests
-  - get: eirini-release
+  - get: ((world_name))-cf-deployment-events
     trigger: true
     passed:
-    - deploy-cf
+    - set-iptable-rules
+  - get: cf-smoke-tests
   - get: ci-resources
   - task: run-smoke-tests
     params:

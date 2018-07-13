@@ -13,7 +13,7 @@ service docker status
 trap 'service docker stop' EXIT
 sleep 10
 
-./eirini-release/kube-release/docker/generate-docker-image.sh "$TAG"
+./eirini-helm-release/kube-release/docker/generate-docker-image.sh "$TAG"
 
 docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
 docker push "eirini/opi:$TAG"

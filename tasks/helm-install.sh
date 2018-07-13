@@ -2,7 +2,7 @@
 
 set -ex
 
-readonly HELM_DIR=./eirini-release/kube-release/helm/eirini
+readonly HELM_DIR=./eirini-helm-release/kube-release/helm/eirini
 
 main(){
 	place_kube_config
@@ -37,13 +37,13 @@ helm_install_or_upgrade(){
   if helm history "$TAG"; then
     helm upgrade \
       "$TAG" \
-      ./eirini-release/kube-release/helm/eirini \
+      ./eirini-helm-release/kube-release/helm/eirini \
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "config.opi_image=eirini/opi:$TAG" \
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT"
   else
     helm install \
-      ./eirini-release/kube-release/helm/eirini \
+      ./eirini-helm-release/kube-release/helm/eirini \
       --namespace "$KUBE_NAMESPACE" \
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \

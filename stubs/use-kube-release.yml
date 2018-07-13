@@ -7,13 +7,15 @@ groups:
   - set-iptable-rules
 
 jobs:
+- name: run-smoke-tests
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed: [deploy-eirini-helm]
+
 - name: create-docker-image
   plan:
-  - get: eirini-release
-    trigger: true
-    passed: []
-  - get: capi
-    passed: [deploy-cf]
+  - get: eirini-helm-release
     trigger: true
   - get: ci-resources
   - task: create images
@@ -26,7 +28,7 @@ jobs:
 
 - name: deploy-eirini-helm
   plan:
-  - get: eirini-release
+  - get: eirini-helm-release
     trigger: true
     passed:
     - create-docker-image
@@ -50,3 +52,13 @@ jobs:
       KUBE_NAMESPACE: ((world_name))
       TAG: ((world_name))
     file: ci-resources/tasks/helm-install.yml
+
+resources:
+- name: eirini-helm-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - src/code.cloudfoundry.org/eirini/*
+    - kube-release/*
