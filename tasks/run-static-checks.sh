@@ -7,15 +7,9 @@ readonly PROJECT_DIR="$GOPATH/src/code.cloudfoundry.org/eirini"
 readonly GOLANGCI_LINT_VERSION="v1.7.2"
 
 main() {
-    setUpDirectoryStructure
     lint_tool=$(getLintTool)
     cd "$PROJECT_DIR"
     runStaticCodeChecks "$lint_tool"
-}
-
-setUpDirectoryStructure() {
-    mkdir -p "$PROJECT_DIR"
-    cp -r eirini-source/. "$PROJECT_DIR"
 }
 
 getLintTool() {
