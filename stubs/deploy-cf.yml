@@ -15,6 +15,9 @@ jobs:
   - get: ci-resources
   - get: eirini-release
     trigger: true
+  - get: eirini-source
+    trigger: true
+    passed: [run-static-checks]
   - get: cf-deployment
     trigger: true
     passed: []
@@ -89,6 +92,17 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
+    ignore_paths:
+    - src/code.cloudfoundry.org/eirini
+    - kube-release
+
+- name: eirini-source
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - src/code.cloudfoundry.org/eirini
 
 - name: cf-deployment
   type: git

@@ -1,5 +1,5 @@
 groups:
-- name: eirini-ci
+- name: eirini-cd
   jobs:
   - (( append ))
   - run-static-checks
@@ -7,17 +7,10 @@ groups:
 jobs:
 - name: run-static-checks
   plan:
-  - get: eirini
+  - get: eirini-source
     trigger: true
     passed:
-      - run-unit-tests
+    - run-unit-tests
   - get: ci-resources
   - task: run-static-checks
     file: ci-resources/tasks/run-static-checks.yml
-
-resources:
-- name: eirini
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini.git
-    branch: ((eirini-branch))

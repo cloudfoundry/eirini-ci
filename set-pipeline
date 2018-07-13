@@ -43,7 +43,7 @@ main(){
       aviator
 			set-pipeline custom.yml
 	 	else
-		  aviator -f aviator-kube.yml
+		  aviator -f aviator-helm.yml
 		  set-pipeline custom.yml
 		fi
   fi

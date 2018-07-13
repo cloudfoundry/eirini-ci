@@ -2,11 +2,13 @@
 
 set -x
 
+GOPATH=eirini-source
+
 readonly WORKSPACE="$GOPATH/src/code.cloudfoundry.org/eirini"
 
 setupTestEnv(){
     mkdir -p "$WORKSPACE"
-    cp -r eirini/* "$WORKSPACE"
+    cp -r eirini-source/* "$WORKSPACE"
 }
 
 runTests(){

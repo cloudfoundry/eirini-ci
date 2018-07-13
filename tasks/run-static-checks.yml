@@ -8,7 +8,7 @@ image_resource:
 
 inputs:
 - name: ci-resources
-- name: eirini
+- name: eirini-source
 
 run:
   path: ci-resources/tasks/run-static-checks.sh

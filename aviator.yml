@@ -3,14 +3,12 @@ spruce:
   merge:
   - with:
       files:
-      - stubs/eirini-dev.yml
+      - stubs/deploy-cf.yml
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
   modify:
     set:
-    - path: jobs.name:deploy-cf.plan.get:cf-deployment.passed.+
-      value: update-cloud-config-((world_name))
     - path: groups.name:manage-director.jobs.+
       value: delete-((world_name))-cf-deployment
     - path: groups.name:manage-director.jobs.+

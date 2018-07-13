@@ -1,21 +1,17 @@
 groups:
-- name: eirini-ci
+- name: eirini-cd
   jobs:
+  - (( append ))
   - run-unit-tests
 
 jobs:
 - name: run-unit-tests
   plan:
-  - get: eirini
+  - get: ((world_name))-ready-for-deployment-events
+    passed: [update-cloud-config-((world_name))]
+    trigger: true
+  - get: eirini-source
     trigger: true
   - get: ci-resources
   - task: run-tests
     file: ci-resources/tasks/run-unit-tests.yml
-
-resources:
-- name: eirini
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini.git
-    branch: ((eirini-branch))
-
