@@ -5,14 +5,9 @@ groups:
   - create-docker-image
   - deploy-eirini-helm
   - set-iptable-rules
+  - run-eirini-smoke-tests
 
 jobs:
-- name: run-smoke-tests
-  plan:
-  - get: eirini-helm-release
-    trigger: true
-    passed: [deploy-eirini-helm]
-
 - name: create-docker-image
   plan:
   - get: eirini-helm-release
@@ -52,6 +47,25 @@ jobs:
       KUBE_NAMESPACE: ((world_name))
       TAG: ((world_name))
     file: ci-resources/tasks/helm-install.yml
+
+- name: run-eirini-smoke-tests
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed:
+    - deploy-eirini-helm
+  - get: ci-resources
+  - task: run smoke tests
+    params:
+      DIRECTOR_NAME: ((world_name))
+      KUBE_ENDPOINT: ((kube_endpoint))
+    file: ci-resources/tasks/run-eirini-smoke-tests.yml
+
+- name: run-smoke-tests
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed: [run-eirini-smoke-tests]
 
 resources:
 - name: eirini-helm-release
