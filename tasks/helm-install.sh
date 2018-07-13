@@ -4,26 +4,53 @@ set -ex
 
 readonly HELM_DIR=./eirini-release/kube-release/helm/eirini
 
-mkdir -p ~/.kube
-echo "$KUBE_CONF" > ~/.kube/config
+main(){
+	place_kube_config
+  create_and_set_namespace
+  copy_helm_config_files
+  helm_install_or_upgrade
+}
 
-cp ./configs/opi.yaml $HELM_DIR/configs/
-kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
+place_kube_config(){
+  mkdir -p ~/.kube
+  echo "$KUBE_CONF" > ~/.kube/config
+}
 
-if helm history "$TAG"; then
-  helm upgrade \
-    "$TAG" \
-    ./eirini-release/kube-release/helm/eirini \
-    --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
-    --set-string "config.opi_image=eirini/opi:$TAG" \
-    --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT"
-else
-  helm install \
-    ./eirini-release/kube-release/helm/eirini \
-    --namespace "$KUBE_NAMESPACE" \
-    --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
-    --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
-    --set-string "config.opi_image=eirini/opi:$TAG" \
-    --debug \
-    --name "$TAG"
-fi
+create_and_set_namespace(){
+	set +e
+  if kubectl get namespace "$KUBE_NAMESPACE"; then
+		echo "namespace $KUBE_NAMESPACE exits"
+	else
+    kubectl create namespace "$KUBE_NAMESPACE"
+		echo "namespace $KUBE_NAMESPACE created"
+  fi
+	kubectl config set-context "$(kubectl config current-context)" --namespace="$KUBE_NAMESPACE"
+	set -e
+}
+
+copy_helm_config_files(){
+  cp ./configs/opi.yaml $HELM_DIR/configs/
+  kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
+}
+
+helm_install_or_upgrade(){
+  if helm history "$TAG"; then
+    helm upgrade \
+      "$TAG" \
+      ./eirini-release/kube-release/helm/eirini \
+      --set-string "ingress.opi.host=eirini-opi.$KUBE_ENDPOINT" \
+      --set-string "config.opi_image=eirini/opi:$TAG" \
+      --set-string "ingress.registry.host=eirini-registry.$KUBE_ENDPOINT"
+  else
+    helm install \
+      ./eirini-release/kube-release/helm/eirini \
+      --namespace "$KUBE_NAMESPACE" \
+      --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
+      --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
+      --set-string "config.opi_image=eirini/opi:$TAG" \
+      --debug \
+      --name "$TAG"
+  fi
+}
+
+main

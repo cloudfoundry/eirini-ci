@@ -25,7 +25,9 @@ set-pipeline(){
   --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
   --load-vars-from "$1" \
 	--var use_eirini_release="$USE_EIRINI_RELEASE" \
-	--var docker_hub_password="$(pass eirini/docker-hub)"
+	--var docker_hub_password="$(pass eirini/docker-hub)" \
+	--var world_name="$PIPELINE_NAME" \
+	--var bosh_lite_name="$PIPELINE_NAME"
 }
 
 main(){
