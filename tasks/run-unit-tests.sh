@@ -2,7 +2,7 @@
 
 set -x
 
-GOPATH=eirini-source
+GOPATH=$(readlink -f eirini-source)
 
 readonly WORKSPACE="$GOPATH/src/code.cloudfoundry.org/eirini"
 

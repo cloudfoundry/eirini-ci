@@ -2,7 +2,7 @@
 
 set -x -e
 
-GOPATH=eirini-source
+GOPATH=$(readlink -f eirini-source)
 readonly PROJECT_DIR="$GOPATH/src/code.cloudfoundry.org/eirini"
 readonly GOLANGCI_LINT_VERSION="v1.7.2"
 
