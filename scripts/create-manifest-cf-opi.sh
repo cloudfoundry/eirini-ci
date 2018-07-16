@@ -18,6 +18,6 @@ bosh interpolate ./cf-deployment/cf-deployment.yml \
      --var kube_endpoint="$KUBE_ENDPOINT" \
      --var nats_ip="$NATS_IP" \
      --var registry_address="registry.$DIRECTOR_IP.nip.io:$REGISTRY_PORT" \
-		 --var opi_cf_url="http://opi.service.cf.internal:8085" \
+         --var opi_cf_url="http://opi.service.cf.internal:8085" \
      --var eirini_local_path=./eirini-release \
-		 > ./manifest/manifest.yml
+         > ./manifest/manifest.yml

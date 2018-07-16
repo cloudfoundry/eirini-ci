@@ -2,10 +2,10 @@
 
 set -ex
 
-readonly HELM_DIR=./eirini-helm-release/kube-release/helm/eirini
+readonly HELM_DIR=eirini-helm-release/kube-release/helm/eirini
 
 main(){
-	place_kube_config
+  place_kube_config
   create_and_set_namespace
   copy_helm_config_files
   helm_install_or_upgrade
@@ -17,15 +17,15 @@ place_kube_config(){
 }
 
 create_and_set_namespace(){
-	set +e
+  set +e
   if kubectl get namespace "$KUBE_NAMESPACE"; then
-		echo "namespace $KUBE_NAMESPACE exits"
-	else
+    echo "namespace $KUBE_NAMESPACE exits"
+  else
     kubectl create namespace "$KUBE_NAMESPACE"
-		echo "namespace $KUBE_NAMESPACE created"
+    echo "namespace $KUBE_NAMESPACE created"
   fi
-	kubectl config set-context "$(kubectl config current-context)" --namespace="$KUBE_NAMESPACE"
-	set -e
+  kubectl config set-context "$(kubectl config current-context)" --namespace="$KUBE_NAMESPACE"
+  set -e
 }
 
 copy_helm_config_files(){

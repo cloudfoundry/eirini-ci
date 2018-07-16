@@ -15,10 +15,10 @@ STEMCELL_VERSION=$(bosh int manifest/manifest.yml --path /releases/name=capi/ste
 EXISTS=`bosh -e lite stemcells`
 
 if [[ $EXISTS = *"$STEMCELL_VERSION"* ]]; then
-	  echo "::::::::::::::STEMCELL EXISTS: Skipping upload-stemcell step..."
-		exit 0
+      echo "::::::::::::::STEMCELL EXISTS: Skipping upload-stemcell step..."
+        exit 0
 else
-		echo "::::::::::::::UPLOAD-STEMCELL-VERSION: $STEMCELL_VERSION"
+        echo "::::::::::::::UPLOAD-STEMCELL-VERSION: $STEMCELL_VERSION"
     bosh -e lite upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent\?v\=$STEMCELL_VERSION
 fi
 

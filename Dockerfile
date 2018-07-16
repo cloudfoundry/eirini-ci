@@ -7,7 +7,7 @@ RUN apt-get update && \
       git-all \
       wget \
       curl \
-			ruby
+      ruby
 
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
 

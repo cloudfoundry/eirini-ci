@@ -31,29 +31,29 @@ main(){
    printf "\\n:::::Setting Environment Variable\\n"
    set_env_vars
 
-	 echo "Installation of eirini dependencies done! You can start to setup the Eirini environment now!"
+     echo "Installation of eirini dependencies done! You can start to setup the Eirini environment now!"
 }
 
 install_os_deps(){
-    apt-get update && apt-get upgrade && apt-get dist-upgrade
-    apt-get install build-essential dkms unzip wget curl git software-properties-common
+  apt-get update && apt-get upgrade && apt-get dist-upgrade
+  apt-get install build-essential dkms unzip wget curl git software-properties-common
 }
 
 install_vbox(){
-   add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
-   wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | apt-key add -
-   apt-get update
-   apt-get install virtualbox-5.2
    VBoxManage -v
+  add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
+  wget --quiet https://www.virtualbox.org/download/oracle_vbox_2016.asc --output-document - | apt-key add -
+  apt-get update
+  apt-get install virtualbox-5.2
 }
 
 install_docker(){
    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
-   apt-get update
-   apt-cache policy docker-ce
-   apt-get install -y docker-ce
+  apt-get update
+  apt-cache policy docker-ce
+  apt-get install --yes docker-ce
 }
 
 install_bosh(){
@@ -89,11 +89,11 @@ install_ruby(){
 
 install_go(){
   wget https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.10.3.linux-amd64.tar.gz
-  echo "export PATH=\$PATH:/usr/local/go/bin"	>> "$HOME"/.profile
+  echo "export PATH=\$PATH:/usr/local/go/bin"   >> "$HOME"/.profile
 }
 
 set_env_vars() {
-  cat >	~/.bash_profile << EOF
+  cat > ~/.bash_profile << EOF
 export EIRINI_LITE=$HOME/workspace/eirini-lite
 export PATH=$PATH:/usr/local/go/bin
 EOF

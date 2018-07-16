@@ -30,7 +30,7 @@ bosh int $BOSH_DEPLOYMENT/bosh.yml \
   -v sl_vm_name_prefix=$DIRECTOR_NAME \
   -v sl_vm_domain=softlayer.com \
   -v sl_username=eirini@cloudfoundry.org \
-	-v sl_api_key=$(pass eirini/softlayer-API-key) \
+    -v sl_api_key=$(pass eirini/softlayer-API-key) \
   -v sl_datacenter=lon04 \
   -v sl_vlan_public=2297791 \
   -v sl_vlan_private=2297793 \
