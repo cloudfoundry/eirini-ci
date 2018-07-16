@@ -1,45 +1,30 @@
 #!/bin/bash
 
+set -euox pipefail
+IFS=$'\n\t'
+
 main(){
-   printf "\\n:::::Installing OS dependencies\\n"
-   install_os_deps
-
-   printf "\\n:::::Installing vbox\\n"
-   install_vbox
-
-   printf "\\n:::::Installing docker\\n"
-   install_docker
-
-   printf "\\n:::::Installing bosh\\n"
-   install_bosh
-
-   printf "\\n:::::Installing cf cli\\n"
-   install_cf_cli
-
-   printf "\\n:::::Installing kubectl\\n"
-   install_kubectl
-
-   printf "\\n:::::Installing minikube\\n"
-   install_minikube
-
-   printf "\\n:::::Installing ruby\\n"
-   install_ruby
-
-   printf "\\n:::::Installing go\\n"
-   install_go
-
-   printf "\\n:::::Setting Environment Variable\\n"
-   set_env_vars
-
-     echo "Installation of eirini dependencies done! You can start to setup the Eirini environment now!"
+  install_os_deps
+  install_vbox
+  install_docker
+  install_bosh
+  install_cf_cli
+  install_kubectl
+  install_minikube
+  install_ruby
+  install_go
+  set_env_vars
+  echo "Installation of eirini dependencies done. You can now start to setup the Eirini environment."
 }
 
 install_os_deps(){
+  echo Installing OS dependencies
   apt-get update && apt-get upgrade && apt-get dist-upgrade
   apt-get install build-essential dkms unzip wget curl git software-properties-common
 }
 
 install_vbox(){
+  echo Installing VirtualBox
   add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
   wget --quiet https://www.virtualbox.org/download/oracle_vbox_2016.asc --output-document - | apt-key add -
   apt-get update
@@ -48,6 +33,7 @@ install_vbox(){
 }
 
 install_docker(){
+  echo Installing Docker
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
@@ -57,11 +43,13 @@ install_docker(){
 }
 
 install_bosh(){
+  echo Installing BOSH
   wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 --output-document /usr/local/bin/bosh && chmod +x /usr/local/bin/bosh
   bosh --version
 }
 
 install_cf_cli(){
+  echo Installing the cf command line tool
   wget --quiet --output-document - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
   echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
   apt-get update
@@ -70,6 +58,7 @@ install_cf_cli(){
 }
 
 install_kubectl(){
+  echo Installing kubectl
   apt-get update && apt-get install --yes apt-transport-https
   curl --silent https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
   touch /etc/apt/sources.list.d/kubernetes.list
@@ -79,20 +68,24 @@ install_kubectl(){
 }
 
 install_minikube(){
+  echo Installing minikube
   curl --location --output-document minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 }
 
 install_ruby(){
+  echo Installing ruby
   apt install ruby
   gem install bundle
 }
 
 install_go(){
+  echo Installing go
   wget https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.10.3.linux-amd64.tar.gz
   echo "export PATH=\$PATH:/usr/local/go/bin" >> "$HOME"/.profile
 }
 
 set_env_vars() {
+  echo 'Adding environment variables to ~/.bash_profile'
   cat > ~/.bash_profile << EOF
 export EIRINI_LITE=$HOME/workspace/eirini-lite
 export PATH=$PATH:/usr/local/go/bin
