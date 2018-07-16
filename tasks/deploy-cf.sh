@@ -12,14 +12,14 @@ export BOSH_CLIENT_SECRET
 ./ci-resources/scripts/bosh-login.sh
 
 echo ":::::::::::::PREPARE CAPI RELEASE"
-pushd ./capi
+pushd capi
   git submodule update --init --recursive
     bosh sync-blobs
 popd
 
 if [ "$USE_EIRINI_RELEASE" = true ]; then
   echo "::::::::::::::PREPARE EIRINI_RELEASE"
-  pushd ./eirini-release
+  pushd eirini-release
     bosh sync-blobs
     bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
     git submodule update --init --recursive

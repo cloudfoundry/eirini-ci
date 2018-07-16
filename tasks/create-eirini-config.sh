@@ -3,7 +3,7 @@
 set -euox pipefail
 IFS=$'\n\t'
 
-readonly DIRECTOR_DIR="./state/environments/softlayer/director/$DIRECTOR_NAME"
+readonly DIRECTOR_DIR="state/environments/softlayer/director/$DIRECTOR_NAME"
 readonly CF_DEPLOYMENT="$DIRECTOR_DIR/cf-deployment/vars.yml"
 
 main(){
