@@ -7,8 +7,8 @@ readonly DIRECTOR_DIR="./state/environments/softlayer/director/$DIRECTOR_NAME"
 readonly CF_DEPLOYMENT="$DIRECTOR_DIR/cf-deployment/vars.yml"
 
 main(){
-  CF_PASSWORD=$(bosh int "$CF_DEPLOYMENT" --path /cf_admin_password)
-  NATS_PASSWORD=$(bosh int "$CF_DEPLOYMENT" --path /nats_password)
+  CF_PASSWORD=$(bosh interpolate "$CF_DEPLOYMENT" --path /cf_admin_password)
+  NATS_PASSWORD=$(bosh interpolate "$CF_DEPLOYMENT" --path /nats_password)
   DIRECTOR_IP=$(cat "$DIRECTOR_DIR/ip")
   NATS_IP=$DIRECTOR_IP #requires iptables rule at director to forward trafic to nats
   create_config

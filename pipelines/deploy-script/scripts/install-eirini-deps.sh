@@ -40,16 +40,16 @@ install_os_deps(){
 }
 
 install_vbox(){
-   VBoxManage -v
   add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
   wget --quiet https://www.virtualbox.org/download/oracle_vbox_2016.asc --output-document - | apt-key add -
   apt-get update
   apt-get install virtualbox-5.2
+  VBoxManage --version
 }
 
 install_docker(){
-   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
   apt-get update
   apt-cache policy docker-ce
@@ -57,29 +57,29 @@ install_docker(){
 }
 
 install_bosh(){
-   wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 -O /usr/local/bin/bosh && chmod +x /usr/local/bin/bosh
-   bosh -v
+  wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 --output-document /usr/local/bin/bosh && chmod +x /usr/local/bin/bosh
+  bosh --version
 }
 
 install_cf_cli(){
-   wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
-   echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-   apt-get update
-   apt-get install cf-cli
-   cf -v
+  wget --quiet --output-document - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
+  echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+  apt-get update
+  apt-get install cf-cli
+  cf --version
 }
 
 install_kubectl(){
-  apt-get update && apt-get install -y apt-transport-https
-  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  apt-get update && apt-get install --yes apt-transport-https
+  curl --silent https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
   touch /etc/apt/sources.list.d/kubernetes.list
   echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
   apt-get update
-  apt-get install -y kubectl
+  apt-get install --yes kubectl
 }
 
 install_minikube(){
-   curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+  curl --location --output-document minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 }
 
 install_ruby(){
@@ -89,7 +89,7 @@ install_ruby(){
 
 install_go(){
   wget https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.10.3.linux-amd64.tar.gz
-  echo "export PATH=\$PATH:/usr/local/go/bin"   >> "$HOME"/.profile
+  echo "export PATH=\$PATH:/usr/local/go/bin" >> "$HOME"/.profile
 }
 
 set_env_vars() {
