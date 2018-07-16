@@ -15,10 +15,9 @@ STEMCELL_VERSION=$(bosh interpolate manifest/manifest.yml --path /releases/name=
 EXISTS=`bosh --environment lite stemcells`
 
 if [[ $EXISTS = *"$STEMCELL_VERSION"* ]]; then
-      echo "::::::::::::::STEMCELL EXISTS: Skipping upload-stemcell step..."
+  echo "Stemcell version $STEMCELL_VERSION exists; skipping upload"
   exit 0
 else
-        echo "::::::::::::::UPLOAD-STEMCELL-VERSION: $STEMCELL_VERSION"
+  echo "Uploading stemcell version $STEMCELL_VERSION"
   bosh --environment lite upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent\?v\=$STEMCELL_VERSION
 fi
-

@@ -11,14 +11,14 @@ export BOSH_CLIENT_SECRET
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
-echo ":::::::::::::PREPARE CAPI RELEASE"
+echo Prepare CAPI release
 pushd capi
   git submodule update --init --recursive
-    bosh sync-blobs
+  bosh sync-blobs
 popd
 
 if [ "$USE_EIRINI_RELEASE" = true ]; then
-  echo "::::::::::::::PREPARE EIRINI_RELEASE"
+  echo Prepare Eirini release
   pushd eirini-release
     bosh sync-blobs
     bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
@@ -26,8 +26,8 @@ if [ "$USE_EIRINI_RELEASE" = true ]; then
   popd
 fi
 
-echo "::::::::::::::DEPLOY CF"
+echo Deploy CF
 bosh --environment lite -d cf deploy -n manifest/manifest.yml -v capi_local_path="$(pwd)/capi"
 
-echo "::::::::::::::CLEAN-UP"
+echo Clean up
 bosh --environment lite clean-up --non-interactive --all

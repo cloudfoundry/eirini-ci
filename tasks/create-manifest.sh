@@ -16,7 +16,7 @@ export DIRECTOR_IP
 
 mkdir -p "$DIRECTOR_PATH/cf-deployment/"
 
-echo "::::::::::::::CREATING MANIFEST:::::::"
+echo Creating manifest
 if [ "$USE_EIRINI_RELEASE" = true ]; then
   ./ci-resources/scripts/create-manifest-cf-opi.sh
 else
