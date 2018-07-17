@@ -6,13 +6,10 @@ image_resource:
   source:
     repository: eirini/ci
 
-params:
-  BOSH2_ENV_ALIAS: lite
-
 inputs:
 - name: ci-resources
-- name: state
-- name: manifest
+- name: eirini-helm-release
+- name: configs
 
 run:
-  path: ci-resources/tasks/upload-stemcell.sh
+  path: ci-resources/tasks/helm-install.sh

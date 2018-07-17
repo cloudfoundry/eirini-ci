@@ -7,6 +7,7 @@ spruce:
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
+      - stubs/use-helm-release.yml
   modify:
     set:
     - path: groups.name:manage-director.jobs.+

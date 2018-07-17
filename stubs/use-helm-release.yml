@@ -1,0 +1,81 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - (( append ))
+  - create-docker-image
+  - deploy-eirini-helm
+  - set-iptable-rules
+  - run-eirini-smoke-tests
+
+jobs:
+- name: create-docker-image
+  plan:
+  - get: eirini-source
+    trigger: true
+    passed: [run-static-checks]
+  - get: eirini-helm-release
+    trigger: true
+  - get: ci-resources
+  - task: create images
+    privileged: true
+    params:
+      DOCKER_HUB_USER: ((docker_hub_user))
+      DOCKER_HUB_PASSWORD: ((docker_hub_password))
+      TAG: ((world_name))
+    file: ci-resources/tasks/create-docker-images.yml
+
+- name: deploy-eirini-helm
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed:
+    - create-docker-image
+  - get: ci-resources
+  - get: state
+  - task: create eirini config
+    params:
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
+      KUBE_CONF: ((kube_conf))
+      KUBE_ENDPOINT: ((kube_endpoint))
+      KUBE_NAMESPACE: ((world_name))
+      NATS_IP: ((nats_ip))
+    file: ci-resources/tasks/create-eirini-config.yml
+  - task: deploy
+    params:
+      USE_EIRINI_RELEASE: ((use_eirini_release))
+      KUBE_CONF: ((kube_conf))
+      DIRECTOR_NAME: ((world_name))
+      KUBE_ENDPOINT: ((kube_endpoint))
+      KUBE_NAMESPACE: ((world_name))
+      TAG: ((world_name))
+    file: ci-resources/tasks/helm-install.yml
+
+- name: run-eirini-smoke-tests
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed:
+    - deploy-eirini-helm
+  - get: ci-resources
+  - task: run smoke tests
+    params:
+      DIRECTOR_NAME: ((world_name))
+      KUBE_ENDPOINT: ((kube_endpoint))
+    file: ci-resources/tasks/run-eirini-smoke-tests.yml
+
+- name: run-smoke-tests
+  plan:
+  - get: eirini-helm-release
+    trigger: true
+    passed: [run-eirini-smoke-tests]
+
+resources:
+- name: eirini-helm-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - src/code.cloudfoundry.org/eirini/*
+    - kube-release/*

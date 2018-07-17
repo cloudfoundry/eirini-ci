@@ -1,0 +1,143 @@
+groups:
+- name: deploy-job
+  jobs:
+  - run-deploy-eirini-script
+  - clean-eirini-state
+  - acceptance-test
+- name: manage-eirini-bm
+  jobs:
+  - install-eirini-dependencies
+
+jobs:
+- name: install-eirini-dependencies
+  plan:
+  - get: pipeline-resources
+  - task: install dependencies
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
+      inputs:
+      - name: pipeline-resources
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" \
+              -i /tmp/eirini-bm "/bin/bash -ls" \
+              < pipeline-resources/pipelines/deploy-script/scripts/install-eirini-deps.sh
+
+- name: run-deploy-eirini-script
+  plan:
+  - get: pipeline-resources
+    trigger: true
+  - get: eirini-release
+    trigger: true
+  - task: deploy eirini
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
+      inputs:
+      - name: pipeline-resources
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" \
+              -i /tmp/eirini-bm "/bin/bash -ls" \
+              < pipeline-resources/pipelines/deploy-script/scripts/deploy-eirini.sh
+
+- name: acceptance-test
+  plan:
+  - get: pipeline-resources
+    passed: [run-deploy-eirini-script]
+    trigger: true
+  - get: eirini-release
+    passed: [run-deploy-eirini-script]
+    trigger: true
+  - task: run acceptance test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: ubuntu #TODO
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" \
+              -i /tmp/eirini-bm "/bin/bash -ls" \
+              < pipeline-resources/pipelines/deploy-script/scripts/acceptance-test.sh
+
+- name: clean-eirini-state
+  plan:
+  - get: pipeline-resources
+    passed: [acceptance-test]
+    trigger: true
+  - get: eirini-release
+    passed: [acceptance-test]
+    trigger: true
+  - task: cleanup
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
+      inputs:
+      - name: pipeline-resources
+      run:
+        path: /bin/bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+          echo "$PRIVATE_KEY" > /tmp/eirini-bm
+          chmod 600 /tmp/eirini-bm
+          ssh -o StrictHostKeyChecking=no root@"$IP" \
+              -i /tmp/eirini-bm "/bin/bash -ls" \
+              < pipeline-resources/pipelines/deploy-script/scripts/clean-state.sh
+
+resources:
+- name: pipeline-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: wip-script-pipeline
+    paths:
+    - pipelines/deploy-script/scripts/*
+
+- name: eirini-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: develop
+    paths:
+    - scripts/lite/*

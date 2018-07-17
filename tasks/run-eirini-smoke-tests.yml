@@ -7,12 +7,11 @@ image_resource:
     repository: eirini/ci
 
 params:
-  BOSH2_ENV_ALIAS: lite
+  DIRECTOR_NAME: ~
+  KUBE_ENDPOINT: ~
 
 inputs:
 - name: ci-resources
-- name: state
-- name: manifest
 
 run:
-  path: ci-resources/tasks/upload-stemcell.sh
+  path: ci-resources/tasks/run-eirini-smoke-tests.sh

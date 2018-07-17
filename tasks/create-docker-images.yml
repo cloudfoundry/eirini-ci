@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: bluebosh/bwb
+
+inputs:
+- name: ci-resources
+- name: eirini-helm-release
+
+run:
+  path: ci-resources/tasks/create-docker-images.sh

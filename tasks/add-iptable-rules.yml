@@ -6,13 +6,9 @@ image_resource:
   source:
     repository: eirini/ci
 
-params:
-  BOSH2_ENV_ALIAS: lite
-
 inputs:
 - name: ci-resources
 - name: state
-- name: manifest
 
 run:
-  path: ci-resources/tasks/upload-stemcell.sh
+  path: ci-resources/tasks/add-iptable-rules.sh

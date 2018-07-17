@@ -14,13 +14,13 @@ jobs:
 - name: run-smoke-tests
   plan:
   - get: state
-  - get: cf-smoke-tests
-  - get: eirini-release
+  - get: ((world_name))-cf-deployment-events
     trigger: true
     passed:
-    - deploy-eirini-release
+    - set-iptable-rules
+  - get: cf-smoke-tests
   - get: ci-resources
   - task: run-smoke-tests
     params:
-      DIRECTOR_NAME: ((bosh_lite_name))
+      DIRECTOR_NAME: ((world_name))
     file: ci-resources/tasks/run-smoke-tests.yml

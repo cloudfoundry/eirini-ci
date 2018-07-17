@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: diegoteam/eirini
+    repository: eirini/ci
 
 params:
   BOSH_DIRECTOR: ~
@@ -21,4 +21,4 @@ inputs:
 - name: capi
 
 run:
-  path: ci-resources/tasks/deploy-eirini-release.sh
+  path: ci-resources/tasks/deploy-cf.sh

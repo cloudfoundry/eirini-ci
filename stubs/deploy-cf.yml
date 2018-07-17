@@ -1,7 +1,7 @@
 groups:
 - name: eirini-cd
   jobs:
-  - deploy-eirini-release
+  - deploy-cf
 - name: manage-cf
   jobs:
   - delete-cf-deployment
@@ -9,25 +9,32 @@ groups:
   jobs: []
 
 jobs:
-- name: deploy-eirini-release
+- name: deploy-cf
   plan:
   - get: state
   - get: ci-resources
   - get: eirini-release
     trigger: true
+  - get: eirini-source
+    trigger: true
+    passed: [run-static-checks]
   - get: cf-deployment
     trigger: true
     passed: []
   - get: capi
+  - get: ((world_name))-cf-deployment-events
+    params: { bump: major }
   - task: create-manifest
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
       KUBE_CONF: ((kube_conf))
       KUBE_ENDPOINT: ((kube_endpoint))
-      KUBE_NAMESPACE: ((bosh_lite_name))
+      KUBE_NAMESPACE: ((world_name))
       NATS_IP: ((nats_ip))
-      EIRINI_IP: ((eirini_ip))
+      USE_EIRINI_RELEASE: ((use_eirini_release))
+      OPI_PORT: ((opi_port))
+      REGISTRY_PORT: ((registry_port))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - put: state
@@ -36,15 +43,20 @@ jobs:
   - task: upload-stemcell
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
     file: ci-resources/tasks/upload-stemcell.yml
   - task: deploy
     privileged: true
     params:
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
-      DIRECTOR_NAME: ((bosh_lite_name))
-    file: ci-resources/tasks/deploy-eirini-release.yml
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
+      USE_EIRINI_RELEASE: ((use_eirini_release))
+    file: ci-resources/tasks/deploy-cf.yml
+    on_success:
+      put: ((world_name))-cf-deployment-events
+      params:
+        file: ((world_name))-cf-deployment-events/number
 
 - name: delete-cf-deployment
   plan:
@@ -52,22 +64,45 @@ jobs:
   - get: state
   - task: delete
     params:
-      DIRECTOR_NAME: ((bosh_lite_name))
-      BOSH_DIRECTOR: ((bosh_lite_name)).softlayer.com
+      DIRECTOR_NAME: ((world_name))
+      BOSH_DIRECTOR: ((world_name)).softlayer.com
     file: ci-resources/tasks/delete-cf-deployment.yml
+
+- name: set-iptable-rules
+  plan:
+  - get: ci-resources
+  - get: state
+  - get: ((world_name))-cf-deployment-events
+    trigger: true
+    passed: [deploy-cf]
+  - task: set rules
+    params:
+      DIRECTOR_NAME: ((world_name))
+    file: ci-resources/tasks/add-iptable-rules.yml
 
 resources:
 - name: ci-resources
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: wip-script-pipeline
 
 - name: eirini-release
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
+    ignore_paths:
+    - src/code.cloudfoundry.org/eirini
+    - kube-release
+
+- name: eirini-source
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - src/code.cloudfoundry.org/eirini
 
 - name: cf-deployment
   type: git

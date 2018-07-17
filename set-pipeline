@@ -5,37 +5,47 @@ readonly PIPELINE_NAME="$2"
 readonly PRIVATE_REPO="$3"
 readonly BOSH_DEPLOYMENT="${4?Path to bosh deployment repository is required}"
 export ONE_CLICK="$5"
+readonly USE_EIRINI_RELEASE="$6"
 
 PIPELINE_CONFIG_FILE="pipeline.yml"
 
 help(){
   cat << EOF
-  $ ./set-pipeline <CONCOURSE_TARGET> <PIPELINE_NAME> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE>
+  $ ./set-pipeline <CONCOURSE_TARGET> <PIPELINE_NAME> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE> <USE_EIRINI_RELEASE>
 EOF
   exit 1
 }
 
 set-pipeline(){
   fly -t "$ALIAS" set-pipeline \
-	--pipeline "$PIPELINE_NAME" \
-	--config "$PIPELINE_CONFIG_FILE" \
-	--var "kube_conf=$(kubectl config view --flatten)" \
-	-v bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
-  --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
-  --load-vars-from "$1"
+    --pipeline "$PIPELINE_NAME" \
+    --config "$PIPELINE_CONFIG_FILE" \
+    --var "kube_conf=$(kubectl config view --flatten)" \
+    --var bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
+    --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
+    --load-vars-from "$1" \
+    --var use_eirini_release="$USE_EIRINI_RELEASE" \
+    --var docker_hub_password="$(pass eirini/docker-hub)" \
+    --var world_name="$PIPELINE_NAME" \
+    --var bosh_lite_name="$PIPELINE_NAME"
 }
 
 main(){
-	if [ "$1" = "help" ]; then
-		help
-	fi
+  if [ "$1" = "help" ]; then
+    help
+  fi
 
-	if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
-	  aviator
-		set-pipeline env/eirini-ci.yml
+  if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
+    aviator
+    set-pipeline env/eirini-ci.yml
   else
-		aviator
-		set-pipeline custom.yml
+    if [ "$USE_EIRINI_RELEASE" = true ]; then
+      aviator
+      set-pipeline custom.yml
+    else
+      aviator -f aviator-helm.yml
+      set-pipeline custom.yml
+    fi
   fi
 }
 
