@@ -10,5 +10,5 @@ bosh interpolate cf-deployment/cf-deployment.yml \
     --ops-file eirini-release/operations/enable-opi.yml \
     --ops-file cf-deployment/iaas-support/softlayer/add-system-domain-dns-alias.yml \
     --var system_domain="$DIRECTOR_IP.nip.io" \
-    --var opi_cf_url="registry-$DIRECTOR_NAME.$KUBE_NAMESPACE:80" \
+    --var opi_cf_url="opi-$DIRECTOR_NAME.$KUBE_NAMESPACE:80" \
   > manifest/manifest.yml
