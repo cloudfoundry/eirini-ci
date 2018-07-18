@@ -40,6 +40,7 @@ fly -t <alias> login \
 - Clone the following repositories to your local workstation:
     - [1-click-pipeline](https://github.com/petergtz/1-click-bosh-lite-pipeline)
     - [bosh-deployment](https://github.com/cloudfoundry/bosh-deployment)
+       -  Note: There's a problem with the certificates in the latest bosh-deployment version. Checkout [this](https://github.com/cloudfoundry/bosh-deployment/commit/ab64aef9c6a439722e3fd570969c27457095b0a5) commit.
     - [eirini-private-config](https://github.com/cloudfoundry/eirini-private-config)
 - Make sure you have `pass` configured (see `eirini-private-config`)
 
