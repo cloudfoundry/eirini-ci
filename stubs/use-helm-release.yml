@@ -77,5 +77,4 @@ resources:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
     paths:
-    - src/code.cloudfoundry.org/eirini/*
     - kube-release/*
