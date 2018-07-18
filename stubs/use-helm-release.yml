@@ -4,7 +4,6 @@ groups:
   - (( append ))
   - create-docker-image
   - deploy-eirini-helm
-  - set-iptable-rules
   - run-eirini-smoke-tests
 
 jobs:
