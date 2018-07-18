@@ -27,6 +27,7 @@ set-pipeline(){
     --var use_eirini_release="$USE_EIRINI_RELEASE" \
     --var docker_hub_password="$(pass eirini/docker-hub)" \
     --var world_name="$PIPELINE_NAME" \
+    --var sl_vm_domain="softlayer.com" \
     --var bosh_lite_name="$PIPELINE_NAME"
 }
 

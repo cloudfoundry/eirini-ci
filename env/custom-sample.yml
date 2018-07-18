@@ -1,6 +1,3 @@
 # Copy this file and edit it to create a full development pipeline, including director + cf + eirini
-world_name: <PROVIDE>
 cf-deployment-version: <PROVIDE>
 eirini-release-branch: <PROVIDE>
-eirini-branch: <PROVIDE>
-sl_vm_domain: <PROVIDE>
