@@ -9,7 +9,7 @@ jobs:
       DOCKER_HUB_USER: ((docker_hub_user))
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
       TAG: latest
-    file: ci-resources/tasks/create-docker-image.yml
+    file: ci-resources/tasks/create-docker-images.yml
 
 resources:
 - name: eirini-release
