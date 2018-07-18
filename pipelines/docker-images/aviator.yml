@@ -1,0 +1,8 @@
+fly:
+  name: update-docker-images
+  target: $TARGET
+  config: pipeline.yml
+  load_vars_from:
+  - $PRIVATE_REPO/concourse/common.yml
+  vars:
+    docker_hub_password: $DOCKER_HUB_PASSWORD
