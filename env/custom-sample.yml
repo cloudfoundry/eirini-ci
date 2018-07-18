@@ -1,3 +1,4 @@
 # Copy this file and edit it to create a full development pipeline, including director + cf + eirini
 cf-deployment-version: <PROVIDE>
 eirini-release-branch: <PROVIDE>
+capi-release-branch: <PROVIDE>

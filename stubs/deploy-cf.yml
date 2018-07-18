@@ -129,4 +129,4 @@ resources:
   type: git
   source:
     uri: https://github.com/JulzDiverse/capi-release.git
-    branch: develop
+    branch: ((capi-release-branch))
