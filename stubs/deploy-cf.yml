@@ -15,6 +15,7 @@ jobs:
   - get: state
   - get: ci-resources
   - get: eirini-release
+  - get: eirini-release-jobs
     trigger: true
   - get: eirini-source
     trigger: true
@@ -88,7 +89,7 @@ resources:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
 
-- name: eirini-release
+- name: eirini-release-jobs
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
@@ -96,6 +97,12 @@ resources:
     ignore_paths:
     - src/code.cloudfoundry.org/eirini
     - kube-release
+
+- name: eirini-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
 
 - name: eirini-source
   type: git
