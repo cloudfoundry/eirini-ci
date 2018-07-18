@@ -5,6 +5,7 @@ jobs:
   - get: eirini-release
     trigger: true
   - task: update docker image
+    privileged: true
     params:
       DOCKER_HUB_USER: ((docker_hub_user))
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
