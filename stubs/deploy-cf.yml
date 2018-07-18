@@ -85,7 +85,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: wip-script-pipeline
+    branch: master
 
 - name: eirini-release
   type: git
