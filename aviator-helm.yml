@@ -10,6 +10,8 @@ spruce:
       - stubs/use-helm-release.yml
   modify:
     set:
+    - path: jobs.name:deploy-cf.plan.get:eirini-source.trigger
+      value: false
     - path: groups.name:manage-director.jobs.+
       value: delete-((world_name))-cf-deployment
     - path: groups.name:manage-director.jobs.+

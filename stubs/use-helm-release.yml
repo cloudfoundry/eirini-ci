@@ -13,7 +13,6 @@ jobs:
     trigger: true
     passed: [run-static-checks]
   - get: eirini-helm-release
-    trigger: true
   - get: eirini-release
   - get: ci-resources
   - task: create images
