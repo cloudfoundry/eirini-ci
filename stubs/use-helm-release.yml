@@ -65,6 +65,7 @@ jobs:
 
 - name: run-smoke-tests
   plan:
+  - (( prepend ))
   - get: eirini-helm-release
     trigger: true
     passed: [run-eirini-smoke-tests]
