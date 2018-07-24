@@ -1,11 +1,6 @@
 # Eirini CI
 
-CI Resources for [cube-release](https://github.com/andrew-edgar/cube-release)
-
-## Pipelines
-
-- [Eirini-CI](https://flintstone.ci.cf-app.com/teams/cube/pipelines/eirini-release-ci)
-- [Eirini-Dev](https://flintstone.ci.cf-app.com/teams/eirini/pipelines/eirini-dev)
+CI Resources for [eirini-release](https://github.com/cloudfoundry-incubator/eirini-release)
 
 ## Access
 
@@ -51,6 +46,12 @@ fly -t <alias> login \
 
 ### Set a Development Pipeline
 
+1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
 1. Copy `eirini-private-config/concourse/env/custom-sample.yml` to `custom.yml`
 1. Edit the file and provide the necessary information
 1. Run `set-pipeline` as above
+
+### Set the Heimdall Pipeline (Acceptance Pipeline)
+
+1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
+1. Run the `./set-heimdall` script. Use the `help` parameter to get details on the required parameters.
