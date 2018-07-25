@@ -23,6 +23,8 @@ else
   ./ci-resources/scripts/create-manifest-cf-only.sh
 fi
 
+echo "$DIRECTOR_IP.nip.io" > "$DIRECTOR_PATH/cf-deployment/system_domain"
+
 pushd state
   if git status --porcelain | grep .; then
     echo "Repo is dirty"

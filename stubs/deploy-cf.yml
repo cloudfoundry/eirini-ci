@@ -6,6 +6,7 @@ groups:
 - name: manage-cf
   jobs:
   - delete-cf-deployment
+  - Show CF login summary
 - name: manage-director
   jobs: []
 
@@ -59,6 +60,19 @@ jobs:
       put: ((world_name))-cf-deployment-events
       params:
         file: ((world_name))-cf-deployment-events/number
+
+- name: Show CF login summary
+  plan:
+  - aggregate:
+    - get: 1-click
+    - get: state
+    - get: ((world_name))-cf-deployment-events
+      passed: [ deploy-cf ]
+      trigger: true
+  - task: Show Summary
+    file: 1-click/tasks/show-cf-summary.yml
+    params:
+      BOSH_LITE_NAME: ((world_name))
 
 - name: delete-cf-deployment
   plan:
