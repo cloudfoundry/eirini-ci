@@ -7,7 +7,7 @@ export PATH=$PATH:$GOPATH/bin
 
 cf version
 
-cf_admin_password=$(bosh int state/environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml --path /cf_admin_password)
+cf_admin_password=$(bosh2 int state/environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml --path /cf_admin_password)
 director_ip=`cat state/environments/softlayer/director/$DIRECTOR_NAME/ip`
 
 cat > config.json <<EOF
