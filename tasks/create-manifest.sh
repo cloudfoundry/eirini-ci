@@ -29,6 +29,7 @@ pushd state
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
     git add "environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/vars.yml"
+    git add "environments/softlayer/director/$DIRECTOR_NAME/cf-deployment/system_domain"
     git config --global user.email "CI.BOT@de.ibm.com"
     git config --global user.name "Come-On Eirini"
     git commit --all --message "update/add deployment vars.yml"
