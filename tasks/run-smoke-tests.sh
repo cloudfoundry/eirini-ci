@@ -39,4 +39,4 @@ export CONFIG="$(readlink -nf config.json)"
 cd gopath/src/github.com/cloudfoundry/cf-smoke-tests
 
 # Using nodes=1, because multiple nodes seem to cause race-conditions. Is that a bug in cf-smoke-tests?
-bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=1 -keepGoing
+bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=1 -keepGoing -skip="/logging/loggregator_test.go"
