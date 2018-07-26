@@ -7,4 +7,4 @@ GOPATH=$(readlink -f eirini-source)
 
 readonly WORKSPACE="$(readlink -f eirini-source)/src/code.cloudfoundry.org/eirini"
 cd "$WORKSPACE"
-ginkgo -r -keepGoing --skipPackage=launcher,recipe --skip="Desiring some LRPs|Desiretask"
+ginkgo -r -keepGoing --skipPackage=launcher,recipe --skip="{SYSTEM}"
