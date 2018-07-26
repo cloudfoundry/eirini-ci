@@ -1,0 +1,33 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - (( append ))
+  - fast-forward-master
+
+resources:
+- name: master
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini.git
+    branch: master
+    private_key: ((eirini_repo_key))
+- name: develop
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini
+    branch: develop
+
+jobs:
+- name: fast-forward-master
+  plan:
+  - get: develop
+    params:
+      submodules: none
+  - get: ((world_name))-cf-deployment-events
+    trigger: true
+    passed:
+    - run-smoke-tests
+  - put: master
+    params:
+      repository: develop
+
