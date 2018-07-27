@@ -37,7 +37,7 @@ main(){
   fi
 
   if [ "$PIPELINE_NAME" = "eirini-ci" ]; then
-    aviator
+    aviator -f aviator-ci.yml
     set-pipeline env/eirini-ci.yml
   else
     if [ "$USE_EIRINI_RELEASE" = true ]; then

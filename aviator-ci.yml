@@ -1,0 +1,31 @@
+spruce:
+- base: $ONE_CLICK/template.yml
+  merge:
+  - with:
+      files:
+      - stubs/deploy-cf.yml
+      - stubs/include-smoke-tests.yml
+      - stubs/include-unit-tests.yml
+      - stubs/include-static-checks.yml
+      - stubs/use-helm-release.yml
+      - stubs/periodic-trigger.yml
+      - stubs/fast-forward-master.yml
+  modify:
+    set:
+    - path: jobs.name:deploy-cf.plan.get:eirini-source.trigger
+      value: false
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((world_name))-cf-deployment
+    - path: groups.name:manage-director.jobs.+
+      value: delete-((world_name))
+    - path: groups.name:manage-director.jobs.+
+      value: recreate-((world_name))
+    - path: groups.name:manage-director.jobs.+
+      value: update-cloud-config-((world_name))
+    - path: groups.name:manage-director.jobs.+
+      value: clean-up-((world_name))
+    - path: groups.name:manage-cf.jobs.+
+      value: cancel-cf-deployment-task-in-((world_name))
+    - path: groups.name:manage-director.jobs.+
+      value: "Show BOSH summary for ((world_name))"
+  to: pipeline.yml
