@@ -8,6 +8,7 @@ spruce:
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
       - stubs/use-helm-release.yml
+      - stubs/periodic-trigger.yml
   modify:
     set:
     - path: jobs.name:deploy-cf.plan.get:eirini-source.trigger
