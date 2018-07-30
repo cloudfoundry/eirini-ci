@@ -26,6 +26,7 @@ bosh interpolate $BOSH_DEPLOYMENT/bosh.yml \
   --ops-file $BOSH_DEPLOYMENT/bosh-lite-runc.yml \
   --ops-file $ONE_CLICK_PIPELINE/operations/add-etc-hosts-entry.yml \
   --ops-file $ONE_CLICK_PIPELINE/operations/increase-max-speed.yml \
+  --ops-file $ONE_CLICK_PIPELINE/operations/disable-virtual-delete-vms.yml \
   --var director_name=eirini-lite \
   --var sl_vm_name_prefix=$DIRECTOR_NAME \
   --var sl_vm_domain=softlayer.com \
