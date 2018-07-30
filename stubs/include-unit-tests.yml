@@ -8,7 +8,8 @@ jobs:
 - name: run-unit-tests
   plan:
   - get: ((world_name))-ready-for-deployment-events
-    passed: [update-cloud-config-((world_name))]
+    passed:
+    - update-cloud-config-((world_name))
     trigger: true
   - get: eirini-source
     trigger: true

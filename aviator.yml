@@ -3,6 +3,8 @@ spruce:
   merge:
   - with:
       files:
+      - stubs/bosh-director.yml
+      - stubs/modify-update-cloud-config.yml
       - stubs/deploy-cf.yml
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
