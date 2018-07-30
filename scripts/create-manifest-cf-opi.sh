@@ -5,7 +5,6 @@ bosh interpolate cf-deployment/cf-deployment.yml \
     --ops-file cf-deployment/operations/experimental/enable-bpm.yml \
     --ops-file cf-deployment/operations/use-compiled-releases.yml \
     --ops-file cf-deployment/operations/bosh-lite.yml \
-    --ops-file cf-deployment/operations/use-bosh-dns.yml \
     --ops-file eirini-release/operations/capi-dev-version.yml \
     --ops-file eirini-release/operations/eirini-bosh-operations.yml \
     --ops-file eirini-release/operations/enable-opi.yml \
