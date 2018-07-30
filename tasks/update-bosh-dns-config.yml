@@ -7,6 +7,7 @@ inputs:
   - name: bosh-deployment
   - name: 1-click
   - name: ci-resources
+  - name: state
 
 params:
   BOSH_LITE_NAME: unconfigured

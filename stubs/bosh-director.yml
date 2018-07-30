@@ -8,12 +8,16 @@ jobs:
 - name: update-bosh-dns-config
   plan:
   - get: ci-resources
+  - get: 1-click
   - get: bosh-deployment
+  - get: state
   - get: ((bosh_lite_name))-recreation-events
     trigger: true
     passed:
     - recreate-((bosh_lite_name))
   - task: update bosh dns config
+    params:
+      BOSH_LITE_NAME: ((bosh_lite_name))
     file: ci-resources/tasks/update-bosh-dns-config.yml
 
 
