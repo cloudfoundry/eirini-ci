@@ -27,7 +27,10 @@ if [ "$USE_EIRINI_RELEASE" = true ]; then
 fi
 
 echo Deploy CF
-bosh --environment lite -d cf deploy -n manifest/manifest.yml -v capi_local_path="$(pwd)/capi"
+bosh --environment lite --deployment cf deploy manifest/manifest.yml \
+        --non-interactive \
+        --var capi_local_path="$(pwd)/capi" \
+        --vars-store "$DIRECTOR_PATH/cf-deployment/vars.yml"
 
 echo Clean up
 bosh --environment lite clean-up --non-interactive --all
