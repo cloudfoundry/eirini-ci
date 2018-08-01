@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 export DIRECTOR_PATH=state/environments/softlayer/director/$DIRECTOR_NAME
 
