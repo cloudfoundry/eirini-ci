@@ -15,6 +15,7 @@ jobs:
   plan:
   - get: state
   - get: ci-resources
+  - get: 1-click
   - get: eirini-release
   - get: eirini-release-jobs
     trigger: true
