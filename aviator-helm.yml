@@ -3,9 +3,7 @@ spruce:
   merge:
   - with:
       files:
-      - stubs/bosh-director.yml
       - stubs/deploy-cf.yml
-      - stubs/modify-update-cloud-config.yml
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
@@ -13,8 +11,6 @@ spruce:
       - stubs/periodic-trigger.yml
   modify:
     set:
-    - path: jobs.name:update-cloud-config-((bosh_lite_name)).plan.get:((bosh_lite_name))-recreation-events.passed.:recreate-((bosh_lite_name))
-      value: update-bosh-dns-config
     - path: jobs.name:deploy-cf.plan.get:eirini-source.trigger
       value: false
     - path: groups.name:manage-director.jobs.+

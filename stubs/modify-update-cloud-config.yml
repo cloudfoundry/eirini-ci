@@ -1,8 +1,0 @@
-jobs:
-- name: update-cloud-config-((bosh_lite_name))
-  plan:
-  - aggregate:
-    - get: ((bosh_lite_name))-recreation-events
-      passed:
-      - (( replace ))
-      - update-bosh-dns-config
