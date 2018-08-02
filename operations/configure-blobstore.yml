@@ -1,0 +1,14 @@
+- type: replace
+  path: /instance_groups/name=bosh/properties/blobstore/address?
+  value: 10.254.50.4
+
+- type: replace
+  path: /instance_groups/name=bosh/properties/agent/env/bosh/blobstores/provider=dav/options/endpoint?
+  value: http://10.254.50.4:25250
+
+- type: remove
+  path: /variables/name=blobstore_server_tls/options/alternative_names/0
+
+- type: replace
+  path: /variables/name=blobstore_server_tls/options/common_name?
+  value: 10.254.50.4
