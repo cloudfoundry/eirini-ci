@@ -20,7 +20,7 @@ spruce:
     - path: groups.name:manage-director.jobs.+
       value: recreate-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: update-cloud-config-((world_name))
+      value: update-cloud-and-runtime-config-((world_name))
     - path: groups.name:manage-director.jobs.+
       value: clean-up-((world_name))
     - path: groups.name:manage-cf.jobs.+
