@@ -40,6 +40,7 @@ helm_install_or_upgrade(){
       eirini-helm-release/kube-release/helm/eirini \
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "config.opi_image=eirini/opi:$TAG" \
+      --set-string "config.registry_image=eirini/registry:$TAG" \
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT"
   else
     helm install \
@@ -47,6 +48,7 @@ helm_install_or_upgrade(){
       --namespace "$KUBE_NAMESPACE" \
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
+      --set-string "config.registry_image=eirini/registry:$TAG" \
       --set-string "config.opi_image=eirini/opi:$TAG" \
       --debug \
       --name "$TAG"
