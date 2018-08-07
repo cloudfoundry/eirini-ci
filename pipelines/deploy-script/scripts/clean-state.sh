@@ -6,6 +6,7 @@ set -ex
 source "${EIRINI_LITE?"please set EIRINI_LITE env variable"}/eirini-release/scripts/lite/set-env.sh"
 
 main(){
+  set_env
   destroy_minikube
   destroy_bosh
   remove_repos
