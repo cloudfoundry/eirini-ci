@@ -21,7 +21,7 @@ destroy_minikube() {
 destroy_bosh() {
   echo Destroying Bosh
   local vm_cid
-  vm_cid="$(bosh interpolate "$BOSH_DEPLOYMENT/state.json" --path /current_vm_cid)"
+	vm_cid="$(bosh interpolate "$BOSH_DEPLOYMENT_DIR/state.json" --path /current_vm_cid)"
 
   vboxmanage controlvm "$vm_cid" poweroff
   vboxmanage unregistervm "$vm_cid" --delete
