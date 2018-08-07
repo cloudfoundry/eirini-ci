@@ -52,6 +52,7 @@ jobs:
       params:
         PRIVATE_KEY: ((eirini_bm_private_key))
         IP: ((eirini_bm_ip))
+        EIRINI_RELEASE_BRANCH: ((eirini_release_branch))
       inputs:
       - name: pipeline-resources
       run:
