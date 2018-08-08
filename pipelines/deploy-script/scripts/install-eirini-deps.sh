@@ -90,6 +90,9 @@ set_env_vars() {
 export EIRINI_LITE=$HOME/workspace/eirini-lite
 export PATH=$PATH:/usr/local/go/bin
 EOF
+
+  # shellcheck source=/dev/null
+  source ~/.bash_profile
   mkdir -p "$EIRINI_LITE"
 }
 
