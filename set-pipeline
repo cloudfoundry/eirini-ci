@@ -19,7 +19,8 @@ EOF
 
 set-pipeline(){
   local env_file="$1"
-  shift
+  local use_eirini_release="$2"
+  shift 2
   fly --target "$ALIAS" set-pipeline \
     --pipeline "$PIPELINE_NAME" \
     --config "$PIPELINE_CONFIG_FILE" \
@@ -27,7 +28,7 @@ set-pipeline(){
     --var bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$PIPELINE_NAME" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
     --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
     --load-vars-from "$env_file" \
-    --var use_eirini_release="$USE_EIRINI_RELEASE" \
+    --var use_eirini_release="$use_eirini_release" \
     --var docker_hub_password="$(pass eirini/docker-hub)" \
     --var world_name="$PIPELINE_NAME" \
     --var sl_vm_domain="softlayer.com" \
@@ -37,7 +38,7 @@ set-pipeline(){
 
 set-ci-pipeline(){
   local repo_key_var="eirini_repo_key=$(pass eirini/github/eirini/ssh-key)"
-  set-pipeline "env/eirini-ci.yml" "--var" "$repo_key_var"
+  set-pipeline "env/eirini-ci.yml" true "--var" "$repo_key_var"
 }
 
 main(){
@@ -53,12 +54,12 @@ main(){
 
   if [ "$USE_EIRINI_RELEASE" = true ]; then
     aviator -f aviator.yml
-    set-pipeline custom.yml
+    set-pipeline custom.yml "$USE_EIRINI_RELEASE"
     exit 0
   fi
 
   aviator -f aviator-helm.yml
-  set-pipeline custom.yml
+  set-pipeline custom.yml "$USE_EIRINI_RELEASE"
 }
 
 main "$@"

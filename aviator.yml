@@ -3,12 +3,11 @@ spruce:
   merge:
   - with:
       files:
-      - stubs/bosh-director.yml
-      - stubs/modify-update-cloud-config.yml
       - stubs/deploy-cf.yml
       - stubs/include-smoke-tests.yml
       - stubs/include-unit-tests.yml
       - stubs/include-static-checks.yml
+      - stubs/periodic-trigger.yml
   modify:
     set:
     - path: groups.name:manage-director.jobs.+
@@ -18,7 +17,7 @@ spruce:
     - path: groups.name:manage-director.jobs.+
       value: recreate-((world_name))
     - path: groups.name:manage-director.jobs.+
-      value: update-cloud-config-((world_name))
+      value: update-cloud-and-runtime-config-((world_name))
     - path: groups.name:manage-director.jobs.+
       value: clean-up-((world_name))
     - path: groups.name:manage-cf.jobs.+
