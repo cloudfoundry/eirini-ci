@@ -64,7 +64,7 @@ jobs:
           echo "$PRIVATE_KEY" > /tmp/eirini-bm
           chmod 600 /tmp/eirini-bm
           ssh -o StrictHostKeyChecking=no root@"$IP" \
-              -i /tmp/eirini-bm "/bin/bash -ls" \
+              -i /tmp/eirini-bm "EIRINI_RELEASE_BRANCH=((eirini_release_branch)) /bin/bash -ls" \
               < pipeline-resources/pipelines/deploy-script/scripts/deploy-eirini.sh
 
 - name: acceptance-test
@@ -82,6 +82,8 @@ jobs:
         type: docker-image
         source:
           repository: ubuntu #TODO
+      inputs:
+      - name: pipeline-resources
       run:
         path: /bin/bash
         args:
@@ -139,6 +141,4 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: develop
-    paths:
-    - scripts/lite/*
+    branch: ((eirini_release_branch))
