@@ -20,7 +20,7 @@ main(){
 install_os_deps(){
   echo Installing OS dependencies
   apt-get update && apt-get upgrade && apt-get dist-upgrade
-  apt-get install build-essential dkms unzip wget curl git software-properties-common
+  apt-get install -y build-essential dkms unzip wget curl git software-properties-common
 }
 
 install_vbox(){
@@ -28,7 +28,7 @@ install_vbox(){
   add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
   wget --quiet https://www.virtualbox.org/download/oracle_vbox_2016.asc --output-document - | apt-key add -
   apt-get update
-  apt-get install virtualbox-5.2
+  apt-get install virtualbox-5.2 -y
   VBoxManage --version
 }
 
@@ -53,7 +53,7 @@ install_cf_cli(){
   wget --quiet --output-document - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | apt-key add -
   echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list
   apt-get update
-  apt-get install cf-cli
+  apt-get install cf-cli -y
   cf --version
 }
 
@@ -74,7 +74,7 @@ install_minikube(){
 
 install_ruby(){
   echo Installing ruby
-  apt install ruby
+  apt install ruby -y
   gem install bundle
 }
 
