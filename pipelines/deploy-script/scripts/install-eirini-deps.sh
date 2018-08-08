@@ -69,7 +69,7 @@ install_kubectl(){
 
 install_minikube(){
   echo Installing minikube
-  curl --location --output minikube https://storage.googleapis.com/minikube/releases/v0.28.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+  curl --location --output minikube https://storage.googleapis.com/minikube/releases/v0.28.2/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 }
 
 install_ruby(){
