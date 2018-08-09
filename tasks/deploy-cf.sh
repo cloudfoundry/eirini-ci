@@ -5,35 +5,63 @@ set -ex
 export DIRECTOR_PATH=state/environments/softlayer/director/$DIRECTOR_NAME
 
 export BOSH_CLIENT=admin
-BOSH_CLIENT_SECRET=$(bosh interpolate $DIRECTOR_PATH/vars.yml --path /admin_password)
+BOSH_CLIENT_SECRET=$(bosh interpolate "$DIRECTOR_PATH/vars.yml" --path /admin_password)
 export BOSH_CLIENT_SECRET
 
 ./ci-resources/scripts/setup-env.sh
 ./ci-resources/scripts/bosh-login.sh
 
-echo Prepare CAPI release
-pushd capi
-  git submodule update --init --recursive
-  bosh sync-blobs
-popd
+main() {
+  prepare-capi-release
+	prepare-eirini-release
+	deploy-cf
+	cleanup
+}
 
-if [ "$USE_EIRINI_RELEASE" = true ]; then
+prepare-capi-release() {
+  echo Prepare CAPI release
+  pushd capi
+    bosh sync-blobs
+  popd
+}
+
+prepare-eirini-release() {
+  [ "$USE_EIRINI_RELEASE" = true ] || return
+
   echo Prepare Eirini release
   pushd eirini-release
+    apt remove --yes docker-ce
+    apt install --yes docker-ce=17.09.1~ce-0~debian
+
+    echo 'DOCKER_OPTS="--data-root /scratch/docker --max-concurrent-downloads 10"' > /etc/default/docker
     service docker start
     service docker status
-    ./scripts/buildfs.sh
-    service docker stop
+    trap 'service docker stop' EXIT
+		sleep 5
+
+		GOPATH=$PWD ./scripts/buildfs.sh
+
     bosh sync-blobs
-    git submodule update --init --recursive
   popd
-fi
+}
 
-echo Deploy CF
-bosh --environment lite --deployment cf deploy manifest/manifest.yml \
-        --non-interactive \
-        --var capi_local_path="$(pwd)/capi" \
-        --vars-store "$DIRECTOR_PATH/cf-deployment/vars.yml"
+deploy-cf() {
+  echo Deploy CF
+  bosh --environment lite \
+       --non-interactive \
+		deploy manifest/manifest.yml \
+		   --deployment cf \
+       --var capi_local_path="$(pwd)/capi" \
+       --vars-store "$DIRECTOR_PATH/cf-deployment/vars.yml"
+}
 
-echo Clean up
-bosh --environment lite clean-up --non-interactive --all
+cleanup() {
+  echo Clean up
+  bosh --environment lite \
+		   --non-interactive \
+		clean-up \
+		  --all
+}
+
+main "$@"
+

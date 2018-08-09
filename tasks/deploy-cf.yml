@@ -7,6 +7,8 @@ image_resource:
     repository: eirini/ci
 
 params:
+  DIRECTOR_NAME: ~
+  USE_EIRINI_RELEASE: false
   BOSH_DIRECTOR: ~
   BOSH2_ENV_ALIAS: lite
   DIRECTOR_IP: ~
