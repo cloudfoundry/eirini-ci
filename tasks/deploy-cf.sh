@@ -20,9 +20,11 @@ popd
 if [ "$USE_EIRINI_RELEASE" = true ]; then
   echo Prepare Eirini release
   pushd eirini-release
+    service docker start
+    service docker status
     ./scripts/buildfs.sh
+    service docker stop
     bosh sync-blobs
-    bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
     git submodule update --init --recursive
   popd
 fi
