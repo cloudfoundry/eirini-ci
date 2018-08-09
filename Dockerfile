@@ -4,10 +4,14 @@ ENV PATH="$GOPATH/bin:${PATH}"
 
 RUN apt-get update && \
     apt-get install --yes \
-      git-all \
-      wget \
+      apt-transport-https \
+      ca-certificates \
       curl \
-      ruby
+      git \
+      gnupg2 \
+      ruby \
+      software-properties-common \
+      wget
 
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
 
@@ -16,9 +20,12 @@ RUN gem install bundler
 RUN wget https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.7/spiff_linux_amd64.zip && \
     unzip spiff_linux_amd64.zip && mv spiff /usr/local/bin/ && rm spiff_linux_amd64.zip
 
-# EirniFS
-RUN mkdir /eirini
-COPY cubefs.tar /eirini/eirinifs.tar
+# Docker
+RUN  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+  && apt-key fingerprint 0EBFCD88 \
+  && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+  && apt-get update \
+  && apt-get install -y docker-ce
 
 # bosh2
 RUN wget --quiet https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 --output-document /usr/bin/bosh && chmod +x /usr/bin/bosh
