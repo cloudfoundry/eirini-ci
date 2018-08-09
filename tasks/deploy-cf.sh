@@ -20,6 +20,7 @@ popd
 if [ "$USE_EIRINI_RELEASE" = true ]; then
   echo Prepare Eirini release
   pushd eirini-release
+    ./scripts/buildfs.sh
     bosh sync-blobs
     bosh add-blob /eirini/eirinifs.tar eirinifs/eirinifs.tar
     git submodule update --init --recursive
