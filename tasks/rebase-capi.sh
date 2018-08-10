@@ -22,6 +22,7 @@ rebase_capi(){
     git fetch original "refs/notes/*:refs/notes/*"
     git pull --rebase=preserve original master
     git checkout --ours src/cloud_controller_ng
+		git rebase --continue
 		git checkout --ours .gitmodules
 		git rebase --continue
   popd || exit 1
