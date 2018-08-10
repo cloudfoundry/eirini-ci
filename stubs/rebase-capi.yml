@@ -8,6 +8,7 @@ jobs:
 - name: rebase-capi
   plan:
   - get: ci-resources
+  - get: capi
   - get: cc-ng
     trigger: false
     passed: []
