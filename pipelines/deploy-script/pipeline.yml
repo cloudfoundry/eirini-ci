@@ -93,7 +93,7 @@ jobs:
           echo "$PRIVATE_KEY" > /tmp/eirini-bm
           chmod 600 /tmp/eirini-bm
           ssh -o StrictHostKeyChecking=no root@"$IP" \
-              -i /tmp/eirini-bm "/bin/bash -ls" \
+              -i /tmp/eirini-bm "/bin/bash -c" \
               < pipeline-resources/pipelines/deploy-script/scripts/acceptance-test.sh
 
 - name: clean-eirini-state
