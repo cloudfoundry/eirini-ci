@@ -24,6 +24,8 @@ destroy_bosh() {
 	vm_cid="$(bosh interpolate "$BOSH_DEPLOYMENT_DIR/state.json" --path /current_vm_cid)"
 
   vboxmanage controlvm "$vm_cid" poweroff
+	sleep 10
+
   vboxmanage unregistervm "$vm_cid" --delete
 
   ssh-keygen -f "/root/.ssh/known_hosts" -R 192.168.50.6

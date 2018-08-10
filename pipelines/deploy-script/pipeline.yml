@@ -70,7 +70,6 @@ jobs:
 - name: acceptance-test
   plan:
   - get: pipeline-resources
-    passed: [run-deploy-eirini-script]
     trigger: true
   - get: eirini-release
     passed: [run-deploy-eirini-script]
@@ -81,7 +80,10 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: ubuntu #TODO
+          repository: brenix/alpine-bash-git-ssh
+      params:
+        PRIVATE_KEY: ((eirini_bm_private_key))
+        IP: ((eirini_bm_ip))
       inputs:
       - name: pipeline-resources
       run:
@@ -93,13 +95,12 @@ jobs:
           echo "$PRIVATE_KEY" > /tmp/eirini-bm
           chmod 600 /tmp/eirini-bm
           ssh -o StrictHostKeyChecking=no root@"$IP" \
-              -i /tmp/eirini-bm "/bin/bash -c" \
+              -i /tmp/eirini-bm "/bin/bash -ls" \
               < pipeline-resources/pipelines/deploy-script/scripts/acceptance-test.sh
 
 - name: clean-eirini-state
   plan:
   - get: pipeline-resources
-    passed: [acceptance-test]
     trigger: true
   - get: eirini-release
     passed: [acceptance-test]
