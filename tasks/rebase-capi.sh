@@ -2,7 +2,7 @@
 
 set -x
 
-readonly CAPI_REMOTE="https://github.com/cloudfoundry/capi-release"
+readonly CAPI_REMOTE="https://github.com/cloudfoundry/capi-release.git"
 
 main(){
 	add_remote
@@ -12,7 +12,9 @@ main(){
 }
 
 add_remote(){
-  git remote add original "$CAPI_REMOTE"
+  pushd capi || exit 1
+    git remote add original "$CAPI_REMOTE"
+  popd || exit 1
 }
 
 rebase_capi(){
