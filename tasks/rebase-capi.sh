@@ -2,7 +2,7 @@
 
 set -x
 
-readonly CAPI_REMOTE="http://github.com/cloudfoundry/capi-release.git"
+readonly CAPI_REMOTE="https://github.com/cloudfoundry/capi-release"
 
 main(){
 	add_remote
