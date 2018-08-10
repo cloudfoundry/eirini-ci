@@ -3,8 +3,7 @@
 set -x
 
 pushd capi/src/cloud_controller_ng/ || exit 1
-  git submodule update --init --recursive
-	git pull
+	git pull origin eirini
 popd || exit 1
 
 cp -r capi/. capi-modified
