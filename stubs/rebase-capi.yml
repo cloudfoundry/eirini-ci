@@ -13,14 +13,14 @@ jobs:
     trigger: false
     passed: []
   - get: cc-ng-fork
-  #- put: cc-ng-fork
-    #params:
-      #repository: cc-ng
-      #rebase: true
+  - put: cc-ng-fork
+    params:
+      repository: cc-ng
+      rebase: true
   - task: rebase capi
     file: ci-resources/tasks/rebase-capi.yml
-  #- put: capi
-    #params: {repository: capi-modified}
+  - put: capi
+    params: {repository: capi-modified}
 
 resources:
 - name: cc-ng-fork

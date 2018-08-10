@@ -2,30 +2,9 @@
 
 set -x
 
-readonly CAPI_REMOTE="https://github.com/cloudfoundry/capi-release.git"
-
 main(){
-	add_remote
-  rebase_capi
 	update_submodule
 	commit
-}
-
-add_remote(){
-  pushd capi || exit 1
-    git remote add original "$CAPI_REMOTE"
-  popd || exit 1
-}
-
-rebase_capi(){
-  pushd capi || exit 1
-    git fetch original "refs/notes/*:refs/notes/*"
-    git pull --rebase=preserve original master
-    git checkout --ours src/cloud_controller_ng
-		git rebase --continue
-		git checkout --ours .gitmodules
-		git rebase --continue
-  popd || exit 1
 }
 
 update_submodule(){
