@@ -20,8 +20,9 @@ add_remote(){
 rebase_capi(){
   pushd capi || exit 1
     git fetch original "refs/notes/*:refs/notes/*"
-    git checkout --ours src/cloud_controller_ng
     git pull --rebase=preserve original master
+    git checkout --ours src/cloud_controller_ng
+		git rebase --continue
   popd || exit 1
 }
 
