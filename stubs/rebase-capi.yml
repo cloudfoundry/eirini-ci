@@ -1,0 +1,36 @@
+groups:
+- name: rebase
+  jobs:
+  - (( append ))
+  - rebase-capi
+
+jobs:
+- name: rebase-capi
+  plan:
+  - get: ci-resources
+  - get: cc-ng
+    trigger: false
+    passed: []
+  - get: cc-ng-fork
+  #- put: cc-ng-fork
+    #params:
+      #repository: cc-ng
+      #rebase: true
+  - task: rebase capi
+    file: ci-resources/tasks/rebase-capi.yml
+  #- put: capi
+    #params: {repository: capi-modified}
+
+resources:
+- name: cc-ng-fork
+  type: git
+  source:
+    uri: git@github.com:mnitchev/cloud_controller_ng.git
+    branch: tmp-eirini
+    private_key: ((cc_ng_key))
+
+- name: cc-ng
+  type: git
+  source:
+    uri: http://github.com/cloudfoundry/cloud_controller_ng.git
+    branch: master

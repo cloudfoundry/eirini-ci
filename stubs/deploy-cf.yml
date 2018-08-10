@@ -143,5 +143,6 @@ resources:
 - name: capi
   type: git
   source:
-    uri: https://github.com/JulzDiverse/capi-release.git
+    uri: git@github.com:JulzDiverse/capi-release.git
     branch: ((capi-release-branch))
+    private_key: ((capi-key))

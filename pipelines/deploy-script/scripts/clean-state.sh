@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # shellcheck source=/dev/null
 source "${EIRINI_LITE?"please set EIRINI_LITE env variable"}/eirini-release/scripts/lite/set-env.sh"
 

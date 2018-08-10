@@ -20,6 +20,7 @@ EOF
 set-pipeline(){
   local env_file="$1"
   local use_eirini_release="$2"
+
   shift 2
   fly --target "$ALIAS" set-pipeline \
     --pipeline "$PIPELINE_NAME" \
