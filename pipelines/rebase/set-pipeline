@@ -1,0 +1,8 @@
+#!/bin/bash
+
+readonly TARGET="${1?target not defined}"
+
+fly -t "$TARGET" set-pipeline \
+  --config rebase-capi.yml \
+	--pipeline rebase-cc \
+	--var cc_ng_key="$(pass eirini/github/mnitchev/cloud_controller_ng/ssh-key)"
