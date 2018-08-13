@@ -13,9 +13,9 @@ export BOSH_CLIENT_SECRET
 
 main() {
   prepare-capi-release
-	prepare-eirini-release
-	deploy-cf
-	cleanup
+  prepare-eirini-release
+  deploy-cf
+  cleanup
 }
 
 prepare-capi-release() {
@@ -26,7 +26,7 @@ prepare-capi-release() {
 }
 
 prepare-eirini-release() {
-  [ "$USE_EIRINI_RELEASE" = true ] || return
+  [ "$USE_EIRINI_RELEASE" = true ] || return 0
 
   echo Prepare Eirini release
   pushd eirini-release
@@ -37,9 +37,8 @@ prepare-eirini-release() {
     service docker start
     service docker status
     trap 'service docker stop' EXIT
-		sleep 5
 
-		GOPATH=$PWD ./scripts/buildfs.sh
+    GOPATH=$PWD ./scripts/buildfs.sh
 
     bosh sync-blobs
   popd
@@ -47,20 +46,20 @@ prepare-eirini-release() {
 
 deploy-cf() {
   echo Deploy CF
-  bosh --environment lite \
-       --non-interactive \
-		deploy manifest/manifest.yml \
-		   --deployment cf \
-       --var capi_local_path="$(pwd)/capi" \
-       --vars-store "$DIRECTOR_PATH/cf-deployment/vars.yml"
+  bosh   --environment lite \
+         --non-interactive \
+       deploy manifest/manifest.yml \
+         --deployment cf \
+         --var capi_local_path="$(pwd)/capi" \
+         --vars-store "$DIRECTOR_PATH/cf-deployment/vars.yml"
 }
 
 cleanup() {
   echo Clean up
-  bosh --environment lite \
-		   --non-interactive \
-		clean-up \
-		  --all
+  bosh   --environment lite \
+         --non-interactive \
+       clean-up \
+         --all
 }
 
 main "$@"
