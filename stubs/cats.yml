@@ -1,0 +1,26 @@
+groups:
+- name: eirini-cd
+  jobs:
+  - (( prepend ))
+  - running-CATs
+
+resources:
+- name: cats
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+
+jobs:
+- name: running-CATs
+  plan:
+  - get: ((world_name))-cf-deployment-events
+    trigger: true
+    passed:
+    - run-smoke-tests
+  - get: cats
+  - get: state
+  - get: ci-resources
+  - task: running cats
+    params:
+      DIRECTOR_NAME: ((world_name))
+    file: ci-resources/tasks/running-cats.yml

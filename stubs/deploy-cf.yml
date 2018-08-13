@@ -1,6 +1,7 @@
 groups:
 - name: eirini-cd
   jobs:
+  - (( append ))
   - deploy-cf
   - set-iptable-rules
 - name: manage-cf
