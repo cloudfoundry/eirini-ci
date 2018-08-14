@@ -15,7 +15,7 @@ main(){
 }
 
 create_config() {
-  cp ci-resources/stubs/opi.yaml configs
+  cp ci-resources/config-stubs/opi.yaml configs
   goml set -f configs/opi.yaml -p opi.kube_namespace -v "$KUBE_NAMESPACE"
   goml set -f configs/opi.yaml -p opi.kube_endpoint -v "$KUBE_ENDPOINT"
   goml set -f configs/opi.yaml -p opi.nats_password -v "$NATS_PASSWORD"
