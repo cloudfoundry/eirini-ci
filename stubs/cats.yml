@@ -23,4 +23,5 @@ jobs:
   - task: running cats
     params:
       DIRECTOR_NAME: ((world_name))
+      KUBE_CONF: ((kube_conf))
     file: ci-resources/tasks/running-cats.yml
