@@ -26,9 +26,6 @@ set_up_gopath() {
     export PATH=$PATH:$GOPATH/bin
 }
 
-cp -a cats gopath/src/github.com/cloudfoundry/cf-acceptance-tests
-
-
 set_up_logcache() {
     echo "Current CF version:"
     cf version
