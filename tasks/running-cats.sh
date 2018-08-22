@@ -52,10 +52,11 @@ EOF
 }
 
 run_tests() {
+    local skipped_tests="$(cat ci-resources/config-stubs/cats | tr '\n' '|' | sed 's/.$//')"
     cp -a cats $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
     cd $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
     ./bin/update_submodules
-		./bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=4 -keepGoing -skip="$(cat ci-resources/config-stubs/cats | tr '\n' '|' | sed 's/.$//')"
+    ./bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=4 -keepGoing -skip="$skipped_tests"
 }
 
 main
