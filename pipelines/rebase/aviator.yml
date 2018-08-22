@@ -1,0 +1,9 @@
+spruce:
+- base: $SCRIPT_DIR/pipeline.yml
+  merge:
+  - with:
+      files:
+      - $REPO_ROOT/stubs/notify/resource.yml
+      - $REPO_ROOT/stubs/notify/rebase-cc.yml
+  to: $SCRIPT_DIR/spruced.yml
+

@@ -1,14 +1,16 @@
 jobs:
-- name: rebase-capi
+- name: Keep-CC-up-to-date
   plan:
   - get: ci-resources
+  - get: cc-ng-fork
   - get: cc-ng
     trigger: true
-  - get: cc-ng-fork
+  - task: rebase
+    file: ci-resources/tasks/rebase-cc.yml
   - put: cc-ng-fork
     params:
-      repository: cc-ng
-      rebase: true
+      repository: rebased-cc
+      force: true
 
 resources:
 - name: cc-ng-fork
@@ -17,15 +19,13 @@ resources:
     uri: git@github.com:mnitchev/cloud_controller_ng.git
     branch: eirini
     private_key: ((cc_ng_key))
-
 - name: cc-ng
   type: git
   source:
     uri: http://github.com/cloudfoundry/cloud_controller_ng.git
     branch: master
-
 - name: ci-resources
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: cc-rebase
