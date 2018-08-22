@@ -4,4 +4,4 @@ This pipeline updates the eirini docker images for `OPI` and `Regsitry` located 
 
 ## Set Pipeline
 
-`$ DOCKER_HUB_PASSWORD=$(pass eirini/docker-hub) TARGET=<your-alias> PRIVATE_REPO=<path-to-eirini-private-repo> aviator`
+`$ set-pipeline <your-concourse-alias> <path-to-eirini-private-repo>`

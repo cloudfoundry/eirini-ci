@@ -1,0 +1,8 @@
+jobs:
+- ((merge))
+- name: create-docker-image
+  .: (( inject hooks.failure ))
+- name: deploy-eirini-helm
+  .: (( inject hooks.failure ))
+- name: run-eirini-smoke-tests
+  .: (( inject hooks.failure ))

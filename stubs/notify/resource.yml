@@ -1,0 +1,38 @@
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
+resources:
+- name: slack
+  type: slack-notification
+  source:
+    url: ((slack_webhook))
+
+hooks:
+  failure:
+    on_failure:
+      put: slack
+      params:
+        channel: '#eirini-ci'
+        text: |
+            <!here>
+
+            Pipeline *$BUILD_PIPELINE_NAME* failed :cry:
+
+            Job is *$BUILD_JOB_NAME*
+            Build name is *$BUILD_NAME*
+        attachments: |
+                  [{
+                      "color": "danger",
+                      "actions": [
+                            {
+                              "type": "button",
+                              "text": "View in Concourse",
+                              "url": "https://flintstone.ci.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
+                            }
+                      ]
+                  }]
+

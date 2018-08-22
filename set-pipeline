@@ -35,7 +35,8 @@ set-pipeline(){
     --var sl_vm_domain="softlayer.com" \
     --var bosh_lite_name="$PIPELINE_NAME" \
     --var cc_ng_key="$(pass eirini/github/mnitchev/cloud_controller_ng/ssh-key)" \
-    --var capi-key="$(pass eirini/github/capi-release/ssh-key)"
+    --var capi-key="$(pass eirini/github/capi-release/ssh-key)" \
+    --var eirini-release_repo_key="$(pass eirini/github/eirini-release/ssh-key)" \
     "$@"
 }
 
