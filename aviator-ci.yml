@@ -4,6 +4,11 @@ spruce:
   - with_in: stubs/
     except:
     - use-helm-release.yml
+  - with:
+      files:
+      - stubs/notify/resource.yml
+      - stubs/notify/base.yml
+      - stubs/notify/ci.yml
   modify:
     set:
     - path: groups.name:manage-director.jobs.+

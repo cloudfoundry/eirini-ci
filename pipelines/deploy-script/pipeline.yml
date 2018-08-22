@@ -21,7 +21,6 @@ jobs:
           repository: brenix/alpine-bash-git-ssh
       params:
         PRIVATE_KEY: ((eirini_bm_private_key))
-        IP: ((eirini_bm_ip))
       inputs:
       - name: pipeline-resources
       run:
@@ -51,7 +50,6 @@ jobs:
           repository: brenix/alpine-bash-git-ssh
       params:
         PRIVATE_KEY: ((eirini_bm_private_key))
-        IP: ((eirini_bm_ip))
         EIRINI_RELEASE_BRANCH: ((eirini_release_branch))
       inputs:
       - name: pipeline-resources
@@ -83,7 +81,6 @@ jobs:
           repository: brenix/alpine-bash-git-ssh
       params:
         PRIVATE_KEY: ((eirini_bm_private_key))
-        IP: ((eirini_bm_ip))
       inputs:
       - name: pipeline-resources
       run:
@@ -114,7 +111,6 @@ jobs:
           repository: brenix/alpine-bash-git-ssh
       params:
         PRIVATE_KEY: ((eirini_bm_private_key))
-        IP: ((eirini_bm_ip))
       inputs:
       - name: pipeline-resources
       run:

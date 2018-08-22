@@ -4,14 +4,14 @@ spruce:
   - with:
       files:
       - $REPO_ROOT/stubs/notify/resource.yml
-      - $REPO_ROOT/stubs/notify/docker-images.yml
+      - $REPO_ROOT/stubs/notify/deploy-script.yml
   to: $SCRIPT_DIR/spruced.yml
 
 fly:
-  name: update-docker-images
+  name: eirini-deploy-script
   target: $TARGET
   config: $SCRIPT_DIR/spruced.yml
   load_vars_from:
-  - $PRIVATE_REPO/concourse/common.yml
+  - $PRIVATE_REPO/concourse/eirini-bm.yml
   vars:
-    docker_hub_password: $DOCKER_HUB_PASSWORD
+    eirini_release_branch: master

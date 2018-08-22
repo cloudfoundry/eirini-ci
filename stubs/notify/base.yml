@@ -1,0 +1,22 @@
+jobs:
+- ((merge))
+- name: delete-((bosh_lite_name))
+  .: (( inject hooks.failure ))
+- name: clean-up-((bosh_lite_name))
+  .: (( inject hooks.failure ))
+- name: recreate-((bosh_lite_name))
+  .: (( inject hooks.failure ))
+- name: update-cloud-and-runtime-config-((bosh_lite_name))
+  .: (( inject hooks.failure ))
+- name: run-unit-tests
+  .: (( inject hooks.failure ))
+- name: run-static-checks
+  .: (( inject hooks.failure ))
+- name: deploy-cf
+  .: (( inject hooks.failure ))
+- name: set-iptable-rules
+  .: (( inject hooks.failure ))
+- name: run-smoke-tests
+  .: (( inject hooks.failure ))
+- name: running-CATs
+  .: (( inject hooks.failure ))

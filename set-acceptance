@@ -14,18 +14,17 @@ check_env(){
   readonly PRIVATE_REPO="${2?Path to private repo not set!}"
   readonly BOSH_DEPLOYMENT="${3?Path to bosh-deployment repo not set!}"
   export ONE_CLICK="${4?Path to 1-click-pipeline repo not set!}"
-  readonly USE_EIRINI_RELEASE="${5?Use eirini release bool not set!}"
 }
 
 help(){
   cat << EOF
-  $ ./set-heimdall <CONCOURSE_TARGET> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE> <USE_EIRINI_RELEASE>
+  $ ./set-heimdall <CONCOURSE_TARGET> <PRIVATE_REPO> <BOSH_DEPLOYMENT> <ONE_CLICK_PIPELINE>
 EOF
   exit 1
 }
 
 set-pipeline(){
-  local pipeline_name=heimdall
+  local pipeline_name=acceptance
 
   fly -t "$ALIAS" set-pipeline \
     --pipeline "$pipeline_name" \
@@ -33,14 +32,15 @@ set-pipeline(){
     --var "kube_conf=$(kubectl config view --flatten)" \
     --var bosh-manifest="$(sed -e 's/((/_(_(/g' <(bin/create-director-manifest.sh "$pipeline_name" "$BOSH_DEPLOYMENT" "$ONE_CLICK" ) )" \
     --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
-    --var use_eirini_release="$USE_EIRINI_RELEASE" \
+    --var use_eirini_release="false" \
     --var docker_hub_password="$(pass eirini/docker-hub)" \
     --var world_name="$pipeline_name" \
     --var cf-deployment-version=master \
     --var eirini-release-branch=master \
     --var capi-release-branch=develop \
     --var sl_vm_domain="softlayer.com" \
-    --var bosh_lite_name="$pipeline_name"
+    --var bosh_lite_name="$pipeline_name" \
+    --var capi-key="$(pass eirini/github/capi-release/ssh-key)"
 }
 
 main "$@"

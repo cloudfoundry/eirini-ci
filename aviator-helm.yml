@@ -5,6 +5,11 @@ spruce:
     except:
     - periodic-trigger.yml
     - fast-forward-master.yml
+  - with:
+      files:
+      - stubs/notify/resource.yml
+      - stubs/notify/base.yml
+      - stubs/notify/helm.yml
   modify:
     set:
     - path: jobs.name:deploy-cf.plan.get:eirini-source.trigger

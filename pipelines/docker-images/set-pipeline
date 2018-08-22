@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$1" == "help" ]; then
+    cat << EOF
+  Usage:
+
+        $ ./set-pipeline <CONCOURSE_TARGET> <PRIVATE_REPO>
+EOF
+    exit 0
+fi
+
+export TARGET="${1?target not defined}"
+export PRIVATE_REPO="${2?private repo not defined}"
+
+export DOCKER_HUB_PASSWORD="$(pass eirini/docker-hub)"
+
+export SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+export REPO_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
+
+aviator -f "$SCRIPT_DIR"/aviator.yml

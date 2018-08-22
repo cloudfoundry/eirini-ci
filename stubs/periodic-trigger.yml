@@ -4,12 +4,12 @@ resources:
   source:
     interval: 24h
     start: 3:00 AM
-    stop: 3:30 AM
+    stop: 4:00 AM
     location: Europe/Berlin
 
 jobs:
 - (( merge ))
-- name: run-unit-tests
+- name: delete-((bosh_lite_name))
   plan:
   - (( prepend ))
   - get: daily-morning-timer
