@@ -1,8 +1,24 @@
 #!/bin/bash
 
-readonly TARGET="${1?target not defined}"
+if [ "$1" == "help" ]; then
+    cat << EOF
+  Usage:
+
+        $ ./set-pipeline <CONCOURSE_TARGET> <PRIVATE_REPO>
+EOF
+    exit 0
+fi
+
+export TARGET="${1?target not defined}"
+export PRIVATE_REPO="${2?private repo not defined}"
+
+export SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+export REPO_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
+
+aviator -f "$SCRIPT_DIR"/aviator.yml
 
 fly -t "$TARGET" set-pipeline \
-  --config rebase-capi.yml \
-	--pipeline rebase-cc \
-	--var cc_ng_key="$(pass eirini/github/mnitchev/cloud_controller_ng/ssh-key)"
+    --config "$SCRIPT_DIR"/spruced.yml \
+    --pipeline rebase-cc \
+    --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
+    --var cc_ng_key="$(pass eirini/github/mnitchev/cloud_controller_ng/ssh-key)"
