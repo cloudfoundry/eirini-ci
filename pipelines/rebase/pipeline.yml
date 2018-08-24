@@ -28,4 +28,4 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: cc-rebase
+    branch: master

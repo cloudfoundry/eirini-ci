@@ -13,5 +13,6 @@ fly:
   config: $SCRIPT_DIR/spruced.yml
   load_vars_from:
   - $PRIVATE_REPO/concourse/eirini-bm.yml
+  - $PRIVATE_REPO/concourse/common.yml
   vars:
     eirini_release_branch: master
