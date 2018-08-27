@@ -10,7 +10,6 @@ loggregator
 Environment Variables Groups
 An application printing a bunch of output
 Encoding
-Changing an app's start command
 Logging
 Application Lifecycle
 Wildcard Routes
