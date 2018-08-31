@@ -38,6 +38,7 @@ jobs:
       KUBE_NAMESPACE: ((world_name))
       NATS_IP: ((nats_ip))
       USE_EIRINI_RELEASE: ((use_eirini_release))
+      ENABLE_OPI_STAGING: ((enable_opi_staging))
       OPI_PORT: ((opi_port))
       REGISTRY_PORT: ((registry_port))
     privileged: true

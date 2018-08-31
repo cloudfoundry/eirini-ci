@@ -7,6 +7,7 @@ opi:
   api_endpoint: DEFINE
   cf_username: "admin"
   cf_password: DEFINE
-  external_eirini_address: DEFINE
+  registry_address: DEFINE
+  eirini_address: DEFINE
   skip_ssl_validation: true
   insecure_skip_verify: true
