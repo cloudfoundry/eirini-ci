@@ -1,17 +1,18 @@
 spruce:
-- base: $SCRIPT_DIR/pipeline.yml
+- base: pipeline.yml
   merge:
   - with:
       files:
       - $REPO_ROOT/stubs/notify/resource.yml
       - $REPO_ROOT/stubs/notify/docker-images.yml
-  to: $SCRIPT_DIR/spruced.yml
+  to: spruced.yml
 
 fly:
   name: update-docker-images
   target: $TARGET
-  config: $SCRIPT_DIR/spruced.yml
+  config: spruced.yml
   load_vars_from:
   - $PRIVATE_REPO/concourse/common.yml
   vars:
+    docker_hub_user: eiriniuser
     docker_hub_password: $DOCKER_HUB_PASSWORD

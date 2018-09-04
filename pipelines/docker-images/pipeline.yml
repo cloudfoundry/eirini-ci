@@ -11,6 +11,12 @@ jobs:
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
       TAG: latest
     file: ci-resources/tasks/create-docker-images.yml
+- name: update-eirini-ci-image
+  plan:
+  - get: eirini-ci-image-source
+    trigger: true
+  - put: eirini-ci-image
+    params: {build: eirini-ci-image-source}
 
 resources:
 - name: eirini-release
@@ -24,3 +30,17 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
+
+- name: eirini-ci-image-source
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: master
+    path: Dockerfile
+
+- name: eirini-ci-image
+  type: docker-image
+  source:
+    repository: eirini/ci
+    username: ((docker_hub_user))
+    password: ((docker_hub_password))
