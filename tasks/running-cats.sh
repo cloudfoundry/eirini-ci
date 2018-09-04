@@ -56,7 +56,7 @@ run_tests() {
     cp -a cats $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
     cd $GOPATH/src/github.com/cloudfoundry/cf-acceptance-tests
     ./bin/update_submodules
-    ./bin/test -v -r -slowSpecThreshold=180 -randomizeAllSpecs -nodes=4 -keepGoing "
+    ./bin/test -v -r -slowSpecThreshold=180 -randomizeAllSpecs -nodes=4 -keepGoing
 }
 
 main
