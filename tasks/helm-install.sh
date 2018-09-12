@@ -30,7 +30,6 @@ create_and_set_namespace(){
 
 copy_helm_config_files(){
   cp configs/opi.yaml $HELM_DIR/configs/
-  kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
 }
 
 helm_install_or_upgrade(){
