@@ -97,6 +97,7 @@ jobs:
   - task: set rules
     params:
       DIRECTOR_NAME: ((world_name))
+      EIRINI_IP: ((eirini_ip))
     file: ci-resources/tasks/add-iptable-rules.yml
 
 resources:

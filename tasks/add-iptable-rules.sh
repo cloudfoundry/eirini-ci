@@ -11,8 +11,8 @@ main() {
 
 set_rules() {
   local nats_rule="-p tcp --dport 4222 -j DNAT --to 10.244.0.129:4222"
-  local opi_rule="-p tcp --dport 8085 -j DNAT --to 10.244.0.142:8085"
-  local registry_rule="-p tcp --dport 8080 -j DNAT --to 10.244.0.142:8080"
+  local opi_rule="-p tcp --dport 8085 -j DNAT --to $EIRINI_IP:8085"
+  local registry_rule="-p tcp --dport 8080 -j DNAT --to $EIRINI_IP:8080"
 
   check_and_set "$nats_rule"
   check_and_set "$opi_rule"
