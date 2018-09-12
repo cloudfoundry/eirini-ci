@@ -41,6 +41,7 @@ jobs:
       ENABLE_OPI_STAGING: ((enable_opi_staging))
       OPI_PORT: ((opi_port))
       REGISTRY_PORT: ((registry_port))
+      EIRINI_IP: ((eirini_ip))
     privileged: true
     file: ci-resources/tasks/create-manifest.yml
   - put: state

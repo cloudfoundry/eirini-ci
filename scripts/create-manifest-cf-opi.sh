@@ -10,6 +10,7 @@ opsfiles=(
     "--ops-file" "1-click/operations/add-system-domain-dns-alias.yml"
     "--ops-file" "eirini-release/operations/opi.yml"
     "--ops-file" "eirini-release/operations/dev-version.yml"
+    "--ops-file" "eirini-release/operations/bosh-lite-static-ip.yml"
 )
 
 if [ "$ENABLE_OPI_STAGING" = true ]; then
@@ -28,4 +29,5 @@ bosh interpolate cf-deployment/cf-deployment.yml \
     --var registry_address="registry.$DIRECTOR_IP.nip.io:$REGISTRY_PORT" \
     --var opi_cf_url="http://opi.service.cf.internal:8085" \
     --var eirini_local_path=eirini-release \
+    --var static_ip="$EIRINI_IP" \
   > manifest/manifest.yml
