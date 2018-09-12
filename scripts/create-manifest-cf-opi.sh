@@ -23,6 +23,7 @@ bosh interpolate cf-deployment/cf-deployment.yml \
     "${opsfiles[@]}" \
     --var system_domain="$DIRECTOR_IP.nip.io" \
     --var cc_api="https://api.$DIRECTOR_IP.nip.io" \
+    --var cc_uploader_ip="$DIRECTOR_IP" \
     --var kube_namespace="$KUBE_NAMESPACE" \
     --var kube_endpoint="$KUBE_ENDPOINT" \
     --var nats_ip="$NATS_IP" \
