@@ -149,4 +149,3 @@ resources:
   source:
     uri: git@github.com:JulzDiverse/capi-release.git
     branch: ((capi-release-branch))
-    private_key: ((capi-key))

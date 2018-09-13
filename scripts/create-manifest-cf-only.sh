@@ -7,7 +7,6 @@ opsfiles=(
     "--ops-file" "eirini-release/operations/capi-dev-version.yml"
     "--ops-file" "eirini-release/operations/enable-opi.yml"
     "--ops-file" "eirini-release/operations/disable-router-tls.yml"
-    "--ops-file" "eirini-release/operations/bosh-lite-static-ip.yml"
     "--ops-file" "1-click/operations/add-system-domain-dns-alias.yml"
 )
 
@@ -20,6 +19,5 @@ bosh interpolate cf-deployment/cf-deployment.yml \
     "${opsfiles[@]}" \
     --var system_domain="$DIRECTOR_IP.nip.io" \
     --var opi_cf_url="http://opi-$DIRECTOR_NAME.$KUBE_ENDPOINT:80" \
-    --var static_ip="$EIRINI_IP" \
     --var cc_uploader_ip="$DIRECTOR_IP" \
   > manifest/manifest.yml

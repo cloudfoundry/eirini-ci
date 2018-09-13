@@ -46,7 +46,7 @@ set-pipeline(){
 set-ci-pipeline(){
   local repo_key_var="eirini_repo_key=$(pass eirini/github/eirini/ssh-key)"
   local release_repo_key_var="eirini-release_repo_key=$(pass eirini/github/eirini-release/ssh-key)"
-  set-pipeline "env/eirini-ci.yml" true "--var" "$repo_key_var" "--var" "$release_repo_key_var"
+  set-pipeline "env/eirini-ci.yml" true "$ENABLE_OPI_STAGING" "--var" "$repo_key_var" "--var" "$release_repo_key_var"
 }
 
 main(){
