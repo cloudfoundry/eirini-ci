@@ -1,5 +1,5 @@
 opi:
-  kube_config: ""
+  kube_config: "/workspace/jobs/opi/config/kube.conf"
   kube_namespace: DEFINE
   kube_endpoint: DEFINE
   nats_password: DEFINE
