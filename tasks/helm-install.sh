@@ -5,7 +5,7 @@ set -ex
 readonly DIRECTOR_PATH="state/environments/softlayer/director/$DIRECTOR_NAME"
 readonly CF_DEPLOYMENT="$DIRECTOR_PATH/cf-deployment/vars.yml"
 
-readonly TMP_CERTS_PATH="certs/"
+readonly TMP_CERTS_PATH="certs"
 readonly CERT_PATH="${TMP_CERTS_PATH}/cc_cert"
 readonly CA_PATH="${TMP_CERTS_PATH}/cc_ca"
 readonly PRIVATE_KEY_PATH="${TMP_CERTS_PATH}/cc_priv"
