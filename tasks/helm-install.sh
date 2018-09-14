@@ -14,7 +14,7 @@ readonly HELM_DIR=eirini-helm-release/kube-release/helm/eirini
 main(){
   place_kube_config
   create_and_set_namespace
-  create_cc_certs_secret
+  get_certs_from_vars
   copy_helm_config_files
   helm_install_or_upgrade
 }
@@ -34,11 +34,6 @@ create_and_set_namespace(){
   fi
   kubectl config set-context "$(kubectl config current-context)" --namespace="$KUBE_NAMESPACE"
   set -e
-}
-
-create_cc_certs_secret() {
-  get_certs_from_vars
-  create_kube_secret
 }
 
 get_certs_from_vars() {
