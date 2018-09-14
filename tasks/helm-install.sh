@@ -43,13 +43,10 @@ get_certs_from_vars() {
   bosh int "${CF_DEPLOYMENT}" --path /cc_bridge_cc_uploader/ca >"${TMP_CERTS_PATH}/cc_ca"
 }
 
-remove_tmp_certs_path() {
-  [ -d $TMP_CERTS_PATH ] && rm -r $TMP_CERTS_PATH
-}
-
 copy_helm_config_files(){
   cp configs/opi.yaml $HELM_DIR/configs/
   kubectl config view --flatten > $HELM_DIR/configs/kube.yaml
+  cp -r $TMP_CERTS_PATH $HELM_DIR/
 }
 
 helm_install_or_upgrade(){
@@ -74,5 +71,4 @@ helm_install_or_upgrade(){
   fi
 }
 
-trap remove_tmp_certs_path EXIT
 main
