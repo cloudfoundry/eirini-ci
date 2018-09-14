@@ -10,6 +10,7 @@ inputs:
 - name: ci-resources
 - name: eirini-helm-release
 - name: configs
+- name: state
 
 run:
   path: ci-resources/tasks/helm-install.sh

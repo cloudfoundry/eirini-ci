@@ -2,18 +2,22 @@
 
 set -ex
 
+readonly DIRECTOR_DIR="state/environments/softlayer/director/$DIRECTOR_NAME"
+readonly CF_DEPLOYMENT="$DIRECTOR_DIR/cf-deployment/vars.yml"
+readonly TMP_CERTS_PATH="certs/"
+readonly CERT_PATH="${TMP_CERTS_PATH}/cc_cert"
+readonly CA_PATH="${TMP_CERTS_PATH}/cc_ca"
+readonly PRIVATE_KEY_PATH="${TMP_CERTS_PATH}/cc_priv"
 readonly HELM_DIR=eirini-helm-release/kube-release/helm/eirini
 
+./ci-resources/scripts/setup-env.sh
+./ci-resources/scripts/bosh-login.sh
+
 main(){
-  place_kube_config
   create_and_set_namespace
+  create_cc_certs_secret
   copy_helm_config_files
   helm_install_or_upgrade
-}
-
-place_kube_config(){
-  mkdir -p ~/.kube
-  echo "$KUBE_CONF" > ~/.kube/config
 }
 
 create_and_set_namespace(){
@@ -26,6 +30,22 @@ create_and_set_namespace(){
   fi
   kubectl config set-context "$(kubectl config current-context)" --namespace="$KUBE_NAMESPACE"
   set -e
+}
+
+create_cc_certs_secret() {
+  get_certs_from_vars
+  create_kube_secret
+}
+
+get_certs_from_vars() {
+  mkdir -p "$TMP_CERTS_PATH"
+  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/certificate >"${TMP_CERTS_PATH}/cc_cert"
+  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/private_key >"${TMP_CERTS_PATH}/cc_priv"
+  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/ca >"${TMP_CERTS_PATH}/cc_ca"
+}
+
+remove_tmp_certs_path() {
+  [ -d $TMP_CERTS_PATH ] && rm -r $TMP_CERTS_PATH
 }
 
 copy_helm_config_files(){
@@ -55,4 +75,5 @@ helm_install_or_upgrade(){
   fi
 }
 
+trap remove_tmp_certs_path EXIT
 main
