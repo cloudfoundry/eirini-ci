@@ -2,8 +2,8 @@
 
 set -ex
 
-readonly DIRECTOR_DIR="state/environments/softlayer/director/$DIRECTOR_NAME"
-readonly CF_DEPLOYMENT="$DIRECTOR_DIR/cf-deployment/vars.yml"
+readonly DIRECTOR_PATH="state/environments/softlayer/director/$DIRECTOR_NAME"
+readonly CF_DEPLOYMENT="$DIRECTOR_PATH/cf-deployment/vars.yml"
 readonly TMP_CERTS_PATH="certs/"
 readonly CERT_PATH="${TMP_CERTS_PATH}/cc_cert"
 readonly CA_PATH="${TMP_CERTS_PATH}/cc_ca"
