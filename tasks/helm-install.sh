@@ -2,13 +2,8 @@
 
 set -ex
 
-export DIRECTOR_PATH="state/environments/softlayer/director/$DIRECTOR_NAME"
+readonly DIRECTOR_PATH="state/environments/softlayer/director/$DIRECTOR_NAME"
 readonly CF_DEPLOYMENT="$DIRECTOR_PATH/cf-deployment/vars.yml"
-
-export BOSH_CLIENT=admin
-BOSH_CLIENT_SECRET=$(bosh interpolate "$DIRECTOR_PATH/vars.yml" --path /admin_password)
-export BOSH_CLIENT_SECRET
-export  BOSH2_ENV_ALIAS=lite
 
 readonly TMP_CERTS_PATH="certs/"
 readonly CERT_PATH="${TMP_CERTS_PATH}/cc_cert"
@@ -16,14 +11,17 @@ readonly CA_PATH="${TMP_CERTS_PATH}/cc_ca"
 readonly PRIVATE_KEY_PATH="${TMP_CERTS_PATH}/cc_priv"
 readonly HELM_DIR=eirini-helm-release/kube-release/helm/eirini
 
-./ci-resources/scripts/setup-env.sh
-./ci-resources/scripts/bosh-login.sh
-
 main(){
+  place_kube_config
   create_and_set_namespace
   create_cc_certs_secret
   copy_helm_config_files
   helm_install_or_upgrade
+}
+
+place_kube_config(){
+  mkdir -p ~/.kube
+  echo "$KUBE_CONF" > ~/.kube/config
 }
 
 create_and_set_namespace(){
