@@ -8,6 +8,9 @@ readonly TMP_CERTS_PATH="certs/"
 readonly CERT_PATH="${TMP_CERTS_PATH}/cc_cert"
 readonly CA_PATH="${TMP_CERTS_PATH}/cc_ca"
 readonly PRIVATE_KEY_PATH="${TMP_CERTS_PATH}/cc_priv"
+export BOSH_CLIENT=admin
+BOSH_CLIENT_SECRET=$(bosh interpolate "$DIRECTOR_PATH/vars.yml" --path /admin_password)
+export BOSH_CLIENT_SECRET
 readonly HELM_DIR=eirini-helm-release/kube-release/helm/eirini
 
 ./ci-resources/scripts/setup-env.sh
