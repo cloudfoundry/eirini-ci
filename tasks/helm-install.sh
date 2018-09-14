@@ -43,9 +43,9 @@ create_cc_certs_secret() {
 
 get_certs_from_vars() {
   mkdir -p "$TMP_CERTS_PATH"
-  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/certificate >"${TMP_CERTS_PATH}/cc_cert"
-  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/private_key >"${TMP_CERTS_PATH}/cc_priv"
-  bosh int "${CF_DEPLOYMENT}/vars.yml" --path /cc_bridge_cc_uploader/ca >"${TMP_CERTS_PATH}/cc_ca"
+  bosh int "${CF_DEPLOYMENT}" --path /cc_bridge_cc_uploader/certificate >"${TMP_CERTS_PATH}/cc_cert"
+  bosh int "${CF_DEPLOYMENT}" --path /cc_bridge_cc_uploader/private_key >"${TMP_CERTS_PATH}/cc_priv"
+  bosh int "${CF_DEPLOYMENT}" --path /cc_bridge_cc_uploader/ca >"${TMP_CERTS_PATH}/cc_ca"
 }
 
 remove_tmp_certs_path() {
