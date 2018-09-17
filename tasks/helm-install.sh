@@ -57,7 +57,8 @@ helm_install_or_upgrade(){
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "config.opi_image=eirini/opi:$TAG" \
       --set-string "config.registry_image=eirini/registry:$TAG" \
-      --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT"
+      --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
+      --set-string "rbac.enabled=true"
   else
     helm install \
       eirini-helm-release/kube-release/helm/eirini \
@@ -66,6 +67,7 @@ helm_install_or_upgrade(){
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "config.registry_image=eirini/registry:$TAG" \
       --set-string "config.opi_image=eirini/opi:$TAG" \
+      --set-string "rbac.enabled=true" \
       --debug \
       --name "$TAG"
   fi
