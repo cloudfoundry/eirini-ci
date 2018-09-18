@@ -62,6 +62,7 @@ helm_install_or_upgrade(){
   else
     helm install \
       eirini-helm-release/kube-release/helm/eirini \
+      --replace \
       --namespace "$KUBE_NAMESPACE" \
       --set-string "ingress.opi.host=opi-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
       --set-string "ingress.registry.host=registry-$DIRECTOR_NAME.$KUBE_ENDPOINT" \
