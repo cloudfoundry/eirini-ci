@@ -23,7 +23,7 @@ create_config() {
   goml set -f configs/opi.yaml -p opi.nats_ip -v "$NATS_IP"
   goml set -f configs/opi.yaml -p opi.api_endpoint -v "https://api.$DIRECTOR_IP.nip.io"
   goml set -f configs/opi.yaml -p opi.cf_password -v "$CF_PASSWORD"
-  goml set -f configs/opi.yaml -p opi.external_eirini_address -v "registry-$DIRECTOR_NAME.$KUBE_ENDPOINT:443"
+  goml set -f configs/opi.yaml -p opi.external_eirini_address -v "https://registry-$DIRECTOR_NAME.$KUBE_ENDPOINT:443"
   goml set -f configs/opi.yaml -p opi.eirini_address -v "http://opi-$DIRECTOR_NAME.$KUBE_ENDPOINT:80"
 }
 
