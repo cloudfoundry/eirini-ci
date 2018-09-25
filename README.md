@@ -41,17 +41,13 @@ fly -t <alias> login \
 
 ### Set the CI Pipeline
 
-1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
-1. Execute the provided `./set-pipeline` script. Use the `help` parameter to get details on the required parameters.
+Execute the following script:
 
-### Set a Development Pipeline
+`$ ./pipelines/ci/set-pipeline <CONCOURSE_TARGET> <PATH_TO_PRIVATE_REPO>`
 
-1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
-1. Copy `eirini-private-config/concourse/env/custom-sample.yml` to `custom.yml`
-1. Edit the file and provide the necessary information
-1. Run `set-pipeline` as above
+### Set the Acceptance Pipeline
 
-### Set the Heimdall Pipeline (Acceptance Pipeline)
+Execute the following script:
 
-1. Point `KUBECONFIG` to the config file of your Kubernetes cluster and export the variable
-1. Run the `./set-heimdall` script. Use the `help` parameter to get details on the required parameters.
+`$ ./pipelines/acceptance/set-pipeline <CONCOURSE_TARGET> <PATH_TO_PRIVATE_REPO>`
+

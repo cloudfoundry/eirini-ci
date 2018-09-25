@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golangci/golangci-lint
+
+inputs:
+- name: eirini-source
+- name: ci-resources
+
+run:
+  path: ci-resources/tasks/run-unit-tests/task.sh

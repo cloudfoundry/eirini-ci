@@ -1,0 +1,134 @@
+groups:
+- name: cluster
+  jobs:
+  - create-cluster
+  - prepare-cluster
+  - check-cluster-readiness
+  - delete-cluster
+  - update-ci-image
+
+jobs:
+  - name: create-cluster
+    plan:
+      - get: ci-resources
+      - get: ((cluster-name))-event-created
+        params:
+          bump: major
+      - task: create-kubernetes-cluster
+        file: ci-resources/tasks/create-cluster/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-name))
+      - put: ((cluster-name))-event-created
+        params:
+          file: ((cluster-name))-event-created/number
+
+  - name: prepare-cluster
+    plan:
+    - get: ci-resources
+    - get: ((cluster-name))-event-created
+      trigger: true
+      passed: [create-cluster]
+    - get: state
+    - task: create-cluster-config
+      params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-name))
+          CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
+          UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
+          NATS_PASSWORD: ((nats_password))
+      file: ci-resources/tasks/cluster-config/task.yml
+    - put: state
+      params: {repository: state-modified}
+    - task: provision-hostpath-provider
+      params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-name))
+      file: ci-resources/tasks/hostpath-provisioner/task.yml
+
+  - name: check-cluster-readiness
+    plan:
+      - get: ci-resources
+      - get: ((cluster-name))-event-created
+        trigger: true
+        passed: [prepare-cluster]
+      - get: ((cluster-name))-event-ready
+        params:
+          bump: major
+      - task: deploy-smoke-test-app
+        file: ci-resources/tasks/deploy-app/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-name))
+      - task: check-app-is-up
+        attempts: 50
+        file: ci-resources/tasks/curl-app/task.yml
+      - put: ((cluster-name))-event-ready
+        params:
+          file: ((cluster-name))-event-ready/number
+
+  - name: delete-cluster
+    plan:
+      - get: ci-resources
+      - task: Delete Kubernetes Cluster
+        file: ci-resources/tasks/delete-cluster/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-name))
+
+  - name: update-ci-image
+    plan:
+    # TODO Create a separate resource that only triggers on updates of the Dockerfile itself
+    - get: ci-resources
+      trigger: true
+    - put: ci-image
+      params: { build: ci-resources/pipelines/kube-cluster/ci-image }
+
+resources:
+  - name: ci-resources
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+      branch: master
+
+  - name: ci-image
+    type: docker-image
+    source:
+      repository: eirini/ibmcloud
+      username: ((dockerhub-username))
+      password: ((dockerhub-password))
+
+  - name: ((cluster-name))-event-created
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: events
+      file: ((cluster-name))-event-created
+      private_key: ((github-private-key))
+
+  - name: ((cluster-name))-event-ready
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: events
+      file: ((cluster-name))-event-ready
+      private_key: ((github-private-key))
+
+  - name: state
+    type: git
+    source:
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: master
+      private_key: ((github-private-key))

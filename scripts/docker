@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Start Docker Daemon (and set a trap to stop it once this script is done)
+start-docker() {
+  echo 'DOCKER_OPTS="--data-root /scratch/docker --max-concurrent-downloads 10"' > /etc/default/docker
+  service docker start
+  trap 'service docker stop' EXIT
+
+  local max_retries=20
+  local current_retries=0
+  until docker-running; do
+    echo "Current docker status: $(service docker status)"
+    if [ "$current_retries" -gt "$max_retries" ]; then
+        echo "Failed to start docker daemon after $max_retries retries"
+        exit 1
+    fi
+    ((current_retries++))
+    sleep 0.5
+  done
+  echo "Docker started"
+}
+
+docker-running() {
+  service docker status
+}
+

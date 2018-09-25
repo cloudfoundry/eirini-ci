@@ -1,0 +1,12 @@
+jobs:
+- ((merge))
+- name: create-cluster
+  .: (( inject hooks.failure ))
+- name: prepare-cluster
+  .: (( inject hooks.failure ))
+- name: check-cluster-readiness
+  .: (( inject hooks.failure ))
+- name: delete-cluster
+  .: (( inject hooks.failure ))
+- name: update-ci-image
+  .: (( inject hooks.failure ))

@@ -1,0 +1,9 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/scf/pipeline.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/scf-build.yml
+  to: $PIPELINE_YML
+

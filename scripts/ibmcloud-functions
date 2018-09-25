@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Loop forever until the status of the cluster $1 equals to $2
+# In Concourse, use timeout to limit waiting https://concourse-ci.org/timeout-step-modifier.html
+wait-for-state(){
+  declare -r name=$1
+  declare -r desired_status=$2
+
+  until cluster-state-is "$name" "$desired_status"; do
+    cluster-state "$name" | jq --raw-output '.state'
+    sleep 10
+  done
+}
+
+# Exit nonzero unless the cluster $1 is in the status given as $2
+cluster-state-is() {
+  declare -r name=$1
+  declare -r desired_status=$2
+
+  cluster-state "$name" | jq '.state == $status' --arg status "$desired_status" --exit-status > /dev/null
+}
+
+# Show details about the cluster
+cluster-state(){
+  declare -r name=$1
+  ibmcloud ks cluster-get "$name" --json
+}
+
+# Log in to the IBM Cloud
+ibmcloud-login(){
+  ibmcloud login \
+    -a https://api.eu-gb.bluemix.net \
+    -u "${IBMCLOUD_USER:?}" \
+    -p "${IBMCLOUD_PASSWORD:?}" \
+    -c "${IBMCLOUD_ACCOUNT:?}"
+}
+
+# Create a new cluster with the name given as $1
+create-cluster(){
+  declare -r name=$1
+
+  ibmcloud ks cluster-create \
+    --name "$name" \
+    --zone lon06 \
+    --machine-type c2c.16x32 \
+    --workers 1 \
+    --private-vlan 2447007 \
+    --public-vlan 2447005
+}
+
+# Delete the cluster with the name given as $1
+delete-cluster(){
+  declare -r name=$1
+  ibmcloud ks cluster-rm --cluster "$name" -f
+}
+
+# Exit nonzero unless the cluster $1 exists
+cluster-exists(){
+  declare -r name=$1
+  ibmcloud ks clusters --json | jq 'any(.[]; .name == $name)' --arg name "$name" --exit-status > /dev/null
+}
+
+# Loop forever until the status of the cluster $1 is gone
+wait-for-deletion(){
+  declare -r name=$1
+
+  until ! cluster-exists "$name"; do
+    cluster-state "$name" | jq --raw-output '.masterStatus'
+    sleep 10
+  done
+}
+
+export-kubeconfig() {
+    declare -r cluster_name=$1
+    eval "$(ibmcloud ks cluster-config "$cluster_name" --export)"
+}

@@ -1,0 +1,12 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/kube-cluster/pipeline.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/deploy-scf/pipeline.yml
+      - $PROJECT_ROOT/pipelines/acceptance/run-cats.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
+      - $PROJECT_ROOT/notifications/slack/run-cats.yml
+  to: $PIPELINE_YML

@@ -1,0 +1,28 @@
+groups:
+- name: eirini-ci
+  jobs:
+  - (( append  ))
+  - run-all-cats
+
+jobs:
+- name: run-all-cats
+  plan:
+  - get: eirini-release
+    passed: [run-smoke-tests]
+    trigger: true
+  - get: cats
+  - get: state
+  - get: ci-resources
+  - task: run cats
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/run-cats/task.yml
+
+resources:
+- name: cats
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git

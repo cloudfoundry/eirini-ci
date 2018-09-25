@@ -1,0 +1,4 @@
+jobs:
+- ((merge))
+- name: scf-build
+  .: (( inject hooks.failure ))

@@ -1,5 +1,4 @@
-custom.yml
-/pipeline.yml
 /pipelines/docker-images/spruced.yml
 /pipelines/deploy-script/spruced.yml
 /pipelines/rebase/spruced.yml
+/pipelines/scf/final-pipeline.yml

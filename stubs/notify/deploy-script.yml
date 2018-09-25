@@ -1,8 +1,0 @@
-jobs:
-- ((merge))
-- name: run-deploy-eirini-script
-  .: (( inject hooks.failure ))
-- name: acceptance-test
-  .: (( inject hooks.failure ))
-- name: clean-eirini-state
-  .: (( inject hooks.failure ))

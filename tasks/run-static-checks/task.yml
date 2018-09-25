@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/ci
+
+inputs:
+- name: ci-resources
+- name: eirini-source
+
+run:
+  path: ci-resources/tasks/run-static-checks/task.sh

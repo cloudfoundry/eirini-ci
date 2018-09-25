@@ -1,4 +1,0 @@
-jobs:
-- ((merge))
-- name: update-docker-images
-  .: (( inject hooks.failure ))

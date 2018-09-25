@@ -42,3 +42,17 @@ RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linu
 
 # goml
 RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.4.0/goml-linux-amd64 && chmod +x /usr/bin/goml
+
+# https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#shell_install
+RUN curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
+
+# Disable automatic version checking because it breaks the scripts
+RUN ibmcloud config --check-version=false
+
+# https://console.bluemix.net/docs/containers/cs_cli_install.html
+RUN ibmcloud plugin install container-service
+
+# Enable bash completion for ibmcloud
+RUN echo source /usr/local/ibmcloud/autocomplete/bash_autocomplete >> ~/.bashrc
+
+

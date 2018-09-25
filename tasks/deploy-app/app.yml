@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hey-yaa
+  labels:
+    name: hey-yaa
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: hey-yaa
+  template:
+    metadata:
+      labels:
+        name: hey-yaa
+    spec:
+      containers:
+      - name: three-stacks
+        image: eirini/test-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: hey-yaa
+  name: hey-yaa
+  namespace: default
+spec:
+  ports:
+  - nodePort: 32016
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    name: hey-yaa
+  type: NodePort
