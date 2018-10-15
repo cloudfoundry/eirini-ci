@@ -78,13 +78,21 @@ jobs:
   - name: delete-cluster
     plan:
       - get: ci-resources
-      - task: Delete Kubernetes Cluster
+      - task: delete-kubernetes-cluster
         file: ci-resources/tasks/delete-cluster/task.yml
         params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: ((cluster-name))
+      - task: delete-values-file
+        file: ci-resources/tasks/clean-up-cluster-config/task.yml
+        params:
+          CLUSTER_NAME: ((cluster-name))
+      - put: state
+        params:
+          repository: state-modified
+
 
   - name: update-ci-image
     plan:
