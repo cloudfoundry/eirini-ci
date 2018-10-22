@@ -1,0 +1,4 @@
+jobs:
+- ((merge))
+- name: Keep-CC-up-to-date
+  .: (( inject hooks.failure ))

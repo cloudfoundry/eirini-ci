@@ -13,9 +13,9 @@ export TARGET="${1?target not defined}"
 export PRIVATE_REPO="${2?private repo not defined}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
 export SCRIPT_DIR
-export REPO_ROOT
+export PROJECT_ROOT
 
 aviator -f "$SCRIPT_DIR"/aviator.yml
 

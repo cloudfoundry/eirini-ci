@@ -6,7 +6,7 @@ jobs:
   - get: cc-ng
     trigger: true
   - task: rebase
-    file: ci-resources/tasks/rebase-cc.yml
+    file: ci-resources/tasks/rebase-cc/task.yml
   - put: cc-ng-fork
     params:
       repository: rebased-cc
