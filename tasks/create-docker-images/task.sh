@@ -5,14 +5,20 @@ IFS=$'\n\t'
 
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
-# shellcheck disable=SC1091
-source eirini-release/.envrc
 
 main() {
   start-docker
+  export-gopath
   generate-opi-images
   generate-recipe-image
   push
+}
+
+export-gopath() {
+  pushd eirini-release || exit
+    # shellcheck disable=SC1091
+    source .envrc
+  popd || exit
 }
 
 generate-opi-images() {
