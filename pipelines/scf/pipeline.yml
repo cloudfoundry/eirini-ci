@@ -3,10 +3,10 @@ jobs:
   plan:
   - aggregate:
     - get: scf
-      trigger: false
       params:
           submodules: none
     - get: capi-release
+      trigger: true
     - get: eirini-release
     - get: ci-resources
   - task: scf-build
