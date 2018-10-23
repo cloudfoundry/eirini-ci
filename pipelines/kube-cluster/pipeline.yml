@@ -85,6 +85,7 @@ jobs:
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: ((cluster-name))
+      - get: state
       - task: delete-values-file
         file: ci-resources/tasks/clean-up-cluster-config/task.yml
         params:
