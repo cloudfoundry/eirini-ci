@@ -14,7 +14,7 @@ start-docker() {
         echo "Failed to start docker daemon after $max_retries retries"
         exit 1
     fi
-    ((current_retries++))
+    ((++current_retries))
     sleep 0.5
   done
   echo "Docker started"
