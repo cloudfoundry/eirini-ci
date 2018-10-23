@@ -5,6 +5,8 @@ IFS=$'\n\t'
 
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
+# shellcheck disable=SC1091
+source eirini-release/.envrc
 
 main() {
   start-docker
