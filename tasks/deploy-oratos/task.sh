@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xeuo pipefail
+set -xuo pipefail
 IFS=$'\n\t'
 
 # shellcheck disable=SC1091

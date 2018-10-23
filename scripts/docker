@@ -21,6 +21,6 @@ start-docker() {
 }
 
 docker-running() {
-  service docker status
+  docker stats --no-stream > /dev/null 2>&1
 }
 
