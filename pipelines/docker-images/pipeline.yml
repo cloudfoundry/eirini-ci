@@ -10,7 +10,7 @@ jobs:
       DOCKER_HUB_USER: ((docker_hub_user))
       DOCKER_HUB_PASSWORD: ((docker_hub_password))
       TAG: latest
-    file: ci-resources/tasks/create-docker-images.yml
+    file: ci-resources/tasks/create-docker-images/task.yml
 - name: update-eirini-ci-image
   plan:
   - get: eirini-ci-image-source

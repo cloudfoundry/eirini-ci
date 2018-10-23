@@ -3,8 +3,8 @@ spruce:
   merge:
   - with:
       files:
-      - $REPO_ROOT/stubs/notify/resource.yml
-      - $REPO_ROOT/stubs/notify/docker-images.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/docker-images.yml
   to: spruced.yml
 
 fly:
