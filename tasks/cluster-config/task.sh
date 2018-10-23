@@ -40,6 +40,7 @@ opi:
     use_ingress: true
     ingress_endpoint: $ingress_endpoint
     namespace: opi
+    image_tag: $CLUSTER_NAME
 
 kube:
     external_ips:
