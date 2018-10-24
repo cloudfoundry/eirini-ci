@@ -30,7 +30,8 @@ helm-install() {
           helm/"$HELM_CHART" \
           --namespace "$COMPONENT" \
           --values "../../$ENVIRONMENT"/scf-config-values.yaml \
-          --set "secrets.UAA_CA_CERT=${CA_CERT}"
+          --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+          --force
     popd
 }
 
