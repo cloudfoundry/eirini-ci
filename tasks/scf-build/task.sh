@@ -50,7 +50,7 @@ make-scf(){
 }
 
 update-helm-templates(){
-  find output/helm/templates/  \( -name "cc-*" -o -name "api*" -o -name "blobstore*" \) -type f -print0 | xargs -0 -I % cp % eirini-release/scf/helm/cf/templates
+  find scf/output/helm/templates/  \( -name "cc-*" -o -name "api*" -o -name "blobstore*" \) -type f -print0 | xargs -0 -I % cp % eirini-release/scf/helm/cf/templates
 }
 
 docker-push(){
