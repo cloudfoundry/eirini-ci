@@ -101,7 +101,6 @@ jobs:
   - get: ci-resources
   - get: state
   - get: eirini-release
-    trigger: true
   - get: ((cluster-name))-event-uaa-ready
     trigger: true
     passed: [deploy-scf-uaa]
