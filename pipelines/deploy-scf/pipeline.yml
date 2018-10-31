@@ -169,6 +169,7 @@ jobs:
   - get: ci-resources
   - task: run cats
     params:
+      .: (( inject cats_conf ))
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))

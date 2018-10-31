@@ -108,7 +108,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-      branch: master
+      branch: ((ci-resources-branch))
 
   - name: ci-image
     type: docker-image
