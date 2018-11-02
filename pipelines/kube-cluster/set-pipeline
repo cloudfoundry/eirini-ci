@@ -16,6 +16,7 @@ fly --target "$target" \
     --var ibmcloud-user=eirini@cloudfoundry.org \
     --var ibmcloud-password="$(pass show eirini/ibm-id)" \
     --var cluster-name="$world_name" \
+    --var ci-resources-branch="master" \
     --var dockerhub_user=eiriniuser \
     --var dockerhub_password="$(pass eirini/docker-hub)" \
     --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \

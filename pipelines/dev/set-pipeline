@@ -3,13 +3,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-PROJECT_ROOT="$(cd "$(dirname "$0")"/../.. && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT
 
-readonly world_name=acceptance
+readonly world_name=$1
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly target=$1
-readonly private_repo=$2
+readonly target=$2
+readonly private_repo=$3
 
 PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
@@ -19,15 +19,18 @@ aviator -f "$basedir"/aviator.yml
 fly --target "$target" \
   set-pipeline \
     --config "$PIPELINE_YML" \
-    --pipeline $world_name \
+    --pipeline "$world_name" \
     --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
     --var ibmcloud-user=eirini@cloudfoundry.org \
     --var ibmcloud-password="$(pass show eirini/ibm-id)" \
-    --var cluster-name=$world_name \
+    --var cluster-name="$world_name" \
     --var ci-resources-branch="master" \
     --var dockerhub-user=eiriniuser \
     --var dockerhub-password="$(pass eirini/docker-hub)" \
     --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
-    --var eirini-release-branch=master \
+    --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
+    --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+    --var eirini-release-branch=develop \
+    --var capi-release-branch=develop \
     --load-vars-from "$private_repo/concourse/common.yml" \
 

@@ -7,9 +7,8 @@ spruce:
       files:
       - $PROJECT_ROOT/pipelines/deploy-scf/pipeline.yml
       - $PROJECT_ROOT/pipelines/acceptance/run-cats.yml
-      - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/dev/cats-conf.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
-      - $PROJECT_ROOT/notifications/slack/run-cats.yml
   to: $PIPELINE_YML

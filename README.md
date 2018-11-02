@@ -51,3 +51,9 @@ Execute the following script:
 
 `$ ./pipelines/acceptance/set-pipeline <CONCOURSE_TARGET> <PATH_TO_PRIVATE_REPO>`
 
+### Set a generic development pipeline
+
+Execute the following script:
+
+`$ ./pipelines/dev/set-pipeline <PIPELINE_NAME> <CONCOURSE_TARGET> <PATH_TO_PRIVATE_REPO>`
+
