@@ -24,4 +24,4 @@ cats_conf:
   INCLUDE_SSO: true
   INCLUDE_TASKS: false
   INCLUDE_V3: false
-  INCLUDE_ZIPKIN": false
+  INCLUDE_ZIPKIN: false
