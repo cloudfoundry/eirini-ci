@@ -59,7 +59,7 @@ EOF
 }
 
 get-node-ip() {
-    kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'; echo
+    kubectl get nodes -o jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'; echo
 }
 
 get-ingress-endpoint() {

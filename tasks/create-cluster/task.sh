@@ -9,6 +9,7 @@ source ci-resources/scripts/ibmcloud-functions
 ibmcloud-login
 
 name=${CLUSTER_NAME:?}
-create-cluster "$name"
+worker_count=${WORKER_COUNT:?}
+create-cluster "$name" "$worker_count"
 wait-for-state "$name" normal
 cluster-state "$name"

@@ -6,6 +6,7 @@ IFS=$'\n\t'
 readonly target=$1
 readonly world_name=$2
 readonly private_repo=$3
+readonly worker_count=${4:-1}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 fly --target "$target" \
@@ -18,6 +19,7 @@ fly --target "$target" \
     --var cluster-name="$world_name" \
     --var ci-resources-branch="master" \
     --var dockerhub_user=eiriniuser \
+    --var worker_count="$worker_count" \
     --var dockerhub_password="$(pass eirini/docker-hub)" \
     --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
     --load-vars-from "$private_repo/concourse/common.yml"

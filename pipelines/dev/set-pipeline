@@ -10,6 +10,7 @@ readonly world_name=$1
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly target=$2
 readonly private_repo=$3
+readonly worker_count=${4:-1}
 
 PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
@@ -24,13 +25,14 @@ fly --target "$target" \
     --var ibmcloud-user=eirini@cloudfoundry.org \
     --var ibmcloud-password="$(pass show eirini/ibm-id)" \
     --var cluster-name="$world_name" \
-    --var ci-resources-branch="master" \
+    --var ci-resources-branch="multinode" \
     --var dockerhub-user=eiriniuser \
     --var dockerhub-password="$(pass eirini/docker-hub)" \
     --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
     --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
     --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
     --var eirini-release-branch=develop \
+    --var worker_count="$worker_count" \
     --var capi-release-branch=develop \
-    --load-vars-from "$private_repo/concourse/common.yml" \
+    --load-vars-from "$private_repo/concourse/common.yml"
 
