@@ -13,6 +13,7 @@ main() {
     export-kubeconfig "$CLUSTER_NAME"
     init-helm
     set-kube-state
+    set-external-ips
     copy-output
 }
 
@@ -43,8 +44,7 @@ opi:
     image_tag: $CLUSTER_NAME
 
 kube:
-    external_ips:
-    - $node_ip
+    external_ips: []
     storage_class:
             persistent: "hostpath"
             shared: "hostpath"
@@ -58,8 +58,23 @@ EOF
     popd
 }
 
+set-external-ips(){
+    pushd state
+      node_ips="$(get-node-ips)"
+      IFS=" "
+      for ip in $node_ips
+      do
+        goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p kube.external_ips.+ -v "$ip"
+      done
+    popd
+}
+
 get-node-ip() {
     kubectl get nodes -o jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'; echo
+}
+
+get-node-ips() {
+    kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'; echo
 }
 
 get-ingress-endpoint() {
