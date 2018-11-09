@@ -21,6 +21,7 @@ jobs:
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: ((cluster-name))
+          WORKER_COUNT: ((worker_count))
       - put: ((cluster-name))-event-created
         params:
           file: ((cluster-name))-event-created/number

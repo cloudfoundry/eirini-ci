@@ -16,4 +16,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/cluster-config/task.sh
+  path: ci-resources/tasks/clean-up-cluster-config/task.sh
