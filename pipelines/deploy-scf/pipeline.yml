@@ -49,6 +49,9 @@ jobs:
   - get: ci-resources
   - get: eirini-release
   - get: scf-resources
+  - get: ((cluster-name))-deployment-version
+    params:
+      bump: major
   - task: create images
     privileged: true
     params:
@@ -56,6 +59,9 @@ jobs:
       DOCKER_HUB_PASSWORD: ((dockerhub-password))
       TAG: ((cluster-name))
     file: ci-resources/tasks/create-docker-images/task.yml
+  - put: ((cluster-name))-deployment-version
+    params:
+      file: ((cluster-name))-deployment-version/number
 - name: deploy-scf-uaa
   plan:
   - get: ((cluster-name))-event-ready

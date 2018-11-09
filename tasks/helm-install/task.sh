@@ -25,12 +25,14 @@ export-ca-cert() {
 }
 
 helm-install() {
+    version=$(cat "$ENVIRONMENT/deployment-version")
     pushd eirini-release/scf
         helm upgrade --install "$COMPONENT" \
           helm/"$HELM_CHART" \
           --namespace "$COMPONENT" \
           --values "../../$ENVIRONMENT"/scf-config-values.yaml \
           --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+          --set "opi.version=$version" \
           --force
     popd
 }
