@@ -176,7 +176,6 @@ jobs:
       CLUSTER_NAME: ((cluster-name))
       SKIPPED_TESTS: >
           Default Environment Variables
-          | Session Affinity
           | Buildpack cache
           | Crashing
           | Context Paths
