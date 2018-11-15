@@ -180,23 +180,24 @@ jobs:
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: ((cluster-name))
-      SKIPPED_TESTS: >
-          Default Environment Variables
-          | Buildpack cache
-          | Crashing
-          | Context Paths
-          | Multiple App Ports
-          | A running application
-          | Buildpacks
-          | loggregator
-          | Environment Variables Groups
-          | An application printing a bunch of output
-          | Encoding
-          | Logging
-          | Application Lifecycle
-          | Wildcard Routes
-          | Getting instance information
-          | Routing Transparency
+      SKIPPED_TESTS: "Default Environment Variables\
+                      |Buildpack cache\
+                      |Crashing\
+                      |Context Paths\
+                      |Multiple App Ports\
+                      |A running application\
+                      |Buildpacks\
+                      |cf logs\
+                      |cf logs --recent\
+                      |shows logs and metrics\
+                      |Environment Variables Groups\
+                      |An application printing a bunch of output\
+                      |Encoding\
+                      |Logging\
+                      |is able to retrieve container metrics\
+                      |Wildcard Routes\
+                      |Getting instance information\
+                      |Routing Transparency"
     file: ci-resources/tasks/run-cats/task.yml
 
 resources:
