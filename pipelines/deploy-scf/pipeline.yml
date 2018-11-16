@@ -187,14 +187,11 @@ jobs:
                       |Multiple App Ports\
                       |A running application\
                       |Buildpacks\
-                      |cf logs\
-                      |cf logs --recent\
-                      |shows logs and metrics\
                       |Environment Variables Groups\
                       |An application printing a bunch of output\
                       |Encoding\
-                      |Logging\
                       |is able to retrieve container metrics\
+                      |Syslog drains\
                       |Wildcard Routes\
                       |Getting instance information\
                       |Routing Transparency"
