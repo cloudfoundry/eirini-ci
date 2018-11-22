@@ -42,8 +42,9 @@ create-cluster(){
   ibmcloud ks cluster-create \
     --name "$name" \
     --zone lon06 \
+    --kube-version "1.10.8_1524" \
     --machine-type c2c.16x32 \
-    --workers $worker_count \
+    --workers "$worker_count" \
     --private-vlan 2447007 \
     --public-vlan 2447005
 }
