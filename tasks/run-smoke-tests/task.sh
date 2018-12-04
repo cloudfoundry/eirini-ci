@@ -9,10 +9,7 @@ source ci-resources/scripts/ibmcloud-functions
 readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"
 
 main() {
-    ibmcloud-login
-    export-kubeconfig "$CLUSTER_NAME"
     set_up_gopath
-    set_up_logcache
     configure_tests
     run_tests
 }
@@ -21,18 +18,6 @@ set_up_gopath() {
     mkdir -p gopath/src/github.com/cloudfoundry
     export GOPATH=$PWD/gopath
     export PATH=$PATH:$GOPATH/bin
-}
-
-set_up_logcache() {
-    echo "Current CF version:"
-    cf version
-    cf install-plugin -r CF-Community "log-cache" -f
-
-    export CF_PLUGIN_HOME=$HOME
-    echo "CF_PLUGIN_HOME is: ${CF_PLUGIN_HOME}"
-
-    LOG_CACHE_ADDR="http://$(kubectl get service log-cache-reads -o jsonpath='{$.status.loadBalancer.ingress[0].ip}' -n oratos):8081"
-    export LOG_CACHE_ADDR
 }
 
 configure_tests() {
