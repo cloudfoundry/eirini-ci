@@ -37,7 +37,7 @@ configure_tests() {
       "use_existing_org"                : true,
       "org"                             : "system",
       "use_existing_space"              : false,
-      "use_log_cache"                   : true,
+      "use_log_cache"                   : false,
       "logging_app"                     : "",
       "runtime_app"                     : "",
       "enable_windows_tests"            : false,
