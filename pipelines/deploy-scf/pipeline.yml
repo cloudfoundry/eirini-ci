@@ -8,7 +8,6 @@ groups:
   - deploy-scf-uaa
   - deploy-scf-eirini
   - run-smoke-tests
-  - run-cats-subset
 
 jobs:
 - name: run-unit-tests
@@ -141,35 +140,6 @@ jobs:
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/run-smoke-tests/task.yml
-- name: run-cats-subset
-  plan:
-  - get: eirini-release
-    passed: [run-smoke-tests]
-    trigger: true
-  - get: cats
-  - get: state
-  - get: ci-resources
-  - task: run cats
-    params:
-      .: (( inject cats_conf ))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-name))
-      SKIPPED_TESTS: "Default Environment Variables\
-                      |Buildpack cache\
-                      |Crashing\
-                      |Context Paths\
-                      |Multiple App Ports\
-                      |A running application\
-                      |Buildpacks\
-                      |Environment Variables Groups\
-                      |An application printing a bunch of output\
-                      |Encoding\
-                      |Wildcard Routes\
-                      |Getting instance information\
-                      |Routing Transparency"
-    file: ci-resources/tasks/run-cats/task.yml
 
 resources:
 - name: eirini-source

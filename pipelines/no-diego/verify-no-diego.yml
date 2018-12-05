@@ -1,0 +1,18 @@
+groups:
+- name: eirini-ci
+  jobs:
+  - (( append  ))
+  - verify-no-diego
+
+jobs:
+- name: verify-no-diego
+  plan:
+  - get: state
+  - get: ci-resources
+  - task: verify no diego
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/verify-no-diego/task.yml

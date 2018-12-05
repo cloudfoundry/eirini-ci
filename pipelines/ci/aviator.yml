@@ -14,4 +14,5 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
       - $PROJECT_ROOT/notifications/slack/ff-master.yml
+      - $PROJECT_ROOT/notifications/slack/run-cats-subset.yml
   to: $PIPELINE_YML

@@ -12,5 +12,3 @@ jobs:
   .: (( inject hooks.failure ))
 - name: run-smoke-tests
   .: (( inject hooks.failure ))
-- name: run-cats-subset
-  .: (( inject hooks.failure ))
