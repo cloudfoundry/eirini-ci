@@ -1,0 +1,4 @@
+jobs:
+- ((merge))
+- name: run-cats-subset
+  .: (( inject hooks.failure ))

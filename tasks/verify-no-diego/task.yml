@@ -7,14 +7,16 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-  - name: ci-resources
-  - name: state
+- name: ci-resources
+- name: state
 
 params:
   IBMCLOUD_ACCOUNT:
   IBMCLOUD_USER:
   IBMCLOUD_PASSWORD:
+  COMPONENT:
   CLUSTER_NAME:
+  HELM_CHART:
 
 run:
-  path: ci-resources/tasks/eirini-smoke-tests/task.sh
+  path: ci-resources/tasks/verify-no-diego/task.sh

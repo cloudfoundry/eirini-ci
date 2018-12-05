@@ -33,6 +33,7 @@ fly --target "$target" \
     --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
     --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
     --var eirini-release-branch=develop \
+    --var enable_opi_staging=false \
     --load-vars-from "$private_repo/concourse/common.yml" \
 
 fly --target "$target" \

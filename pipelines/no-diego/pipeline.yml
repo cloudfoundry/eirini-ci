@@ -1,0 +1,140 @@
+groups:
+- (( prepend ))
+- name: eirini-ci
+  jobs:
+  - deploy-uaa
+  - deploy-scf-eirini
+  - run-smoke-tests
+  - verify-no-diego
+
+jobs:
+- name: deploy-uaa
+  plan:
+  - get: ci-ready
+    trigger: true
+  - get: scf-uaa-resources
+  - get: ci-resources
+  - get: eirini-release
+  - get: state
+  - task: deploy-uaa
+    file: ci-resources/tasks/helm-install/task.yml
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      COMPONENT: uaa
+      HELM_CHART: uaa
+      CLUSTER_NAME: ((cluster-name))
+      VERSIONING_CLUSTER: ci
+  - task: waiting-for-uaa
+    attempts: 100
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/waiting-for-uaa/task.yml
+- name: deploy-scf-eirini
+  plan:
+  - get: ci-ready
+    trigger: true
+    passed:
+    - deploy-uaa
+  - get: scf-resources
+  - get: ci-resources
+  - get: state
+  - get: eirini-release
+  - task: deploy-scf
+    file: ci-resources/tasks/helm-install/task.yml
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      COMPONENT: scf
+      HELM_CHART: cf
+      CLUSTER_NAME: ((cluster-name))
+      VERSIONING_CLUSTER: ci
+  - task: smoke-eirini
+    attempts: 100
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/eirini-smoke-tests/task.yml
+- name: run-smoke-tests
+  plan:
+  - get: ci-ready
+    passed: [deploy-scf-eirini]
+    trigger: true
+  - get: cf-smoke-tests
+  - get: state
+  - get: ci-resources
+  - task: run-smoke-tests
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/run-smoke-tests/task.yml
+- name: verify-no-diego
+  plan:
+  - get: ci-ready
+    passed: [run-smoke-tests]
+    trigger: true
+  - get: ci-resources
+  - get: ci-no-diego-ready
+  - task: verify-no-diego
+    params:
+      bump: major
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/verify-no-diego/task.yml
+  - put: ci-no-diego-ready
+    params:
+      file: ci-no-diego-ready/number
+
+resources:
+- name: eirini-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+- name: scf-uaa-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - scf/helm/uaa
+- name: scf-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))
+    paths:
+    - scf/helm/cf
+- name: ci-ready
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: events
+    file: ci-ready
+    private_key: ((github-private-key))
+- name: ci-no-diego-ready
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: events
+    file: ci-no-diego-ready
+    private_key: ((github-private-key))
+- name: cf-smoke-tests
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-smoke-tests.git
+    branch: master

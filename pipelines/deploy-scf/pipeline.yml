@@ -7,7 +7,6 @@ groups:
   - create-docker-images
   - deploy-scf-uaa
   - deploy-scf-eirini
-  - deploy-oratos
   - run-smoke-tests
   - run-cats-subset
 
@@ -122,34 +121,11 @@ jobs:
   - task: smoke-eirini
     attempts: 100
     params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
-- name: deploy-oratos
-  plan:
-  - get: ((cluster-name))-event-ready
-    trigger: true
-    passed:
-    - create-docker-images
-  - get: ci-resources
-  - get: state
-  - get: oratos
-    trigger: true
-  - task: deploy-oratos
-    privileged: true
-    file: ci-resources/tasks/deploy-oratos/task.yml
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-name))
-  - task: waiting-for-oratos
-    attempts: 100
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-name))
-    file: ci-resources/tasks/waiting-for-oratos/task.yml
 - name: run-smoke-tests
   plan:
   - get: eirini-release
@@ -238,11 +214,6 @@ resources:
     branch: events
     file: ((cluster-name))-event-ready
     private_key: ((github-private-key))
-- name: oratos
-  type: git
-  source:
-    uri: https://github.com/gdankov/oratos-deployment
-    branch: eirini
 - name: cf-smoke-tests
   type: git
   source:
@@ -252,3 +223,11 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+- name: ((cluster-name))-deployment-version
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    file: environments/kube-clusters/((cluster-name))/deployment-version
+    private_key: ((github-private-key))

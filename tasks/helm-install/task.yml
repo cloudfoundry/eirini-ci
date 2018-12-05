@@ -18,6 +18,7 @@ params:
   COMPONENT:
   CLUSTER_NAME:
   HELM_CHART:
+  VERSIONING_CLUSTER:
 
 run:
   path: ci-resources/tasks/helm-install/task.sh

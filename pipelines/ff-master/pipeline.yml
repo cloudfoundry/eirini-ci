@@ -1,7 +1,6 @@
 groups:
-- name: eirini-ci
+- name: fast-forward
   jobs:
-  - (( append ))
   - fast-forward-master
   - fast-forward-master-release
 
@@ -28,29 +27,34 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release
     branch: develop
+- name: ci-no-diego-ready
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: events
+    file: ci-no-diego-ready
 
 jobs:
 - name: fast-forward-master
   plan:
+  - get: ci-no-diego-ready
+    trigger: true
   - get: develop
     params:
       submodules: none
-  - get: eirini-release
-    trigger: true
-    passed:
-    - run-cats-subset
   - put: master
     params:
       repository: develop
 - name: fast-forward-master-release
   plan:
-  - get: release-develop
-    params:
-      submodules: none
-  - get: eirini-release
+  - get: ci-no-diego-ready
     trigger: true
     passed:
     - fast-forward-master
+  - get: release-develop
+    params:
+      submodules: none
   - put: release-master
     params:
       repository: release-develop
