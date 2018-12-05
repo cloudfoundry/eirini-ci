@@ -5,7 +5,6 @@ groups:
   - prepare-cluster
   - check-cluster-readiness
   - delete-cluster
-  - update-ci-image
 
 jobs:
   - name: create-cluster
@@ -96,28 +95,12 @@ jobs:
         params:
           repository: state-modified
 
-
-  - name: update-ci-image
-    plan:
-    # TODO Create a separate resource that only triggers on updates of the Dockerfile itself
-    - get: ci-resources
-      trigger: true
-    - put: ci-image
-      params: { build: ci-resources/pipelines/kube-cluster/ci-image }
-
 resources:
   - name: ci-resources
     type: git
     source:
       uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
       branch: ((ci-resources-branch))
-
-  - name: ci-image
-    type: docker-image
-    source:
-      repository: eirini/ibmcloud
-      username: ((dockerhub-username))
-      password: ((dockerhub-password))
 
   - name: ((cluster-name))-event-created
     type: semver

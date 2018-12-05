@@ -8,5 +8,3 @@ jobs:
   .: (( inject hooks.failure ))
 - name: delete-cluster
   .: (( inject hooks.failure ))
-- name: update-ci-image
-  .: (( inject hooks.failure ))
