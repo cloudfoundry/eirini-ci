@@ -8,6 +8,7 @@ source ci-resources/scripts/ibmcloud-functions
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
+readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-false}
 
 main() {
     ibmcloud-login
@@ -36,7 +37,7 @@ env:
 
     UAA_HOST: uaa.$node_ip.nip.io
     UAA_PORT: 2793
-    ENABLE_OPI_STAGING: false
+    ENABLE_OPI_STAGING: $ENABLE_STAGING
 
 opi:
     use_registry_ingress: true

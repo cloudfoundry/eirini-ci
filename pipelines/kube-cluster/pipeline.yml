@@ -42,6 +42,7 @@ jobs:
           CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
           UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
           NATS_PASSWORD: ((nats_password))
+          ENABLE_OPI_STAGING: ((enable_opi_staging))
       file: ci-resources/tasks/cluster-config/task.yml
     - put: state
       params: {repository: state-modified}
