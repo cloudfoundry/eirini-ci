@@ -32,7 +32,6 @@ generate-recipe-image() {
 push() {
   docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
   docker push "eirini/opi:$TAG"
-  docker push "eirini/registry:$TAG"
   docker push "eirini/opi-init:$TAG"
   docker push "eirini/recipe:$TAG"
 }
