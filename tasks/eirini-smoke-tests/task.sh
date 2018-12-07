@@ -15,7 +15,7 @@ main(){
 
 curl-eirini-endpoints(){
   curl "api.$CF_DOMAIN/v2/info" --fail
-  curl "http://we-love-pandas.$INGRESS_ENDPOINT/v2" --fail
+  curl "http://registry.$INGRESS_ENDPOINT/v2" --fail
 }
 
 main
