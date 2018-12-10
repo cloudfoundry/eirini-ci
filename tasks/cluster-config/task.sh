@@ -7,6 +7,7 @@ IFS=$'\n\t'
 source ci-resources/scripts/ibmcloud-functions
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
+readonly BITS_SECRET="bits"
 
 main() {
     ibmcloud-login
@@ -54,7 +55,10 @@ secrets:
     CLUSTER_ADMIN_PASSWORD: $CLUSTER_ADMIN_PASSWORD
     UAA_ADMIN_CLIENT_SECRET: $UAA_ADMIN_CLIENT_SECRET
     NATS_PASSWORD: $NATS_PASSWORD
-    BITS_SERVICE_SECRET: bits
+
+    BITS_SERVICE_SECRET: $BITS_SECRET
+    BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
+    BLOBSTORE_PASSWORD: $BITS_SECRET
 EOF
     popd
 }
