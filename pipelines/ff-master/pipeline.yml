@@ -34,6 +34,7 @@ resources:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: events
     file: ci-no-diego-ready
+    private_key: ((github-private-key))
 
 jobs:
 - name: fast-forward-master
