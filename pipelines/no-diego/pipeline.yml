@@ -79,6 +79,7 @@ jobs:
     file: ci-resources/tasks/run-smoke-tests/task.yml
 - name: verify-no-diego
   plan:
+  - get: state
   - get: ci-ready
     passed: [run-smoke-tests]
     trigger: true
