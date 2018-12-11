@@ -1,4 +1,4 @@
 jobs:
 - ((merge))
-- name: run-all-cats
+- name: run-core-cats
   .: (( inject hooks.failure ))

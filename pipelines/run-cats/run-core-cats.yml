@@ -2,10 +2,10 @@ groups:
 - name: eirini-ci
   jobs:
   - (( append  ))
-  - run-all-cats
+  - run-core-cats
 
 jobs:
-- name: run-all-cats
+- name: run-core-cats
   plan:
   - get: eirini-release
     passed: [run-smoke-tests]

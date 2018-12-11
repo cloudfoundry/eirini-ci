@@ -10,7 +10,7 @@ resources:
 
 jobs:
 - ((merge))
-- name: run-cats-subset
+- name: run-core-cats
   plan:
   - ((append))
   - get: ci-ready
