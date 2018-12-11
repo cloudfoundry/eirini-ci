@@ -85,9 +85,9 @@ jobs:
     trigger: true
   - get: ci-resources
   - get: ci-no-diego-ready
-  - task: verify-no-diego
     params:
       bump: major
+  - task: verify-no-diego
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))

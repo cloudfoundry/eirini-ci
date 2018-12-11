@@ -83,6 +83,7 @@ jobs:
       COMPONENT: uaa
       HELM_CHART: uaa
       CLUSTER_NAME: ((cluster-name))
+      VERSIONING_CLUSTER: ((cluster-name))
   - task: waiting-for-uaa
     attempts: 100
     params:
@@ -117,6 +118,7 @@ jobs:
       COMPONENT: scf
       HELM_CHART: cf
       CLUSTER_NAME: ((cluster-name))
+      VERSIONING_CLUSTER: ((cluster-name))
   - task: smoke-eirini
     attempts: 100
     params:
