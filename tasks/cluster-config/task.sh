@@ -29,7 +29,7 @@ set-kube-state() {
     node_ip="$(get-node-ip)"
     ingress_endpoint="$(get-ingress-endpoint)"
 
-    pushd state
+    pushd cluster-state
         mkdir --parent "$CLUSTER_DIR"
         cat > "$CLUSTER_DIR"/scf-config-values.yaml <<EOF
 env:
@@ -65,7 +65,7 @@ EOF
 }
 
 set-external-ips(){
-    pushd state
+    pushd cluster-state
       node_ips="$(get-node-ips)"
       IFS=" "
       for ip in $node_ips
@@ -88,7 +88,7 @@ get-ingress-endpoint() {
 }
 
 copy-output() {
-    pushd state || exit
+    pushd cluster-state || exit
         if git status --porcelain | grep .; then
             echo "Repo is dirty"
             git add "$CLUSTER_DIR/scf-config-values.yaml"
@@ -100,7 +100,7 @@ copy-output() {
         fi
     popd || exit
 
-    cp -r state/. state-modified/
+    cp -r cluster-state/. state-modified/
 }
 
 main

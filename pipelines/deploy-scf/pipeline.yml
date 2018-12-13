@@ -203,3 +203,9 @@ resources:
     branch: master
     file: environments/kube-clusters/((cluster-name))/deployment-version
     private_key: ((github-private-key))
+- name: state
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    private_key: ((github-private-key))

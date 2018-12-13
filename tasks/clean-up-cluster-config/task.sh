@@ -11,13 +11,13 @@ main() {
 }
 
 remove-scf-values() {
-  pushd state
+  pushd cluster-state
     rm -r "$CLUSTER_DIR"
   popd
 }
 
 copy-output() {
-    pushd state || exit
+    pushd cluster-state || exit
         if git status --porcelain | grep .; then
             echo "Repo is dirty"
             git add "$CLUSTER_DIR"
@@ -29,7 +29,7 @@ copy-output() {
         fi
     popd || exit
 
-    cp -r state/. state-modified/
+    cp -r cluster-state/. state-modified/
 }
 
 main

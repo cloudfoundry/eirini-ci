@@ -139,3 +139,9 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/cf-smoke-tests.git
     branch: master
+- name: state
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    private_key: ((github-private-key))

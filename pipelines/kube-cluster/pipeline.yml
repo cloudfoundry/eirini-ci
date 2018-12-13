@@ -31,7 +31,7 @@ jobs:
     - get: ((cluster-name))-event-created
       trigger: true
       passed: [create-cluster]
-    - get: state
+    - get: cluster-state
     - task: create-cluster-config
       params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
@@ -44,7 +44,7 @@ jobs:
           IMAGE_TAG: ((cluster-name))
           ENABLE_OPI_STAGING: ((enable_opi_staging))
       file: ci-resources/tasks/cluster-config/task.yml
-    - put: state
+    - put: cluster-state
       params: {repository: state-modified}
     - task: provision-hostpath-provider
       params:
@@ -87,12 +87,12 @@ jobs:
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: ((cluster-name))
-      - get: state
+      - get: cluster-state
       - task: delete-values-file
         file: ci-resources/tasks/clean-up-cluster-config/task.yml
         params:
           CLUSTER_NAME: ((cluster-name))
-      - put: state
+      - put: cluster-state
         params:
           repository: state-modified
 
@@ -121,7 +121,7 @@ resources:
       file: ((cluster-name))-event-ready
       private_key: ((github-private-key))
 
-  - name: state
+  - name: cluster-state
     type: git
     source:
       uri: git@github.com:cloudfoundry/eirini-private-config.git
