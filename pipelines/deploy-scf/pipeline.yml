@@ -206,6 +206,7 @@ resources:
 - name: state
   type: git
   source:
+    check_every: 500ms
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
     private_key: ((github-private-key))
