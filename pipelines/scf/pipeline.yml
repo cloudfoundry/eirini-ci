@@ -25,8 +25,8 @@ resources:
 - name: scf
   type: git
   source:
-    uri: https://github.com/JulzDiverse/scf.git
-    branch: eirini
+    uri: https://github.com/gdankov/scf.git
+    branch: diego-come-back
     git_config:
     - name: submodule.fetchJobs
       value: 64
