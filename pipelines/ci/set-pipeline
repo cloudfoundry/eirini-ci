@@ -32,6 +32,7 @@ fly --target "$target" \
     --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
     --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
     --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+    --var tracker-token="$(pass eirini/pivotaltracker/api-token)" \
     --var eirini-release-branch=develop \
     --var enable_opi_staging=false \
     --load-vars-from "$private_repo/concourse/common.yml" \
