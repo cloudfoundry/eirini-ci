@@ -10,7 +10,7 @@ readonly world_name=acceptance
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly target=$1
 readonly private_repo=$2
-readonly worker_count=${3:-""}
+readonly worker_count=${3:-"1"}
 
 PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
