@@ -14,10 +14,12 @@ jobs:
     trigger: true
   - get: scf-uaa-resources
   - get: ci-resources
+  - get: ci-deployment-version
   - get: eirini-release
   - get: state
   - task: deploy-uaa
     file: ci-resources/tasks/helm-install/task.yml
+    input_mapping: {deployment-version: ci-deployment-version}
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
@@ -41,11 +43,13 @@ jobs:
     passed:
     - deploy-uaa
   - get: scf-resources
+  - get: ci-deployment-version
   - get: ci-resources
   - get: state
   - get: eirini-release
   - task: deploy-scf
     file: ci-resources/tasks/helm-install/task.yml
+    input_mapping: {deployment-version: ci-deployment-version}
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
@@ -145,3 +149,12 @@ resources:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
     private_key: ((github-private-key))
+- name: ci-deployment-version
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    file: environments/kube-clusters/ci/deployment-version
+    private_key: ((github-private-key))
+    initial_version: 1.0.0
