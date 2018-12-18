@@ -43,7 +43,6 @@ opi:
     use_registry_ingress: true
     ingress_endpoint: $ingress_endpoint
     namespace: opi
-    image_tag: $IMAGE_TAG
 
 kube:
     external_ips: []

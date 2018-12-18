@@ -1,0 +1,50 @@
+resources:
+- name: eirini-scf-release
+  type: github-release
+  source:
+    owner: cloudfoundry-incubator
+    repository: eirini-release
+    access_token: ((github-access-token))
+
+groups:
+- name: fast-forward
+  jobs:
+  - ((append))
+  - publish-release
+
+jobs:
+- ((merge))
+- name: publish-release
+  plan:
+  - get: ci-no-diego-ready
+    trigger: true
+    passed:
+    - fast-forward-master-release
+  - get: ci-resources
+  - get: state
+  - get: ((cluster-name))-deployment-version
+  - get: eirini-release
+  - task: retag-release-images
+    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
+    privileged: true
+    params:
+      DOCKER_HUB_USER: ((dockerhub-user))
+      DOCKER_HUB_PASSWORD: ((dockerhub-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/retag-release-images/task.yml
+  - task: create-release
+    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
+    params:
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/create-release/task.yml
+  - put: ((cluster-name))-deployment-version
+    params:
+      bump: major
+      file: ((cluster-name))-deployment-version/number
+  - put: eirini-scf-release
+    params:
+      name: ((cluster-name))-deployment-version/version
+      tag: ((cluster-name))-deployment-version/version
+      tag_prefix: v
+      globs:
+      - release-output/eirini-scf-release-*.tgz

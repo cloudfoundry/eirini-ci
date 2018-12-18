@@ -7,9 +7,14 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
+- name: state
 - name: ci-resources
-- name: eirini-release
 - name: deployment-version
 
+params:
+  DOCKER_HUB_USER:
+  DOCKER_HUB_PASSWORD:
+  CLUSTER_NAME:
+
 run:
-  path: ci-resources/tasks/create-docker-images/task.sh
+  path: ci-resources/tasks/retag-release-images/task.sh

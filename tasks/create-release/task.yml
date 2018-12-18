@@ -8,8 +8,12 @@ image_resource:
 
 inputs:
 - name: ci-resources
+- name: state
 - name: eirini-release
 - name: deployment-version
 
+outputs:
+- name: release-output
+
 run:
-  path: ci-resources/tasks/create-docker-images/task.sh
+  path: ci-resources/tasks/create-release/task.sh

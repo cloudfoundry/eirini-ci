@@ -48,18 +48,14 @@ jobs:
   - get: eirini-release
   - get: scf-resources
   - get: ((cluster-name))-deployment-version
-    params:
-      bump: major
   - task: create images
     privileged: true
+    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
     params:
       DOCKER_HUB_USER: ((dockerhub-user))
       DOCKER_HUB_PASSWORD: ((dockerhub-password))
-      TAG: ((cluster-name))
+      CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/create-docker-images/task.yml
-  - put: ((cluster-name))-deployment-version
-    params:
-      file: ((cluster-name))-deployment-version/number
 - name: deploy-scf-uaa
   plan:
   - get: ((cluster-name))-event-ready
@@ -106,11 +102,13 @@ jobs:
   - get: ci-resources
   - get: state
   - get: eirini-release
+  - get: ((cluster-name))-deployment-version
   - get: ((cluster-name))-event-uaa-ready
     trigger: true
     passed: [deploy-scf-uaa]
   - task: deploy-scf
     file: ci-resources/tasks/helm-install/task.yml
+    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
@@ -203,6 +201,7 @@ resources:
     branch: master
     file: environments/kube-clusters/((cluster-name))/deployment-version
     private_key: ((github-private-key))
+    initial_version: 1.0.0
 - name: state
   type: git
   source:
