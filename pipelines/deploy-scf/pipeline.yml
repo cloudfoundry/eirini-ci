@@ -67,11 +67,13 @@ jobs:
   - get: ci-resources
   - get: eirini-release
   - get: state
+  - get: ((cluster-name))-deployment-version
   - get: ((cluster-name))-event-uaa-ready
     params:
       bump: major
   - task: deploy-uaa
     file: ci-resources/tasks/helm-install/task.yml
+    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
