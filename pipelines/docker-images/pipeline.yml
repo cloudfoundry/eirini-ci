@@ -13,6 +13,8 @@ jobs:
     file: ci-resources/tasks/create-docker-images/task.yml
 - name: update-eirini-ci-image
   plan:
+  - get: golang-image
+    trigger: true
   - get: eirini-ci-image-source
     trigger: true
   - put: eirini-ci-image
@@ -44,3 +46,8 @@ resources:
     repository: eirini/ci
     username: ((docker_hub_user))
     password: ((docker_hub_password))
+
+- name: golang-image
+  type: docker-image
+  source:
+    repository: golang
