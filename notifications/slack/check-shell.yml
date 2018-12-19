@@ -1,0 +1,6 @@
+jobs:
+- ((merge))
+- name: check-shell
+  .: (( inject hooks.failure ))
+- name: format-shell
+  .: (( inject hooks.failure ))

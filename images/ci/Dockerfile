@@ -11,6 +11,8 @@ RUN  apt-get update \
        wget \
        jq \
        shellcheck \
+       software-properties-common \
+       lsb-release \
   && rm -rf /var/lib/apt/lists/*
 
 # CF CLI

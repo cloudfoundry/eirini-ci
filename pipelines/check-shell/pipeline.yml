@@ -1,0 +1,27 @@
+groups:
+- name: check-shell
+  jobs:
+  - check-shell
+  - format-shell
+
+jobs:
+- name: check-shell
+  plan:
+  - get: ci-resources
+    trigger: true
+  - task: run-shellcheck
+    file: ci-resources/tasks/check-shell/task.yml
+
+- name: format-shell
+  plan:
+  - get: ci-resources
+    trigger: true
+  - task: run-shfmt
+    file: ci-resources/tasks/format-shell/task.yml
+
+resources:
+- name: ci-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: ((ci-resources-branch))

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xeuo pipefail
+set -euo pipefail
 IFS=$'\n\t'
 
 readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"

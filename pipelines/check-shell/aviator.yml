@@ -1,0 +1,8 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/check-shell/pipeline.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/check-shell.yml
+  to: $PIPELINE_YML

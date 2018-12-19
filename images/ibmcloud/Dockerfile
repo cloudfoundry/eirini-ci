@@ -6,7 +6,9 @@ RUN apt-get update && \
       bash \
       ca-certificates \
       curl \
-      git
+      git \
+      jq \
+      wget
 
 # IBMCloud CLI
 # https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#shell_install

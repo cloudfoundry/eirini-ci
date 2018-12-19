@@ -17,12 +17,14 @@ jobs:
     trigger: true
   - get: eirini-ci-image-source
     trigger: true
+  - put: eirini-ci-image
+    params: {build: eirini-ci-image-source/images/ci}
+- name: update-eirini-ibmcloud-image
+  plan:
   - get: eirini-ibmcloud-image-source
     trigger: true
-  - put: eirini-ci-image
-    params: {build: eirini-ci-image-source}
   - put: eirini-ibmcloud-image
-    params: {build: eirini-ibmcloud-image-source}
+    params: {build: eirini-ibmcloud-image-source/images/ibmcloud}
 
 resources:
 - name: eirini-release
@@ -35,20 +37,20 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: check-shell
 
 - name: eirini-ci-image-source
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: check-shell
     path: images/ci/Dockerfile
 
 - name: eirini-ibmcloud-image-source
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
+    branch: check-shell
     path: images/ibmcloud/Dockerfile
 
 - name: eirini-ci-image
