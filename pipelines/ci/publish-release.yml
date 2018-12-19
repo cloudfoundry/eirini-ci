@@ -5,6 +5,15 @@ resources:
     owner: cloudfoundry-incubator
     repository: eirini-release
     access_token: ((github-access-token))
+- name: release-version
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    file: environments/kube-clusters/ci/deployment-version
+    private_key: ((github-private-key))
+    initial_version: 1.0.0
 
 groups:
 - name: fast-forward
@@ -37,10 +46,9 @@ jobs:
     params:
       CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/create-release/task.yml
-  - put: ((cluster-name))-deployment-version
+  - put: release-version
     params:
       bump: major
-      file: ((cluster-name))-deployment-version/number
   - put: eirini-scf-release
     params:
       name: ((cluster-name))-deployment-version/version
