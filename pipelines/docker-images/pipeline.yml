@@ -17,8 +17,12 @@ jobs:
     trigger: true
   - get: eirini-ci-image-source
     trigger: true
+  - get: eirini-ibmcloud-image-source
+    trigger: true
   - put: eirini-ci-image
     params: {build: eirini-ci-image-source}
+  - put: eirini-ibmcloud-image
+    params: {build: eirini-ibmcloud-image-source}
 
 resources:
 - name: eirini-release
@@ -38,12 +42,26 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
-    path: Dockerfile
+    path: images/ci/Dockerfile
+
+- name: eirini-ibmcloud-image-source
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: master
+    path: images/ibmcloud/Dockerfile
 
 - name: eirini-ci-image
   type: docker-image
   source:
     repository: eirini/ci
+    username: ((docker_hub_user))
+    password: ((docker_hub_password))
+
+- name: eirini-ibmcloud-image
+  type: docker-image
+  source:
+    repository: eirini/ibmcloud
     username: ((docker_hub_user))
     password: ((docker_hub_password))
 

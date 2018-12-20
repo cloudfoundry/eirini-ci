@@ -10,6 +10,7 @@ main() {
     configure_tests
     run_tests
 }
+
 set_up_gopath() {
     mkdir -p gopath/src/github.com/cloudfoundry
     export GOPATH=$PWD/gopath
