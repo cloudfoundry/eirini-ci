@@ -11,7 +11,7 @@ rebase() {
         git checkout "$FORK_BRANCH"
         git remote add upstream "$UPSTREAM"
 
-        git pull upstream $UPSTREAM_BRANCH --rebase
+        git pull upstream "$UPSTREAM_BRANCH" --rebase
     popd
 }
 
@@ -19,7 +19,7 @@ rebase() {
 # This function restores them by parsing the 'Signed-off-by' message footer, if available
 restore-commiters() {
     pushd cc-ng-fork
-        diff=$(git rev-list --right-only --count upstream/$UPSTREAM_BRANCH..$FORK_BRANCH)
+        diff=$(git rev-list --right-only --count upstream/"$UPSTREAM_BRANCH".."$FORK_BRANCH")
         start_commit=HEAD~"$diff"
         end_commit=HEAD
 

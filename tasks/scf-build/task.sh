@@ -23,7 +23,7 @@ init-scf-submodules(){
     local modules
     modules=$(grep "submodule" .gitmodules | grep --invert-match "capi" | awk '{print $2}' | tr --delete '"]' | xargs)
 
-    git submodule update --init --recursive $modules
+    git submodule update --init --recursive "$modules"
   popd
 }
 
