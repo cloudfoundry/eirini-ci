@@ -1,0 +1,60 @@
+groups:
+- name: bits
+  jobs:
+  - ((append))
+  - update-bits
+  - run-smoke-tests-with-latest-bits
+
+resources:
+- name: bits-latest
+  type: docker-image
+  source:
+    repository: flintstonecf/bits-service
+    tag: latest
+- name: ci-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: master
+- name: cf-smoke-tests
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-smoke-tests.git
+    branch: master
+- name: state
+  type: git
+  source:
+    check_every: 500ms
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    private_key: ((github-private-key))
+
+jobs:
+- ((merge))
+- name: update-bits
+  plan:
+  - get: bits-latest
+    trigger: true
+  - get: ci-resources
+  - task: update-deployed-bits
+    params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/update-bits/task.yml
+- name: run-smoke-tests-with-latest-bits
+  plan:
+  - get: bits-latest
+    passed: [update-bits]
+    trigger: true
+  - get: cf-smoke-tests
+  - get: ci-resources
+  - get: state
+  - task: run smoke tests
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/run-smoke-tests/task.yml

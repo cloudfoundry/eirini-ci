@@ -1,0 +1,6 @@
+jobs:
+- ((merge))
+- name: update-bits
+  .: (( inject hooks.failure ))
+- name: run-smoke-tests-with-latest-bits
+  .: (( inject hooks.failure ))

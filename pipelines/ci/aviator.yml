@@ -13,6 +13,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/ci/deliver-story.yml
       - $PROJECT_ROOT/pipelines/ci/publish-release.yml
       - $PROJECT_ROOT/pipelines/ci/check-shell.yml
+      - $PROJECT_ROOT/pipelines/ci/bits.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
@@ -20,4 +21,5 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/notifications/slack/publish-release.yml
       - $PROJECT_ROOT/notifications/slack/check-shell.yml
+      - $PROJECT_ROOT/notifications/slack/bits.yml
   to: $PIPELINE_YML
