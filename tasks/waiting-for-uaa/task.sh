@@ -6,21 +6,23 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 
+# shellcheck disable=SC1091
+source ci-resources/scripts/kube-functions
+
 main() {
   ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+  export-kubeconfig "${CLUSTER_NAME:?Cluster name not provided}"
 
   local ready
-  ready=$(get-readiness-status)
-  if [ "$ready" = "false" ]; then
-    echo "Expected uaa to be ready, but it is not!"
+  ready=$(is-container-ready uaa uaa-0)
+
+  if [ "$ready" = "true" ]; then
+    echo UAA is ready
+    exit 0
+  else
+    echo UAA is NOT ready
     exit 1
   fi
-}
-
-get-readiness-status() {
-  kubectl get pods uaa-0 -n uaa -o jsonpath='{.status.containerStatuses[0].ready}'
-  echo
 }
 
 main
