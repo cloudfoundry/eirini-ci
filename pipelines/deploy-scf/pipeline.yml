@@ -119,6 +119,9 @@ jobs:
       HELM_CHART: cf
       CLUSTER_NAME: ((cluster-name))
       VERSIONING_CLUSTER: ((cluster-name))
+    on_failure:
+      task: purge-namespace
+      file: ci-resources/tasks/purge-namespace/task.yml
   - task: smoke-eirini
     attempts: 100
     params:
