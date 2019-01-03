@@ -23,3 +23,7 @@ fly --target "$target" \
   --pipeline "$world_name" \
   --var ci-resources-branch="$ci_branch" \
   --load-vars-from "$private_repo/concourse/common.yml"
+
+fly --target "$target" \
+  expose-pipeline \
+  --pipeline "$world_name"
