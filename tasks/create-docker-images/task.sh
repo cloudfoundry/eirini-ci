@@ -19,8 +19,8 @@ main() {
 
 export-gopath() {
   pushd eirini-release || exit
-    # shellcheck disable=SC1091
-    source .envrc
+  # shellcheck disable=SC1091
+  source .envrc
   popd || exit
 }
 

@@ -2,7 +2,7 @@
 
 # Loop forever until the status of the cluster $1 equals to $2
 # In Concourse, use timeout to limit waiting https://concourse-ci.org/timeout-step-modifier.html
-wait-for-state(){
+wait-for-state() {
   declare -r name=$1
   declare -r desired_status=$2
 
@@ -17,17 +17,17 @@ cluster-state-is() {
   declare -r name=$1
   declare -r desired_status=$2
 
-  cluster-state "$name" | jq '.state == $status' --arg status "$desired_status" --exit-status > /dev/null
+  cluster-state "$name" | jq '.state == $status' --arg status "$desired_status" --exit-status >/dev/null
 }
 
 # Show details about the cluster
-cluster-state(){
+cluster-state() {
   declare -r name=$1
   ibmcloud ks cluster-get "$name" --json
 }
 
 # Log in to the IBM Cloud
-ibmcloud-login(){
+ibmcloud-login() {
   ibmcloud login \
     -a https://api.eu-gb.bluemix.net \
     -u "${IBMCLOUD_USER:?}" \
@@ -36,7 +36,7 @@ ibmcloud-login(){
 }
 
 # Create a new cluster with the name given as $1
-create-cluster(){
+create-cluster() {
   declare -r name=$1
   declare -r worker_count=$2
   ibmcloud ks cluster-create \
@@ -50,19 +50,19 @@ create-cluster(){
 }
 
 # Delete the cluster with the name given as $1
-delete-cluster(){
+delete-cluster() {
   declare -r name=$1
   ibmcloud ks cluster-rm --cluster "$name" -f
 }
 
 # Exit nonzero unless the cluster $1 exists
-cluster-exists(){
+cluster-exists() {
   declare -r name=$1
-  ibmcloud ks clusters --json | jq 'any(.[]; .name == $name)' --arg name "$name" --exit-status > /dev/null
+  ibmcloud ks clusters --json | jq 'any(.[]; .name == $name)' --arg name "$name" --exit-status >/dev/null
 }
 
 # Loop forever until the status of the cluster $1 is gone
-wait-for-deletion(){
+wait-for-deletion() {
   declare -r name=$1
 
   until ! cluster-exists "$name"; do
@@ -72,6 +72,6 @@ wait-for-deletion(){
 }
 
 export-kubeconfig() {
-    declare -r cluster_name=$1
-    eval "$(ibmcloud ks cluster-config "$cluster_name" --export)"
+  declare -r cluster_name=$1
+  eval "$(ibmcloud ks cluster-config "$cluster_name" --export)"
 }

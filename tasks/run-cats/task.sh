@@ -6,24 +6,24 @@ IFS=$'\n\t'
 readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"
 
 main() {
-    set_up_gopath
-    configure_tests
-    run_tests
+  set_up_gopath
+  configure_tests
+  run_tests
 }
 
 set_up_gopath() {
-    mkdir -p gopath/src/github.com/cloudfoundry
-    export GOPATH=$PWD/gopath
-    export PATH=$PATH:$GOPATH/bin
+  mkdir -p gopath/src/github.com/cloudfoundry
+  export GOPATH=$PWD/gopath
+  export PATH=$PATH:$GOPATH/bin
 }
 
 configure_tests() {
-    local cf_domain
-    cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
-    local cf_admin_password
-    cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+  local cf_domain
+  cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
+  local cf_admin_password
+  cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
 
-    cat > integration_config.json <<EOF
+  cat >integration_config.json <<EOF
     {
       "api": "api.${cf_domain}",
       "apps_domain": "${cf_domain}",
@@ -57,16 +57,15 @@ configure_tests() {
       "include_zipkin": ${INCLUDE_ZIPKIN}
     }
 EOF
-    CONFIG="$(readlink -nf integration_config.json)"
-    export CONFIG
+  CONFIG="$(readlink -nf integration_config.json)"
+  export CONFIG
 }
 
 run_tests() {
-    cp -a cats "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
-    cd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
-    ./bin/update_submodules
-    ./bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=4 -keepGoing -skip="$SKIPPED_TESTS"
+  cp -a cats "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+  cd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
+  ./bin/update_submodules
+  ./bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=4 -keepGoing -skip="$SKIPPED_TESTS"
 }
 
 main
-

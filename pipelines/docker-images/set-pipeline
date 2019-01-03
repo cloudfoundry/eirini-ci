@@ -1,12 +1,12 @@
 #!/bin/bash
 
 if [ "$1" == "help" ]; then
-    cat << EOF
+  cat <<EOF
   Usage:
 
         $ ./set-pipeline <CONCOURSE_TARGET> <PRIVATE_REPO>
 EOF
-    exit 0
+  exit 0
 fi
 
 export TARGET="${1?target not defined}"

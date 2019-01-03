@@ -18,7 +18,7 @@ change-image-tags() {
 
 zip-templates() {
   pushd eirini-release/scf/helm
-    tar -zcvf "eirini-scf-release-v${VERSION}.tgz" cf uaa
+  tar -zcvf "eirini-scf-release-v${VERSION}.tgz" cf uaa
   popd
   mv "eirini-release/scf/helm/eirini-scf-release-v${VERSION}.tgz" release-output
 }

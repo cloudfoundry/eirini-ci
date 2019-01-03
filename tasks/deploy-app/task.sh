@@ -18,4 +18,4 @@ readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 kubectl apply -f "$basedir/app.yml"
 
 # this assumes we only have a single worker
-ibmcloud ks workers "$name" --json | jq --raw-output '.[0].publicIP' > worker-info/public-ip
+ibmcloud ks workers "$name" --json | jq --raw-output '.[0].publicIP' >worker-info/public-ip

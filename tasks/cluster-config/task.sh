@@ -11,27 +11,27 @@ readonly BITS_SECRET="bits"
 readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-false}
 
 main() {
-    ibmcloud-login
-    export-kubeconfig "$CLUSTER_NAME"
-    init-helm
-    set-kube-state
-    set-external-ips
-    copy-output
+  ibmcloud-login
+  export-kubeconfig "$CLUSTER_NAME"
+  init-helm
+  set-kube-state
+  set-external-ips
+  copy-output
 }
 
 init-helm() {
-    helm init
+  helm init
 }
 
 set-kube-state() {
-    local node_ip
-    local ingress_endpoint
-    node_ip="$(get-node-ip)"
-    ingress_endpoint="$(get-ingress-endpoint)"
+  local node_ip
+  local ingress_endpoint
+  node_ip="$(get-node-ip)"
+  ingress_endpoint="$(get-ingress-endpoint)"
 
-    pushd cluster-state
-        mkdir --parent "$CLUSTER_DIR"
-        cat > "$CLUSTER_DIR"/scf-config-values.yaml <<EOF
+  pushd cluster-state
+  mkdir --parent "$CLUSTER_DIR"
+  cat >"$CLUSTER_DIR"/scf-config-values.yaml <<EOF
 env:
     DOMAIN: $node_ip.nip.io
 
@@ -60,46 +60,48 @@ secrets:
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
     BLOBSTORE_PASSWORD: $BITS_SECRET
 EOF
-    popd
+  popd
 }
 
-set-external-ips(){
-    pushd cluster-state
-      node_ips="$(get-node-ips)"
-      IFS=" "
-      for ip in $node_ips
-      do
-        goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p kube.external_ips.+ -v "$ip"
-      done
-    popd
+set-external-ips() {
+  pushd cluster-state
+  node_ips="$(get-node-ips)"
+  IFS=" "
+  for ip in $node_ips; do
+    goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p kube.external_ips.+ -v "$ip"
+  done
+  popd
 }
 
 get-node-ip() {
-    kubectl get nodes -o jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'; echo
+  kubectl get nodes -o jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'
+  echo
 }
 
 get-node-ips() {
-    kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'; echo
+  kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+  echo
 }
 
 get-ingress-endpoint() {
-   ibmcloud ks cluster-get "$CLUSTER_NAME" --json | jq --raw-output '.ingressHostname'; echo
+  ibmcloud ks cluster-get "$CLUSTER_NAME" --json | jq --raw-output '.ingressHostname'
+  echo
 }
 
 copy-output() {
-    pushd cluster-state || exit
-        if git status --porcelain | grep .; then
-            echo "Repo is dirty"
-            git add "$CLUSTER_DIR/scf-config-values.yaml"
-            git config --global user.email "eirini@cloudfoundry.org"
-            git config --global user.name "Come-On Eirini"
-            git commit --all --message "update/add scf values file"
-        else
-            echo "Repo is clean"
-        fi
-    popd || exit
+  pushd cluster-state || exit
+  if git status --porcelain | grep .; then
+    echo "Repo is dirty"
+    git add "$CLUSTER_DIR/scf-config-values.yaml"
+    git config --global user.email "eirini@cloudfoundry.org"
+    git config --global user.name "Come-On Eirini"
+    git commit --all --message "update/add scf values file"
+  else
+    echo "Repo is clean"
+  fi
+  popd || exit
 
-    cp -r cluster-state/. state-modified/
+  cp -r cluster-state/. state-modified/
 }
 
 main

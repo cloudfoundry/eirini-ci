@@ -6,24 +6,24 @@ IFS=$'\n\t'
 readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"
 
 main() {
-    set_up_gopath
-    configure_tests
-    run_tests
+  set_up_gopath
+  configure_tests
+  run_tests
 }
 
 set_up_gopath() {
-    mkdir -p gopath/src/github.com/cloudfoundry
-    export GOPATH=$PWD/gopath
-    export PATH=$PATH:$GOPATH/bin
+  mkdir -p gopath/src/github.com/cloudfoundry
+  export GOPATH=$PWD/gopath
+  export PATH=$PATH:$GOPATH/bin
 }
 
 configure_tests() {
-    local cf_domain
-    cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
-    local cf_admin_password
-    cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+  local cf_domain
+  cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
+  local cf_admin_password
+  cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
 
-    cat > config.json <<EOF
+  cat >config.json <<EOF
     {
       "suite_name"                      : "CF_SMOKE_TESTS",
       "api"                             : "api.${cf_domain}",
@@ -48,15 +48,15 @@ configure_tests() {
       "skip_ssl_validation"             : true
     }
 EOF
-    CONFIG="$(readlink -nf config.json)"
-    export CONFIG
+  CONFIG="$(readlink -nf config.json)"
+  export CONFIG
 }
 
 run_tests() {
-    cp -a cf-smoke-tests "$GOPATH"/src/github.com/cloudfoundry/
-    cd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
-    # Using nodes=1, because multiple nodes seem to cause race-conditions. Is that a bug in cf-smoke-tests?
-    bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=1 -keepGoing
+  cp -a cf-smoke-tests "$GOPATH"/src/github.com/cloudfoundry/
+  cd "$GOPATH"/src/github.com/cloudfoundry/cf-smoke-tests
+  # Using nodes=1, because multiple nodes seem to cause race-conditions. Is that a bug in cf-smoke-tests?
+  bin/test -v -r -slowSpecThreshold=120 -randomizeAllSpecs -nodes=1 -keepGoing
 }
 
 main

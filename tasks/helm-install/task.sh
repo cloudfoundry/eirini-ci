@@ -19,24 +19,24 @@ main() {
 }
 
 export-ca-cert() {
-    if [ "$COMPONENT" == "scf" ]; then
-        SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
-        CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-    fi
+  if [ "$COMPONENT" == "scf" ]; then
+    SECRET=$(kubectl get pods --namespace uaa -o jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
+    CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa -o jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
+  fi
 }
 
 helm-install() {
-    local -r image_tag="${VERSIONING_CLUSTER}-${VERSION}"
-    pushd eirini-release/scf
-        helm upgrade --install "$COMPONENT" \
-          helm/"$HELM_CHART" \
-          --namespace "$COMPONENT" \
-          --values "../../$ENVIRONMENT"/scf-config-values.yaml \
-          --set "secrets.UAA_CA_CERT=${CA_CERT}" \
-          --set "opi.version=$VERSION" \
-          --set "opi.image_tag=$image_tag" \
-          --force
-    popd
+  local -r image_tag="${VERSIONING_CLUSTER}-${VERSION}"
+  pushd eirini-release/scf
+  helm upgrade --install "$COMPONENT" \
+    helm/"$HELM_CHART" \
+    --namespace "$COMPONENT" \
+    --values "../../$ENVIRONMENT"/scf-config-values.yaml \
+    --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+    --set "opi.version=$VERSION" \
+    --set "opi.image_tag=$image_tag" \
+    --force
+  popd
 }
 
 main

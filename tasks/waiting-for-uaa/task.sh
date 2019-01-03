@@ -6,7 +6,7 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 
-main(){
+main() {
   ibmcloud-login
   export-kubeconfig "$CLUSTER_NAME"
 
@@ -18,8 +18,9 @@ main(){
   fi
 }
 
-get-readiness-status(){
-  kubectl get pods uaa-0 -n uaa -o jsonpath='{.status.containerStatuses[0].ready}'; echo
+get-readiness-status() {
+  kubectl get pods uaa-0 -n uaa -o jsonpath='{.status.containerStatuses[0].ready}'
+  echo
 }
 
 main

@@ -19,11 +19,11 @@ aviator -f "$basedir"/aviator.yml
 
 fly --target "$target" \
   set-pipeline \
-    --config "$PIPELINE_YML" \
-    --pipeline "$world_name" \
-    --var cluster-name="$world_name" \
-    --var dockerhub-user=eiriniuser \
-    --var worker_count="$worker_count" \
-    --var dockerhub-password="$(pass eirini/docker-hub)" \
-    --var eirini-release-private-key="$(pass eirini/github/eirini-release/ssh-key)" \
-    --load-vars-from "$private_repo/concourse/common.yml" \
+  --config "$PIPELINE_YML" \
+  --pipeline "$world_name" \
+  --var cluster-name="$world_name" \
+  --var dockerhub-user=eiriniuser \
+  --var worker_count="$worker_count" \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var eirini-release-private-key="$(pass eirini/github/eirini-release/ssh-key)" \
+  --load-vars-from "$private_repo/concourse/common.yml"

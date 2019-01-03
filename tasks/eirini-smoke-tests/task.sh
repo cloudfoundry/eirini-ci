@@ -7,7 +7,7 @@ readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-
 # shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 
-main(){
+main() {
   ibmcloud-login
   export-kubeconfig "$CLUSTER_NAME"
   CF_DOMAIN="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
