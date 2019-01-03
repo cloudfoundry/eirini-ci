@@ -1,5 +1,5 @@
 groups:
-- name: check-shell
+- name: ci-check-shell
   jobs:
   - check-shell
   - format-shell
