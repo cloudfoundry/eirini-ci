@@ -37,20 +37,20 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: check-shell
+    branch: master
 
 - name: eirini-ci-image-source
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: check-shell
+    branch: master
     path: images/ci/Dockerfile
 
 - name: eirini-ibmcloud-image-source
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: check-shell
+    branch: master
     path: images/ibmcloud/Dockerfile
 
 - name: eirini-ci-image
