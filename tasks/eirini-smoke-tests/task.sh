@@ -20,7 +20,7 @@ main() {
 check-scf-readiness() {
   local exit_code
   set +e
-  kubectl get pods -n scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep "0/1"
+  kubectl get pods --namespace scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep "0/1"
   exit_code="$?"
   set -e
 

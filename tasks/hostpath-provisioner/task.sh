@@ -14,6 +14,6 @@ ibmcloud-login
 
 export-kubeconfig "$CLUSTER_NAME"
 
-kubectl apply -f "$HOSTPATH_PROVIDER_RBAC"
-kubectl apply -f "$HOSTPATH_PROVIDER_DEPLOYMENT"
-kubectl apply -f "$HOSTPATH_PROVIDER_STORAGECLASS"
+kubectl apply --filename "$HOSTPATH_PROVIDER_RBAC"
+kubectl apply --filename "$HOSTPATH_PROVIDER_DEPLOYMENT"
+kubectl apply --filename "$HOSTPATH_PROVIDER_STORAGECLASS"

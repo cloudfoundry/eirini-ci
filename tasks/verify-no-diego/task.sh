@@ -20,7 +20,7 @@ verify-no-diego() {
   local diego_components
   local exit_code
 
-  diego_components="$(kubectl get pods -n scf | grep "diego")"
+  diego_components="$(kubectl get pods --namespace scf | grep "diego")"
   exit_code="$?"
   if [ "$exit_code" -eq 0 ]; then
     echo "Diego componnets still running: $diego_components"

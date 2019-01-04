@@ -74,12 +74,12 @@ set-external-ips() {
 }
 
 get-node-ip() {
-  kubectl get nodes -o jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'
+  kubectl get nodes --output jsonpath='{ $.items[0].status.addresses[?(@.type=="ExternalIP")].address}'
   echo
 }
 
 get-node-ips() {
-  kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+  kubectl get nodes --output jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
   echo
 }
 
