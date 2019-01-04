@@ -13,7 +13,7 @@ main() {
 }
 
 restart-bits() {
-  kubectl patch deployment bits -p \
+  kubectl patch deployment bits --namespace scf --patch \
     "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"$(date +'%s')\"}}}}}"
 }
 
