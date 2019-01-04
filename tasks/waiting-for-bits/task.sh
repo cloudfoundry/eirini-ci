@@ -14,7 +14,6 @@ main() {
   export-kubeconfig "${CLUSTER_NAME:?Cluster name not provided}"
 
   local -r expected_image_digest="$(<bits-latest/digest)"
-
   if actual-digest-equals "name=bits" "$expected_image_digest"; then
     echo Expected digest "$expected_image_digest" is running
   else
@@ -23,8 +22,7 @@ main() {
   fi
 
   local -r ready=$(is-labeled-container-ready scf "name=bits")
-
-  if [ "$ready" = "true" ]; then
+  if [ "$ready" == "true" ]; then
     echo Bits-Service is ready
     exit 0
   else
