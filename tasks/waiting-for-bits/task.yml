@@ -8,6 +8,7 @@ image_resource:
 
 inputs:
   - name: ci-resources
+  - name: bits-latest
 
 params:
   IBMCLOUD_ACCOUNT:

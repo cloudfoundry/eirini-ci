@@ -43,6 +43,14 @@ jobs:
         IBMCLOUD_PASSWORD: ((ibmcloud-password))
         CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/update-bits/task.yml
+  - task: waiting-for-bits
+    attempts: 100
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/waiting-for-bits/task.yml
 - name: run-smoke-tests-with-latest-bits
   plan:
   - get: bits-latest
