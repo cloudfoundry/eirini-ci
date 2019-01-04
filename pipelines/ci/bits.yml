@@ -44,7 +44,7 @@ jobs:
         CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/update-bits/task.yml
   - task: waiting-for-bits
-    attempts: 100
+    attempts: 10
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
