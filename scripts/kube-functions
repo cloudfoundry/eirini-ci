@@ -5,3 +5,9 @@ is-container-ready() {
   declare -r resource_name="${2:?Resource name not provided}"
   kubectl get pods "$resource_name" -n "$namespace" -o jsonpath='{.status.containerStatuses[0].ready}'
 }
+
+is-labeled-container-ready() {
+  declare -r namespace="${1:?Namespace not provided}"
+  declare -r label="${2:?Label not provided}"
+  kubectl get pods -l "$label" -n "$namespace" -o jsonpath='{.items[0].status.containerStatuses[0].ready}'
+}
