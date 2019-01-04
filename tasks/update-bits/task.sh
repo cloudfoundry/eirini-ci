@@ -4,7 +4,7 @@ set -eo pipefail
 IFS=$'\n\t'
 
 # shellcheck disable=SC1091
-source ci-resources-branch/scripts/ibmcloud-functions
+source ci-resources/scripts/ibmcloud-functions
 
 main() {
   ibmcloud-login

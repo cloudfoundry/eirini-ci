@@ -7,7 +7,7 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-- name: ci-resources-branch
+- name: ci-resources
 
 params:
   IBMCLOUD_ACCOUNT:
@@ -16,4 +16,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources-branch/tasks/update-bits/task.sh
+  path: ci-resources/tasks/update-bits/task.sh
