@@ -20,7 +20,7 @@ After you got all these things, run the following to login via `fly`:
 
 ```bash
 fly -t <alias> login \
-  -c https://flintstone.ci.cf-app.com \
+  -c https://ci.flintstone.cf.cloud.ibm.com \
   -u <user-name> \
   -p $(lpass show "<key-name>" --password) \
   --team-name <team-name>
@@ -56,4 +56,3 @@ Execute the following script:
 Execute the following script:
 
 `$ ./pipelines/dev/set-pipeline <PIPELINE_NAME> <CONCOURSE_TARGET> <PATH_TO_PRIVATE_REPO>`
-
