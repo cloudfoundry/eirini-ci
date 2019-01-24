@@ -5,9 +5,9 @@ IFS=$'\n\t'
 
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
-readonly VERSION_FILE="deployment-version/version"
-readonly VERSION=$(cat "$VERSION_FILE")
-readonly CI_TAG="${CLUSTER_NAME}-${VERSION}"
+readonly PIPELINE_VERSION=$(cat deployment-version/version)
+readonly VERSION=$(cat release-version/version)
+readonly CI_TAG="${CLUSTER_NAME}-${PIPELINE_VERSION}"
 
 main() {
   start-docker

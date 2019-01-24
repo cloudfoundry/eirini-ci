@@ -10,6 +10,7 @@ inputs:
 - name: state
 - name: ci-resources
 - name: deployment-version
+- name: release-version
 
 params:
   DOCKER_HUB_USER:

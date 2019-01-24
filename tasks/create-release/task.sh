@@ -4,7 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck disable=SC1091
-readonly VERSION_FILE="deployment-version/version"
+readonly VERSION_FILE="release-version/version"
 readonly VERSION=$(cat "$VERSION_FILE")
 
 main() {
