@@ -31,7 +31,7 @@ hooks:
                             {
                               "type": "button",
                               "text": "View in Concourse",
-                              "url": "https://flintstone.ci.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
+                              "url": "https://ci.flintstone.cf.cloud.ibm.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
                             }
                       ]
                   }]
