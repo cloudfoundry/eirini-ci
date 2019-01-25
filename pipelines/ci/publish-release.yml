@@ -11,7 +11,7 @@ resources:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
-    file: release/version
+    file: release-version
     private_key: ((github-private-key))
     initial_version: 0.1.0
 
