@@ -7,7 +7,6 @@ image_resource:
     repository: eirini/ci
 
 inputs:
-- name: state
 - name: ci-resources
 - name: deployment-version
 - name: release-version
