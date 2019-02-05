@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: cloudfoundry/capi
+    tag: ruby-units
+
+inputs:
+- name: cc-ng-fork
+- name: eirini-source
+- name: ci-resources
+
+run:
+  path: ci-resources/tasks/run-cc-tests/task.sh

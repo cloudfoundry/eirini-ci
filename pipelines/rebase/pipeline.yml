@@ -11,6 +11,16 @@ jobs:
     params:
       repository: rebased-cc
       force: true
+- name: run-CC-tests
+  plan:
+  - get: cc-ng-fork
+    trigger: true
+  - get: ci-resources
+  - get: eirini-source
+    params:
+      submodules: all
+  - task: run-tests
+    file: ci-resources/tasks/run-cc-tests/task.yml
 
 resources:
 - name: cc-ng-fork
@@ -28,4 +38,9 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: cc-tests
+- name: eirini-source
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: master
