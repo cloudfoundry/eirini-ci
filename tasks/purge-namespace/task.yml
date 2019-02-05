@@ -14,4 +14,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  file: ci-resources/tasks/purge-namespace/task.sh
+  path: ci-resources/tasks/purge-namespace/task.sh
