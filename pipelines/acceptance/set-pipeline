@@ -30,6 +30,7 @@ fly --target "$target" \
   --var worker_count="$worker_count" \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var eirini-release-branch=master \
   --var enable_opi_staging=false \
   --load-vars-from "$private_repo/concourse/common.yml"

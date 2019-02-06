@@ -8,7 +8,7 @@ image_resource:
 
 inputs:
 - name: ci-resources
-- name: deployment-version
+- name: eirini-release
 - name: release-version
 
 params:
@@ -17,4 +17,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/retag-release-images/task.sh
+  path: ci-resources/tasks/create-release-images/task.sh

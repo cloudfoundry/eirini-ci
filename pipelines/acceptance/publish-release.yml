@@ -16,34 +16,29 @@ resources:
     initial_version: 0.1.0
 
 groups:
-- name: fast-forward
+- name: publish-release
   jobs:
-  - ((append))
   - publish-release
 
 jobs:
 - ((merge))
 - name: publish-release
   plan:
-  - get: ci-no-diego-ready
-    trigger: true
-    passed:
-    - fast-forward-master-release
   - get: ci-resources
   - get: state
   - get: eirini-release
+    params:
+      submodules: all
   - get: release-version
     params:
       bump: minor
-  - get: ((cluster-name))-deployment-version
-  - task: retag-release-images
+  - task: create-release-images
     privileged: true
-    input_mapping: {deployment-version: ((cluster-name))-deployment-version}
     params:
       DOCKER_HUB_USER: ((dockerhub-user))
       DOCKER_HUB_PASSWORD: ((dockerhub-password))
       CLUSTER_NAME: ((cluster-name))
-    file: ci-resources/tasks/retag-release-images/task.yml
+    file: ci-resources/tasks/create-release-images/task.yml
   - task: create-release
     params:
       CLUSTER_NAME: ((cluster-name))
