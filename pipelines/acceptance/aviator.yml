@@ -12,4 +12,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+  modify:
+    delete:
+      - "jobs.name:delete-cluster.plan.task:delete-values-file"
   to: $PIPELINE_YML

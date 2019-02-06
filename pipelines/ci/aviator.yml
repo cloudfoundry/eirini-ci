@@ -22,4 +22,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/publish-release.yml
       - $PROJECT_ROOT/notifications/slack/check-shell.yml
       - $PROJECT_ROOT/notifications/slack/bits.yml
+  modify:
+    delete:
+      - "jobs.name:delete-cluster.plan.task:delete-values-file"
   to: $PIPELINE_YML
