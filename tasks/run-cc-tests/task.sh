@@ -14,28 +14,28 @@ main() {
   run-tests
 }
 
-build-opi(){
+build-opi() {
   pushd "$EIRINI_MAIN"
-    go install
+  go install
   popd
 }
 
-start-postgres(){
+start-postgres() {
   service postgresql restart
   trap stop-postgres EXIT
 }
 
-stop-postgres(){ 
+stop-postgres() {
   service postgresql stop
 }
 
-run-tests(){
+run-tests() {
   pushd cc-ng-fork
-    export BUNDLE_GEMFILE=Gemfile
-    bundle install
+  export BUNDLE_GEMFILE=Gemfile
+  bundle install
 
-    bundle exec rake rubocop
-    CF_RUN_OPI_SPEC=true bundle exec rake spec:serial
+  bundle exec rake rubocop
+  CF_RUN_OPI_SPEC=true bundle exec rake spec:serial
   popd
 }
 

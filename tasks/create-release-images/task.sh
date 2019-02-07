@@ -27,10 +27,10 @@ main() {
 }
 
 build-images() {
-  pushd "eirini-release/"
-    ./docker/generate-docker-image.sh "$VERSION"
-    ./src/code.cloudfoundry.org/eirini/recipe/bin/build.sh "$VERSION"
-  popd
+  pushd "eirini-release/" || exit
+  ./docker/generate-docker-image.sh "$VERSION"
+  ./src/code.cloudfoundry.org/eirini/recipe/bin/build.sh "$VERSION"
+  popd || exit
 }
 
 retag-images() {
