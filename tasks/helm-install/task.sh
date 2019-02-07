@@ -15,6 +15,7 @@ main() {
   ibmcloud-login
   export-kubeconfig "$CLUSTER_NAME"
   export-ca-cert
+  helm-dep-update
   helm-install
 }
 
@@ -25,16 +26,25 @@ export-ca-cert() {
   fi
 }
 
+helm-dep-update(){
+  if [ "$COMPONENT" == "scf" ]; then
+    pushd "eirini-release/helm/cf"
+      helm init --client-only
+      helm dependency update
+    popd || exit
+  fi
+}
+
 helm-install() {
   local -r image_tag="${VERSIONING_CLUSTER}-${VERSION}"
-  pushd eirini-release/scf
+  pushd eirini-release/helm
   helm upgrade --install "$COMPONENT" \
-    helm/"$HELM_CHART" \
+    "$HELM_CHART" \
     --namespace "$COMPONENT" \
     --values "../../$ENVIRONMENT"/scf-config-values.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
     --set "opi.version=$VERSION" \
-    --set "opi.image_tag=$image_tag" \
+    --set "eirini.opi.image_tag=$image_tag" \
     --force
   popd
 }

@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/ibmcloud
+
+inputs:
+- name: ci-resources
+- name: release-output
+- name: release-version
+- name: gh-pages
+
+outputs:
+- name: gh-pages-updated
+
+run:
+  path: ci-resources/tasks/update-helm-repo/task.sh

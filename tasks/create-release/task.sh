@@ -8,19 +8,37 @@ readonly VERSION_FILE="release-version/version"
 readonly VERSION=$(cat "$VERSION_FILE")
 
 main() {
-  change-image-tags
+  change-image-tag
+  update-chart-version
+  update-requirements-version
+  helm-dep-update
+  update-requirements-repo
   zip-templates
 }
 
-change-image-tags() {
-  sed -i "s/{{ .Values.opi.image_tag }}/${VERSION}/g" eirini-release/scf/helm/cf/templates/eirini.yaml
+change-image-tag() {
+  goml set -f eirini-release/helm/eirini/values.yaml -p opi.image_tag -v "$VERSION"
+}
+
+update-chart-version() {
+  goml set -f eirini-release/helm/eirini/Chart.yaml -p opi.image_tag -v "$VERSION"
+}
+
+update-requirements-version() {
+  goml set -f eirini-release/helm/cf/requirements.yaml -p dependencies.name:eirini.version -v "$VERSION"
+}
+
+update-requirements-repo(){
+  goml set -f eirini-release/helm/cf/requirements.yaml -p dependencies.name:eirini.repository -v https://cloudfoundry-incubator.github.io/eirini-release
 }
 
 zip-templates() {
-  pushd eirini-release/scf/helm
-  tar -zcvf "eirini-scf-release-v${VERSION}.tgz" cf uaa
+  pushd eirini-release/helm
+    tar -zcvf "eirini-cf.tgz" cf
+    tar -zcvf "eirini-uaa.tgz" uaa
+    tar -zcvf "eirini.tgz" eirini
   popd
-  mv "eirini-release/scf/helm/eirini-scf-release-v${VERSION}.tgz" release-output
+  mv "eirini-release/helm/*" release-output
 }
 
 main

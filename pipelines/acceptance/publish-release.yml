@@ -14,6 +14,12 @@ resources:
     file: release-version
     private_key: ((github-private-key))
     initial_version: 0.1.0
+- name: gh-pages
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
+    branch: gh-pages
+    private_key: ((github-private-key))
 
 groups:
 - name: publish-release
@@ -25,6 +31,7 @@ jobs:
 - name: publish-release
   plan:
   - get: ci-resources
+  - get: gh-pages
   - get: state
   - get: eirini-release
     params:
@@ -43,6 +50,8 @@ jobs:
     params:
       CLUSTER_NAME: ((cluster-name))
     file: ci-resources/tasks/create-release/task.yml
+  - task: update-helm-index
+    file: ci-resources/tasks/update-helm-repo/task.yml
   - put: release-version
     params:
       file: release-version/version
@@ -52,4 +61,7 @@ jobs:
       tag: release-version/version
       tag_prefix: v
       globs:
-      - release-output/eirini-scf-release-*.tgz
+      - release-output/eirini*.tgz
+  - put: gh-pages
+    params:
+       repository: gh-pages-updated

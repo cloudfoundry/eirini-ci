@@ -39,11 +39,6 @@ env:
     UAA_PORT: 2793
     ENABLE_OPI_STAGING: $ENABLE_STAGING
 
-opi:
-    use_registry_ingress: true
-    ingress_endpoint: $ingress_endpoint
-    namespace: opi
-
 kube:
     external_ips: []
     storage_class:
@@ -54,11 +49,20 @@ kube:
 secrets:
     CLUSTER_ADMIN_PASSWORD: $CLUSTER_ADMIN_PASSWORD
     UAA_ADMIN_CLIENT_SECRET: $UAA_ADMIN_CLIENT_SECRET
-    NATS_PASSWORD: $NATS_PASSWORD
+    BLOBSTORE_PASSWORD: $BITS_SECRET
 
+eirini:
+  opi:
+    use_registry_ingress: true
+    ingress_endpoint: $ingress_endpoint
+
+  secrets:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
     BLOBSTORE_PASSWORD: $BITS_SECRET
+
+  kube:
+    external_ips: []
 EOF
   popd
 }
@@ -69,6 +73,7 @@ set-external-ips() {
   IFS=" "
   for ip in $node_ips; do
     goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p kube.external_ips.+ -v "$ip"
+    goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p eirini.kube.external_ips.+ -v "$ip"
   done
   popd
 }
