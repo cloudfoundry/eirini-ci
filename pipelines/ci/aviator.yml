@@ -25,4 +25,6 @@ spruce:
   modify:
     delete:
       - "jobs.name:delete-cluster.plan.task:delete-values-file"
+      - "jobs.name:delete-cluster.plan.put:cluster-state"
+      - "jobs.name:delete-cluster.plan.get:cluster-state"
   to: $PIPELINE_YML
