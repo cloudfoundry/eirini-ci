@@ -5,12 +5,12 @@ IFS=$'\n\t'
 
 VERSION="$(cat release-version/version)"
 
-main(){
+main() {
   update-helm-index
   commit-helm-index
 }
 
-update-helm-index(){
+update-helm-index() {
   mkdir output
   cp release-output/* output
   helm repo index output --merge gh-pages/index.yaml --url "https://github.com/cloudfoundry-incubator/eirini-release/releases/download/v$VERSION"

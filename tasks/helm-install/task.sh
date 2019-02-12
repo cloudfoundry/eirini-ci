@@ -26,11 +26,11 @@ export-ca-cert() {
   fi
 }
 
-helm-dep-update(){
+helm-dep-update() {
   if [ "$COMPONENT" == "scf" ]; then
     pushd "eirini-release/helm/cf"
-      helm init --client-only
-      helm dependency update
+    helm init --client-only
+    helm dependency update
     popd || exit
   fi
 }
