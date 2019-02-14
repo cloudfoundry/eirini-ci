@@ -30,7 +30,7 @@ commit-helm-index() {
   fi
   popd || exit
 
-  cp -R gh-pages gh-pages-updated
+  cp -r gh-pages/. gh-pages-updated
 }
 
 main
