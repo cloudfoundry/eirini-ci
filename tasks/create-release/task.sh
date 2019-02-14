@@ -21,7 +21,7 @@ change-image-tag() {
 }
 
 update-chart-version() {
-  goml set -f eirini-release/helm/eirini/Chart.yaml -p opi.image_tag -v "$VERSION"
+  goml set -f eirini-release/helm/eirini/Chart.yaml -p version -v "$VERSION"
 }
 
 update-requirements-version() {
@@ -45,7 +45,7 @@ zip-templates() {
   tar -zcvf "eirini-uaa.tgz" uaa
   tar -zcvf "eirini.tgz" eirini
   popd
-  mv "eirini-release/helm/*" release-output
+  mv eirini-release/helm/*.tgz release-output
 }
 
 main
