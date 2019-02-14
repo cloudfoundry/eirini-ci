@@ -28,6 +28,13 @@ update-requirements-version() {
   goml set -f eirini-release/helm/cf/requirements.yaml -p dependencies.name:eirini.version -v "$VERSION"
 }
 
+helm-dep-update() {
+  pushd "eirini-release/helm/cf"
+  helm init --client-only
+  helm dependency update
+  popd || exit
+}
+
 update-requirements-repo() {
   goml set -f eirini-release/helm/cf/requirements.yaml -p dependencies.name:eirini.repository -v https://cloudfoundry-incubator.github.io/eirini-release
 }
