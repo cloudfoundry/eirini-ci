@@ -19,7 +19,7 @@ resources:
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: gh-pages
-    private_key: ((github-private-key))
+    private_key: ((eirini-release-repo-key))
 
 groups:
 - name: publish-release
