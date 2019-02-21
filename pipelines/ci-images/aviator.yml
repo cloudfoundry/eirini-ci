@@ -1,14 +1,14 @@
 spruce:
-- base: pipeline.yml
+- base: $PROJECT_ROOT/pipelines/ci-images/pipeline.yml
   merge:
   - with:
       files:
       - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/docker-images.yml
+      - $PROJECT_ROOT/notifications/slack/ci-images.yml
   to: spruced.yml
 
 fly:
-  name: update-docker-images
+  name: ci-images
   target: $TARGET
   config: spruced.yml
   load_vars_from:

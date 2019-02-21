@@ -1,16 +1,4 @@
 jobs:
-- name: update-docker-images
-  plan:
-  - get: ci-resources
-  - get: eirini-release
-    trigger: true
-  - task: update docker image
-    privileged: true
-    params:
-      DOCKER_HUB_USER: ((docker_hub_user))
-      DOCKER_HUB_PASSWORD: ((docker_hub_password))
-      TAG: latest
-    file: ci-resources/tasks/create-docker-images/task.yml
 - name: update-eirini-ci-image
   plan:
   - get: golang-image
@@ -27,18 +15,6 @@ jobs:
     params: {build: eirini-ibmcloud-image-source/images/ibmcloud}
 
 resources:
-- name: eirini-release
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: master
-
-- name: ci-resources
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: master
-
 - name: eirini-ci-image-source
   type: git
   source:
