@@ -1,6 +1,6 @@
 jobs:
 - ((merge))
-- name: update-docker-images
+- name: update-eirini-ibmcloud-image
   .: (( inject hooks.failure ))
 - name: update-eirini-ci-image
   .: (( inject hooks.failure ))
