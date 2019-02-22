@@ -51,6 +51,9 @@ secrets:
     UAA_ADMIN_CLIENT_SECRET: $UAA_ADMIN_CLIENT_SECRET
     BLOBSTORE_PASSWORD: $BITS_SECRET
 
+services:
+  loadbalanced: false
+
 eirini:
   opi:
     use_registry_ingress: true
