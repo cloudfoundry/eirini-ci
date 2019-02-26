@@ -3,6 +3,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if [[ "$#" -lt 4 ]]; then
+  echo "Usage $0 <world_name> <target> <private_repo> <working_branch> [worker_count] [enable_opi_staging]" >&2
+  exit 1
+fi
+
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT
 
