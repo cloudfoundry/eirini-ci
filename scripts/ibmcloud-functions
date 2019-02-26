@@ -52,7 +52,10 @@ create-cluster() {
 # Delete the cluster with the name given as $1
 delete-cluster() {
   declare -r name=$1
-  ibmcloud ks cluster-rm --cluster "$name" -f
+
+  if cluster-exists "$name"; then
+    ibmcloud ks cluster-rm --cluster "$name" -f --force-delete-storage
+  fi
 }
 
 # Exit nonzero unless the cluster $1 exists
@@ -66,7 +69,7 @@ wait-for-deletion() {
   declare -r name=$1
 
   until ! cluster-exists "$name"; do
-    cluster-state "$name" | jq --raw-output '.masterStatus'
+    cluster-state "$name" | jq --raw-output '.masterStatus' || true
     sleep 10
   done
 }
