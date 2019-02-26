@@ -16,7 +16,8 @@ RUN curl --fail --silent --show-error --location https://clis.ng.bluemix.net/ins
 # Disable automatic version checking because it breaks the scripts
 RUN ibmcloud config --check-version=false
 # https://console.bluemix.net/docs/containers/cs_cli_install.html
-RUN ibmcloud plugin install container-service
+# Pinning it a working version, because the latest version (0.2.53) has a bug when creating a cluster
+RUN ibmcloud plugin install container-service -v 0.1.638
 # Enable bash completion for ibmcloud
 RUN echo source /usr/local/ibmcloud/autocomplete/bash_autocomplete >> ~/.bashrc
 
