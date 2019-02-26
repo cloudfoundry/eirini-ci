@@ -20,14 +20,16 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
-    path: images/ci/Dockerfile
+    paths:
+    - images/ci/Dockerfile
 
 - name: eirini-ibmcloud-image-source
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
-    path: images/ibmcloud/Dockerfile
+    paths:
+    - images/ibmcloud/Dockerfile
 
 - name: eirini-ci-image
   type: docker-image
