@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xeuo pipefail
+set -euo pipefail
 IFS=$'\n\t'
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
@@ -12,7 +12,7 @@ main() {
 
 remove-scf-values() {
   pushd cluster-state
-  rm -r "$CLUSTER_DIR"
+  rm -rf "$CLUSTER_DIR"
   popd
 }
 
