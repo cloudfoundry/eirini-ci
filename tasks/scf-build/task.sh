@@ -5,8 +5,6 @@ set -xeuo pipefail
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 
-apt remove --yes docker-ce && apt install --yes docker-ce=17.09.1~ce-0~ubuntu
-
 main() {
   start-docker
   init-scf-submodules

@@ -39,7 +39,7 @@ RUN  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
   && apt-key fingerprint 0EBFCD88 \
   && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
   && apt-get update \
-  && apt-get install -y docker-ce
+  && apt-get install -y docker-ce=17.09.1~ce-0~ubuntu
 
 # Fissile
 ENV FISSILE_SHA1="311b07d9462f6fc091f126ec28abe4db6cf8ea32"
