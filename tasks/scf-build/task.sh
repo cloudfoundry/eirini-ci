@@ -28,7 +28,7 @@ init-scf-submodules() {
 
 use-eirini-capi() {
   pushd capi-release
-    git submodule update --init --recursive
+  git submodule update --init --recursive
   popd
   cp -r capi-release scf/src
 }
