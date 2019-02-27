@@ -4,9 +4,11 @@ jobs:
   - aggregate:
     - get: scf
       params:
-          submodules: none
+        submodules: none
     - get: capi-release
       trigger: true
+      params:
+        submodules: none
     - get: eirini-release
     - get: ci-resources
   - task: scf-build
