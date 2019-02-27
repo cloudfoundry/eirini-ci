@@ -20,6 +20,13 @@ RUN apt-get update && \
 # bosh2
 RUN curl --fail --silent --show-error --location --output /usr/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 && chmod +x /usr/bin/bosh
 
+# Golang
+ENV GOLANG_VERSION="1.10.8" GOROOT="/goroot" GOPATH="/gopath"
+RUN mkdir /goroot \
+&& mkdir /gopath \
+&& curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar xvzf - -C /goroot --strip-components=1
+ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
+
 # Direnv
 RUN go get -u github.com/mvdan/sh/cmd/shfmt && \
     git clone https://github.com/direnv/direnv $GOPATH/src/github.com/direnv/direnv && \
@@ -43,13 +50,6 @@ RUN git clone https://github.com/SUSE/fissile $GOPATH/src/github.com/SUSE/fissil
 && make tools \
 && make build \
 && mv $GOPATH/src/github.com/SUSE/fissile/build/linux-amd64/fissile /usr/local/bin/fissile
-
-# Golang
-ENV GOLANG_VERSION="1.10.1" GOROOT="/goroot" GOPATH="/gopath"
-RUN mkdir /goroot \
-&& mkdir /gopath \
-&& curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz | tar xvzf - -C /goroot --strip-components=1
-ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
 # Pip
 RUN apt-get install -y python \
