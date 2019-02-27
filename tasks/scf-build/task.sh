@@ -20,10 +20,11 @@ main() {
 
 init-scf-submodules() {
   pushd scf
-  local modules
-  modules=$(grep "submodule" .gitmodules | grep --invert-match "capi" | awk '{print $2}' | tr --delete '"]' | xargs)
-
-  git submodule update --init --recursive "$modules"
+  grep "submodule" .gitmodules | \
+    grep --invert-match "capi" | \
+    awk '{print $2}' | \
+    tr --delete '"]' | \
+    xargs git submodule update --init --recursive
   popd
 }
 
