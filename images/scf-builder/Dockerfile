@@ -29,6 +29,7 @@ ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
 # Direnv
 RUN go get -u github.com/mvdan/sh/cmd/shfmt && \
+    go get -u github.com/cpuguy83/go-md2man && \
     git clone https://github.com/direnv/direnv $GOPATH/src/github.com/direnv/direnv && \
     cd $GOPATH/src/github.com/direnv/direnv && \
     make install && \
