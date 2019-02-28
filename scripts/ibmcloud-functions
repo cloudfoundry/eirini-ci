@@ -43,6 +43,7 @@ create-cluster() {
     --name "$name" \
     --zone lon06 \
     --machine-type b2c.4x16 \
+    --kube-version "1.10.8_1524" \
     --workers "$worker_count" \
     --private-vlan 2447007 \
     --public-vlan 2447005
