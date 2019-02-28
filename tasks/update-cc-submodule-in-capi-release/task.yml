@@ -1,0 +1,17 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/ci
+
+inputs:
+  - name: ci-resources
+  - name: capi-release-fork
+  - name: cc-ng-fork
+
+outputs:
+  - name: updated-capi-release-fork
+
+run:
+  path: ci-resources/tasks/update-cc-submodule-in-capi-release/task.sh

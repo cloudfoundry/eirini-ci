@@ -21,6 +21,21 @@ jobs:
       submodules: all
   - task: run-tests
     file: ci-resources/tasks/run-cc-tests/task.yml
+- name: update-submodule-in-capi-release-fork
+  plan:
+  - get: cc-ng-fork
+    passed:
+    - run-CC-tests
+    trigger: true
+  - get: capi-release-fork
+    params:
+      submodules: none
+  - get: ci-resources
+  - task: update-cc-submodule
+    file: ci-resources/tasks/update-cc-submodule-in-capi-release/task.yml
+  - put: capi-release-fork
+    params:
+      repository: updated-capi-release-fork
 
 resources:
 - name: cc-ng-fork
@@ -29,6 +44,12 @@ resources:
     uri: git@github.com:mnitchev/cloud_controller_ng.git
     branch: eirini
     private_key: ((cc_ng_key))
+- name: capi-release-fork
+  type: git
+  source:
+    uri: git@github.com:JulzDiverse/capi-release.git
+    branch: develop
+    private_key: ((github-private-key))
 - name: cc-ng
   type: git
   source:
