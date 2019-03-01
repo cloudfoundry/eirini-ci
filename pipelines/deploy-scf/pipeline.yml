@@ -179,14 +179,15 @@ resources:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
     paths:
-    - scf/helm/uaa
+    - helm/uaa
 - name: scf-resources
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
     paths:
-    - scf/helm/cf
+    - helm/cf
+    - helm/eirini
 - name: ((cluster-name))-event-ready
   type: semver
   source:
