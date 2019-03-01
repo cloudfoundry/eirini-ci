@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/ci
+
+inputs:
+- name: eirini-source
+- name: ci-resources
+- name: kube
+
+run:
+  path: ci-resources/tasks/run-unit-tests/task.sh

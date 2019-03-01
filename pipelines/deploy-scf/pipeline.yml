@@ -2,7 +2,7 @@ groups:
 - (( prepend ))
 - name: eirini-ci
   jobs:
-  - run-unit-tests
+  - run-tests
   - run-static-checks
   - create-docker-images
   - deploy-scf-uaa
@@ -10,7 +10,7 @@ groups:
   - run-smoke-tests
 
 jobs:
-- name: run-unit-tests
+- name: run-tests
   plan:
   - get: ((cluster-name))-event-ready
     trigger: true
@@ -19,18 +19,27 @@ jobs:
   - get: eirini-source
     trigger: true
   - get: ci-resources
-  - task: run-tests
+  - task: run-unit-tests
     file: ci-resources/tasks/run-unit-tests/task.yml
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-name))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
+  - task: run-integration-tests
+    file: ci-resources/tasks/run-integration-tests/task.yml
 - name: run-static-checks
   plan:
   - get: eirini-source
     trigger: true
     passed:
-    - run-unit-tests
+    - run-tests
   - get: ((cluster-name))-event-ready
     trigger: true
     passed:
-    - run-unit-tests
+    - run-tests
   - get: ci-resources
   - task: run-static-checks
     file: ci-resources/tasks/run-static-checks/task.yml

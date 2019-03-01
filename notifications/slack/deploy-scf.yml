@@ -1,6 +1,6 @@
 jobs:
 - ((merge))
-- name: run-unit-tests
+- name: run-tests
   .: (( inject hooks.failure ))
 - name: run-static-checks
   .: (( inject hooks.failure ))
