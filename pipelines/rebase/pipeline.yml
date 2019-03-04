@@ -65,7 +65,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-    branch: cc-tests
+    branch: master
 - name: eirini-source
   type: git
   source:
