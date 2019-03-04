@@ -96,11 +96,7 @@ jobs:
           repository: state-modified
 
 resources:
-  - name: ci-resources
-    type: git
-    source:
-      uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
-      branch: ((ci-resources-branch))
+  
 
   - name: ((cluster-name))-event-created
     type: semver

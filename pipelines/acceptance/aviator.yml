@@ -1,22 +1,22 @@
 spruce:
-- base: $PROJECT_ROOT/pipelines/kube-cluster/pipeline.yml
+- base: $PROJECT_ROOT/pipelines/deploy-scf/pipeline.yml
   prune:
   - cats_conf
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/deploy-scf/pipeline.yml
       - $PROJECT_ROOT/pipelines/run-cats/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
       - $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
       - $PROJECT_ROOT/notifications/slack/publish-release.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   modify:
     delete:
-      - "jobs.name:delete-cluster.plan.task:delete-values-file"
-      - "jobs.name:delete-cluster.plan.put:cluster-state"
-      - "jobs.name:delete-cluster.plan.get:cluster-state"
+    - "resources.name:((cluster-name))-event-ready"
+    - "jobs.name:run-tests.plan.get:((cluster-name))-event-ready"
+    - "jobs.name:run-static-checks.plan.get:((cluster-name))-event-ready"
+    - "jobs.name:create-docker-images.plan.get:((cluster-name))-event-ready"
+    - "jobs.name:deploy-scf-uaa.plan.get:((cluster-name))-event-ready"
   to: $PIPELINE_YML

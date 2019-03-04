@@ -82,6 +82,9 @@ jobs:
   - get: eirini-release
   - get: state
   - get: ((cluster-name))-deployment-version
+    trigger: true
+    passed:
+    - create-docker-images
   - get: ((cluster-name))-event-uaa-ready
     params:
       bump: major
@@ -161,6 +164,11 @@ jobs:
     file: ci-resources/tasks/run-smoke-tests/task.yml
 
 resources:
+- name: ci-resources
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: ((ci-resources-branch))
 - name: eirini-source
   type: git
   source:
