@@ -4,6 +4,7 @@ jobs:
   - get: ci-resources
   - get: cc-ng-fork
   - get: cc-ng
+  - get: capi-ci-passed
     trigger: true
   - task: rebase
     file: ci-resources/tasks/rebase-cc/task.yml
