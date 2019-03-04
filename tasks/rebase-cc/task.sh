@@ -16,7 +16,7 @@ rebase() {
   popd
 }
 
-ci_passed_sha(){
+ci_passed_sha() {
   cd capi-ci-passed/src/cloud_controller_ng
   git rev-parse HEAD
 }
@@ -26,7 +26,7 @@ ci_passed_sha(){
 restore-commiters() {
   sha="$(ci_passed_sha)"
   pushd cc-ng-fork
-  diff=$(git rev-list --right-only --count $sha..eirini)
+  diff=$(git rev-list --right-only --count "$sha"..eirini)
   start_commit=HEAD~"$diff"
   end_commit=HEAD
 
