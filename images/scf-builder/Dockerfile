@@ -12,6 +12,7 @@ RUN apt-get update && \
       jq \
       lsb-release \
       zlib1g \
+      wget \
       zlib1g-dev \
       libssl-dev \
       libreadline-dev \
