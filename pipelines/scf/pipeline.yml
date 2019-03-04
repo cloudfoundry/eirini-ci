@@ -7,8 +7,6 @@ jobs:
         submodules: none
     - get: capi-release
       trigger: true
-      params:
-        submodules: none
     - get: eirini-release
     - get: ci-resources
   - task: scf-build
@@ -27,8 +25,8 @@ resources:
 - name: scf
   type: git
   source:
-    uri: https://github.com/gdankov/scf.git
-    branch: diego-come-back
+    uri: https://github.com/JulzDiverse/scf.git
+    branch: eirini-scf-2.14.5
     git_config:
     - name: submodule.fetchJobs
       value: 64
