@@ -50,6 +50,12 @@ resources:
     uri: git@github.com:JulzDiverse/capi-release.git
     branch: develop
     private_key: ((github-private-key))
+- name: capi-ci-passed
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry/capi-release.git
+    branch: ci-passed
+    private_key: ((github-private-key))
 - name: cc-ng
   type: git
   source:

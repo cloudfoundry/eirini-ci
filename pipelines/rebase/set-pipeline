@@ -23,5 +23,5 @@ fly -t "$TARGET" set-pipeline \
   --config "$SCRIPT_DIR"/spruced.yml \
   --pipeline rebase-cc \
   --load-vars-from "$PRIVATE_REPO/concourse/common.yml" \
-  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var github-private-key="$(pass eirini/github/capi-release/ssh-key)" \
   --var cc_ng_key="$(pass eirini/github/mnitchev/cloud_controller_ng/ssh-key)"

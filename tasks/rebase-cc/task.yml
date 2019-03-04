@@ -6,15 +6,11 @@ image_resource:
   source:
     repository: eirini/ci
 
-params:
-  FORK_BRANCH: eirini
-  UPSTREAM: ../cc-ng
-  UPSTREAM_BRANCH: master
-
 inputs:
 - name: ci-resources
 - name: cc-ng-fork
 - name: cc-ng
+- name: capi-ci-passed
 
 outputs:
 - name: rebased-cc

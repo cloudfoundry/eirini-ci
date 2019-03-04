@@ -7,19 +7,26 @@ main() {
 }
 
 rebase() {
-  pushd cc-ng-fork
-  git checkout "$FORK_BRANCH"
-  git remote add upstream "$UPSTREAM"
+  sha="$(ci_passed_sha)"
 
-  git pull upstream "$UPSTREAM_BRANCH" --rebase
+  pushd cc-ng-fork
+  git checkout eirini
+  git remote add upstream ../cc-ng
+  git pull upstream "$sha" --rebase
   popd
+}
+
+ci_passed_sha(){
+  cd capi-ci-passed/src/cloud_controller_ng
+  git rev-parse HEAD
 }
 
 # This is necessary because git does not let you keep the committers after rebase
 # This function restores them by parsing the 'Signed-off-by' message footer, if available
 restore-commiters() {
+  sha="$(ci_passed_sha)"
   pushd cc-ng-fork
-  diff=$(git rev-list --right-only --count upstream/"$UPSTREAM_BRANCH".."$FORK_BRANCH")
+  diff=$(git rev-list --right-only --count $sha..eirini)
   start_commit=HEAD~"$diff"
   end_commit=HEAD
 
