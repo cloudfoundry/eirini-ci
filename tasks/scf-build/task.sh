@@ -67,7 +67,7 @@ git-commit() {
   pushd eirini-release || exit
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
-    git add "scf/helm/cf/templates"
+    git add "helm/cf/templates"
     git config --global user.email "eirini@cloudfoundry.org"
     git config --global user.name "Come-On Eirini"
     git commit --all --message "update scf templates"
