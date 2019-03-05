@@ -20,6 +20,7 @@ jobs:
     file: ci-resources/tasks/scf-build/task.yml
   - put: eirini-release
     params:
+      merge: true
       repository: eirini-release-modified
 
 resources:
