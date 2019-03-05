@@ -12,7 +12,8 @@ rebase() {
   pushd cc-ng-fork
   git checkout eirini
   git remote add upstream ../cc-ng
-  git pull upstream "$sha" --rebase
+  git fetch upstream
+  git rebase "$sha"
   popd
 }
 
