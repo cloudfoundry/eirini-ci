@@ -1,5 +1,6 @@
 jobs:
 - name: scf-build
+  serial: true
   plan:
   - aggregate:
     - get: scf
