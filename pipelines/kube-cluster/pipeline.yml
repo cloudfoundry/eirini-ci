@@ -10,6 +10,9 @@ jobs:
   - name: create-cluster
     plan:
       - get: ci-resources
+      - get: cluster-state
+        trigger: true
+        passed: [delete-cluster]
       - get: ((cluster-name))-event-created
         params:
           bump: major
@@ -79,6 +82,7 @@ jobs:
   - name: delete-cluster
     plan:
       - get: ci-resources
+      - get: cluster-state
       - task: delete-kubernetes-cluster
         file: ci-resources/tasks/delete-cluster/task.yml
         params:
