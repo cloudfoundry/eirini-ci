@@ -82,7 +82,6 @@ jobs:
   - name: delete-cluster
     plan:
       - get: ci-resources
-      - get: cluster-state
       - task: delete-kubernetes-cluster
         file: ci-resources/tasks/delete-cluster/task.yml
         params:
