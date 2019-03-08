@@ -38,7 +38,6 @@ push() {
   docker push "eirini/opi-init:$TAG"
   docker push "eirini/recipe:$TAG"
   docker push "eirini/certs-copy:$TAG"
-  docker push "eirini/certs-generate:$TAG"
   docker push "eirini/secret-smuggler:$TAG"
 }
 
