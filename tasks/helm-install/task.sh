@@ -18,7 +18,7 @@ main() {
   export-kubeconfig "$CLUSTER_NAME"
   export-certs
   helm-dep-update
-  helm init --upgrade
+  helm init --upgrade --wait
   helm-install
 }
 
