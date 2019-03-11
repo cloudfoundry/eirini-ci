@@ -6,7 +6,7 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 readonly VERSION=$(cat release-version/version)
-readonly IMAGE_NAMES=("opi" "opi-init" "recipe" "certs-copy" "secret-smuggler")
+readonly IMAGE_NAMES=("opi" "opi-init" "recipe" "secret-smuggler")
 readonly DOCKER_HUB_USER=${DOCKER_HUB_USER:?Variable not set}
 readonly DOCKER_HUB_PASSWORD=${DOCKER_HUB_PASSWORD:?Variable not set}
 
