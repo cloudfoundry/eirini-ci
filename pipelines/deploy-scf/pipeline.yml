@@ -176,6 +176,7 @@ resources:
     branch: ((eirini-release-branch))
     paths:
     - src/code.cloudfoundry.org/eirini
+    - docker
 - name: eirini-release
   type: git
   source:
