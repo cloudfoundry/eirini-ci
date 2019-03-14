@@ -25,3 +25,4 @@ cats_conf:
   INCLUDE_TASKS: false
   INCLUDE_V3: false
   INCLUDE_ZIPKIN: false
+  NO_OF_TEST_NODES: 2
