@@ -1,0 +1,10 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/ci/check-shell.yml
+  prune:
+  - cats_conf
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/check-shell.yml
+  to: $PIPELINE_YML

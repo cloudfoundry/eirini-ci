@@ -11,14 +11,12 @@ spruce:
       - $PROJECT_ROOT/pipelines/ff-master/pipeline.yml
       - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/deliver-story.yml
-      - $PROJECT_ROOT/pipelines/ci/check-shell.yml
       - $PROJECT_ROOT/pipelines/ci/bits.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
       - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
       - $PROJECT_ROOT/notifications/slack/ff-master.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-      - $PROJECT_ROOT/notifications/slack/check-shell.yml
       - $PROJECT_ROOT/notifications/slack/bits.yml
   modify:
     delete:
