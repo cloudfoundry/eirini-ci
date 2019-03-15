@@ -1,5 +1,5 @@
 spruce:
-- base: $PROJECT_ROOT/pipelines/ci/check-shell.yml
+- base: $PROJECT_ROOT/pipelines/check-shell/check-shell.yml
   prune:
   - cats_conf
   merge:
