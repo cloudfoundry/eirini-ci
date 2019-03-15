@@ -38,7 +38,7 @@ jobs:
     file: ci-resources/tasks/waiting-for-uaa/task.yml
   - put: cluster-with-diego-staging-event-uaa-ready
     params:
-      file: ((cluster-with-diego-staging-name))-event-uaa-ready/number
+      file: cluster-with-diego-staging-event-uaa-ready/number
 - name: deploy-scf-eirini-with-diego
   plan:
   - get: eirini-source

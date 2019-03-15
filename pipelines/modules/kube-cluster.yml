@@ -83,7 +83,7 @@ jobs:
         file: ci-resources/tasks/curl-app/task.yml
       - put: cluster-with-diego-staging-event-ready
         params:
-          file: ((cluster-with-diego-staging-name))-event-ready/number
+          file: cluster-with-diego-staging-event-ready/number
 
   - name: delete-cluster-with-diego
     plan:
