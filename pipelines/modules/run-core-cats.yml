@@ -1,0 +1,29 @@
+groups:
+- (( prepend ))
+- name: all
+  jobs:
+  - run-core-cats
+
+jobs:
+- name: run-core-cats
+  plan:
+  - get: eirini-release
+    passed: [run-smoke-tests-with-diego]
+    trigger: true
+  - get: cats
+  - get: state
+  - get: ci-resources
+  - task: run cats
+    params:
+      .: (( inject cats_conf ))
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+    file: ci-resources/tasks/run-cats/task.yml
+
+resources:
+- name: cats
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
