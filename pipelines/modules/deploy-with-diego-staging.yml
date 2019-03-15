@@ -22,15 +22,12 @@ jobs:
     params:
       bump: major
   - task: deploy-uaa
-    file: ci-resources/tasks/helm-install/task.yml
+    file: ci-resources/tasks/deploy-uaa/task.yml
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      COMPONENT: uaa
-      HELM_CHART: uaa
       CLUSTER_NAME: ((cluster-with-diego-staging-name))
-      VERSIONING_CLUSTER: ((integration-test-cluster-name))
   - task: waiting-for-uaa
     attempts: 20
     params:
@@ -60,13 +57,11 @@ jobs:
     trigger: true
     passed: [deploy-scf-uaa-with-diego]
   - task: deploy-scf
-    file: ci-resources/tasks/helm-install/task.yml
+    file: ci-resources/tasks/deploy-scf/task.yml
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      COMPONENT: scf
-      HELM_CHART: cf
       CLUSTER_NAME: ((cluster-with-diego-staging-name))
       VERSIONING_CLUSTER: ((integration-test-cluster-name))
     on_failure:
