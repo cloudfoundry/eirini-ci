@@ -20,7 +20,8 @@ main() {
 }
 
 init-helm() {
-  helm init
+  kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
+  helm init --service-account tiller
 }
 
 set-kube-state() {
