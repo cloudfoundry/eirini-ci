@@ -1,0 +1,10 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/ci-new/empty.yml
+  merge:
+  - with:
+      files:
+        - $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+        - $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+        - $PROJECT_ROOT/pipelines/modules/deploy-with-diego-staging.yml
+  to: $PIPELINE_YML
+

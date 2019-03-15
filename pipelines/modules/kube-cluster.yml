@@ -1,0 +1,131 @@
+groups:
+- name: all
+  jobs:
+  - create-cluster-with-diego
+  - prepare-cluster-with-diego
+  - check-cluster-readiness-with-diego
+  - delete-cluster-with-diego
+- name: cluster
+  jobs:
+  - create-cluster-with-diego
+  - prepare-cluster-with-diego
+  - check-cluster-readiness-with-diego
+  - delete-cluster-with-diego
+
+jobs:
+  - name: create-cluster-with-diego
+    plan:
+      - get: ci-resources
+      - get: cluster-state
+        trigger: true
+        passed: [delete-cluster-with-diego]
+      - get: cluster-with-diego-staging-event-created
+        params:
+          bump: major
+      - task: create-kubernetes-cluster
+        file: ci-resources/tasks/create-cluster/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+          WORKER_COUNT: ((worker_count))
+      - put: cluster-with-diego-staging-event-created
+        params:
+          file: cluster-with-diego-staging-event-created/number
+
+  - name: prepare-cluster-with-diego
+    plan:
+    - get: ci-resources
+    - get: cluster-with-diego-staging-event-created
+      trigger: true
+      passed: [create-cluster-with-diego]
+    - get: cluster-state
+    - task: create-cluster-config
+      params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+          CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
+          UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
+          NATS_PASSWORD: ((nats_password))
+          ENABLE_OPI_STAGING: ((enable_opi_staging))
+      file: ci-resources/tasks/cluster-config/task.yml
+    - put: cluster-state
+      params: {repository: state-modified}
+    - task: provision-hostpath-provider
+      params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      file: ci-resources/tasks/hostpath-provisioner/task.yml
+
+  - name: check-cluster-readiness-with-diego
+    plan:
+      - get: ci-resources
+      - get: cluster-with-diego-staging-event-created
+        trigger: true
+        passed: [prepare-cluster-with-diego]
+      - get: cluster-with-diego-staging-event-ready
+        params:
+          bump: major
+      - task: deploy-smoke-test-app
+        file: ci-resources/tasks/deploy-app/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      - task: check-app-is-up
+        attempts: 50
+        file: ci-resources/tasks/curl-app/task.yml
+      - put: cluster-with-diego-staging-event-ready
+        params:
+          file: ((cluster-with-diego-staging-name))-event-ready/number
+
+  - name: delete-cluster-with-diego
+    plan:
+      - get: ci-resources
+      - task: delete-kubernetes-cluster
+        file: ci-resources/tasks/delete-cluster/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      - get: cluster-state
+      - task: delete-values-file
+        file: ci-resources/tasks/clean-up-cluster-config/task.yml
+        params:
+          CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      - put: cluster-state
+        params:
+          repository: state-modified
+
+resources:
+  - name: cluster-with-diego-staging-event-created
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: events
+      file: ((cluster-with-diego-staging-name))-event-created
+      private_key: ((github-private-key))
+
+  - name: cluster-with-diego-staging-event-ready
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: events
+      file: ((cluster-with-diego-staging-name))-event-ready
+      private_key: ((github-private-key))
+
+  - name: cluster-state
+    type: git
+    source:
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: master
+      private_key: ((github-private-key))
