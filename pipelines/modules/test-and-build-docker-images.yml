@@ -6,6 +6,11 @@ groups:
   - run-tests
   - run-static-checks
   - create-docker-images
+- name: test-and-build
+  jobs:
+  - run-tests
+  - run-static-checks
+  - create-docker-images
 
 jobs:
 - name: run-tests

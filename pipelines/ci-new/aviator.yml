@@ -35,18 +35,38 @@ spruce:
       - $PROJECT_ROOT/pipelines/ci-new/with-opi.yml
   to: {{eirini-with-opi}}
 
-- base: $PROJECT_ROOT/pipelines/ci-new/empty.yml
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
+  - meta
   - cats_conf
   merge:
   - with:
       files:
-        - {{cluster-with-diego}}
-        - {{cluster-with-opi}}
-        - {{eirini-with-diego}}
-        - {{eirini-with-opi}}
-        - $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
-        - $PROJECT_ROOT/pipelines/ci-new/cats-conf.yml
-        - $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+      - $PROJECT_ROOT/pipelines/ci-new/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/ci-new/with-diego.yml
+  to: {{cats-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
+  - cats_conf
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/ci-new/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/ci-new/with-opi.yml
+  to: {{cats-with-opi}}
+
+- base: $PROJECT_ROOT/pipelines/ci-new/empty.yml
+  merge:
+  - with:
+      files:
+      - {{cluster-with-diego}}
+      - {{cluster-with-opi}}
+      - {{eirini-with-diego}}
+      - {{eirini-with-opi}}
+      - $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+      - {{cats-with-diego}}
+      - {{cats-with-opi}}
   to: $PIPELINE_YML
 

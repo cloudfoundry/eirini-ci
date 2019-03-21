@@ -1,15 +1,15 @@
 groups:
-- (( merge ))
+- (( defer merge ))
 - name: all
   jobs:
-  - (( prepend ))
-  - run-core-cats
+  - (( defer prepend ))
+  - (( concat "run-core-cats-" meta.cluster-name ))
 
 jobs:
-- name: run-core-cats
+- name: (( concat "run-core-cats-" meta.cluster-name ))
   plan:
   - get: eirini-release
-    passed: [run-smoke-tests-with-diego]
+    passed: [ (( concat "run-smoke-tests-" meta.cluster-name )) ]
     trigger: true
   - get: cats
   - get: state
@@ -20,7 +20,7 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name))
     file: ci-resources/tasks/run-cats/task.yml
 
 resources:
