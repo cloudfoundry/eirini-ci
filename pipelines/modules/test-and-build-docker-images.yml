@@ -1,7 +1,8 @@
 groups:
-- ((prepend))
+- (( merge ))
 - name: all
   jobs:
+  - (( prepend ))
   - run-tests
   - run-static-checks
   - create-docker-images

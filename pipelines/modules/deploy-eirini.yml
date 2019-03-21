@@ -1,24 +1,25 @@
 groups:
-- (( prepend ))
+- (( defer merge ))
 - name: all
   jobs:
-  - deploy-scf-uaa-with-diego
-  - deploy-scf-eirini-with-diego
-  - run-smoke-tests-with-diego
+  - (( defer prepend ))
+  - (( concat "deploy-scf-uaa-" meta.cluster-name "" ))
+  - (( concat "deploy-scf-eirini-" meta.cluster-name "" ))
+  - (( concat "run-smoke-tests-" meta.cluster-name "" ))
 
 jobs:
-- name: deploy-scf-uaa-with-diego
+- name: (( concat "deploy-scf-uaa-" meta.cluster-name "" ))
   plan:
-  - get: cluster-with-diego-staging-event-ready
+  - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
     trigger: true
     passed:
-    - check-cluster-readiness-with-diego
+    - (( concat "check-cluster-readiness-" meta.cluster-name "" ))
   - get: scf-uaa-resources
     trigger: true
   - get: ci-resources
   - get: eirini-release
   - get: state
-  - get: cluster-with-diego-staging-event-uaa-ready
+  - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     params:
       bump: major
   - task: deploy-uaa
@@ -27,19 +28,19 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
   - task: waiting-for-uaa
     attempts: 20
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/waiting-for-uaa/task.yml
-  - put: cluster-with-diego-staging-event-uaa-ready
+  - put: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     params:
-      file: cluster-with-diego-staging-event-uaa-ready/number
-- name: deploy-scf-eirini-with-diego
+      file: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready/number" ))
+- name: (( concat "deploy-scf-eirini-" meta.cluster-name "" ))
   plan:
   - get: eirini-source
     passed:
@@ -53,16 +54,16 @@ jobs:
     trigger: true
     passed:
     - create-docker-images
-  - get: cluster-with-diego-staging-event-uaa-ready
+  - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
-    passed: [deploy-scf-uaa-with-diego]
+    passed: [(( concat "deploy-scf-uaa-" meta.cluster-name "" ))]
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((integration-test-cluster-name))
     on_failure:
       task: purge-namespace
@@ -73,12 +74,12 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
-- name: run-smoke-tests-with-diego
+- name: (( concat "run-smoke-tests-" meta.cluster-name "" ))
   plan:
   - get: eirini-release
-    passed: [deploy-scf-eirini-with-diego]
+    passed: [(( concat "deploy-scf-eirini-" meta.cluster-name "" ))]
     trigger: true
   - get: cf-smoke-tests
   - get: state
@@ -88,7 +89,7 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-with-diego-staging-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/run-smoke-tests/task.yml
 
 resources:
@@ -125,21 +126,21 @@ resources:
     paths:
     - helm/cf
     - helm/eirini
-- name: cluster-with-diego-staging-event-ready
+- name: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
   type: semver
   source:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: events
-    file: ((cluster-with-diego-staging-name))-event-ready
+    file: (( concat meta.cluster-name "-event-ready" ))
     private_key: ((github-private-key))
-- name: cluster-with-diego-staging-event-uaa-ready
+- name: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
   type: semver
   source:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: events
-    file: ((cluster-with-diego-staging-name))-event-uaa-ready
+    file: (( concat meta.cluster-name "-event-uaa-ready" ))
     private_key: ((github-private-key))
 - name: cf-smoke-tests
   type: git
