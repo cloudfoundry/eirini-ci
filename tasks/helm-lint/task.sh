@@ -8,9 +8,9 @@ YELLOW='\033[0;93m'
 NOCOLOR='\033[0m'
 
 
-helm init --client-only > /dev/null
+helm init --client-only >/dev/null
 pushd eirini-release/helm/cf || exit
-  helm dep update
+helm dep update
 popd || exit
 
 exit_code=0
