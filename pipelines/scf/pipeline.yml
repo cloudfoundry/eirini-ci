@@ -4,10 +4,6 @@ jobs:
   plan:
   - aggregate:
     - get: scf
-      params:
-        submodules: none
-    - get: capi-release
-      trigger: true
     - get: eirini-release
     - get: ci-resources
   - task: scf-build
@@ -28,15 +24,10 @@ resources:
   type: git
   source:
     uri: https://github.com/JulzDiverse/scf.git
-    branch: eirini-scf-2.14.5
+    branch: eirini-scf-2.15.2.1
     git_config:
     - name: submodule.fetchJobs
       value: 64
-- name: capi-release
-  type: git
-  source:
-    uri: https://github.com/JulzDiverse/capi-release.git
-    branch: develop
 - name: eirini-release
   type: git
   source:

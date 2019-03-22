@@ -5,39 +5,28 @@ set -xeuo pipefail
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 
+trap clean-artefacts EXIT
+SCF_DIR=$PWD/scf
+
 main() {
   start-docker
-  init-scf-submodules
   prepare-release
-  use-eirini-capi
   make-scf
   update-helm-templates
   docker-push
   git-commit
 }
 
-init-scf-submodules() {
-  pushd scf
-  grep "submodule" .gitmodules |
-    grep --invert-match "capi" |
-    awk '{print $2}' |
-    tr --delete '"]' |
-    xargs git submodule update --init --recursive
-  popd
-}
-
-use-eirini-capi() {
-  pushd capi-release
-  git submodule update --init --recursive
-  popd
-  cp -r capi-release scf/src
+clean-artefacts() {
+  set +e
+  rm -rf $SCF_DIR
+  set -e
 }
 
 prepare-release() {
   pushd scf
   # shellcheck disable=SC1091
   source .envrc
-  export FISSILE_STEMCELL=splatform/fissile-stemcell-opensuse:develop-42.3-6.g1785bff-30.51
   make docker-deps
   popd
 }
