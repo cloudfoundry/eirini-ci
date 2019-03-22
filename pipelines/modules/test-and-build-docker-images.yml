@@ -19,11 +19,13 @@ jobs:
     trigger: true
     # passed:
     # - check-cluster-readiness
-  - get: eirini-source
+  - get: eirini-release
     trigger: true
   - get: ci-resources
   - task: run-unit-tests
     file: ci-resources/tasks/run-unit-tests/task.yml
+    input_mapping:
+      eirini-source: eirini-release
   - task: download-kubeconfig
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
@@ -33,23 +35,26 @@ jobs:
     file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run-integration-tests
     file: ci-resources/tasks/run-integration-tests/task.yml
+    input_mapping:
+      eirini-source: eirini-release
 - name: run-static-checks
   plan:
-  - get: eirini-source
+  - get: eirini-release
     trigger: true
     passed:
     - run-tests
   - get: ci-resources
   - task: run-static-checks
     file: ci-resources/tasks/run-static-checks/task.yml
+    input_mapping:
+      eirini-source: eirini-release
 - name: create-docker-images
   plan:
-  - get: eirini-source
+  - get: eirini-release
     trigger: true
     passed:
     - run-static-checks
   - get: ci-resources
-  - get: eirini-release
   - get: scf-resources
   - get: deployment-version
     params:
@@ -71,14 +76,6 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: ((ci-resources-branch))
-- name: eirini-source
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
-    paths:
-    - src/code.cloudfoundry.org/eirini
-    - docker
 - name: eirini-release
   type: git
   source:

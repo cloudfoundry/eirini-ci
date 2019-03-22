@@ -48,16 +48,15 @@ jobs:
       file: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready/number" ))
 - name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
   plan:
-  - get: eirini-source
+  - get: eirini-release
+    trigger: true
     passed:
     - create-docker-images
   - get: scf-resources
     trigger: true
   - get: ci-resources
   - get: state
-  - get: eirini-release
   - get: deployment-version
-    trigger: true
     passed:
     - create-docker-images
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
@@ -104,14 +103,6 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: ((ci-resources-branch))
-- name: eirini-source
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
-    paths:
-    - src/code.cloudfoundry.org/eirini
-    - docker
 - name: eirini-release
   type: git
   source:
