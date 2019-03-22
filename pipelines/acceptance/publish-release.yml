@@ -5,6 +5,7 @@ resources:
     owner: cloudfoundry-incubator
     repository: eirini-release
     access_token: ((github-access-token))
+    drafts: true
 - name: release-version
   type: semver
   source:
