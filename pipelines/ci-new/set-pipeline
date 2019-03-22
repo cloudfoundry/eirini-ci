@@ -18,8 +18,6 @@ fly -t "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
   --pipeline "$world_name" \
-  --var integration-test-cluster-name="with-diego" \
-  --var cluster-with-diego-staging-name="with-diego" \
   --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
@@ -32,4 +30,5 @@ fly -t "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var worker_count="$worker_count" \
   --var enable_opi_staging=false \
+  --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

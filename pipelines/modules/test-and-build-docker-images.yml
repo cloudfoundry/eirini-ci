@@ -1,8 +1,8 @@
 groups:
-- (( merge ))
+- (( defer merge ))
 - name: all
   jobs:
-  - (( prepend ))
+  - (( defer prepend ))
   - run-tests
   - run-static-checks
   - create-docker-images
@@ -15,10 +15,10 @@ groups:
 jobs:
 - name: run-tests
   plan:
-  - get: ((integration-test-cluster-name))-event-ready
+  - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
     trigger: true
-    # passed:
-    # - check-cluster-readiness
+    passed:
+    - (( concat "check-cluster-readiness-" meta.cluster-name ))
   - get: eirini-release
     trigger: true
   - get: ci-resources
@@ -31,7 +31,7 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((integration-test-cluster-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run-integration-tests
     file: ci-resources/tasks/run-integration-tests/task.yml
@@ -64,7 +64,7 @@ jobs:
     params:
       DOCKER_HUB_USER: ((dockerhub-user))
       DOCKER_HUB_PASSWORD: ((dockerhub-password))
-      CLUSTER_NAME: ((integration-test-cluster-name))
+      CLUSTER_NAME: ((world-name))
     file: ci-resources/tasks/create-docker-images/task.yml
   - put: deployment-version
     params:
@@ -81,20 +81,12 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
-- name: ((integration-test-cluster-name))-event-ready
-  type: semver
-  source:
-    driver: git
-    uri: git@github.com:cloudfoundry/eirini-private-config.git
-    branch: events
-    file: ((integration-test-cluster-name))-event-ready
-    private_key: ((github-private-key))
 - name: deployment-version
   type: semver
   source:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
-    file: environments/kube-clusters/((integration-test-cluster-name))/deployment-version
+    file: environments/worlds/((world-name))/deployment-version
     private_key: ((github-private-key))
     initial_version: 1.0.0

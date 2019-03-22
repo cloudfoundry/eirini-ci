@@ -66,13 +66,20 @@ spruce:
       - $PROJECT_ROOT/pipelines/ci-new/ff.yml
   to: {{ff-master}}
 
+- base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/ci-new/with-diego.yml
+  to: {{test-and-build-docker}}
+
 - base: $PROJECT_ROOT/pipelines/ci-new/empty.yml
   merge:
   - with:
       files:
       - {{cluster-with-diego}}
       - {{cluster-with-opi}}
-      - $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+      - {{test-and-build-docker}}
       - {{eirini-with-diego}}
       - {{eirini-with-opi}}
       - {{cats-with-diego}}

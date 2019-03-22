@@ -69,7 +69,7 @@ jobs:
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
-      VERSIONING_CLUSTER: ((integration-test-cluster-name))
+      VERSIONING_CLUSTER: ((world-name))
     on_failure:
       task: purge-namespace
       file: ci-resources/tasks/purge-namespace/task.yml
@@ -144,15 +144,6 @@ resources:
   source:
     uri: https://github.com/cloudfoundry/cf-smoke-tests.git
     branch: master
-- name: deployment-version
-  type: semver
-  source:
-    driver: git
-    uri: git@github.com:cloudfoundry/eirini-private-config.git
-    branch: master
-    file: environments/kube-clusters/((integration-test-cluster-name))/deployment-version
-    private_key: ((github-private-key))
-    initial_version: 1.0.0
 - name: state
   type: git
   source:
