@@ -1,0 +1,45 @@
+groups:
+- name: fast-forward
+  jobs:
+  - fast-forward-master
+  - fast-forward-master-release
+- name: all
+  jobs:
+  - ((defer prepend))
+  - fast-forward-master
+  - fast-forward-master-release
+
+resources:
+- name: eirini-master
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini.git
+    branch: master
+    private_key: ((eirini-repo-key))
+- name: eirini-release-master
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
+    branch: master
+    private_key: ((eirini-release-repo-key))
+
+jobs:
+- name: fast-forward-master
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed: (( grab meta.ff-upstream ))
+  - put: eirini-master
+    params:
+      repository: eirini-release/src/code.cloudfoundry.org/eirini
+- name: fast-forward-master-release
+  plan:
+  - get: eirini-release
+    trigger: true
+    params:
+      submodules: none
+    passed:
+    - fast-forward-master
+  - put: eirini-release-master
+    params:
+      repository: eirini-release
