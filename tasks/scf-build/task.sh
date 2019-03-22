@@ -19,7 +19,7 @@ main() {
 
 clean-artefacts() {
   set +e
-  rm -rf $SCF_DIR
+  rm -rf "$SCF_DIR"
   set -e
 }
 
