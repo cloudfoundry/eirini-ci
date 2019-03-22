@@ -9,7 +9,6 @@ image_resource:
 inputs:
   - name: ci-resources
   - name: scf
-  - name: capi-release
   - name: eirini-release
 
 outputs:
