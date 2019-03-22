@@ -32,7 +32,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: develop
+    branch: scf-2.15.2.1
     private_key: ((eirini-release-private-key))
 - name: ci-resources
   type: git
