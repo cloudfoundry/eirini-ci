@@ -12,4 +12,4 @@ inputs:
 - name: kube
 
 run:
-  path: ci-resources/tasks/run-unit-tests/task.sh
+  path: ci-resources/tasks/run-integration-tests/task.sh
