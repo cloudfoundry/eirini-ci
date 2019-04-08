@@ -7,7 +7,6 @@ LIGHT_RED='\033[1;31m'
 YELLOW='\033[0;93m'
 NOCOLOR='\033[0m'
 
-
 helm init --client-only >/dev/null
 pushd eirini-release/helm/cf || exit
 helm dep update
