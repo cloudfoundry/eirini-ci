@@ -87,6 +87,6 @@ resources:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
-    file: environments/worlds/((world-name))/deployment-version
+    file: environments/kube-clusters/((world-name))/deployment-version
     private_key: ((github-private-key))
     initial_version: 1.0.0
