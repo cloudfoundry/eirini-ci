@@ -16,6 +16,7 @@ resources:
     uri: git@github.com:cloudfoundry-incubator/eirini.git
     branch: master
     private_key: ((eirini-repo-key))
+
 - name: eirini-release-master
   type: git
   source:
