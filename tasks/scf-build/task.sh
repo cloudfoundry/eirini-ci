@@ -43,6 +43,7 @@ make-scf() {
 
 update-helm-templates() {
   cp -r scf/output/helm/templates/* eirini-release/helm/cf/templates/
+  cp -r scf/output/helm/*.yaml eirini-release/helm/cf/
 }
 
 docker-push() {
