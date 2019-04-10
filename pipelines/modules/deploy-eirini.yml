@@ -131,6 +131,7 @@ resources:
     branch: events
     file: (( concat meta.cluster-name "-event-ready" ))
     private_key: ((github-private-key))
+    initial_version: 0.1.0
 - name: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
   type: semver
   source:
@@ -139,6 +140,7 @@ resources:
     branch: events
     file: (( concat meta.cluster-name "-event-uaa-ready" ))
     private_key: ((github-private-key))
+    initial_version: 0.1.0
 - name: cf-smoke-tests
   type: git
   source:

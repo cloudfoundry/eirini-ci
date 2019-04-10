@@ -121,6 +121,7 @@ resources:
       branch: events
       file: (( concat meta.cluster-name "-event-created" ))
       private_key: ((github-private-key))
+      initial_version: 0.1.0
 
   - name: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
     type: semver
@@ -130,6 +131,7 @@ resources:
       branch: events
       file: (( concat meta.cluster-name "-event-ready" ))
       private_key: ((github-private-key))
+      initial_version: 0.1.0
 
   - name: cluster-state
     type: git
