@@ -45,11 +45,11 @@ jobs:
     params:
       DOCKER_HUB_USER: ((dockerhub-user))
       DOCKER_HUB_PASSWORD: ((dockerhub-password))
-      CLUSTER_NAME: ((cluster-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/create-release-images/task.yml
   - task: create-release
     params:
-      CLUSTER_NAME: ((cluster-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/create-release/task.yml
   - task: update-helm-index
     file: ci-resources/tasks/update-helm-repo/task.yml

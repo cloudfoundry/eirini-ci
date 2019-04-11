@@ -1,22 +1,56 @@
 spruce:
-- base: $PROJECT_ROOT/pipelines/deploy-scf/pipeline.yml
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
   prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance-new/meta.yml
+  to: {{cluster-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance-new/meta.yml
+  to: {{eirini-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
   - cats_conf
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/run-cats/run-core-cats.yml
-      - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
-      - $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/deploy-scf.yml
-      - $PROJECT_ROOT/notifications/slack/publish-release.yml
-      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-  modify:
-    delete:
-    - "resources.name:((cluster-name))-event-ready"
-    - "jobs.name:run-tests.plan.get:((cluster-name))-event-ready"
-    - "jobs.name:run-static-checks.plan.get:((cluster-name))-event-ready"
-    - "jobs.name:create-docker-images.plan.get:((cluster-name))-event-ready"
-    - "jobs.name:deploy-scf-uaa.plan.get:((cluster-name))-event-ready"
+      - $PROJECT_ROOT/pipelines/acceptance-new/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/acceptance-new/meta.yml
+  to: {{cats-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance-new/meta.yml
+  to: {{test-and-build-docker}}
+
+- base: $PROJECT_ROOT/pipelines/acceptance-new/publish-release.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance-new/meta.yml
+  to: {{publish-release}}
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - {{cluster-with-diego}}
+      - {{test-and-build-docker}}
+      - {{eirini-with-diego}}
+      - {{cats-with-diego}}
+      - {{publish-release}}
   to: $PIPELINE_YML

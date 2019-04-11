@@ -73,7 +73,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
   to: {{test-and-build-docker}}
 
-- base: $PROJECT_ROOT/pipelines/ci/empty.yml
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
   - with:
       files:
