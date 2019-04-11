@@ -51,14 +51,14 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - create-docker-images
+    - lint-helm-charts
   - get: scf-resources
     trigger: true
   - get: ci-resources
   - get: state
   - get: deployment-version
     passed:
-    - create-docker-images
+    - lint-helm-charts
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]

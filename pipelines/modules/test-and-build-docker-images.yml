@@ -6,11 +6,13 @@ groups:
   - run-tests
   - run-static-checks
   - create-docker-images
+  - lint-helm-charts
 - name: test-and-build
   jobs:
   - run-tests
   - run-static-checks
   - create-docker-images
+  - lint-helm-charts
 
 jobs:
 - name: run-tests
@@ -69,6 +71,18 @@ jobs:
   - put: deployment-version
     params:
       file: deployment-version/version
+- name: lint-helm-charts
+  plan:
+  - get: ci-resources
+  - get: eirini-release
+    trigger: true
+    passed:
+    - create-docker-images
+  - get: sample-configs
+    trigger: true
+  - get: deployment-version
+  - task: helm-lint
+    file: ci-resources/tasks/helm-lint/task.yml
 
 resources:
 - name: ci-resources
@@ -76,6 +90,13 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: ((ci-resources-branch))
+- name: sample-configs
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    branch: ((ci-resources-branch))
+    paths:
+    - sample-configs
 - name: eirini-release
   type: git
   source:
