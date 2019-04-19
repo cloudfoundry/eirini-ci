@@ -47,7 +47,7 @@ update-helm-templates() {
 }
 
 docker-push() {
-  docker login -u "$FISSILE_DOCKER_USERNAME" -p "$FISSILE_DOCKER_PASSWORD"
+  docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   echo "Pushing Docker images ..."
   docker images --format "{{.Repository}}:{{.Tag}}" | grep eirinicf | while read -r DOCKER_IMAGE_AND_TAG; do
     docker push "$DOCKER_IMAGE_AND_TAG"

@@ -10,8 +10,8 @@ jobs:
     privileged: true
     params:
       FISSILE_DOCKER_REGISTRY: ""
-      FISSILE_DOCKER_USERNAME: ((dockerhub-user))
-      FISSILE_DOCKER_PASSWORD: ((dockerhub-password))
+      DOCKER_USERNAME: ((dockerhub-user))
+      DOCKER_PASSWORD: ((dockerhub-password))
       FISSILE_DOCKER_ORGANIZATION: "eirinicf"
     file: ci-resources/tasks/scf-build/task.yml
   - put: eirini-release
