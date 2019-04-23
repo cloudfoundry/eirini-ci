@@ -19,6 +19,8 @@ main() {
 }
 
 build-tools() {
+  export FISSILE_BINARY=/usr/bin/fissile
+  export SCF_BIN_DIR=/usr/bin
   pushd scf
   ./bin/dev/install_tools.sh
   popd
