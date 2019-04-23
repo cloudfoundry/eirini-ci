@@ -18,9 +18,6 @@ RUN apt-get update && \
       libreadline-dev \
       software-properties-common
 
-# bosh2
-RUN curl --fail --silent --show-error --location --output /usr/bin/bosh https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-3.0.1-linux-amd64 && chmod +x /usr/bin/bosh
-
 # Golang
 ENV GOLANG_VERSION="1.10.8" GOROOT="/goroot" GOPATH="/gopath"
 RUN mkdir /goroot \
@@ -43,16 +40,6 @@ RUN  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
   && apt-get update \
   && apt-get install -y docker-ce=17.09.1~ce-0~ubuntu
 
-# Fissile
-ENV FISSILE_SHA1="311b07d9462f6fc091f126ec28abe4db6cf8ea32"
-RUN git clone https://github.com/SUSE/fissile $GOPATH/src/github.com/SUSE/fissile \
-&& cd $GOPATH/src/github.com/SUSE/fissile \
-&& git reset --hard ${FISSILE_SHA1} \
-&& git pull origin ${FISSILE_SHA1} \
-&& make tools \
-&& make build \
-&& mv $GOPATH/src/github.com/SUSE/fissile/build/linux-amd64/fissile /usr/local/bin/fissile
-
 # Pip
 RUN apt-get install -y python \
 && curl -O https://bootstrap.pypa.io/get-pip.py \
@@ -67,11 +54,4 @@ RUN apt-get install --yes software-properties-common && \
     echo "gem: --no-rdoc --no-ri" > ~/.gemrc && \
     gem install bundler && \
     bundle config --global silence_root_warning true
-
-# Stampy
-RUN go get -d github.com/SUSE/stampy \
-&& cd $GOPATH/src/github.com/SUSE/stampy \
-&& make tools \
-&& make all \
-&& mv $GOPATH/src/github.com/SUSE/stampy/build/linux-amd64/stampy /usr/local/bin/stampy
 
