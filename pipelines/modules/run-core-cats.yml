@@ -28,3 +28,4 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git
+    branch: v2.13.0
