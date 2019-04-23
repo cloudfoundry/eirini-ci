@@ -10,11 +10,18 @@ SCF_DIR=$PWD/scf
 
 main() {
   start-docker
+  build-tools
   prepare-release
   make-scf
   update-helm-templates
   docker-push
   git-commit
+}
+
+build-tools() {
+  pushd scf
+  ./bin/dev/install_tools.sh
+  popd
 }
 
 clean-artefacts() {
