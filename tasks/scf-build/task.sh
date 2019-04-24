@@ -5,8 +5,6 @@ set -xeuo pipefail
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 
-SCF_DIR=$PWD/scf
-
 main() {
   start-docker
   build-tools
