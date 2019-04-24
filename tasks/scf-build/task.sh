@@ -5,7 +5,6 @@ set -xeuo pipefail
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 
-trap clean-artefacts EXIT
 SCF_DIR=$PWD/scf
 
 main() {
@@ -20,16 +19,10 @@ main() {
 
 build-tools() {
   export FISSILE_BINARY=/usr/bin/fissile
-  export SCF_BIN_DIR=/usr/bin
+  export SCF_BIN_DIR=/usr/bin/
   pushd scf
   ./bin/dev/install_tools.sh
   popd
-}
-
-clean-artefacts() {
-  set +e
-  rm -rf "$SCF_DIR"
-  set -e
 }
 
 prepare-release() {
