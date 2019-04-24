@@ -57,8 +57,9 @@ jobs:
   - get: ci-resources
   - get: state
   - get: deployment-version
+    trigger: true
     passed:
-    - lint-helm-charts
+    - create-docker-images
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
