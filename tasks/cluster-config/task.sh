@@ -53,7 +53,7 @@ secrets:
     BLOBSTORE_PASSWORD: $BITS_SECRET
 
 services:
-  loadbalanced: true
+  loadbalanced: false
 
 eirini:
   opi:
