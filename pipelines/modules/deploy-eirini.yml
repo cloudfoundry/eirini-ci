@@ -71,9 +71,6 @@ jobs:
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((world-name))
-    on_failure:
-      task: purge-namespace
-      file: ci-resources/tasks/purge-namespace/task.yml
   - task: smoke-eirini
     attempts: 50
     params:
