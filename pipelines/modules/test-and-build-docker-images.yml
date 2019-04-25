@@ -17,28 +17,31 @@ groups:
 jobs:
 - name: run-tests
   plan:
-  - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
-    trigger: true
-    passed:
-    - (( concat "check-cluster-readiness-" meta.cluster-name ))
-  - get: eirini-release
-    trigger: true
-  - get: ci-resources
-  - task: run-unit-tests
-    file: ci-resources/tasks/run-unit-tests/task.yml
-    input_mapping:
-      eirini-source: eirini-release
-  - task: download-kubeconfig
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml
-  - task: run-integration-tests
-    file: ci-resources/tasks/run-integration-tests/task.yml
-    input_mapping:
-      eirini-source: eirini-release
+  - aggregate:
+    - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+      trigger: true
+      passed:
+      - (( concat "check-cluster-readiness-" meta.cluster-name ))
+    - get: eirini-release
+      trigger: true
+    - get: ci-resources
+  - aggregate:
+    - task: run-unit-tests
+      file: ci-resources/tasks/run-unit-tests/task.yml
+      input_mapping:
+        eirini-source: eirini-release
+    - do:
+      - task: download-kubeconfig
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: (( grab meta.cluster-name ))
+        file: ci-resources/tasks/download-kubeconfig/task.yml
+      - task: run-integration-tests
+        file: ci-resources/tasks/run-integration-tests/task.yml
+        input_mapping:
+          eirini-source: eirini-release
 - name: run-static-checks
   plan:
   - get: eirini-release
@@ -52,15 +55,16 @@ jobs:
       eirini-source: eirini-release
 - name: create-docker-images
   plan:
-  - get: eirini-release
-    trigger: true
-    passed:
-    - run-static-checks
-  - get: ci-resources
-  - get: scf-resources
-  - get: deployment-version
-    params:
-      bump: major
+  - aggregate:
+    - get: eirini-release
+      trigger: true
+      passed:
+      - run-static-checks
+    - get: ci-resources
+    - get: scf-resources
+    - get: deployment-version
+      params:
+        bump: major
   - task: create images
     privileged: true
     params:
@@ -73,14 +77,15 @@ jobs:
       file: deployment-version/version
 - name: lint-helm-charts
   plan:
-  - get: ci-resources
-  - get: eirini-release
-    trigger: true
-    passed:
-    - create-docker-images
-  - get: sample-configs
-    trigger: true
-  - get: deployment-version
+  - aggregate:
+    - get: ci-resources
+    - get: eirini-release
+      trigger: true
+      passed:
+      - create-docker-images
+    - get: sample-configs
+      trigger: true
+    - get: deployment-version
   - task: helm-lint
     file: ci-resources/tasks/helm-lint/task.yml
 
