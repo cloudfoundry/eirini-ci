@@ -4,15 +4,11 @@ groups:
   jobs:
   - (( defer prepend ))
   - run-tests
-  - run-static-checks
   - create-docker-images
-  - lint-helm-charts
 - name: test-and-build
   jobs:
   - run-tests
-  - run-static-checks
   - create-docker-images
-  - lint-helm-charts
 
 jobs:
 - name: run-tests
@@ -25,11 +21,22 @@ jobs:
     - get: eirini-release
       trigger: true
     - get: ci-resources
+    - get: sample-configs
+      trigger: true
+    - get: deployment-version
+  - task: helm-lint
+    file: ci-resources/tasks/helm-lint/task.yml
   - aggregate:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
       input_mapping:
         eirini-source: eirini-release
+    - task: run-static-checks
+      file: ci-resources/tasks/run-static-checks/task.yml
+      input_mapping:
+        eirini-source: eirini-release
+    - task: helm-lint
+      file: ci-resources/tasks/helm-lint/task.yml
     - do:
       - task: download-kubeconfig
         params:
@@ -42,24 +49,13 @@ jobs:
         file: ci-resources/tasks/run-integration-tests/task.yml
         input_mapping:
           eirini-source: eirini-release
-- name: run-static-checks
-  plan:
-  - get: eirini-release
-    trigger: true
-    passed:
-    - run-tests
-  - get: ci-resources
-  - task: run-static-checks
-    file: ci-resources/tasks/run-static-checks/task.yml
-    input_mapping:
-      eirini-source: eirini-release
 - name: create-docker-images
   plan:
   - aggregate:
     - get: eirini-release
       trigger: true
       passed:
-      - run-static-checks
+      - run-tests
     - get: ci-resources
     - get: scf-resources
     - get: deployment-version
@@ -75,19 +71,6 @@ jobs:
   - put: deployment-version
     params:
       file: deployment-version/version
-- name: lint-helm-charts
-  plan:
-  - aggregate:
-    - get: ci-resources
-    - get: eirini-release
-      trigger: true
-      passed:
-      - create-docker-images
-    - get: sample-configs
-      trigger: true
-    - get: deployment-version
-  - task: helm-lint
-    file: ci-resources/tasks/helm-lint/task.yml
 
 resources:
 - name: ci-resources

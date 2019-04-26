@@ -51,7 +51,7 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - lint-helm-charts
+    - create-docker-images
   - get: scf-resources
     trigger: true
   - get: ci-resources
