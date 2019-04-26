@@ -1,7 +1,5 @@
 spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
-  prune:
-  - meta
   merge:
   - with:
       files:
@@ -10,7 +8,6 @@ spruce:
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
-  - meta
   - cats_conf
   merge:
   - with:
@@ -27,8 +24,6 @@ spruce:
   to: {{test-and-build-docker}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
-  prune:
-  - meta
   merge:
   - with:
       files:
@@ -36,6 +31,8 @@ spruce:
   to: {{publish-release}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  prune:
+  - meta
   merge:
   - with:
       files:
@@ -45,6 +42,6 @@ spruce:
       - {{publish-release}}
   modify:
     delete:
-      - "jobs.name:run-tests.plan.get:cluster-((world-name))-staging-event-ready.passed"
+      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-((world-name))-staging-event-ready.passed"
       - "jobs.name:deploy-scf-uaa-((world-name)).plan.get:cluster-((world-name))-staging-event-ready.passed"
   to: $PIPELINE_YML
