@@ -24,8 +24,6 @@ jobs:
     - get: sample-configs
       trigger: true
     - get: deployment-version
-  - task: helm-lint
-    file: ci-resources/tasks/helm-lint/task.yml
   - aggregate:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
