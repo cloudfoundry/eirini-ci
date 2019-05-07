@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -euo pipefail
+
+PIPELINE_YML=$(mktemp)
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+export PROJECT_ROOT PIPELINE_YML
+
+readonly basedir="$(cd "$(dirname "$0")" && pwd)"
+readonly world_name=accept-no-diego
+readonly target="${1:-flintstone}"
+readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
+
+aviator -f "$basedir"/aviator.yml
+
+fly -t "$target" \
+  set-pipeline \
+  --config "$PIPELINE_YML" \
+  --pipeline "$world_name" \
+  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
+  --var ibmcloud-user=eirini@cloudfoundry.org \
+  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
+  --var ci-resources-branch="master" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var eirini-release-branch=master \
+  --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+  --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
+  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
+  --var worker_count="3" \
+  --var enable_opi_staging=true \
+  --var world-name="$world_name" \
+  --load-vars-from "$private_repo/concourse/common.yml"
