@@ -23,15 +23,6 @@ spruce:
       - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
   to: {{test-and-build-docker}}
 
-- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
-  to: {{cluster-with-opi}}
-
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
@@ -66,7 +57,6 @@ spruce:
   - with:
       files:
       - {{test-and-build-docker}}
-      - {{cluster-with-opi}}
       - {{eirini-with-diego}}
       - {{eirini-with-opi}}
       - {{cats-with-diego}}
@@ -76,4 +66,5 @@ spruce:
     delete:
       - "jobs.name:run-tests.plan.0.aggregate.get:cluster-acceptance-staging-event-ready.passed"
       - "jobs.name:deploy-scf-uaa-acceptance.plan.get:cluster-acceptance-staging-event-ready.passed"
+      - "jobs.name:deploy-scf-uaa-cf-sans-diego.plan.get:cluster-cf-sans-diego-staging-event-ready.passed"
   to: $PIPELINE_YML
