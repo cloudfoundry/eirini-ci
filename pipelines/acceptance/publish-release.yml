@@ -6,7 +6,7 @@ resources:
     repository: eirini-release
     access_token: ((github-access-token))
     drafts: true
-- name: release-version
+- name: eirini-release-version
   type: semver
   source:
     driver: git
@@ -15,11 +15,11 @@ resources:
     file: release-version
     private_key: ((github-private-key))
     initial_version: 0.1.0
-- name: gh-pages
+- name: gh-pages-pr
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: gh-pages
+    branch: gh-pages-pr
     private_key: ((eirini-release-repo-key))
 
 groups:
@@ -32,12 +32,16 @@ jobs:
 - name: publish-release
   plan:
   - get: ci-resources
-  - get: gh-pages
+  - get: gh-pages-pr
+  - task: check-for-pending-release
+    params:
+     GITHUB_TOKEN: ((github-access-token))
+    file: ci-resources/tasks/check-for-pending-release/task.yml
   - get: state
   - get: eirini-release
     params:
       submodules: all
-  - get: release-version
+  - get: eirini-release-version
     params:
       bump: minor
   - task: create-release-images
@@ -53,16 +57,20 @@ jobs:
     file: ci-resources/tasks/create-release/task.yml
   - task: update-helm-index
     file: ci-resources/tasks/update-helm-repo/task.yml
-  - put: release-version
-    params:
-      file: release-version/version
   - put: eirini-scf-release
     params:
-      name: release-version/version
-      tag: release-version/version
+      name: eirini-release-version/version
+      tag: eirini-release-version/version
       tag_prefix: v
       globs:
       - release-output/eirini*.tgz
-  - put: gh-pages
+  - put: gh-pages-pr
     params:
-       repository: gh-pages-updated
+      repository: gh-pages-updated
+  - task: create-github-pr
+    params:
+     GITHUB_TOKEN: ((github-access-token))
+    file: ci-resources/tasks/create-github-pr/task.yml
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version

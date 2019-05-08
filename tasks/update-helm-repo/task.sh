@@ -3,7 +3,7 @@
 set -euox pipefail
 IFS=$'\n\t'
 
-VERSION="$(cat release-version/version)"
+VERSION="$(cat eirini-release-version/version)"
 
 main() {
   update-helm-index
@@ -13,12 +13,12 @@ main() {
 update-helm-index() {
   mkdir output
   cp release-output/* output
-  helm repo index output --merge gh-pages/index.yaml --url "https://github.com/cloudfoundry-incubator/eirini-release/releases/download/v$VERSION"
-  cp output/index.yaml gh-pages
+  helm repo index output --merge gh-pages-pr/index.yaml --url "https://github.com/cloudfoundry-incubator/eirini-release/releases/download/v$VERSION"
+  cp output/index.yaml gh-pages-pr
 }
 
 commit-helm-index() {
-  pushd gh-pages
+  pushd gh-pages-pr
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
     git add index.yaml
@@ -30,7 +30,7 @@ commit-helm-index() {
   fi
   popd || exit
 
-  cp -r gh-pages/. gh-pages-updated
+  cp -r gh-pages-pr/. gh-pages-updated
 }
 
 main

@@ -9,7 +9,7 @@ image_resource:
 inputs:
 - name: ci-resources
 - name: eirini-release
-- name: release-version
+- name: eirini-release-version
 
 params:
   DOCKER_HUB_USER:

@@ -10,7 +10,7 @@ inputs:
 - name: ci-resources
 - name: state
 - name: eirini-release
-- name: release-version
+- name: eirini-release-version
 
 outputs:
 - name: release-output

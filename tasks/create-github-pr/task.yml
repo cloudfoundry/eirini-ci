@@ -8,15 +8,9 @@ image_resource:
 
 inputs:
 - name: ci-resources
-- name: release-output
-- name: eirini-release-version
-- name: gh-pages-pr
 
 params:
   GITHUB_TOKEN:
 
-outputs:
-- name: gh-pages-updated
-
 run:
-  path: ci-resources/tasks/update-helm-repo/task.sh
+  path: ci-resources/tasks/create-github-pr/task.sh
