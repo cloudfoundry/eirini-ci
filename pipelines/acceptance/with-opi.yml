@@ -1,0 +1,3 @@
+meta:
+  cluster-name: cf-sans-diego
+  enable-opi-staging: "true"

@@ -3,7 +3,7 @@ spruce:
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/acceptance/meta.yml
+      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
   to: {{eirini-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
@@ -13,21 +13,50 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
-      - $PROJECT_ROOT/pipelines/acceptance/meta.yml
+      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
   to: {{cats-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/acceptance/meta.yml
+      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
   to: {{test-and-build-docker}}
+
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
+  to: {{cluster-with-opi}}
+
+- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
+  to: {{eirini-with-opi}}
+
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
+  - cats_conf
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
+  to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/acceptance/meta.yml
+      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
   to: {{publish-release}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
@@ -37,11 +66,14 @@ spruce:
   - with:
       files:
       - {{test-and-build-docker}}
+      - {{cluster-with-opi}}
       - {{eirini-with-diego}}
+      - {{eirini-with-opi}}
       - {{cats-with-diego}}
+      - {{cats-with-opi}}
       - {{publish-release}}
   modify:
     delete:
-      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-((world-name))-staging-event-ready.passed"
-      - "jobs.name:deploy-scf-uaa-((world-name)).plan.get:cluster-((world-name))-staging-event-ready.passed"
+      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-acceptance-staging-event-ready.passed"
+      - "jobs.name:deploy-scf-uaa-acceptance.plan.get:cluster-acceptance-staging-event-ready.passed"
   to: $PIPELINE_YML
