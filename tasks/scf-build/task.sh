@@ -43,6 +43,7 @@ make-scf() {
 
 update-helm-templates() {
   rm -rf eirini-release/helm/cf/templates
+  rm scf/output/helm/templates/autoscaler-*
   cp -r scf/output/helm/templates eirini-release/helm/cf/
   cp -r scf/output/helm/*.yaml eirini-release/helm/cf/
 }
