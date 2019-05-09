@@ -21,6 +21,13 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
+  modify:
+    delete:
+      - "jobs.name:run-tests"
+      - "jobs.name:create-docker-images.plan.0.aggregate.get:eirini-release.passed.0"
+      - "resources.name:sample-configs"
+      - "groups.1.jobs.:run-tests"
+      - "groups.2.jobs.:run-tests"
   to: {{test-and-build-docker}}
 
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
