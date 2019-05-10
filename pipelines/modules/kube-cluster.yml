@@ -7,12 +7,6 @@ groups:
   - (( concat "prepare-cluster-" meta.cluster-name ))
   - (( concat "check-cluster-readiness-" meta.cluster-name ))
   - (( concat "delete-cluster-" meta.cluster-name ))
-# - name: (( concat "all-" meta.cluster-name ))
-#   jobs:
-#   - (( concat "create-cluster-" meta.cluster-name ))
-#   - (( concat "prepare-cluster-" meta.cluster-name ))
-#   - (( concat "check-cluster-readiness-" meta.cluster-name ))
-#   - (( concat "delete-cluster-" meta.cluster-name ))
 - name: (( concat "cluster-" meta.cluster-name ))
   jobs:
   - (( concat "create-cluster-" meta.cluster-name ))
