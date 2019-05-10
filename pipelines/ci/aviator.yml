@@ -6,6 +6,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
   to: {{cluster-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
@@ -15,6 +17,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
   to: {{eirini-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
@@ -24,6 +28,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
   to: {{cluster-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
@@ -33,6 +39,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
   to: {{eirini-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
@@ -44,6 +52,8 @@ spruce:
       files:
       - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
@@ -55,6 +65,8 @@ spruce:
       files:
       - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/ff-master.yml
@@ -64,6 +76,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/ff.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/ff-master.yml
   to: {{ff-master}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
@@ -71,6 +85,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/test-and-build-docker-images.yml
   to: {{test-and-build-docker}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml

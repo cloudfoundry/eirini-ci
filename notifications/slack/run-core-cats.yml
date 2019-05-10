@@ -1,4 +1,4 @@
 jobs:
 - ((merge))
-- name: run-core-cats
+- name: (( concat "run-core-cats-" meta.cluster-name ))
   .: (( inject hooks.failure ))

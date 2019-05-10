@@ -1,10 +1,11 @@
 jobs:
 - ((merge))
-- name: create-cluster
+- name: (( concat "create-cluster-" meta.cluster-name ))
   .: (( inject hooks.failure ))
-- name: prepare-cluster
+- name: (( concat "prepare-cluster-" meta.cluster-name ))
   .: (( inject hooks.failure ))
-- name: check-cluster-readiness
+- name: (( concat "check-cluster-readiness-" meta.cluster-name ))
   .: (( inject hooks.failure ))
-- name: delete-cluster
+- name: (( concat "delete-cluster-" meta.cluster-name ))
   .: (( inject hooks.failure ))
+
