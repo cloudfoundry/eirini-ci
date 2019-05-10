@@ -13,6 +13,7 @@ jobs:
       DOCKER_USERNAME: ((dockerhub-user))
       DOCKER_PASSWORD: ((dockerhub-password))
       FISSILE_DOCKER_ORGANIZATION: "eirinicf"
+      HELM_CHART_VERSION: 2.15.2
     file: ci-resources/tasks/scf-build/task.yml
   - put: eirini-release
     params:

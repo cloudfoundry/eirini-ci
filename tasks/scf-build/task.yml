@@ -19,6 +19,7 @@ params:
   DOCKER_USERNAME:
   DOCKER_PASSWORD:
   FISSILE_DOCKER_ORGANIZATION:
+  HELM_CHART_VERSION:
 
 run:
   path: ci-resources/tasks/scf-build/task.sh

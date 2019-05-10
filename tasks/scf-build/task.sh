@@ -35,6 +35,9 @@ prepare-release() {
 make-scf() {
   pushd scf
   export RUBY_VERSION=2.3.1
+  if [[ ! -z "$HELM_CHART_VERSION" ]]; then
+    export GIT_TAG="$HELM_CHART_VERSION"
+  fi
   make releases \
     compile \
     images
