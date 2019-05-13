@@ -6,7 +6,7 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/docker
 readonly VERSION=$(cat eirini-release-version/version)
-readonly IMAGE_NAMES=("opi" "opi-init" "recipe" "secret-smuggler")
+readonly IMAGE_NAMES=("opi" "opi-init" "rootfs-patcher" "secret-smuggler")
 readonly DOCKER_HUB_USER=${DOCKER_HUB_USER:?Variable not set}
 readonly DOCKER_HUB_PASSWORD=${DOCKER_HUB_PASSWORD:?Variable not set}
 
@@ -29,7 +29,6 @@ main() {
 build-images() {
   pushd "eirini-release/" || exit
   ./docker/generate-docker-image.sh "$VERSION"
-  ./src/code.cloudfoundry.org/eirini/recipe/bin/build.sh "$VERSION"
   popd || exit
 }
 

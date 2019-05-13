@@ -13,7 +13,6 @@ main() {
   start-docker
   export-gopath
   generate-opi-images
-  generate-recipe-image
   push
 }
 
@@ -28,15 +27,10 @@ generate-opi-images() {
   ./eirini-release/docker/generate-docker-image.sh "$TAG"
 }
 
-generate-recipe-image() {
-  ./eirini-release/src/code.cloudfoundry.org/eirini/recipe/bin/build.sh "$TAG"
-}
-
 push() {
   docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
   docker push "eirini/opi:$TAG"
   docker push "eirini/opi-init:$TAG"
-  docker push "eirini/recipe:$TAG"
   docker push "eirini/secret-smuggler:$TAG"
   docker push "eirini/rootfs-patcher:$TAG"
 }
