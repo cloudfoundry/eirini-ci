@@ -2,12 +2,12 @@ resources:
 - name: eirini
   type: git
   source:
-    uri: git@github.com:cloudfoundry-incubator/eirini.git
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: develop
 - name: ci-resources
   type: git
   source:
-    uri: git@github.com:cloudfoundry-incubator/eirini-ci.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
 
 jobs:
