@@ -1,0 +1,9 @@
+#!/bin/bash
+
+readonly TARGET=$1
+
+
+fly -t $TARGET set-pipeline -p fluentd \
+  --config pipeline.yml \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)"

@@ -1,0 +1,24 @@
+resources:
+- name: eirini
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini.git
+    branch: develop
+- name: ci-resources
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini-ci.git
+    branch: master
+
+jobs:
+- name: update-fluentd-image
+  plan:
+  - get: eirini
+  - get: ci-resources
+  - task: update
+    privileged: true
+    file: ci-resources/tasks/update-fluentd-image/task.yml
+    params:
+      TAG: something
+      DOCKER_HUB_USER: ((dockerhub-user))
+      DOCKER_HUB_PASSWORD: ((dockerhub-password))
