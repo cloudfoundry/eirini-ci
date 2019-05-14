@@ -4,21 +4,98 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: develop
+    paths:
+    - fluentd/
+- name: eirini-release
+  type: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
+    branch: fluentd-test
+    private_key: ((eirini-release-repo-key))
 - name: ci-resources
   type: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
     branch: master
+- name: docker-fluentd
+  type: docker-image
+  source:
+    repository: eirini/fluentd
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
 
 jobs:
 - name: update-fluentd-image
   plan:
   - get: eirini
+    trigger: true
   - get: ci-resources
-  - task: update
-    privileged: true
-    file: ci-resources/tasks/update-fluentd-image/task.yml
+  - put: docker-fluentd
     params:
-      TAG: something
-      DOCKER_HUB_USER: ((dockerhub-user))
-      DOCKER_HUB_PASSWORD: ((dockerhub-password))
+      build: eirini/fluentd/
+- name: update-fluentd-digest
+  plan:
+  - get: ci-resources
+  - get: eirini-release
+  - get: docker-fluentd
+    passed: [update-fluentd-image]
+    trigger: true
+  - task: update-digest
+    file: ci-resources/tasks/update-fluentd-digest/task.yml
+  - task: update-digest
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: docker-fluentd
+      - name: eirini-release
+      outputs:
+      - name: eirini-release-updated
+      run:
+        path: bash
+        args:
+        - "-c"
+        - |
+          #!/bin/bash
+
+          set -euxo pipefail
+
+          main() {
+            update-digest
+            commit-changes
+          }
+
+          update-digest() {
+            local digest=$(cat docker-fluentd/digest)
+            goml set \
+              -f eirini-release/helm/eirini/templates/daemonset-fluentd.yaml \
+              -p "spec.template.spec.containers.name:loggregator-fluentd.image" \
+              -v "eirini/loggregator-fluentd@${digest}"
+          }
+
+          commit-changes() {
+            pushd eirini-release
+            if git status --porcelain | grep .; then
+              echo "Repo is dirty"
+              git add index.yaml
+              git config --global user.email "eirini@cloudfoundry.org"
+              git config --global user.name "Come-On Eirini"
+              git commit --all --message "Update fluentd image"
+            else
+              echo "Repo is clean"
+            fi
+            popd || exit
+
+            cp -r eirini-release/. eirini-release-updated
+          }
+
+          main
+
+  - put: eirini-release
+    params: {repository: eirini-release-updated}
+
+
+
