@@ -10,7 +10,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: fluentd-test
+    branch: develop
     private_key: ((eirini-release-repo-key))
 - name: ci-resources
   type: git
