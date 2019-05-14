@@ -8,7 +8,7 @@ main() {
 }
 
 update-digest() {
-  echo -n "$(cat docker-fluentd/digest)" > eirini-release/helm/eirini/versions/fluentd
+  echo -n "$(cat docker-fluentd/digest)" >eirini-release/helm/eirini/versions/fluentd
 }
 
 commit-changes() {
