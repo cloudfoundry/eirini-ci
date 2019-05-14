@@ -25,10 +25,19 @@ resources:
     password: ((dockerhub-password))
 
 jobs:
+- name: run-unit-tests
+  plan:
+  - aggregate:
+    - get: eirini
+      trigger: true
+    - get: ci-resources
+  - task: run-unit-tests
+    file: ci-resource/tasks/run-fluentd-tests/task.yml
 - name: update-fluentd-image
   plan:
   - get: eirini
     trigger: true
+    passed: [run-unit-tests]
   - get: ci-resources
   - put: docker-fluentd
     params:
