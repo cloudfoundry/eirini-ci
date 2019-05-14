@@ -32,7 +32,7 @@ jobs:
       trigger: true
     - get: ci-resources
   - task: run-unit-tests
-    file: ci-resource/tasks/run-fluentd-tests/task.yml
+    file: ci-resources/tasks/run-fluentd-tests/task.yml
 - name: update-fluentd-image
   plan:
   - get: eirini
