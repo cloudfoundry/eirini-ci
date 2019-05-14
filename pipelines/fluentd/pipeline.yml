@@ -20,7 +20,7 @@ resources:
 - name: docker-fluentd
   type: docker-image
   source:
-    repository: eirini/fluentd
+    repository: eirini/loggregator-fluentd
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 
