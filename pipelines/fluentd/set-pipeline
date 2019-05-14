@@ -1,10 +1,12 @@
 #!/bin/bash
 
+set -euo pipefail
+
+PIPELINE_YML="$(cd "$(dirname "$0")" && pwd)/pipeline.yml"
 readonly TARGET=$1
 
-
 fly -t "$TARGET" set-pipeline -p fluentd \
-  --config pipeline.yml \
+  --config "$PIPELINE_YML" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)"
