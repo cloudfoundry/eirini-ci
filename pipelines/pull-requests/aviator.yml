@@ -1,0 +1,74 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/pull-requests/with-diego.yml
+  to: {{cluster-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - meta
+  modify:
+    delete:
+      - "jobs.name:deploy-scf-uaa-pull-requests.plan.get:scf-uaa-resources"
+      - "jobs.name:deploy-scf-uaa-pull-requests.plan.get:cluster-pull-requests-staging-event-ready"
+      - "jobs.name:deploy-scf-eirini-pull-requests.plan.get:scf-resources"
+      - "resources.name:eirini-release"
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/pull-requests/with-diego.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+  to: {{eirini-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
+  - cats_conf
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/pull-requests/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/pull-requests/with-diego.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+  modify:
+    delete:
+      - "resources.name:eirini-release.source"
+  to: {{cats-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  modify:
+    delete:
+      - "jobs.name:create-docker-images.plan.0.aggregate.get:scf-resources"
+      - "resources.name:eirini-release"
+      # Disable auto trigger
+      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-pull-requests-staging-event-ready.trigger"
+      - "jobs.name:run-tests.plan.0.aggregate.get:eirini-release.trigger"
+      - "jobs.name:run-tests.plan.0.aggregate.get:sample-configs.trigger"
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/pull-requests/with-diego.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/test-and-build-docker-images.yml
+  to: {{test-and-build-docker}}
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - {{cluster-with-diego}}
+      - {{test-and-build-docker}}
+      - {{eirini-with-diego}}
+      - {{cats-with-diego}}
+      - $PROJECT_ROOT/pipelines/pull-requests/track-prs.yml
+  modify:
+    delete:
+      - "resources.name:scf-resources"
+      - "resources.name:scf-uaa-resources"
+  to: $PIPELINE_YML

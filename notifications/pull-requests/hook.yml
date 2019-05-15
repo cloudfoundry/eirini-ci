@@ -1,0 +1,7 @@
+hooks:
+  failure:
+    on_failure:
+      put: eirini-release
+      params:
+        path: eirini-release
+        status: failure

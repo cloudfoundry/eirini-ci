@@ -1,0 +1,58 @@
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: teliaoss/github-pr-resource
+
+resources:
+- name: eirini-release
+  type: pull-request
+  check_every: 2h
+  webhook_token: ((eirini-release-pr-webhook-token))
+  source:
+    repository: cloudfoundry-incubator/eirini-release
+    access_token: ((github-access-token))
+    base_branch: develop
+
+jobs:
+  - ((merge))
+  - name: deploy-scf-uaa-pull-requests
+    plan:
+    - get: eirini-release
+      passed: [run-tests]
+      trigger: true
+  - name: run-tests
+    plan:
+     - aggregate: []
+     - aggregate:
+        - task: run-unit-tests
+          input_mapping: {eirini-source: eirini-updated}
+        - task: run-static-checks
+          input_mapping: {eirini-source: eirini-updated}
+        - task: helm-lint
+        - do:
+          - (( merge on task ))
+          - task: run-integration-tests
+            input_mapping: {eirini-source: eirini-updated}
+     - (( insert before 1 ))
+     - put: eirini-release
+       params:
+         path: eirini-release
+         status: pending
+     - task: init-submodules
+       file: ci-resources/tasks/init-submodules/task.yml
+  - name: create-docker-images
+    plan:
+     - aggregate: []
+     - task: create images
+       input_mapping: {eirini-release: eirini-updated}
+     - (( insert before 1 ))
+     - task: init-submodules
+       file: ci-resources/tasks/init-submodules/task.yml
+  - name: "run-core-cats-pull-requests"
+    plan:
+      - (( insert after 4 ))
+      - put: eirini-release
+        params:
+          path: eirini-release
+          status: success
