@@ -3,11 +3,13 @@ jobs:
   serial: true
   plan:
   - aggregate:
-    - get: scf
+    - get: scf-fork
     - get: eirini-release
     - get: ci-resources
   - task: scf-build
     privileged: true
+    input_mapping:
+      scf: scf-fork
     params:
       FISSILE_DOCKER_REGISTRY: ""
       DOCKER_USERNAME: ((dockerhub-user))
@@ -21,7 +23,7 @@ jobs:
       repository: eirini-release-modified
 
 resources:
-- name: scf
+- name: scf-fork
   type: git
   source:
     uri: https://github.com/eirini-forks/scf.git
