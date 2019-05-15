@@ -4,16 +4,11 @@ RUN apt-get update && \
     apt-get install --yes \
       apt-transport-https \
       build-essential \
-      ca-certificates \
       curl \
       git \
-      gnupg2 \
       jq \
       lsb-release \
       wget \
-      zlib1g-dev \
-      libssl-dev \
-      libreadline-dev \
       software-properties-common
 
 # Add repos (Docker & Ruby)
