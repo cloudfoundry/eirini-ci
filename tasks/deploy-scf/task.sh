@@ -48,6 +48,7 @@ helm-install() {
     --set "eirini.opi.image_tag=$image_tag" \
     --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
     --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
+    --timeout 900 \
     --force
   popd
 }
