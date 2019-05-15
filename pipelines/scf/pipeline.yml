@@ -24,7 +24,7 @@ resources:
 - name: scf
   type: git
   source:
-    uri: https://github.com/JulzDiverse/scf.git
+    uri: https://github.com/eirini-forks/scf.git
     branch: eirini-scf-2.15.2.1
     git_config:
     - name: submodule.fetchJobs
