@@ -33,6 +33,7 @@ push() {
   docker push "eirini/opi-init:$TAG"
   docker push "eirini/secret-smuggler:$TAG"
   docker push "eirini/rootfs-patcher:$TAG"
+  docker push "eirini/bits-waiter:$TAG"
 }
 
 main
