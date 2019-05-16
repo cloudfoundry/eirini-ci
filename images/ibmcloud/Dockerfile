@@ -8,7 +8,8 @@ RUN apt-get update && \
       curl \
       git \
       jq \
-      wget
+      wget \
+      vim
 
 # IBMCloud CLI
 # https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#shell_install
