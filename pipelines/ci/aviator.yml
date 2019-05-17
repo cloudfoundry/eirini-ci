@@ -60,11 +60,13 @@ spruce:
   prune:
   - meta
   - cats_conf
+  go_patch: true
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
+      - $PROJECT_ROOT/pipelines/ci/skip-some-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-opi}}
