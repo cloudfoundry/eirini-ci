@@ -13,3 +13,4 @@ worker_count=${WORKER_COUNT:-1}
 create-cluster "$name" "$worker_count"
 wait-for-state "$name" normal
 cluster-state "$name"
+wait-for-ingress-hostname "$name"

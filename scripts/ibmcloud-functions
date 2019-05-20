@@ -26,6 +26,22 @@ cluster-state() {
   ibmcloud ks cluster-get "$name" --json
 }
 
+# Exit non-zero unless the cluster $1 has non empty ingressHostname
+ingress-hostname-is-set() {
+  declare -r name=$1
+  cluster-state "$name" | jq '.ingressHostname != ""' --exit-status >/dev/null
+}
+
+# Loop forever until the the cluster $1 has non empty ingressHostname
+# In Concourse, use timeout to limit waiting https://concourse-ci.org/timeout-step-modifier.html
+wait-for-ingress-hostname() {
+  declare -r name=$1
+  until ingress-hostname-is-set "$name"; do
+    echo "ingress hostname is empty"
+    sleep 10
+  done
+}
+
 # Log in to the IBM Cloud
 ibmcloud-login() {
   ibmcloud login \
