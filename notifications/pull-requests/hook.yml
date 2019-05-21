@@ -1,7 +1,15 @@
 hooks:
   failure:
     on_failure:
-      put: eirini-release
-      params:
-        path: eirini-release
-        status: failure
+      do:
+      - put: eirini-release
+        params:
+          path: eirini-release
+          status: failure
+      - task: reset-environment
+        file: ci-resources/tasks/reset-environment/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: (( grab meta.cluster-name ))

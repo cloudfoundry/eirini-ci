@@ -14,8 +14,15 @@ resources:
     access_token: ((github-access-token))
     base_branch: develop
 
+groups:
+- (( merge ))
+- name: all
+  jobs:
+  - (( prepend ))
+  - clean-up-environment
+
 jobs:
-  - ((merge))
+  - (( merge ))
   - name: deploy-scf-uaa-pull-requests
     plan:
     - get: eirini-release
@@ -56,3 +63,15 @@ jobs:
         params:
           path: eirini-release
           status: success
+  - name: clean-up-environment
+    plan:
+      - get: eirini-release
+        trigger: true
+        passed: ["run-core-cats-pull-requests"]
+      - task: clean-up-environment
+        file: ci-resources/tasks/reset-environment/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: (( grab meta.cluster-name ))
