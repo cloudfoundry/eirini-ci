@@ -1,7 +1,7 @@
 hooks:
   failure:
     on_failure:
-      do:
+      aggregate:
       - put: eirini-release
         params:
           path: eirini-release
