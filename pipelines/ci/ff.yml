@@ -1,4 +1,4 @@
 meta:
   ff-upstream:
-  - run-smoke-tests-with-opi
+  - run-core-cats-with-opi
   - run-core-cats-with-diego
