@@ -49,6 +49,7 @@ jobs:
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: (( grab meta.cluster-name ))
+          STORAGE_CLASS: ((storage_class))
           CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
           UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
           NATS_PASSWORD: ((nats_password))

@@ -18,6 +18,7 @@ readonly working_branch=${4:-"develop"}
 readonly ci_branch=${5:-"master"}
 readonly worker_count=${6:-"1"}
 readonly enable_opi_staging=${7:-""}
+readonly storage_class=${8:-"hostpath"}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -41,6 +42,7 @@ fly --target "$target" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-release-branch="$working_branch" \
   --var worker_count="$worker_count" \
+  --var storage_class="$storage_class" \
   --var enable_opi_staging="${enable_opi_staging}" \
   --var capi-release-branch=develop \
   --load-vars-from "$private_repo/concourse/common.yml"
