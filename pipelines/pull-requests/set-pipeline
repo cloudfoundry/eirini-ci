@@ -28,6 +28,7 @@ fly -t "$target" \
   --var eirini-release-pr-webhook-token="$(pass eirini/github/eirini-release/webhook-token)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var worker_count="$worker_count" \
+  --var storage_class="ibmc-block-bronze" \
   --var enable_opi_staging=false \
   --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"
