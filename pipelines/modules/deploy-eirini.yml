@@ -36,7 +36,7 @@ jobs:
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
   - task: waiting-for-uaa
-    attempts: 20
+    attempts: 30
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
