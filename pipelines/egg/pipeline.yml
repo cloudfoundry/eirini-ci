@@ -1,0 +1,101 @@
+resources:
+- name: eirini-private-config
+  type: git
+  source:
+    branch: master
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config
+- name: postfacto
+  type: git
+  source:
+    tag_filter: '*'
+    uri: https://github.com/pivotal/postfacto.git
+- name: ci-resources
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+jobs:
+- name: deploy-postfacto
+  plan:
+  - aggregate:
+    - get: postfacto
+      trigger: true
+    - get: eirini-private-config
+    - get: ci-resources
+  - task: get-credentials
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          #!/bin/bash
+          set -euo pipefail
+
+          source ci-resources/scripts/ibmcloud-functions
+          ibmcloud-login
+          export-kubeconfig "$CLUSTER_NAME"
+
+          mysql_password=$(kubectl get secret postfacto-dbs-mysql -n postfacto-dbs -o json | jq -r '.data | .["mysql-root-password"]'  | base64 -d)
+          echo $mysql_password >mysql-password/password
+
+          redis_password=$(kubectl get secret postfacto-dbs-redis -n postfacto-dbs -o json | jq -r '.data | .["redis-password"]'  | base64 -d)
+          echo $redis_password >redis-password/password
+      inputs:
+      - name: eirini-private-config
+      - name: ci-resources
+      outputs:
+      - name: mysql-password
+      - name: redis-password
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          #!/bin/bash
+          set -euo pipefail
+
+          cp eirini-private-config/postfacto-deployment/api/config.js postfacto/api/config.js
+          mysql_password="$(cat mysql-password/password)"
+          redis_password="$(cat redis-password/password)"
+          scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
+          cf_domain="$(goml get -f "$scf_values" -p "env.DOMAIN")"
+          cf_admin_password="$(goml get -f "$scf_values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+          cf api "api.$cf_domain" --skip-ssl-validation
+          cf auth admin "$cf_admin_password"
+          cf target -o postfacto -s postfacto
+          cf push -f eirini-private-config/postfacto-deployment/api/manifest.yml \
+            -p postfacto/api \
+            --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
+            --var pcf-url=acceptance.eu-gb.containers.appdomain.cloud \
+            --var redis-password=${redis_password} --var mysql-password=${mysql_password}
+
+          cp -r eirini-private-config/postfacto-deployment/web/config.js postfacto/web/public/config.js
+          cf push -f eirini-private-config/postfacto-deployment/web/manifest.yml \
+            -p postfacto/web \
+            --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
+            -m 5G -k 10G
+      inputs:
+      - name: postfacto
+      - name: eirini-private-config
+      - name: ci-resources
+      - name: mysql-password
+      - name: redis-password
