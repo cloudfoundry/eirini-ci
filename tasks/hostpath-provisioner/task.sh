@@ -17,7 +17,6 @@ install_block_storage_prodivder() {
   helm install iks-charts/ibmcloud-block-storage-plugin
 }
 
-
 install_hostpath_provider() {
   local HOSTPATH_PROVIDER_RBAC="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml"
   local HOSTPATH_PROVIDER_DEPLOYMENT="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml"
