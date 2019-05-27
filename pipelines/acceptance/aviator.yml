@@ -43,11 +43,13 @@ spruce:
   prune:
   - meta
   - cats_conf
+  go_patch: true
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/acceptance/cats-conf.yml
       - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
+      - $PROJECT_ROOT/pipelines/modules/skip-opi-cats.yml
   to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
