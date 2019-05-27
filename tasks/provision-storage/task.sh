@@ -12,6 +12,7 @@ main() {
 }
 
 install_block_storage_prodivder() {
+  helm init --client-only
   helm repo add iks-charts https://icr.io/helm/iks-charts
   helm repo update
   helm install iks-charts/ibmcloud-block-storage-plugin
