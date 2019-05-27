@@ -6,14 +6,30 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 
-readonly HOSTPATH_PROVIDER_RBAC="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml"
-readonly HOSTPATH_PROVIDER_DEPLOYMENT="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml"
-readonly HOSTPATH_PROVIDER_STORAGECLASS="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml"
+main(){
+  install_block_storage_prodivder
+  install_hostpath_provider
+}
 
-ibmcloud-login
+install_block_storage_prodivder(){
+  helm repo add iks-charts https://icr.io/helm/iks-charts
+  helm repo update
+  helm install iks-charts/ibmcloud-block-storage-plugin
+}
 
-export-kubeconfig "$CLUSTER_NAME"
 
-kubectl apply --filename "$HOSTPATH_PROVIDER_RBAC"
-kubectl apply --filename "$HOSTPATH_PROVIDER_DEPLOYMENT"
-kubectl apply --filename "$HOSTPATH_PROVIDER_STORAGECLASS"
+install_hostpath_provider(){
+  local HOSTPATH_PROVIDER_RBAC="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml"
+  local HOSTPATH_PROVIDER_DEPLOYMENT="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml"
+  local HOSTPATH_PROVIDER_STORAGECLASS="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml"
+
+  ibmcloud-login
+
+  export-kubeconfig "$CLUSTER_NAME"
+
+  kubectl apply --filename "$HOSTPATH_PROVIDER_RBAC"
+  kubectl apply --filename "$HOSTPATH_PROVIDER_DEPLOYMENT"
+  kubectl apply --filename "$HOSTPATH_PROVIDER_STORAGECLASS"
+}
+
+main
