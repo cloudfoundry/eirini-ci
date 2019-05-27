@@ -57,13 +57,13 @@ jobs:
       file: ci-resources/tasks/cluster-config/task.yml
     - put: cluster-state
       params: {repository: state-modified}
-    - task: provision-hostpath-provider
+    - task: provision-storage
       params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
           IBMCLOUD_USER: ((ibmcloud-user))
           IBMCLOUD_PASSWORD: ((ibmcloud-password))
           CLUSTER_NAME: (( grab meta.cluster-name ))
-      file: ci-resources/tasks/hostpath-provisioner/task.yml
+      file: ci-resources/tasks/provision-storage/task.yml
 
   - name: (( concat "check-cluster-readiness-" meta.cluster-name ))
     plan:

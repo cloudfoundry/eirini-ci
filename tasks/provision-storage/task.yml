@@ -16,4 +16,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/hostpath-provisioner/task.sh
+  path: ci-resources/tasks/provision-storage/task.sh
