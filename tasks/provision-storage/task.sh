@@ -7,6 +7,8 @@ IFS=$'\n\t'
 source ci-resources/scripts/ibmcloud-functions
 
 main() {
+  ibmcloud-login
+  export-kubeconfig "$CLUSTER_NAME"
   install_block_storage_prodivder
   install_hostpath_provider
 }
@@ -22,10 +24,6 @@ install_hostpath_provider() {
   local HOSTPATH_PROVIDER_RBAC="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml"
   local HOSTPATH_PROVIDER_DEPLOYMENT="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml"
   local HOSTPATH_PROVIDER_STORAGECLASS="https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/storageclass.yaml"
-
-  ibmcloud-login
-
-  export-kubeconfig "$CLUSTER_NAME"
 
   kubectl apply --filename "$HOSTPATH_PROVIDER_RBAC"
   kubectl apply --filename "$HOSTPATH_PROVIDER_DEPLOYMENT"
