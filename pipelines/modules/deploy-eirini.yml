@@ -15,6 +15,7 @@ groups:
 
 jobs:
 - name: (( concat "deploy-scf-uaa-" meta.cluster-name ))
+  serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
   - get: eirini-release # Make sure eirini-release is at the top, otherwise the PR pipeline aviator does wrong things
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
@@ -47,6 +48,7 @@ jobs:
     params:
       file: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready/number" ))
 - name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
+  serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
   - get: eirini-release
     trigger: true
@@ -80,6 +82,7 @@ jobs:
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
 - name: (( concat "run-smoke-tests-" meta.cluster-name ))
+  serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
   - get: eirini-release
     passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
