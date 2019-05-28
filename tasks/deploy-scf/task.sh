@@ -32,6 +32,7 @@ export-certs() {
 helm-dep-update() {
   pushd "eirini-release/helm/cf"
   helm init --client-only
+  helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
   helm dependency update
   popd || exit
 }
