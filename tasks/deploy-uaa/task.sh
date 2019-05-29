@@ -21,7 +21,7 @@ helm-install() {
     "uaa" \
     --namespace "uaa" \
     --values "../../$ENVIRONMENT"/scf-config-values.yaml \
-    --force --wait
+    --force
   popd
 }
 
