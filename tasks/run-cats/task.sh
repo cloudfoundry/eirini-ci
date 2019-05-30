@@ -40,6 +40,7 @@ configure_tests() {
       "include_credhub" : ${INCLUDE_CREDHUB},
       "include_detect": ${INCLUDE_DETECT},
       "include_docker": ${INCLUDE_DOCKER},
+      "include_deployments": ${INCLUDE_DEPLOYMENTS},
       "include_internet_dependent": ${INCLUDE_INTERNET_DEPENDENT},
       "include_isolation_segments": ${INCLUDE_ISOLATION_SEGMENTS},
       "include_private_docker_registry": ${INCLUDE_PRIVATE_DOCKER_REGISTRY},
