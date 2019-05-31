@@ -5,6 +5,7 @@
           |when app only has single route when no ports are specified for the app should listen on the default app port\
           |uses stack.* for staging and running\
           |starts up successfully\
+          |uses a buildpack from a git url\
           |the user receives a BuildpackCompileFailed error\
           |the user receives a BuildpackReleaseFailed error\
           |starts up successfully\
