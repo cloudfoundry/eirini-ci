@@ -3,8 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if [[ "$#" -lt 3 ]]; then
-  echo "Usage $0 <world_name> <target> <private_repo> [working_branch] [ci_branch] [worker_count] [enable_opi_staging]" >&2
+if [[ "$#" -lt 1 ]]; then
+  echo "Usage $0 <world_name> [<target>] [<private_repo>] [working_branch] [ci_branch] [worker_count] [enable_opi_staging]" >&2
   exit 1
 fi
 
@@ -12,8 +12,8 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT
 
 readonly world_name=$1
-readonly target=$2
-readonly private_repo=$3
+readonly target="${2:-flintstone}"
+readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
 readonly working_branch=${4:-"develop"}
 readonly ci_branch=${5:-"master"}
 readonly worker_count=${6:-"1"}
