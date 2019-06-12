@@ -17,11 +17,38 @@ jobs:
   - get: ci-resources
   - task: run cats
     params:
-      .: (( inject cats_conf ))
+      SKIP_SSL_VALIDATION: true
+      USE_HTTP: true
+      USE_LOG_CACHE: false
+      INCLUDE_APPS: true
+      INCLUDE_BACKEND_COMPATIBILITY: false
+      INCLUDE_CAPI_EXPERIMENTAL: true
+      INCLUDE_CAPI_NO_BRIDGE: true
+      INCLUDE_CONTAINER_NETWORKING: true
+      INCLUDE_CREDHUB: false
+      INCLUDE_DETECT: true
+      INCLUDE_DEPLOYMENTS: true
+      INCLUDE_DOCKER: false
+      INCLUDE_INTERNET_DEPENDENT: true
+      INCLUDE_ISOLATION_SEGMENTS: false
+      INCLUDE_PRIVATE_DOCKER_REGISTRY: false
+      INCLUDE_ROUTE_SERVICES: false
+      INCLUDE_ROUTING: true
+      INCLUDE_ROUTING_ISOLATION_SEGMENTS: false
+      INCLUDE_SECURITY_GROUPS: false
+      INCLUDE_SERVICE_DISCOVERY: false
+      INCLUDE_SERVICES: true
+      INCLUDE_SERVICE_INSTANCE_SHARING: false
+      INCLUDE_SSH: false
+      INCLUDE_SSO: true
+      INCLUDE_TASKS: false
+      INCLUDE_V3: false
+      INCLUDE_ZIPKIN: false
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name))
+      SKIPPED_TESTS: (( grab skipped_cats))
     file: ci-resources/tasks/run-cats/task.yml
 
 resources:

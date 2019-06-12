@@ -46,12 +46,12 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
-  - cats_conf
+  - skipped_cats
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-diego}}
@@ -59,14 +59,13 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
-  - cats_conf
+  - skipped_cats
   go_patch: true
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/ci/cats-conf.yml
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
-      - $PROJECT_ROOT/pipelines/modules/skip-opi-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-opi}}

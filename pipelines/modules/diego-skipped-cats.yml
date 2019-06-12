@@ -1,0 +1,2 @@
+skipped_cats:
+  "forwards app messages to registered syslog drains"
