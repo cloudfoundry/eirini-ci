@@ -15,4 +15,5 @@ skipped_cats:
   |forwards app messages to registered syslog drains\
   |Supports URLs with percent-encoded characters\
   |uses the buildpack cache after first staging\
+  |reverse log proxy streams logs\
   |when app has multiple ports mapped should listen on multiple ports"
