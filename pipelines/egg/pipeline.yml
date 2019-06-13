@@ -86,13 +86,15 @@ jobs:
             -p postfacto/api \
             --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
             --var pcf-url=acceptance.eu-gb.containers.appdomain.cloud \
-            --var redis-password=${redis_password} --var mysql-password=${mysql_password}
+            --var redis-password=${redis_password} --var mysql-password=${mysql_password} \
+            -b ruby_buildpack
 
           cp -r eirini-private-config/postfacto-deployment/web/config.js postfacto/web/public/config.js
           cf push -f eirini-private-config/postfacto-deployment/web/manifest.yml \
             -p postfacto/web \
             --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
-            -m 5G -k 10G
+            -m 5G -k 10G \
+            -b nodejs_buildpack
       inputs:
       - name: postfacto
       - name: eirini-private-config
