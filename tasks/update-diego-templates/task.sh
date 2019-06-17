@@ -10,7 +10,7 @@ main(){
 update-templates(){
   pushd eirini-release
     sed -i '2i\{{ if .Values.env.ENABLE_OPI_STAGING  }}' helm/cf/templates/diego-*.yaml
-    sed -i '\$a{{- end}}' helm/cf/templates/diego-*.yaml
+    sed -i -e '\$a{{- end}}' helm/cf/templates/diego-*.yaml
   popd || exit
 }
 
