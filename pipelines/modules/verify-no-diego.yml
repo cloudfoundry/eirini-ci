@@ -1,18 +1,11 @@
-groups:
-- name: eirini-ci
-  jobs:
-  - (( append  ))
-  - verify-no-diego
-
 jobs:
-- name: verify-no-diego
+- name: (( concat "run-smoke-tests-" meta.cluster-name ))
   plan:
-  - get: state
-  - get: ci-resources
+  - (( append ))
   - task: verify no diego
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: ((cluster-name))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/verify-no-diego/task.yml

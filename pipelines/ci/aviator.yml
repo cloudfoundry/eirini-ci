@@ -41,6 +41,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+      - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
   to: {{eirini-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
