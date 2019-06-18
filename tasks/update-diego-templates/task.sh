@@ -2,19 +2,19 @@
 
 set -euo pipefail
 
-main(){
+main() {
   update-templates
   commit
 }
 
-update-templates(){
+update-templates() {
   pushd eirini-release
     sed -i '2i\{{ if not .Values.env.ENABLE_OPI_STAGING  }}' helm/cf/templates/diego-*.yaml
     sed -i -e "\$a{{- end}}" helm/cf/templates/diego-*.yaml
   popd || exit
 }
 
-commit(){
+commit() {
   pushd eirini-release
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
@@ -31,5 +31,3 @@ commit(){
 }
 
 main
-
-
