@@ -9,14 +9,16 @@ EOF
   exit 0
 fi
 
-export TARGET="${1?target not defined}"
-export PRIVATE_REPO="${2?private repo not defined}"
 
 DOCKER_HUB_PASSWORD="$(pass eirini/docker-hub)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
+
 export DOCKER_HUB_PASSWORD
 export SCRIPT_DIR
 export PROJECT_ROOT
+
+export TARGET="${1:-flintstone}"
+export PRIVATE_REPO="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 aviator -f "$SCRIPT_DIR"/aviator.yml

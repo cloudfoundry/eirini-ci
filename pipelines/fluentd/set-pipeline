@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PIPELINE_YML="$(cd "$(dirname "$0")" && pwd)/pipeline.yml"
-readonly TARGET=$1
+readonly TARGET="${1:-flintstone}"
 
 fly -t "$TARGET" set-pipeline -p fluentd \
   --config "$PIPELINE_YML" \
