@@ -24,7 +24,7 @@ resources:
 - name: eirini-ci-image-source
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
     paths:
     - images/ci/Dockerfile
@@ -32,7 +32,7 @@ resources:
 - name: eirini-ibmcloud-image-source
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
     paths:
     - images/ibmcloud/Dockerfile
@@ -40,7 +40,7 @@ resources:
 - name: eirini-scf-builder-image-source
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
     paths:
     - images/scf-builder/Dockerfile

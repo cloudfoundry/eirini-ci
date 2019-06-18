@@ -102,7 +102,7 @@ resources:
 - name: ci-resources
   type: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci.git
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: ((ci-resources-branch))
 - name: eirini-release
   type: git
