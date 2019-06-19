@@ -34,6 +34,21 @@ set-kube-state() {
   pushd cluster-state
   mkdir --parent "$CLUSTER_DIR"
   cat >"$CLUSTER_DIR"/scf-config-values.yaml <<EOF
+bits:
+  env:
+    DOMAIN: $node_ip.nip.io
+  kube:
+    external_ips: []
+  opi:
+    ingress_endpoint: $ingress_endpoint
+    use_registry_ingress: true
+  secrets:
+    BITS_SERVICE_SECRET: $BITS_SECRET
+    BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
+    BLOBSTORE_PASSWORD: $BITS_SECRET
+  services:
+    loadbalanced: false
+
 env:
     DOMAIN: $node_ip.nip.io
 
@@ -62,8 +77,6 @@ eirini:
     ingress_endpoint: $ingress_endpoint
 
   secrets:
-    BITS_SERVICE_SECRET: $BITS_SECRET
-    BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
     BLOBSTORE_PASSWORD: $BITS_SECRET
 
   kube:
@@ -79,6 +92,7 @@ set-external-ips() {
   for ip in $node_ips; do
     goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p kube.external_ips.+ -v "$ip"
     goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p eirini.kube.external_ips.+ -v "$ip"
+    goml set -f "$CLUSTER_DIR/scf-config-values.yaml" -p bits.kube.external_ips.+ -v "$ip"
   done
   popd
 }
