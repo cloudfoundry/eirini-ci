@@ -25,6 +25,7 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/cats-conf.yml
+      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
   to: {{cats-with-diego}}
 
