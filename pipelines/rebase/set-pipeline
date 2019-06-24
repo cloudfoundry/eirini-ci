@@ -12,7 +12,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
 
-readonly TARGET="${1:-flintstone}"
+readonly TARGET="${1:-eirini}"
 readonly PRIVATE_REPO="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 export SCRIPT_DIR

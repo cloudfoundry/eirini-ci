@@ -19,7 +19,7 @@ export DOCKER_HUB_PASSWORD
 export SCRIPT_DIR
 export PROJECT_ROOT
 
-export TARGET="${1:-flintstone}"
+export TARGET="${1:-eirini}"
 export PRIVATE_REPO="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 aviator -f "$SCRIPT_DIR"/aviator.yml
