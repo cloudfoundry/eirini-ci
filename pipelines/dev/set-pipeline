@@ -45,6 +45,6 @@ fly --target "$target" \
   --var worker_count="$worker_count" \
   --var storage_class="$storage_class" \
   --var enable_opi_staging="${enable_opi_staging}" \
-  --var diego-cell-count="$diego_cell_count"
+  --var diego-cell-count="$diego_cell_count" \
   --var capi-release-branch=develop \
   --load-vars-from "$private_repo/concourse/common.yml"
