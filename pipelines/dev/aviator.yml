@@ -20,11 +20,10 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
-  - cats_conf
+  - skipped_cats
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/dev/cats-conf.yml
       - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
   to: {{cats-with-diego}}
