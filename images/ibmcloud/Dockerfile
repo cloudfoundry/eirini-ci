@@ -12,11 +12,11 @@ RUN apt-get update && \
       vim
 
 # IBMCloud CLI
-# https://console.bluemix.net/docs/cli/reference/ibmcloud/download_cli.html#shell_install
-RUN curl --fail --silent --show-error --location https://clis.ng.bluemix.net/install/linux | sh
+# https://cloud.ibm.com/docs/cli/reference/ibmcloud?topic=cloud-cli-install-ibmcloud-cli#shell_install
+RUN curl --fail --silent --show-error --location https://clis.cloud.ibm.com/install/linux | sh
 # Disable automatic version checking because it breaks the scripts
 RUN ibmcloud config --check-version=false
-# https://console.bluemix.net/docs/containers/cs_cli_install.html
+# https://cloud.ibm.com/docs/containers?topic=containers-cs_cli_install
 RUN ibmcloud plugin install container-service
 # Enable bash completion for ibmcloud
 RUN echo source /usr/local/ibmcloud/autocomplete/bash_autocomplete >> ~/.bashrc

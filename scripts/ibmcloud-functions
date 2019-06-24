@@ -45,7 +45,7 @@ wait-for-ingress-hostname() {
 # Log in to the IBM Cloud
 ibmcloud-login() {
   ibmcloud login \
-    -a https://api.eu-gb.bluemix.net \
+    -a https://cloud.ibm.com \
     -u "${IBMCLOUD_USER:?}" \
     -p "${IBMCLOUD_PASSWORD:?}" \
     -c "${IBMCLOUD_ACCOUNT:?}"
