@@ -73,7 +73,6 @@ jobs:
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((world-name))
-      DIEGO_CELL_COUNT: ((diego-cell-count))
   - task: smoke-eirini
     attempts: 50
     params:
