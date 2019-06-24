@@ -13,8 +13,6 @@ main() {
   CF_DOMAIN="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
   sleep 10
 
-  check-post-deployment-setup
-  kubectl delete pod api-group-0 -n scf
   check-scf-readiness
   curl "api.$CF_DOMAIN/v2/info" --fail
 }
@@ -23,16 +21,6 @@ check-scf-readiness() {
   local exit_code
   set +e
   kubectl get pods --namespace scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep "0/1"
-  exit_code="$?"
-  set -e
-
-  [ "$exit_code" -eq 1 ] || exit 1
-}
-
-check-post-deployment-setup() {
-  local exit_code
-  set +e
-  kubectl get pods --namespace scf | grep -E "post-deployment-setup.*0/1.*Completed"
   exit_code="$?"
   set -e
 
