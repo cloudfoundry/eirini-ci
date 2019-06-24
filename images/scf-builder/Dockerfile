@@ -18,10 +18,10 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
     apt-add-repository ppa:brightbox/ruby-ng && \
-    apt-get update \
+    apt-get update && \
     apt-get install --yes docker-ce=17.09.1~ce-0~ubuntu ruby2.4 && \
     rm -rf /var/lib/apt/lists/*
-    
+
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc && \
     gem install bundler && \
     bundle config --global silence_root_warning true
