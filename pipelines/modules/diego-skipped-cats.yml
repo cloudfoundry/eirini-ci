@@ -1,3 +1,2 @@
 skipped_cats:
-  "forwards app messages to registered syslog drains\
-  |reverse log proxy streams logs"
+  "reverse log proxy streams logs"
