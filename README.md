@@ -1,6 +1,6 @@
 # Eirini CI
 
-CI Resources for [eirini-release](https://github.com/cloudfoundry-incubator/eirini-release). The pipeline is deployed at [cloud.ibm.com](https://ci.flintstone.cf.cloud.ibm.com/teams/eirini/pipelines/ci).
+CI Resources for [eirini-release](https://github.com/cloudfoundry-incubator/eirini-release). The pipeline is deployed at [GCP](https://ci.eirini.cf-app.com).
 
 To be able to login via Github you will need to be member of the `cf-cube-ci/cube` team.
 
