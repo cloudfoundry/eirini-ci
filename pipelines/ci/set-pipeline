@@ -32,6 +32,6 @@ fly -t "$target" \
   --var worker_count="$worker_count" \
   --var storage_class="ibmc-block-gold" \
   --var enable_opi_staging=false \
-  --var diego-cell-count="$diego_cell_count"
+  --var diego-cell-count="$diego_cell_count" \
   --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"
