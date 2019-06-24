@@ -9,21 +9,19 @@ RUN apt-get update && \
       jq \
       lsb-release \
       wget \
-      software-properties-common
+      software-properties-common \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add repos (Docker & Ruby)
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
     apt-add-repository ppa:brightbox/ruby-ng && \
-    apt-get update
-
-# Docker
-RUN  apt-get install --yes docker-ce=17.09.1~ce-0~ubuntu
-
-# Ruby
-RUN apt-get install --yes ruby2.4 && \
-    echo "gem: --no-rdoc --no-ri" > ~/.gemrc && \
+    apt-get update \
+    apt-get install --yes docker-ce=17.09.1~ce-0~ubuntu ruby2.4 && \
+    rm -rf /var/lib/apt/lists/*
+    
+RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc && \
     gem install bundler && \
     bundle config --global silence_root_warning true
 

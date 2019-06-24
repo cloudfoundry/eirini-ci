@@ -9,7 +9,8 @@ RUN apt-get update && \
       git \
       jq \
       wget \
-      vim
+      vim \
+  && rm -rf /var/lib/apt/lists/*
 
 # IBMCloud CLI
 # https://cloud.ibm.com/docs/cli/reference/ibmcloud?topic=cloud-cli-install-ibmcloud-cli#shell_install
