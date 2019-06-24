@@ -10,7 +10,7 @@ readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly world_name=pull-requests
 readonly target="${1:-flintstone}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
-readonly worker_count=${3:-"1"}
+readonly worker_count=${3:-"3"}
 
 aviator -f "$basedir"/aviator.yml
 
