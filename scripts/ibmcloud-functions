@@ -48,7 +48,8 @@ ibmcloud-login() {
     -a https://cloud.ibm.com \
     -u "${IBMCLOUD_USER:?}" \
     -p "${IBMCLOUD_PASSWORD:?}" \
-    -c "${IBMCLOUD_ACCOUNT:?}"
+    -c "${IBMCLOUD_ACCOUNT:?}" \
+    -r "eu-gb"
 }
 
 # Create a new cluster with the name given as $1
