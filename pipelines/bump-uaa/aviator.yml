@@ -1,0 +1,4 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/bump-uaa/pipeline.yml
+  to: $PIPELINE_YML
+
