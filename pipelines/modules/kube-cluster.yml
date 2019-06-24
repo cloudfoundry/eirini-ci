@@ -56,7 +56,9 @@ jobs:
           ENABLE_OPI_STAGING: (( grab meta.enable-opi-staging ))
       file: ci-resources/tasks/cluster-config/task.yml
     - put: cluster-state
-      params: {repository: state-modified}
+      params: 
+        repository: state-modified
+        merge: true
     - task: provision-storage
       params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
@@ -105,6 +107,7 @@ jobs:
           CLUSTER_NAME: (( grab meta.cluster-name ))
       - put: cluster-state
         params:
+          merge: true
           repository: state-modified
 
 resources:
