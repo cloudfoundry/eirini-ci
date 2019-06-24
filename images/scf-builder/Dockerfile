@@ -8,8 +8,9 @@ RUN apt-get update && \
       git \
       jq \
       lsb-release \
-      wget \
       software-properties-common \
+      unzip \
+      wget \
   && rm -rf /var/lib/apt/lists/*
 
 # Add repos (Docker & Ruby)
