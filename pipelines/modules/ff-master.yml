@@ -34,7 +34,7 @@ jobs:
   plan:
   - get: ci-lock
   - put: ci-lock
-    params: {release: ci}
+    params: {release: ci-lock}
 
 - name: unlock-ci
   plan:
@@ -43,7 +43,7 @@ jobs:
     passed: (( grab meta.ff-upstream ))
   - get: ci-lock
   - put: ci-lock
-    params: {release: ci}
+    params: {release: ci-lock}
 
 - name: fast-forward-master
   plan:
