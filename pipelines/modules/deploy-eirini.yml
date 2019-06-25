@@ -4,6 +4,7 @@ groups:
   jobs:
   - (( defer prepend ))
   - (( concat "deploy-scf-uaa-" meta.cluster-name ))
+  - lock-ci
   - (( concat "deploy-scf-eirini-" meta.cluster-name ))
   - (( concat "run-smoke-tests-" meta.cluster-name ))
 - name: (( concat "deploy-eirini-" meta.cluster-name ))
@@ -47,8 +48,7 @@ jobs:
   - put: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     params:
       file: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready/number" ))
-- name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
-  serial_groups: [ (( grab meta.cluster-name )) ]
+- name: lock-ci
   plan:
   - get: eirini-release
     trigger: true
@@ -56,12 +56,29 @@ jobs:
     - create-docker-images
   - get: scf-resources
     trigger: true
+  - get: deployment-version
+    trigger: true
+    passed:
+    - create-docker-images
+  - put: ci-lock
+    params: {acquire: true}
+- name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
+  serial_groups: [ (( grab meta.cluster-name )) ]
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - lock-ci
+  - get: scf-resources
+    trigger: true
+    passed:
+    - lock-ci
   - get: ci-resources
   - get: state
   - get: deployment-version
     trigger: true
     passed:
-    - create-docker-images
+    - lock-ci
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
@@ -153,4 +170,11 @@ resources:
     check_every: 500ms
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
+    private_key: ((github-private-key))
+- name: ci-lock
+  type: pool
+  source:
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: ci-locks
+    pool: ci
     private_key: ((github-private-key))
