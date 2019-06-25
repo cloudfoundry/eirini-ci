@@ -11,16 +11,8 @@ readonly TAG="${CLUSTER_NAME}-${VERSION}"
 
 main() {
   start-docker
-  export-gopath
   generate-opi-images
   push
-}
-
-export-gopath() {
-  pushd eirini-release || exit
-  # shellcheck disable=SC1091
-  source .envrc
-  popd || exit
 }
 
 generate-opi-images() {
