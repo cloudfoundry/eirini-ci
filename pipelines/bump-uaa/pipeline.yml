@@ -1,9 +1,11 @@
 jobs:
 - name: bump-uaa
+  .: (( inject hooks.failure ))
   serial: true
   plan:
   - in_parallel:
     - get: scf-release
+      trigger: true
     - get: eirini-release
     - get: ci-resources
   - task: bump-uaa
@@ -22,7 +24,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: uaa-bump-test
+    branch: develop
     private_key: ((eirini-release-private-key))
 - name: ci-resources
   type: git
