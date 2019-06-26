@@ -8,9 +8,7 @@ groups:
   - ((defer prepend))
   - fast-forward-master
   - fast-forward-master-release
-- name: unlock-ci
-  jobs:
-  - release-lock
+
 
 resources:
 - name: eirini-master

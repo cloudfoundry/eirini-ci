@@ -5,13 +5,19 @@ groups:
   - (( append ))
   - (( concat "lock-" meta.cluster-name ))
   - (( concat "unlock-" meta.cluster-name ))
+- (( append ))
+- name: release-locks
+  jobs:
+  - (( append ))
+  - (( concat "release-lock-" meta.cluster-name ))
 
 jobs:
-- name: release-lock
+- name: (( concat "release-lock-" meta.cluster-name ))
   plan:
-  - get: ci-lock
-  - put: ci-lock
-    params: {release: ci-lock}
+  - get: (( concat "lock-" meta.cluster-name ))
+  - put: (( concat "lock-" meta.cluster-name ))
+    params:
+      release: (( concat "lock-" meta.cluster-name ))
 
 - name: (( concat "lock-" meta.cluster-name ))
   plan:
