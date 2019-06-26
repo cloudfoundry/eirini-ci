@@ -1,0 +1,26 @@
+groups:
+- name: nuke-cf
+  jobs:
+  - nuke-scf
+- name: all
+  jobs:
+  - (( append ))
+  - nuke-scf
+
+jobs:
+- name: nuke-scf
+  plan:
+  - get: ci-resources
+  - get: scf-resources
+  - get: eirini-release
+    passed:
+    - (( concat "run-core-cats-" meta.cluster-name ))
+    trigger: true
+  - task: nuke
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
+      VERSIONING_CLUSTER: ((world-name))
+    file: ci-resources/tasks/nuke-scf/task.yml

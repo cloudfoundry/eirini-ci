@@ -2,3 +2,4 @@ meta:
   ff-upstream:
   - run-core-cats-with-opi
   - run-core-cats-with-diego
+  - nuke-scf
