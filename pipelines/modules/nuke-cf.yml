@@ -24,7 +24,7 @@ jobs:
       CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((world-name))
     file: ci-resources/tasks/nuke-scf/task.yml
-  - taks: wait-for-deletion
+  - task: wait-for-deletion
     attempts: 50
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
