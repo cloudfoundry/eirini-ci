@@ -7,7 +7,6 @@ IFS=$'\n\t'
 source ci-resources/scripts/ibmcloud-functions
 
 readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
-readonly VERSION="$(cat deployment-version/version)"
 export SECRET=""
 export CA_CERT=""
 export BITS_TLS_CRT=""
