@@ -1,3 +1,4 @@
 meta:
   cluster-name: freshini
   enable-opi-staging: "true"
+  unlock-passed: nuke-scf

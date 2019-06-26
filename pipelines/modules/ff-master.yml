@@ -6,7 +6,6 @@ groups:
 - name: all
   jobs:
   - ((defer prepend))
-  - unlock-ci
   - fast-forward-master
   - fast-forward-master-release
 - name: unlock-ci
@@ -30,27 +29,11 @@ resources:
 
 
 jobs:
-- name: release-lock
-  plan:
-  - get: ci-lock
-  - put: ci-lock
-    params: {release: ci-lock}
-
-- name: unlock-ci
-  plan:
-  - get: eirini-release
-    trigger: true
-    passed: (( grab meta.ff-upstream ))
-  - get: ci-lock
-  - put: ci-lock
-    params: {release: ci-lock}
-
 - name: fast-forward-master
   plan:
   - get: eirini-release
     trigger: true
-    passed:
-    - unlock-ci
+    passed: (( grab meta.ff-upstream ))
   - put: eirini-master
     params:
       repository: eirini-release/src/code.cloudfoundry.org/eirini

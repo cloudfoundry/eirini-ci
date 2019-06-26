@@ -16,6 +16,7 @@ spruce:
   merge:
   - with:
       files:
+      - $PROJECT_ROOT/pipelines/modules/lock.yml
       - $PROJECT_ROOT/pipelines/ci/with-diego.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
@@ -39,6 +40,7 @@ spruce:
   merge:
   - with:
       files:
+      - $PROJECT_ROOT/pipelines/modules/lock.yml
       - $PROJECT_ROOT/pipelines/ci/with-opi.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
@@ -63,6 +65,7 @@ spruce:
   merge:
   - with:
       files:
+      - $PROJECT_ROOT/pipelines/modules/lock.yml
       - $PROJECT_ROOT/pipelines/ci/freshini.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml

@@ -1,0 +1,50 @@
+groups:
+- (( defer merge ))
+- name: all
+  jobs:
+  - (( append ))
+  - (( concat "lock-" meta.cluster-name ))
+  - (( concat "unlock-" meta.cluster-name ))
+
+jobs:
+- name: release-lock
+  plan:
+  - get: ci-lock
+  - put: ci-lock
+    params: {release: ci-lock}
+
+- name: (( concat "lock-" meta.cluster-name ))
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - create-docker-images
+  - get: scf-resources
+    trigger: true
+  - get: deployment-version
+    trigger: true
+    passed:
+    - create-docker-images
+  - put: (( concat "lock-" meta.cluster-name ))
+    params: {acquire: true}
+
+- name: (( concat "unlock-" meta.cluster-name ))
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - (( grab meta.unlock-passed ))
+  - get: (( concat "lock-" meta.cluster-name ))
+  - put: (( concat "lock-" meta.cluster-name ))
+    params:
+      release: (( concat "lock-" meta.cluster-name ))
+
+resources:
+- (( append ))
+- name: (( concat "lock-" meta.cluster-name ))
+  type: pool
+  source:
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: ci-locks
+    pool: (( grab meta.cluster-name ))
+    private_key: ((github-private-key))
