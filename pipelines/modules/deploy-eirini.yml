@@ -54,17 +54,17 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - (( concat "lock-" meta.cluster-name ))
+    - create-docker-images
   - get: scf-resources
     trigger: true
     passed:
-    - (( concat "lock-" meta.cluster-name ))
+    - create-docker-images
   - get: ci-resources
   - get: state
   - get: deployment-version
     trigger: true
     passed:
-    - (( concat "lock-" meta.cluster-name ))
+    - create-docker-images
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]

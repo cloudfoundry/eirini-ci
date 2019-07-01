@@ -44,6 +44,23 @@ jobs:
   - put: (( concat "lock-" meta.cluster-name ))
     params:
       release: (( concat "lock-" meta.cluster-name ))
+- name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - (( concat "lock-" meta.cluster-name ))
+  - get: scf-resources
+    trigger: true
+    passed:
+    - (( concat "lock-" meta.cluster-name ))
+  - get: ci-resources
+  - get: state
+  - get: deployment-version
+    trigger: true
+    passed:
+    - (( concat "lock-" meta.cluster-name ))
+
 
 resources:
 - (( append ))
