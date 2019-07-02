@@ -55,10 +55,6 @@ jobs:
     trigger: true
     passed:
     - create-docker-images
-  - get: scf-resources
-    trigger: true
-    passed:
-    - create-docker-images
   - get: ci-resources
   - get: state
   - get: deployment-version
@@ -119,14 +115,6 @@ resources:
     branch: ((eirini-release-branch))
     paths:
     - helm/uaa
-- name: scf-resources
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
-    paths:
-    - helm/cf
-    - helm/eirini
 - name: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
   type: semver
   source:

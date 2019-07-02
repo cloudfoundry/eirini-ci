@@ -15,7 +15,6 @@ spruce:
     delete:
       - "jobs.name:deploy-scf-uaa-pull-requests.plan.get:scf-uaa-resources"
       - "jobs.name:deploy-scf-uaa-pull-requests.plan.get:cluster-pull-requests-staging-event-ready"
-      - "jobs.name:deploy-scf-eirini-pull-requests.plan.get:scf-resources"
       - "resources.name:eirini-release"
   merge:
   - with:
@@ -44,7 +43,6 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   modify:
     delete:
-      - "jobs.name:create-docker-images.plan.0.aggregate.get:scf-resources"
       - "resources.name:eirini-release"
       # Disable auto trigger
       - "jobs.name:run-tests.plan.0.aggregate.get:cluster-pull-requests-staging-event-ready.trigger"
@@ -69,6 +67,5 @@ spruce:
       - $PROJECT_ROOT/pipelines/pull-requests/track-prs.yml
   modify:
     delete:
-      - "resources.name:scf-resources"
       - "resources.name:scf-uaa-resources"
   to: $PIPELINE_YML

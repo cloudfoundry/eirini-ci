@@ -11,7 +11,6 @@ jobs:
 - name: nuke-scf
   plan:
   - get: ci-resources
-  - get: scf-resources
   - get: eirini-release
     passed:
     - (( concat "run-core-cats-" meta.cluster-name ))

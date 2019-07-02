@@ -25,8 +25,6 @@ jobs:
     trigger: true
     passed:
     - create-docker-images
-  - get: scf-resources
-    trigger: true
   - get: deployment-version
     trigger: true
     passed:
@@ -47,10 +45,6 @@ jobs:
 - name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
   plan:
   - get: eirini-release
-    trigger: true
-    passed:
-    - (( concat "lock-" meta.cluster-name ))
-  - get: scf-resources
     trigger: true
     passed:
     - (( concat "lock-" meta.cluster-name ))

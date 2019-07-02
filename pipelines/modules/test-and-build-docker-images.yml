@@ -55,7 +55,6 @@ jobs:
       passed:
       - run-tests
     - get: ci-resources
-    - get: scf-resources
     - get: deployment-version
       params:
         bump: major
