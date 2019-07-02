@@ -29,7 +29,7 @@ export-certs() {
 helm-purge() {
   local output
   kubectl delete namespace scf --ignore-not-found
-  if output="$(helm del scf --purge 2>&1)"; then
+  if ! output="$(helm del scf --purge 2>&1)"; then
     echo "$output" | grep --ignore-case "not found"
   fi
 }
