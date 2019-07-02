@@ -27,7 +27,7 @@ export-certs() {
 }
 
 helm-purge() {
-  kubectl delete namespace scf
+  kubectl delete namespace scf --ignore-not-found
   helm del scf --purge
 }
 
