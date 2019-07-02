@@ -27,7 +27,7 @@ export-certs() {
 }
 
 is-deleted() {
-  if ! kubectl get namespaces | grep scf; then exit 1; fi
+  if kubectl get namespaces | grep scf; then exit 1; fi
 }
 
 main
