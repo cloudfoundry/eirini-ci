@@ -24,6 +24,7 @@ params:
   NATS_PASSWORD:
   ENABLE_OPI_STAGING:
   DIEGO_CELL_COUNT:
+  ROOTFS_VERSION:
 
 run:
   path: ci-resources/tasks/cluster-config/task.sh
