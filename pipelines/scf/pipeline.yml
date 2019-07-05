@@ -15,8 +15,9 @@ jobs:
       DOCKER_USERNAME: ((dockerhub-user))
       DOCKER_PASSWORD: ((dockerhub-password))
       FISSILE_DOCKER_ORGANIZATION: "eirinicf"
-      HELM_CHART_VERSION: 2.15.2
+      HELM_CHART_VERSION: 2.16.4
     file: ci-resources/tasks/scf-build/task.yml
+    tags: [scf]
   - put: eirini-release
     params:
       merge: true
@@ -39,7 +40,7 @@ resources:
   type: git
   source:
     uri: https://github.com/eirini-forks/scf.git
-    branch: eirini-scf-2.15.2.1
+    branch: eirini-scf-2.16.4
     git_config:
     - name: submodule.fetchJobs
       value: 64
@@ -47,7 +48,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: scf-2.15.2.1
+    branch: scf-2.16.4
     private_key: ((eirini-release-private-key))
 - name: ci-resources
   type: git
