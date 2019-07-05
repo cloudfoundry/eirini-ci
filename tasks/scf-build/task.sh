@@ -27,7 +27,7 @@ prepare-release() {
   pushd scf
   # shellcheck disable=SC1091
   source .envrc
-  export FISSILE_STEMCELL=splatform/fissile-stemcell-opensuse:42.3-24.g63783b3-30.60
+  export FISSILE_STEMCELL=splatform/fissile-stemcell-opensuse:42.3-36.g03b4653-30.90
   export USE_CFLINUXFS3_STACK=true
   make docker-deps
   popd
