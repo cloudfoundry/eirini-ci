@@ -14,6 +14,10 @@ inputs:
 outputs:
   - name: eirini-release-modified
 
+caches:
+- path: scf/.fissile
+- path: scf/output
+
 params:
   FISSILE_DOCKER_REGISTRY:
   DOCKER_USERNAME:
