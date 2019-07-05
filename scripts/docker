@@ -2,7 +2,7 @@
 
 # Start Docker Daemon (and set a trap to stop it once this script is done)
 start-docker() {
-  echo 'DOCKER_OPTS="--data-root $PWD/docker --max-concurrent-downloads 10"' >/etc/default/docker
+  echo "DOCKER_OPTS=\"--data-root $PWD/docker --max-concurrent-downloads 10\"" >/etc/default/docker
   service docker start
   trap 'service docker stop' EXIT
 
