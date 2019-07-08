@@ -17,7 +17,6 @@ outputs:
 caches:
 - path: scf/.fissile
 - path: scf/output
-- path: docker
 
 params:
   FISSILE_DOCKER_REGISTRY:
