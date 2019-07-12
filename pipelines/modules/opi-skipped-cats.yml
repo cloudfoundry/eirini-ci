@@ -16,4 +16,6 @@ skipped_cats:
   |Supports URLs with percent-encoded characters\
   |uses the buildpack cache after first staging\
   |reverse log proxy streams logs\
+  |Users can manage droplet bits for an app\
+  |applies default environment variables while staging apps\
   |when app has multiple ports mapped should listen on multiple ports"
