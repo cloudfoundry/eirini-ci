@@ -30,8 +30,8 @@ jobs:
       trigger: true
   - name: run-tests
     plan:
-     - aggregate: []
-     - aggregate:
+     - in_parallel: []
+     - in_parallel:
         - task: run-unit-tests
           input_mapping: {eirini-source: eirini-updated}
         - task: run-static-checks
@@ -50,7 +50,7 @@ jobs:
        file: ci-resources/tasks/init-submodules/task.yml
   - name: create-docker-images
     plan:
-     - aggregate: []
+     - in_parallel: []
      - task: create images
        input_mapping: {eirini-release: eirini-updated}
      - (( insert before 1 ))

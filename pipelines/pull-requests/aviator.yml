@@ -45,9 +45,9 @@ spruce:
     delete:
       - "resources.name:eirini-release"
       # Disable auto trigger
-      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-pull-requests-staging-event-ready.trigger"
-      - "jobs.name:run-tests.plan.0.aggregate.get:eirini-release.trigger"
-      - "jobs.name:run-tests.plan.0.aggregate.get:sample-configs.trigger"
+      - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-pull-requests-staging-event-ready.trigger"
+      - "jobs.name:run-tests.plan.0.in_parallel.get:eirini-release.trigger"
+      - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
   merge:
   - with:
       files:

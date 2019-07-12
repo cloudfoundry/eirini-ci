@@ -27,7 +27,7 @@ resources:
 jobs:
 - name: run-unit-tests
   plan:
-  - aggregate:
+  - in_parallel:
     - get: eirini
       trigger: true
     - get: ci-resources

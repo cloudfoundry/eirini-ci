@@ -24,7 +24,7 @@ spruce:
   modify:
     delete:
       - "jobs.name:run-tests"
-      - "jobs.name:create-docker-images.plan.0.aggregate.get:eirini-release.passed.0"
+      - "jobs.name:create-docker-images.plan.0.in_parallel.get:eirini-release.passed.0"
       - "resources.name:sample-configs"
       - "groups.1.jobs.:run-tests"
       - "groups.2.jobs.:run-tests"
@@ -72,7 +72,7 @@ spruce:
       - {{publish-release}}
   modify:
     delete:
-      - "jobs.name:run-tests.plan.0.aggregate.get:cluster-acceptance-staging-event-ready.passed"
+      - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-acceptance-staging-event-ready.passed"
       - "jobs.name:deploy-scf-uaa-acceptance.plan.get:cluster-acceptance-staging-event-ready.passed"
       - "jobs.name:deploy-scf-uaa-cf-sans-diego.plan.get:cluster-cf-sans-diego-staging-event-ready.passed"
   to: $PIPELINE_YML

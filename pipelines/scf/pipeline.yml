@@ -2,7 +2,7 @@ jobs:
 - name: scf-build
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: scf-fork
     - get: eirini-release
     - get: ci-resources
