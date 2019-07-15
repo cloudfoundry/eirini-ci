@@ -47,10 +47,10 @@ jobs:
         file: ci-resources/tasks/run-integration-tests/task.yml
         input_mapping:
           eirini-source: eirini-release
-- name: create-docker-images
+- name: create-opi-docker-images
   plan:
   - in_parallel:
-    - get: eirini-release
+    - get: eirini
       trigger: true
       passed:
       - run-tests
@@ -58,13 +58,57 @@ jobs:
     - get: deployment-version
       params:
         bump: major
-  - task: create images
-    privileged: true
-    params:
-      DOCKER_HUB_USER: ((dockerhub-user))
-      DOCKER_HUB_PASSWORD: ((dockerhub-password))
-      CLUSTER_NAME: ((world-name))
-    file: ci-resources/tasks/create-docker-images/task.yml
+  - in_parallel:
+    - task: build-opi
+      privileged: true
+      params:
+        DOCKER_HUB_USER: ((dockerhub-user))
+        DOCKER_HUB_PASSWORD: ((dockerhub-password))
+        CLUSTER_NAME: ((world-name))
+        CONTEXT_PATH: eirini
+        IMAGE_NAME: eirini/opi
+        DOCKERFILE_PATH: eirini/docker/opi/Dockerfile
+      file: ci-resources/tasks/create-docker-images/task.yml
+     - task: build-opi-init
+      privileged: true
+      params:
+        DOCKER_HUB_USER: ((dockerhub-user))
+        DOCKER_HUB_PASSWORD: ((dockerhub-password))
+        CLUSTER_NAME: ((world-name))
+        CONTEXT_PATH: eirini/docker/opi/init
+        IMAGE_NAME: eirini/opi-init
+        DOCKERFILE_PATH: eirini/docker/opi/init/Dockerfile
+      file: ci-resources/tasks/create-docker-images/task.yml
+     - task: build-secret-smuggler
+      privileged: true
+      params:
+        DOCKER_HUB_USER: ((dockerhub-user))
+        DOCKER_HUB_PASSWORD: ((dockerhub-password))
+        CLUSTER_NAME: ((world-name))
+        CONTEXT_PATH: eirini/docker/registry/certs/smuggler
+        IMAGE_NAME: eirini/secret-smuggler
+        DOCKERFILE_PATH: eirini/docker/registry/certs/smuggler/Dockerfile
+      file: ci-resources/tasks/create-docker-images/task.yml
+     - task: build-bits-waiter
+      privileged: true
+      params:
+        DOCKER_HUB_USER: ((dockerhub-user))
+        DOCKER_HUB_PASSWORD: ((dockerhub-password))
+        CLUSTER_NAME: ((world-name))
+        CONTEXT_PATH: eirini
+        IMAGE_NAME: eirini/bits-watier
+        DOCKERFILE_PATH: eirini/docker/bits-watier/Dockerfile
+      file: ci-resources/tasks/create-docker-images/task.yml
+     - task: build-rootfs-patcher
+      privileged: true
+      params:
+        DOCKER_HUB_USER: ((dockerhub-user))
+        DOCKER_HUB_PASSWORD: ((dockerhub-password))
+        CLUSTER_NAME: ((world-name))
+        CONTEXT_PATH: eirini
+        IMAGE_NAME: eirini/rootfs-patcher
+        DOCKERFILE_PATH: eirini/docker/rootfs-patcher/Dockerfile
+      file: ci-resources/tasks/build-docker-images/task.yml
   - put: deployment-version
     params:
       file: deployment-version/version
@@ -82,6 +126,11 @@ resources:
     branch: ((ci-resources-branch))
     paths:
     - sample-configs
+- name: eirini
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    branch: ((eirini-branch))
 - name: eirini-release
   type: git
   source:
