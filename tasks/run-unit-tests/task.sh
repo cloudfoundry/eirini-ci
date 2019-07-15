@@ -2,5 +2,5 @@
 
 set -e
 
-readonly WORKSPACE="$(readlink -f eirini-source)/src/code.cloudfoundry.org/eirini"
+readonly WORKSPACE="$(readlink -f eirini-source)"
 "$WORKSPACE"/scripts/run_unit_tests.sh

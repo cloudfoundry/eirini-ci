@@ -20,6 +20,10 @@ jobs:
       - (( concat "check-cluster-readiness-" meta.cluster-name ))
     - get: eirini-release
       trigger: true
+      passed:
+      - run-tests
+    - get: eirini
+      trigger: true
     - get: ci-resources
     - get: sample-configs
       trigger: true
@@ -28,11 +32,11 @@ jobs:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
       input_mapping:
-        eirini-source: eirini-release
+        eirini-source: eirini
     - task: run-static-checks
       file: ci-resources/tasks/run-static-checks/task.yml
       input_mapping:
-        eirini-source: eirini-release
+        eirini-source: eirini
     - task: helm-lint
       file: ci-resources/tasks/helm-lint/task.yml
     - do:
@@ -46,10 +50,14 @@ jobs:
       - task: run-integration-tests
         file: ci-resources/tasks/run-integration-tests/task.yml
         input_mapping:
-          eirini-source: eirini-release
-- name: create-opi-docker-images
+          eirini-source: eirini
+- name: create-docker-images
   plan:
   - in_parallel:
+    - get: eirini-release
+      trigger: true
+      passed:
+      - run-tests
     - get: eirini
       trigger: true
       passed:
@@ -69,7 +77,7 @@ jobs:
         IMAGE_NAME: eirini/opi
         DOCKERFILE_PATH: eirini/docker/opi/Dockerfile
       file: ci-resources/tasks/create-docker-images/task.yml
-     - task: build-opi-init
+    - task: build-opi-init
       privileged: true
       params:
         DOCKER_HUB_USER: ((dockerhub-user))
@@ -79,7 +87,7 @@ jobs:
         IMAGE_NAME: eirini/opi-init
         DOCKERFILE_PATH: eirini/docker/opi/init/Dockerfile
       file: ci-resources/tasks/create-docker-images/task.yml
-     - task: build-secret-smuggler
+    - task: build-secret-smuggler
       privileged: true
       params:
         DOCKER_HUB_USER: ((dockerhub-user))
@@ -89,7 +97,7 @@ jobs:
         IMAGE_NAME: eirini/secret-smuggler
         DOCKERFILE_PATH: eirini/docker/registry/certs/smuggler/Dockerfile
       file: ci-resources/tasks/create-docker-images/task.yml
-     - task: build-bits-waiter
+    - task: build-bits-waiter
       privileged: true
       params:
         DOCKER_HUB_USER: ((dockerhub-user))
@@ -99,7 +107,7 @@ jobs:
         IMAGE_NAME: eirini/bits-watier
         DOCKERFILE_PATH: eirini/docker/bits-watier/Dockerfile
       file: ci-resources/tasks/create-docker-images/task.yml
-     - task: build-rootfs-patcher
+    - task: build-rootfs-patcher
       privileged: true
       params:
         DOCKER_HUB_USER: ((dockerhub-user))
