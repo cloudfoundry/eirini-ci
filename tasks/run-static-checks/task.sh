@@ -5,6 +5,6 @@ IFS=$'\n\t'
 
 golangci-lint --version
 
-cd "eirini"
+cd "eirini-source"
 test -f .golangci.yml
 golangci-lint run --verbose
