@@ -4,12 +4,15 @@ groups:
   jobs:
   - (( defer prepend ))
   - run-tests
-  - create-docker-images
+  - create-go-docker-images
+  - create-opi-init-docker-image
+  - create-secret-smuggler-docker-image
 - name: test-and-build
   jobs:
   - run-tests
-  - create-docker-images
-
+  - create-go-docker-images
+  - create-opi-init-docker-image
+  - create-secret-smuggler-docker-image
 jobs:
 - name: run-tests
   plan:
@@ -23,7 +26,6 @@ jobs:
     - get: ci-resources
     - get: sample-configs
       trigger: true
-    - get: deployment-version
   - in_parallel:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
@@ -45,7 +47,7 @@ jobs:
         file: ci-resources/tasks/run-integration-tests/task.yml
         input_mapping:
           eirini-source: eirini
-- name: create-docker-images
+- name: create-go-docker-images
   plan:
   - in_parallel:
     - get: eirini
@@ -53,9 +55,6 @@ jobs:
       passed:
       - run-tests
     - get: ci-resources
-    - get: deployment-version
-      params:
-        bump: major
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
   - in_parallel:
@@ -63,14 +62,6 @@ jobs:
       params:
         build: eirini
         dockerfile: eirini/docker/opi/Dockerfile
-        build_args_file: docker-build-args/args.json
-    - put: docker-opi-init
-      params:
-        build: eirini/docker/opi/init
-        build_args_file: docker-build-args/args.json
-    - put: docker-secret-smuggler
-      params:
-        build: eirini/docker/registry/certs/smuggler
         build_args_file: docker-build-args/args.json
     - put: docker-bits-waiter
       params:
@@ -82,6 +73,34 @@ jobs:
         build: eirini
         dockerfile: eirini/docker/rootfs-patcher/Dockerfile
         build_args_file: docker-build-args/args.json
+- name: create-opi-init-docker-image
+  plan:
+  - in_parallel:
+    - get: eirini-opi-init
+      trigger: true
+    - get: ci-resources
+  - task: make-docker-build-args
+    file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      eirini: eirini-opi-init
+  - put: docker-opi-init
+    params:
+      build: eirini-opi-init/docker/opi/init
+      build_args_file: docker-build-args/args.json
+- name: create-secret-smuggler-docker-image
+  plan:
+  - in_parallel:
+    - get: eirini-secret-smuggler
+      trigger: true
+    - get: ci-resources
+  - task: make-docker-build-args
+    file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      eirini: eirini-secret-smuggler
+  - put: docker-secret-smuggler
+    params:
+      build: eirini-secret-smuggler/docker/registry/certs/smuggler
+      build_args_file: docker-build-args/args.json
 resources:
 - name: ci-resources
   type: git
@@ -100,15 +119,20 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
-- name: deployment-version
-  type: semver
+- name: eirini-opi-init
+  type: git
   source:
-    driver: git
-    uri: git@github.com:cloudfoundry/eirini-private-config.git
-    branch: master
-    file: environments/kube-clusters/((world-name))/deployment-version
-    private_key: ((github-private-key))
-    initial_version: 1.0.0
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    branch: ((eirini-branch))
+    paths:
+    - docker/opi/init/
+- name: eirini-secret-smuggler
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    branch: ((eirini-branch))
+    paths:
+    - docker/opi/init/
 - name: docker-opi
   type: docker-image
   source:
