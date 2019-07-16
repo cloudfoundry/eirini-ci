@@ -17,7 +17,7 @@ main() {
 
 generate-opi-images() {
   local git_sha
-  git_sha="$(git rev-parse HEAD)"
+  git_sha="$(git -C "$CONTEXT_PATH" rev-parse HEAD)"
 
   docker build "$CONTEXT_PATH" -t "$IMAGE_NAME:$TAG" -f "$DOCKERFILE_PATH" --build-arg "GIT_SHA=$git_sha"
 }
