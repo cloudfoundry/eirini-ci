@@ -15,4 +15,4 @@ inputs:
 outputs:
 - name: eirini-release-updated
 run:
-  path: ci-resources/tasks/update-fluentd-digest/task.sh
+  path: ci-resources/tasks/update-image-digests/task.sh
