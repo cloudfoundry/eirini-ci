@@ -64,61 +64,32 @@ jobs:
     - get: deployment-version
       params:
         bump: major
+  - task: make-docker-build-args
+    file: ci-resources/tasks/make-docker-build-args/task.yml
   - in_parallel:
-    - task: build-opi
-      privileged: true
+    - put: docker-opi
       params:
-        DOCKER_HUB_USER: ((dockerhub-user))
-        DOCKER_HUB_PASSWORD: ((dockerhub-password))
-        CLUSTER_NAME: ((world-name))
-        CONTEXT_PATH: eirini
-        IMAGE_NAME: eirini/opi
-        DOCKERFILE_PATH: eirini/docker/opi/Dockerfile
-      file: ci-resources/tasks/build-docker-image/task.yml
-    - task: build-opi-init
-      privileged: true
+        build: eirini
+        dockerfile: eirini/docker/opi/Dockerfile
+        build_args_file: docker-build-args/args.json
+    - put: docker-opi-init
       params:
-        DOCKER_HUB_USER: ((dockerhub-user))
-        DOCKER_HUB_PASSWORD: ((dockerhub-password))
-        CLUSTER_NAME: ((world-name))
-        CONTEXT_PATH: eirini/docker/opi/init
-        IMAGE_NAME: eirini/opi-init
-        DOCKERFILE_PATH: eirini/docker/opi/init/Dockerfile
-      file: ci-resources/tasks/build-docker-image/task.yml
-    - task: build-secret-smuggler
-      privileged: true
+        build: eirini/docker/opi/init
+        build_args_file: docker-build-args/args.json
+    - put: docker-secret-smuggler
       params:
-        DOCKER_HUB_USER: ((dockerhub-user))
-        DOCKER_HUB_PASSWORD: ((dockerhub-password))
-        CLUSTER_NAME: ((world-name))
-        CONTEXT_PATH: eirini/docker/registry/certs/smuggler
-        IMAGE_NAME: eirini/secret-smuggler
-        DOCKERFILE_PATH: eirini/docker/registry/certs/smuggler/Dockerfile
-      file: ci-resources/tasks/build-docker-image/task.yml
-    - task: build-bits-waiter
-      privileged: true
+        build: eirini/docker/registry/certs/smuggler
+        build_args_file: docker-build-args/args.json
+    - put: docker-bits-waiter
       params:
-        DOCKER_HUB_USER: ((dockerhub-user))
-        DOCKER_HUB_PASSWORD: ((dockerhub-password))
-        CLUSTER_NAME: ((world-name))
-        CONTEXT_PATH: eirini
-        IMAGE_NAME: eirini/bits-waiter
-        DOCKERFILE_PATH: eirini/docker/bits-watier/Dockerfile
-      file: ci-resources/tasks/build-docker-image/task.yml
-    - task: build-rootfs-patcher
-      privileged: true
+        build: eirini
+        dockerfile: eirini/docker/bits-waiter/Dockerfile
+        build_args_file: docker-build-args/args.json
+    - put: docker-rootfs-patcher
       params:
-        DOCKER_HUB_USER: ((dockerhub-user))
-        DOCKER_HUB_PASSWORD: ((dockerhub-password))
-        CLUSTER_NAME: ((world-name))
-        CONTEXT_PATH: eirini
-        IMAGE_NAME: eirini/rootfs-patcher
-        DOCKERFILE_PATH: eirini/docker/rootfs-patcher/Dockerfile
-      file: ci-resources/tasks/build-docker-image/task.yml
-  - put: deployment-version
-    params:
-      file: deployment-version/version
-
+        build: eirini
+        dockerfile: eirini/docker/rootfs-patcher/Dockerfile
+        build_args_file: docker-build-args/args.json
 resources:
 - name: ci-resources
   type: git
@@ -151,3 +122,33 @@ resources:
     file: environments/kube-clusters/((world-name))/deployment-version
     private_key: ((github-private-key))
     initial_version: 1.0.0
+- name: docker-opi
+  type: docker-image
+  source:
+    repository: eirini/opi
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: docker-opi-init
+  type: docker-image
+  source:
+    repository: eirini/opi-init
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: docker-secret-smuggler
+  type: docker-image
+  source:
+    repository: eirini/secret-smuggler
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: docker-bits-waiter
+  type: docker-image
+  source:
+    repository: eirini/bits-waiter
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: docker-rootfs-patcher
+  type: docker-image
+  source:
+    repository: eirini/rootfs-patcher
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
