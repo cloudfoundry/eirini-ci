@@ -18,8 +18,6 @@ jobs:
       trigger: true
       passed:
       - (( concat "check-cluster-readiness-" meta.cluster-name ))
-    - get: eirini-release
-      trigger: true
     - get: eirini
       trigger: true
     - get: ci-resources
@@ -35,8 +33,6 @@ jobs:
       file: ci-resources/tasks/run-static-checks/task.yml
       input_mapping:
         eirini-source: eirini
-    - task: helm-lint
-      file: ci-resources/tasks/helm-lint/task.yml
     - do:
       - task: download-kubeconfig
         params:
@@ -52,10 +48,6 @@ jobs:
 - name: create-docker-images
   plan:
   - in_parallel:
-    - get: eirini-release
-      trigger: true
-      passed:
-      - run-tests
     - get: eirini
       trigger: true
       passed:
@@ -108,11 +100,6 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
-- name: eirini-release
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
 - name: deployment-version
   type: semver
   source:
