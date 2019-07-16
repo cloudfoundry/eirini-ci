@@ -102,7 +102,7 @@ jobs:
         DOCKER_HUB_PASSWORD: ((dockerhub-password))
         CLUSTER_NAME: ((world-name))
         CONTEXT_PATH: eirini
-        IMAGE_NAME: eirini/bits-watier
+        IMAGE_NAME: eirini/bits-waiter
         DOCKERFILE_PATH: eirini/docker/bits-watier/Dockerfile
       file: ci-resources/tasks/build-docker-image/task.yml
     - task: build-rootfs-patcher
