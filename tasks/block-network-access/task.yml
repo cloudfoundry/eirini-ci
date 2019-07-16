@@ -13,6 +13,7 @@ params:
   IBMCLOUD_ACCOUNT:
   IBMCLOUD_USER:
   IBMCLOUD_PASSWORD:
+  CLUSTER_NAME:
 
 run:
   path: ci-resources/tasks/block-network-access/task.sh
