@@ -1,0 +1,24 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+  to: {{create-cluster}}
+- base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+  to: {{test-and-build-docker}}
+
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - {{create-cluster}}
+      - {{test-and-build-docker}}
+  to: $PIPELINE_YML
