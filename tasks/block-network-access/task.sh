@@ -10,8 +10,7 @@ ibmcloud-login
 
 readonly CALICOCNF="$(ibmcloud ks cluster-config jax-conf --network -s | grep calicoctl)"
 
-
-calicoctl apply --config $CALICOCNF -f - <<EOF
+calicoctl apply --config "$CALICOCNF" -f - <<EOF
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
