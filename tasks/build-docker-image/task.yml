@@ -20,4 +20,4 @@ inputs:
   - name: deployment-version
 
 run:
-  path: ci-resources/tasks/create-docker-images/task.sh
+  path: ci-resources/tasks/build-docker-image/task.sh
