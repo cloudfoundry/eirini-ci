@@ -10,7 +10,6 @@ inputs:
 - name: ci-resources
 - name: eirini-release
 - name: state
-- name: deployment-version
 
 params:
   IBMCLOUD_ACCOUNT:

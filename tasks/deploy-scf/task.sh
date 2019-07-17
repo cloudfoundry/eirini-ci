@@ -7,7 +7,6 @@ IFS=$'\n\t'
 source ci-resources/scripts/ibmcloud-functions
 
 readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
-readonly VERSION="$(cat deployment-version/version)"
 export SECRET=""
 export CA_CERT=""
 export BITS_TLS_CRT=""
@@ -38,15 +37,12 @@ helm-dep-update() {
 }
 
 helm-install() {
-  local -r image_tag="${VERSIONING_CLUSTER}-${VERSION}"
   pushd eirini-release/helm
   helm upgrade --install "scf" \
     "cf" \
     --namespace "scf" \
     --values "../../$ENVIRONMENT"/scf-config-values.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
-    --set "opi.version=$VERSION" \
-    --set "eirini.opi.image_tag=$image_tag" \
     --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
     --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
     --force
