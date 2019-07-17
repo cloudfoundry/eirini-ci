@@ -17,11 +17,6 @@ jobs:
 - name: (( concat "deploy-scf-uaa-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
-  - get: eirini-release # Make sure eirini-release is at the top, otherwise the PR pipeline aviator does wrong things
-  - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
-    trigger: true
-    passed:
-    - (( concat "check-cluster-readiness-" meta.cluster-name ))
   - get: scf-uaa-resources
     trigger: true
   - get: ci-resources

@@ -8,7 +8,7 @@ image_resource:
 
 inputs:
 - name: ci-resources
-- name: eirini-release
+- name: scf-uaa-resources
 - name: state
 
 params:
