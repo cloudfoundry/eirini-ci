@@ -1,6 +1,4 @@
 jobs:
 - ((merge))
-- name: fast-forward-master
-  .: (( inject hooks.failure ))
 - name: fast-forward-master-release
   .: (( inject hooks.failure ))
