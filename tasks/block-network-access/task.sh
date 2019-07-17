@@ -21,6 +21,8 @@ spec:
   - Egress
   egress:
   - action: Deny
+    source:
+      selector: source_type == 'APP'
     destination:
       namespaceSelector: name == 'scf'
   - action: Allow
