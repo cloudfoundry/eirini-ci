@@ -153,13 +153,16 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
+    ignore_paths:
+    - docker/opi/init/
+    - docker/registry/certs/smuggler/
+    - fluentd/
 - name: eirini-release
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
     private_key: ((eirini-release-repo-key))
-
 - name: eirini-opi-init
   type: git
   source:
@@ -173,7 +176,7 @@ resources:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
     paths:
-    - docker/opi/init/
+    - docker/registry/certs/smuggler
 - name: docker-opi
   type: docker-image
   source:
