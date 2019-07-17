@@ -23,12 +23,6 @@ jobs:
   plan:
   - get: eirini-release
     trigger: true
-    passed:
-    - create-docker-images
-  - get: deployment-version
-    trigger: true
-    passed:
-    - create-docker-images
   - put: (( concat "lock-" meta.cluster-name ))
     params: {acquire: true}
 
@@ -39,6 +33,9 @@ jobs:
     passed:
     - (( grab meta.unlock-passed ))
   - get: (( concat "lock-" meta.cluster-name ))
+    trigger: true
+    passed:
+    - (( grab meta.unlock-passed ))
   - put: (( concat "lock-" meta.cluster-name ))
     params:
       release: (( concat "lock-" meta.cluster-name ))
@@ -50,11 +47,6 @@ jobs:
     - (( concat "lock-" meta.cluster-name ))
   - get: ci-resources
   - get: state
-  - get: deployment-version
-    trigger: true
-    passed:
-    - (( concat "lock-" meta.cluster-name ))
-
 
 resources:
 - (( append ))

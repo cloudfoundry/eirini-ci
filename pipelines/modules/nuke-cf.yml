@@ -11,6 +11,10 @@ jobs:
 - name: nuke-scf
   plan:
   - get: ci-resources
+  - get: (( concat "lock-" meta.cluster-name ))
+    trigger: true
+    passed:
+    - (( concat "run-core-cats-" meta.cluster-name ))
   - get: eirini-release
     passed:
     - (( concat "run-core-cats-" meta.cluster-name ))

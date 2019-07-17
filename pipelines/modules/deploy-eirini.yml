@@ -57,13 +57,12 @@ jobs:
     - create-docker-images
   - get: ci-resources
   - get: state
-  - get: deployment-version
-    trigger: true
-    passed:
-    - create-docker-images
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
+  - get: (( concat "lock-" meta.cluster-name ))
+    trigger: true
+    passed: [(( concat "lock-" meta.cluster-name ))]
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
@@ -86,6 +85,9 @@ jobs:
   - get: eirini-release
     passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
     trigger: true
+  - get: (( concat "lock-" meta.cluster-name ))
+    trigger: true
+    passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
   - get: cf-smoke-tests
   - get: state
   - get: ci-resources
