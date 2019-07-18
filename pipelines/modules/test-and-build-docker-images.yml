@@ -7,14 +7,12 @@ groups:
   - create-go-docker-images
   - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
-  - update-version-files
 - name: test-and-build
   jobs:
   - run-tests
   - create-go-docker-images
   - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
-  - update-version-files
 jobs:
 - name: run-tests
   plan:
@@ -25,7 +23,6 @@ jobs:
       - (( concat "check-cluster-readiness-" meta.cluster-name ))
     - get: eirini
       trigger: true
-    - get: eirini-release
     - get: ci-resources
     - get: sample-configs
       trigger: true
@@ -104,36 +101,6 @@ jobs:
     params:
       build: eirini-secret-smuggler/docker/registry/certs/smuggler
       build_args_file: docker-build-args/args.json
-- name: update-version-files
-  plan:
-  - in_parallel:
-    - get: eirini-release
-    - get: ci-resources
-    - get: docker-opi
-      trigger: true
-      passed:
-        - create-go-docker-images
-    - get: docker-opi-init
-      trigger: true
-      passed:
-        - create-opi-init-docker-image
-    - get: docker-secret-smuggler
-      trigger: true
-      passed:
-        - create-secret-smuggler-docker-image
-    - get: docker-bits-waiter
-      trigger: true
-      passed:
-        - create-go-docker-images
-    - get: docker-rootfs-patcher
-      trigger: true
-      passed:
-        - create-go-docker-images
-  - task: update-image-digests
-    file: ci-resources/tasks/update-image-digests/task.yml
-  - put: eirini-release
-    params: {repository: eirini-release-updated}
-
 
 resources:
 - name: ci-resources
@@ -157,12 +124,6 @@ resources:
     - docker/opi/init/
     - docker/registry/certs/smuggler/
     - fluentd/
-- name: eirini-release
-  type: git
-  source:
-    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
-    private_key: ((eirini-release-repo-key))
 - name: eirini-opi-init
   type: git
   source:

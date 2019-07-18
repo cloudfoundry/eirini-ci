@@ -7,6 +7,7 @@ spruce:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
   to: {{create-cluster}}
+
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   merge:
   - with:
@@ -14,6 +15,12 @@ spruce:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
   to: {{test-and-build-docker}}
 
+- base: $PROJECT_ROOT/pipelines/modules/update-image-version-files.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+  to: {{update-image-version-files}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
@@ -21,4 +28,5 @@ spruce:
       files:
       - {{create-cluster}}
       - {{test-and-build-docker}}
+      - {{update-image-version-files}}
   to: $PIPELINE_YML
