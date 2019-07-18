@@ -56,7 +56,7 @@ jobs:
         - |
           #!/bin/bash
           set -euo pipefail
-          eirinifs_version=$(cat eirinifs-release/version)
+          eirinifs_version=$(cat eirinifs-release/tag)
           pushd eirini-release
           echo "global:" >> helm/cf/values.yaml
           echo "  rootfs_version: '$eirinifs_version'" >> helm/cf/values.yaml
