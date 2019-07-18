@@ -1,0 +1,70 @@
+groups:
+- (( merge ))
+- name: all
+  jobs:
+  - (( prepend ))
+  - tag-images
+- name: test-and-build
+  jobs:
+  - (( prepend ))
+  - tag-images
+jobs:
+- name: tag-images
+  plan:
+  - in_parallel:
+    - get: docker-opi
+      trigger: true
+      passed:
+        - create-go-docker-images
+      params:
+        save: true
+    - get: docker-opi-init
+      trigger: true
+      passed:
+        - create-opi-init-docker-image
+    - get: docker-secret-smuggler
+      trigger: true
+      passed:
+        - create-secret-smuggler-docker-image
+    - get: docker-bits-waiter
+      trigger: true
+      passed:
+        - create-go-docker-images
+    - get: docker-rootfs-patcher
+      trigger: true
+      passed:
+        - create-go-docker-images
+    - put: deployment-version
+      params:
+        pre: ((world-name))
+  - in_parallel:
+    - put: docker-opi
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-opi/image
+    - put: docker-opi-init
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-opi-init/image
+    - put: docker-secret-smuggler
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-secret-smuggler/image
+    - put: docker-bits-waiter
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-bits-waiter/image
+    - put: docker-rootfs-patcher
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-rootfs-patcher/image
+resources:
+- name: deployment-version
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: master
+    file: environments/kube-clusters/((world-name))/deployment-version
+    private_key: ((github-private-key))
+    initial_version: 1.0.0
