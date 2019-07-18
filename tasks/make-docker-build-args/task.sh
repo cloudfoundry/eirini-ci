@@ -1,5 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 
-revision=$(cat eirini/.git/ref)
+revision=$(git -C eirini rev-parse HEAD)
 echo "{\"GIT_SHA\": \"$revision\"}" > docker-build-args/args.json
