@@ -2,5 +2,3 @@ jobs:
 - ((merge))
 - name: run-tests
   .: (( inject hooks.failure ))
-- name: create-docker-images
-  .: (( inject hooks.failure ))
