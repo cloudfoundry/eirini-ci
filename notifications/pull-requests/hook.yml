@@ -2,9 +2,9 @@ hooks:
   failure:
     on_failure:
       aggregate:
-      - put: eirini-release
+      - put: eirini
         params:
-          path: eirini-release
+          path: eirini
           status: failure
       - task: reset-environment
         file: ci-resources/tasks/reset-environment/task.yml
