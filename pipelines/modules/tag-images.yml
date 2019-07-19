@@ -12,28 +12,37 @@ jobs:
 - name: tag-images
   plan:
   - in_parallel:
-    - get: docker-opi
+    - get: eirini
       trigger: true
+      passed:
+      - create-go-docker-images
+      - create-opi-init-docker-image
+      - create-secret-smuggler-docker-image
+    - get: docker-opi
       passed:
         - create-go-docker-images
       params:
         save: true
     - get: docker-opi-init
-      trigger: true
       passed:
         - create-opi-init-docker-image
+      params:
+        save: true
     - get: docker-secret-smuggler
-      trigger: true
       passed:
         - create-secret-smuggler-docker-image
+      params:
+        save: true
     - get: docker-bits-waiter
-      trigger: true
       passed:
         - create-go-docker-images
+      params:
+        save: true
     - get: docker-rootfs-patcher
-      trigger: true
       passed:
         - create-go-docker-images
+      params:
+        save: true
     - put: deployment-version
       params:
         pre: ((world-name))
