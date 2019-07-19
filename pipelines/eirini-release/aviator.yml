@@ -20,6 +20,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/eirini-release/with-diego.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
   to: {{eirini-with-diego}}
 
 # With-OPI
@@ -45,6 +46,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
   to: {{eirini-with-opi}}
 
 # Freshini
@@ -70,6 +72,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
   to: {{eirini-freshini}}
 
 # With-Diego CATs
@@ -84,6 +87,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
   to: {{cats-with-diego}}
 
 # With-OPI CATs
@@ -99,6 +103,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
   to: {{cats-with-opi}}
 
 # Freshini CATs
@@ -115,6 +120,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/nuke-cf.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
   to: {{cats-freshini}}
 
 # Fast Forward

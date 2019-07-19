@@ -1,0 +1,10 @@
+jobs:
+- name: (( concat "run-core-cats-" meta.cluster-name ))
+  plan:
+  - (( prepend ))
+  - get: eirini-release
+    passed: [ (( concat "run-smoke-tests-" meta.cluster-name )) ]
+    trigger: true
+  - get: (( concat "lock-" meta.cluster-name ))
+    trigger: true
+    passed: [ (( concat "run-smoke-tests-" meta.cluster-name )) ]

@@ -1,0 +1,15 @@
+jobs:
+- name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
+  plan:
+  - (( prepend ))
+  - get: (( concat "lock-" meta.cluster-name ))
+    passed:
+    - (( concat "lock-" meta.cluster-name ))
+    trigger: true
+- name: (( concat "run-smoke-tests-" meta.cluster-name ))
+  plan:
+  - (( prepend ))
+  - get: (( concat "lock-" meta.cluster-name ))
+    passed:
+    - (( concat "deploy-scf-eirini-" meta.cluster-name ))
+    trigger: true

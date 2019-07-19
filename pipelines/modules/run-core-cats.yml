@@ -9,12 +9,6 @@ jobs:
 - name: (( concat "run-core-cats-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
-  - get: eirini-release
-    passed: [ (( concat "run-smoke-tests-" meta.cluster-name )) ]
-    trigger: true
-  - get: (( concat "lock-" meta.cluster-name ))
-    trigger: true
-    passed: [ (( concat "run-smoke-tests-" meta.cluster-name )) ]
   - get: cats
   - get: state
   - get: ci-resources

@@ -15,9 +15,7 @@ spruce:
     delete:
       - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources"
       - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:eirini-release.trigger"
-      - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:lock-eirini-pr"
       - "jobs.name:run-smoke-tests-eirini-pr.plan.get:eirini-release"
-      - "jobs.name:run-smoke-tests-eirini-pr.plan.get:lock-eirini-pr"
     set:
       - path: jobs.name:deploy-scf-eirini-pr.plan.task:deploy-scf.file
         value: ci-resources/tasks/deploy-scf/task-with-image-override.yml
@@ -42,11 +40,6 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
       - $PROJECT_ROOT/notifications/pull-requests/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-  modify:
-    delete:
-      - "resources.name:eirini-release"
-      - "jobs.name:run-core-cats-eirini-pr.plan.get:eirini-release"
-      - "jobs.name:run-core-cats-eirini-pr.plan.get:lock-eirini-pr"
   to: {{cats-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml

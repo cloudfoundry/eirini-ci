@@ -42,11 +42,8 @@ jobs:
 - name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
   plan:
   - get: eirini-release
-    trigger: true
     passed:
     - (( concat "lock-" meta.cluster-name ))
-  - get: ci-resources
-  - get: state
 
 resources:
 - (( append ))

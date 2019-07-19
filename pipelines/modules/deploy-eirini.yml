@@ -47,7 +47,6 @@ jobs:
   - put: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     params:
       file: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready/number" ))
-# lock lives in lock-module
 - name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
@@ -58,9 +57,6 @@ jobs:
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
-  - get: (( concat "lock-" meta.cluster-name ))
-    trigger: true
-    passed: [(( concat "lock-" meta.cluster-name ))]
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
@@ -83,9 +79,6 @@ jobs:
   - get: eirini-release
     passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
     trigger: true
-  - get: (( concat "lock-" meta.cluster-name ))
-    trigger: true
-    passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
   - get: cf-smoke-tests
   - get: state
   - get: ci-resources
