@@ -78,6 +78,7 @@ jobs:
   - in_parallel:
     - get: eirini-opi-init
       trigger: true
+      passed: [] # Required for PR pipeline
     - get: ci-resources
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
@@ -92,6 +93,7 @@ jobs:
   - in_parallel:
     - get: eirini-secret-smuggler
       trigger: true
+      passed: [] # Required for PR pipeline
     - get: ci-resources
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml

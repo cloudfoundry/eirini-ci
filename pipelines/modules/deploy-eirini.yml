@@ -53,8 +53,6 @@ jobs:
   plan:
   - get: eirini-release
     trigger: true
-    passed:
-    - create-docker-images
   - get: ci-resources
   - get: state
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
@@ -147,4 +145,8 @@ resources:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
     private_key: ((github-private-key))
-
+- name: eirini-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
+    branch: ((eirini-release-branch))

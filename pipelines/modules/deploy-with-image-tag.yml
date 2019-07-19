@@ -1,0 +1,18 @@
+jobs:
+- name: (( concat "deploy-scf-eirini-" meta.cluster-name ))
+  plan:
+  - (( prepend ))
+  - get: deployment-version
+    passed:
+    - tag-images
+  - get: eirini
+    passed:
+    - tag-images
+    trigger: true
+- name: (( concat "run-smoke-tests-" meta.cluster-name ))
+  plan:
+  - (( prepend ))
+  - get: eirini
+    passed:
+    - (( concat "deploy-scf-eirini-" meta.cluster-name ))
+    trigger: true
