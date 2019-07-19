@@ -14,7 +14,6 @@ spruce:
   modify:
     delete:
       - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources"
-      - "resources.name:eirini-release"
       - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:eirini-release.trigger"
       - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:lock-eirini-pr"
       - "jobs.name:run-smoke-tests-eirini-pr.plan.get:eirini-release"

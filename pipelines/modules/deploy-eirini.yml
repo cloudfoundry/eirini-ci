@@ -145,8 +145,3 @@ resources:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
     private_key: ((github-private-key))
-- name: eirini-release
-  type: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))
