@@ -29,12 +29,8 @@ jobs:
   - in_parallel:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
-      input_mapping:
-        eirini-source: eirini
     - task: run-static-checks
       file: ci-resources/tasks/run-static-checks/task.yml
-      input_mapping:
-        eirini-source: eirini
     - do:
       - task: download-kubeconfig
         params:
@@ -45,8 +41,6 @@ jobs:
         file: ci-resources/tasks/download-kubeconfig/task.yml
       - task: run-integration-tests
         file: ci-resources/tasks/run-integration-tests/task.yml
-        input_mapping:
-          eirini-source: eirini
 - name: create-go-docker-images
   plan:
   - in_parallel:

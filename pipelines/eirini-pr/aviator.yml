@@ -15,7 +15,6 @@ spruce:
     delete:
       - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources"
       - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:eirini-release.trigger"
-      - "jobs.name:run-smoke-tests-eirini-pr.plan.get:eirini-release"
     set:
       - path: jobs.name:deploy-scf-eirini-pr.plan.task:deploy-scf.file
         value: ci-resources/tasks/deploy-scf/task-with-image-override.yml

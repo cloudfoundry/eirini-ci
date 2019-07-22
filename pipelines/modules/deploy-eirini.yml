@@ -76,9 +76,6 @@ jobs:
 - name: (( concat "run-smoke-tests-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
-  - get: eirini-release
-    passed: [(( concat "deploy-scf-eirini-" meta.cluster-name ))]
-    trigger: true
   - get: cf-smoke-tests
   - get: state
   - get: ci-resources

@@ -13,3 +13,7 @@ jobs:
     passed:
     - (( concat "deploy-scf-eirini-" meta.cluster-name ))
     trigger: true
+  - get: eirini-release
+    passed:
+    - (( concat "deploy-scf-eirini-" meta.cluster-name ))
+    trigger: true

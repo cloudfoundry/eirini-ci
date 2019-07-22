@@ -7,7 +7,7 @@ image_resource:
     repository: eirini/ci
 
 inputs:
-- name: eirini-source
+- name: eirini
 - name: ci-resources
 - name: kube
 
