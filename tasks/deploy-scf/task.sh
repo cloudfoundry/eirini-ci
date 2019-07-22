@@ -44,7 +44,6 @@ override-image-options() {
 }
 
 helm-install() {
-  pushd eirini-release/helm
   # shellcheck disable=SC2046
   helm upgrade --install "scf" \
     "eirini-release/helm/cf" \
@@ -55,7 +54,6 @@ helm-install() {
     --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
     $(override-image-options) \
     --force
-  popd
 }
 
 main
