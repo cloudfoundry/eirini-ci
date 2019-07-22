@@ -36,7 +36,7 @@ helm-dep-update() {
   popd || exit
 }
 
-override-images-options() {
+override-image-options() {
     if [[ -f deployment-version/version ]]; then
         readonly image_tag=$(cat deployment-version/version)
         "--set opi.init_image=eirini/opi-init --set opi.image=eirini/opi --set opi.bits_waiter_image=eirini/bits-waiter --set opi.rootfs_patcher_image=eirini/rootfs-patcher --set opi.secret_smuggler_image=eirini/secret-smuggler --set opi.image_tag=$image_tag"
