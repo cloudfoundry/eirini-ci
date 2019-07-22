@@ -10,16 +10,8 @@ readonly IMAGE_NAMES=("opi" "opi-init" "rootfs-patcher" "secret-smuggler" "bits-
 readonly DOCKER_HUB_USER=${DOCKER_HUB_USER:?Variable not set}
 readonly DOCKER_HUB_PASSWORD=${DOCKER_HUB_PASSWORD:?Variable not set}
 
-export-gopath() {
-  pushd eirini-release || exit
-  # shellcheck disable=SC1091
-  source .envrc
-  popd || exit
-}
-
 main() {
   start-docker
-  export-gopath
   build-images
   retag-images
   push "$VERSION"
@@ -27,9 +19,7 @@ main() {
 }
 
 build-images() {
-  pushd "eirini-release/" || exit
-  ./docker/generate-docker-image.sh "$VERSION"
-  popd || exit
+  ./eirini-release/docker/generate-docker-image.sh "$VERSION"
 }
 
 retag-images() {
