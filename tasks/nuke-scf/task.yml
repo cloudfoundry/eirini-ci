@@ -11,7 +11,6 @@ params:
   IBMCLOUD_USER:
   IBMCLOUD_PASSWORD:
   CLUSTER_NAME:
-  VERSIONING_CLUSTER:
 
 inputs:
 - name: ci-resources
