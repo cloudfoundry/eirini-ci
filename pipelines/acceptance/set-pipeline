@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly world_name=acceptance
+readonly world_name=new-acceptance
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly diego_cell_count="${3:-"3"}"
