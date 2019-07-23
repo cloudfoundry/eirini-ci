@@ -6,6 +6,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
   to: {{create-cluster}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
@@ -13,6 +15,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/test-and-build-docker-images.yml
   to: {{test-and-build-docker}}
 
 - base: $PROJECT_ROOT/pipelines/modules/update-image-version-files.yml
@@ -20,6 +24,8 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/update-image-version-files.yml
   to: {{update-image-version-files}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
