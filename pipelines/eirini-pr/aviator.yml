@@ -89,9 +89,14 @@ spruce:
       - {{test-and-build-docker}}
       - {{eirini-with-diego}}
       - {{cats-with-diego}}
-      - $PROJECT_ROOT/pipelines/eirini-pr/track-prs.yml
+      - $PROJECT_ROOT/pipelines/modules/clean-up-pr-environment.yml
+      - $PROJECT_ROOT/pipelines/eirini-pr/pr-success.yml
       - $PROJECT_ROOT/pipelines/modules/tag-images.yml
   modify:
     delete:
       - "resources.name:scf-uaa-resources"
+    set:
+        # We do not have to delete UAA in this pipeline, thus only nuke SCF
+      - path: jobs.name:clean-up-environment.plan.task:clean-up-environment.file
+        value: ci-resources/tasks/nuke-scf/task.yml
   to: $PIPELINE_YML

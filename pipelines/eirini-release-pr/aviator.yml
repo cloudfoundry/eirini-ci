@@ -14,7 +14,6 @@ spruce:
   modify:
     delete:
       - "resources.name:eirini-release"
-      # - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:scf-uaa-resources"
       - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:cluster-eirini-release-pr-staging-event-ready.trigger"
       - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.task:deploy-uaa.input_mapping"
       - "jobs.name:deploy-scf-eirini-eirini-release-pr.plan.get:cluster-eirini-release-pr-staging-event-uaa-ready.trigger"
@@ -57,7 +56,8 @@ spruce:
       - {{cluster-with-diego}}
       - {{eirini-with-diego}}
       - {{cats-with-diego}}
-      - $PROJECT_ROOT/pipelines/eirini-release-pr/track-prs.yml
+      - $PROJECT_ROOT/pipelines/modules/clean-up-pr-environment.yml
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/pr-success.yml
   modify:
     delete:
       - "resources.name:scf-uaa-resources"

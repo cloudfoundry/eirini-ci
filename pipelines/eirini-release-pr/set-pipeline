@@ -28,7 +28,7 @@ fly -t "$target" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
-  --var eirini-release-pr-webhook-token="$(pass eirini/github/eirini-release/webhook-token)" \
+  --var pr-webhook-token="$(pass eirini/github/eirini-release/webhook-token)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var diego-cell-count="$diego_cell_count" \
   --var worker_count="$worker_count" \
