@@ -25,6 +25,7 @@ fly -t "$target" \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var ci-resources-branch="new-ci-164492513" \
   --var eirini-release-branch="new-ci-164492513" \
+  --var eirini-branch="new-ci-164492513" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \

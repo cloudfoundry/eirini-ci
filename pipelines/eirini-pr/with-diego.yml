@@ -1,3 +1,4 @@
 meta:
   cluster-name: eirini-pr
   enable-opi-staging: "false"
+  pr-repo: eirini

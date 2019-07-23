@@ -17,7 +17,7 @@ resources:
   check_every: 2h
   webhook_token: ((eirini-pr-webhook-token))
   source:
-    repository: akshaymankar/eirini
+    repository: mnitchev/eirini
     access_token: ((github-access-token))
     base_branch: develop
 
@@ -33,10 +33,16 @@ jobs:
   - name: clean-up-environment
     plan:
       - get: eirini
-        trigger: true
-        passed: ["run-core-cats-eirini-pr"]
+      - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+        passed:
+          - (( concat "check-cluster-readiness-" meta.cluster-name ))
+      - get: ci-resources
+      - put: eirini
+        params:
+          path: eirini
+          status: pending
       - task: clean-up-environment
-        file: ci-resources/tasks/reset-environment/task.yml
+        file: ci-resources/tasks/nuke-scf/task.yml
         params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
           IBMCLOUD_USER: ((ibmcloud-user))

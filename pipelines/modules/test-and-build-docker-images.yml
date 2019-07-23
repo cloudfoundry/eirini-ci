@@ -23,6 +23,7 @@ jobs:
       - (( concat "check-cluster-readiness-" meta.cluster-name ))
     - get: eirini
       trigger: true
+      passed: [] # Required for PR pipeline
     - get: ci-resources
     - get: sample-configs
       trigger: true

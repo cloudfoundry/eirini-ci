@@ -13,11 +13,14 @@ spruce:
   - meta
   modify:
     delete:
-      - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources"
       - "jobs.name:deploy-scf-eirini-eirini-pr.plan.get:eirini-release.trigger"
+      - "jobs.name:deploy-scf-uaa-eirini-pr.plan.task:deploy-uaa.input_mapping"
+      - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources.trigger"
     set:
       - path: jobs.name:deploy-scf-eirini-pr.plan.task:deploy-scf.file
         value: ci-resources/tasks/deploy-scf/task-with-image-override.yml
+      - path: jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources.get
+        value: eirini-release
   merge:
   - with:
       files:
@@ -50,8 +53,7 @@ spruce:
       - "jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping"
       - "jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping"
       # Disable auto trigger
-      - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-eirini-pr-staging-event-ready.trigger"
-      - "jobs.name:run-tests.plan.0.in_parallel.get:eirini.trigger"
+      - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-eirini-pr-staging-event-ready"
       - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
     set:
       # Build opi-init image from PR, after the tests pass
@@ -61,6 +63,8 @@ spruce:
         value: run-tests
       - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
         value: eirini/docker/opi/init
+      - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
+        value: clean-up-environment
 
       # Build secret-smuggler image from PR, after the tests pass
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
