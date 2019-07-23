@@ -1,0 +1,64 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/with-diego.yml
+  to: {{cluster-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - meta
+  modify:
+    delete:
+      - "resources.name:eirini-release"
+      # - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:scf-uaa-resources"
+      - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:cluster-eirini-release-pr-staging-event-ready.trigger"
+      - "jobs.name:deploy-scf-uaa-eirini-release-pr.plan.task:deploy-uaa.input_mapping"
+      - "jobs.name:deploy-scf-eirini-eirini-release-pr.plan.get:cluster-eirini-release-pr-staging-event-uaa-ready.trigger"
+    set:
+     - path: jobs.name:deploy-scf-eirini-eirini-release-pr.plan.get:eirini-release.passed.+
+       value: deploy-scf-uaa-eirini-release-pr
+     - path: jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:scf-uaa-resources.passed.+
+       value: clean-up-environment
+     - path: jobs.name:deploy-scf-uaa-eirini-release-pr.plan.get:scf-uaa-resources.get
+       value: eirini-release
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/with-diego.yml
+      - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+  to: {{eirini-with-diego}}
+
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
+  - skipped_cats
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/with-diego.yml
+      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+  to: {{cats-with-diego}}
+
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/with-diego.yml
+      - {{cluster-with-diego}}
+      - {{eirini-with-diego}}
+      - {{cats-with-diego}}
+      - $PROJECT_ROOT/pipelines/eirini-release-pr/track-prs.yml
+  modify:
+    delete:
+      - "resources.name:scf-uaa-resources"
+  to: $PIPELINE_YML

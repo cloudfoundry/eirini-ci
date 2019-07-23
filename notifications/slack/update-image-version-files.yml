@@ -1,0 +1,4 @@
+jobs:
+- ((merge))
+- name: update-version-files
+  .: (( inject hooks.failure ))

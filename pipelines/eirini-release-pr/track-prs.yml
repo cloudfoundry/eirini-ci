@@ -1,0 +1,46 @@
+groups:
+- (( merge ))
+- name: all
+  jobs:
+  - (( prepend ))
+  - clean-up-environment
+
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: teliaoss/github-pr-resource
+
+resources:
+- name: eirini-release
+  type: pull-request
+  check_every: 2h
+  webhook_token: ((eirini-release-pr-webhook-token))
+  source:
+    repository: mnitchev/eirini-release
+    access_token: ((github-access-token))
+    base_branch: develop
+
+jobs:
+  - (( merge ))
+  - name: "run-core-cats-eirini-release-pr"
+    plan:
+      - (( append ))
+      - put: eirini-release
+        params:
+          path: eirini-release
+          status: success
+  - name: clean-up-environment
+    plan:
+      - get: eirini-release
+      - get: ci-resources
+      - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+        passed:
+          - (( concat "check-cluster-readiness-" meta.cluster-name ))
+      - task: clean-up-environment
+        file: ci-resources/tasks/reset-environment/task.yml
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: (( grab meta.cluster-name ))
