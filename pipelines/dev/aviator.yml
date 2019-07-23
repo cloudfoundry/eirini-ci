@@ -6,15 +6,23 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
-  to: {{create-cluster}}
+  to: {{cluster-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  modify:
+    set:
+      - path: jobs.name:deploy-scf-((world-name)).plan.task:deploy-scf.file
+        value: ci-resources/tasks/deploy-scf/task-with-image-override.yml
   merge:
   - with:
       files:
+      - $PROJECT_ROOT/pipelines/modules/deploy-with-image-tag.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
   to: {{eirini-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
@@ -24,24 +32,52 @@ spruce:
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-trigger.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
   to: {{cats-with-diego}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  modify:
+    delete:
+      - "resources.name:eirini-opi-init"
+      - "resources.name:eirini-secret-smuggler"
+      - "jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping"
+      - "jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping"
+    set:
+      # Build opi-init image from PR, after the tests pass
+      - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini-opi-init.get
+        value: eirini
+      - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini.passed.+
+        value: run-tests
+      - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
+        value: eirini/docker/opi/init
+
+      # Build secret-smuggler image from PR, after the tests pass
+      - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
+        value: eirini
+      - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini.passed.+
+        value: run-tests
+      - path: jobs.name:create-secret-smuggler-docker-image.plan.put:docker-secret-smuggler.params.build
+        value: eirini/docker/registry/certs/smuggler
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/notifications/pull-requests/hook.yml
+      - $PROJECT_ROOT/notifications/slack/test-and-build-docker-images.yml
   to: {{test-and-build-docker}}
-
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
   - with:
       files:
-      - {{create-cluster}}
+      - {{cluster-with-diego}}
       - {{test-and-build-docker}}
       - {{eirini-with-diego}}
       - {{cats-with-diego}}
+      - $PROJECT_ROOT/pipelines/modules/tag-images.yml
   to: $PIPELINE_YML

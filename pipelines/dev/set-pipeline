@@ -14,12 +14,14 @@ export PROJECT_ROOT
 readonly world_name=$1
 readonly target="${2:-eirini}"
 readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
-readonly working_branch=${4:-"develop"}
-readonly ci_branch=${5:-"master"}
-readonly worker_count=${6:-"1"}
-readonly enable_opi_staging=${7:-""}
-readonly storage_class=${8:-"hostpath"}
-readonly diego_cell_count="${9:-"3"}"
+readonly eirini_branch=${4:-"new-ci-164492513"}
+readonly eirini_release_branch=${5:-"develop"}
+readonly ci_branch=${6:-"new-ci-164492513"}
+readonly worker_count=${7:-"1"}
+readonly enable_opi_staging=${8:-""}
+readonly storage_class=${9:-"hostpath"}
+readonly diego_cell_count="${10:-"3"}"
+readonly rootfs_version="${11:-"v66.0.0"}"
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -41,10 +43,11 @@ fly --target "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
-  --var eirini-release-branch="$working_branch" \
+  --var eirini-release-branch="$eirini_release_branch" \
+  --var eirini-branch="$eirini_branch" \
   --var worker_count="$worker_count" \
   --var storage_class="$storage_class" \
   --var enable_opi_staging="${enable_opi_staging}" \
   --var diego-cell-count="$diego_cell_count" \
-  --var capi-release-branch=develop \
+  --var rootfs_version="$rootfs_version" \
   --load-vars-from "$private_repo/concourse/common.yml"
