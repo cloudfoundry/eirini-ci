@@ -7,9 +7,7 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-- name: ci-resources
-- name: scf-uaa-resources
-- name: state
+  - name: ci-resources
 
 params:
   IBMCLOUD_ACCOUNT:
@@ -18,4 +16,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/deploy-uaa/task.sh
+  path: ci-resources/tasks/block-network-access/task.sh

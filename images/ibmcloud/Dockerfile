@@ -33,3 +33,6 @@ RUN wget --quiet https://github.com/github/hub/releases/download/v2.11.2/hub-lin
 
 # goml
 RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.4.0/goml-linux-amd64 && chmod +x /usr/bin/goml
+
+# calicoctl
+RUN curl -O -L https://github.com/projectcalico/calicoctl/releases/download/v3.4.4/calicoctl-linux-amd64 && mv ./calicoctl-linux-amd64 /usr/bin/calicoctl && chmod +x /usr/bin/calicoctl

@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:stretch
 
 ENV PATH="$GOPATH/bin:${PATH}"
 

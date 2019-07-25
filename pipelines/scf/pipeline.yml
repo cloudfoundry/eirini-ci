@@ -28,8 +28,45 @@ jobs:
   - get: eirini-release
     passed: [scf-build]
     trigger: true
+  - get: eirinifs-release
   - task: update-diego-templates
     file: ci-resources/tasks/update-diego-templates/task.yml
+  - task: update-eirinifs-version
+    input_mapping:
+      eirini-release-modified: eirini-release
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+
+      inputs:
+      - name: ci-resources
+      - name: eirini-release
+      - name: eirinifs-release
+
+      outputs:
+      - name: eirini-release-modified
+
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          #!/bin/bash
+          set -euo pipefail
+          eirinifs_version=$(cat eirinifs-release/tag)
+          pushd eirini-release
+          echo "global:" >> helm/cf/values.yaml
+          echo "  rootfs_version: '$eirinifs_version'" >> helm/cf/values.yaml
+          git add "helm/cf/values.yaml"
+          git config --global user.email "eirini@cloudfoundry.org"
+          git config --global user.name "Come-On Eirini"
+          git commit --all --message "update eirinifs version"
+          popd
+
+          cp -r eirini-release/. eirini-release-modified/
   - put: eirini-release
     params:
       merge: true
@@ -55,4 +92,9 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
+- name: eirinifs-release
+  type: github-release
+  source:
+    owner: cloudfoundry-incubator
+    repository: eirinifs
 
