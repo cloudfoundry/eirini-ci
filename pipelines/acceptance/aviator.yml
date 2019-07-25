@@ -41,8 +41,8 @@ spruce:
       - {{publish-release}}
   modify:
     delete:
-      - "resources.name:cluster-new-acceptance-staging-event-ready"
-      - "resources.name:cluster-new-cf-sans-diego-staging-event-ready"
-      - "jobs.name:deploy-scf-uaa-new-acceptance.plan.get:cluster-new-acceptance-staging-event-ready"
-      - "jobs.name:deploy-scf-uaa-new-cf-sans-diego.plan.get:cluster-new-cf-sans-diego-staging-event-ready"
+      - "resources.name:cluster-acceptance-staging-event-ready"
+      - "resources.name:cluster-cf-sans-diego-staging-event-ready"
+      - "jobs.name:deploy-scf-uaa-acceptance.plan.get:cluster-acceptance-staging-event-ready"
+      - "jobs.name:deploy-scf-uaa-cf-sans-diego.plan.get:cluster-cf-sans-diego-staging-event-ready"
   to: $PIPELINE_YML

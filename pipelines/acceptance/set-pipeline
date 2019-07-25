@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly world_name=new-acceptance
+readonly world_name=acceptance
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly diego_cell_count="${3:-"3"}"
@@ -21,10 +21,10 @@ fly -t "$target" \
   --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
-  --var ci-resources-branch="new-ci-164492513" \
+  --var ci-resources-branch="master" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
-  --var eirini-release-branch="new-ci-164492513" \
+  --var eirini-release-branch="master" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
