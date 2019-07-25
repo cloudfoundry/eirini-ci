@@ -11,10 +11,6 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
-  modify:
-    set:
-      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:deploy-scf.file
-        value: ci-resources/tasks/deploy-scf/task-with-image-overrides.yml
   merge:
   - with:
       files:
