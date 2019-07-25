@@ -17,7 +17,7 @@ resources:
   check_every: 2h
   webhook_token: ((pr-webhook-token))
   source:
-    repository: (( concat "mnitchev/" meta.pr-repo ))
+    repository: (( concat "cloudfoundry-incubator/" meta.pr-repo ))
     access_token: ((github-access-token))
     base_branch: develop
 
