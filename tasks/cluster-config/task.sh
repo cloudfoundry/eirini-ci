@@ -42,6 +42,7 @@ bits:
   opi:
     ingress_endpoint: $ingress_endpoint
     use_registry_ingress: true
+    rootfs_version: $ROOTFS_VERSION
   secrets:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
