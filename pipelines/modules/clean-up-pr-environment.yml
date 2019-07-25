@@ -19,7 +19,7 @@ resources:
   source:
     repository: (( concat "cloudfoundry-incubator/" meta.pr-repo ))
     access_token: ((github-access-token))
-    base_branch: develop
+    base_branch: ((pr-base-branch))
 
 jobs:
   - name: clean-up-environment
