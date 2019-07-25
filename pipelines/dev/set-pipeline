@@ -21,7 +21,6 @@ readonly worker_count=${7:-"1"}
 readonly enable_opi_staging=${8:-""}
 readonly storage_class=${9:-"hostpath"}
 readonly diego_cell_count="${10:-"3"}"
-readonly rootfs_version="${11:-"v66.0.0"}"
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -49,5 +48,4 @@ fly --target "$target" \
   --var storage_class="$storage_class" \
   --var enable_opi_staging="${enable_opi_staging}" \
   --var diego-cell-count="$diego_cell_count" \
-  --var rootfs_version="$rootfs_version" \
   --load-vars-from "$private_repo/concourse/common.yml"

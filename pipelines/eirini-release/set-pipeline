@@ -12,7 +12,6 @@ readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly worker_count=${3:-"3"}
 readonly diego_cell_count="${4:-"3"}"
-readonly rootfs_version="${5:-"v66.0.0"}"
 
 aviator -f "$basedir"/aviator.yml
 
@@ -34,5 +33,4 @@ fly -t "$target" \
   --var enable_opi_staging=false \
   --var diego-cell-count="$diego_cell_count" \
   --var world-name="$world_name" \
-  --var rootfs_version="$rootfs_version" \
   --load-vars-from "$private_repo/concourse/common.yml"

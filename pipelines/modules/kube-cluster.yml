@@ -55,7 +55,6 @@ jobs:
           NATS_PASSWORD: ((nats_password))
           ENABLE_OPI_STAGING: (( grab meta.enable-opi-staging ))
           DIEGO_CELL_COUNT: ((diego-cell-count))
-          ROOTFS_VERSION: ((rootfs_version))
       file: ci-resources/tasks/cluster-config/task.yml
     - put: cluster-state
       params: 
