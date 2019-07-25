@@ -4,10 +4,10 @@ spruce:
   - meta
   modify:
     delete:
-      - "jobs.name:prepare-cluster-((world-name))"
+    - "jobs.name:prepare-cluster-((world-name))"
     set:
-     - path: jobs.name:check-cluster-readiness-((world-name)).plan.get:cluster-((world-name))-staging-event-created.passed.0
-       value: create-cluster-((world-name))
+    - path: jobs.name:check-cluster-readiness-((world-name)).plan.get:cluster-((world-name))-staging-event-created.passed.0
+      value: create-cluster-((world-name))
   merge:
   - with:
       files:
@@ -37,9 +37,8 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   modify:
     delete:
-      # delete prepare-cluster job from groups
-      - "groups.name:all.jobs.8"
-      - "groups.name:cluster-((world-name)).jobs.1"
+    - "groups.name:all.jobs.:prepare-cluster-((world-name))"
+    - "groups.name:cluster-((world-name)).jobs.:prepare-cluster-((world-name))"
   merge:
   - with:
       files:
