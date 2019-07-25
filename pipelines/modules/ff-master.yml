@@ -21,9 +21,9 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - run-core-cats-with-opi-new
-    - run-core-cats-with-diego-new
-    - run-core-cats-freshini-new
+    - run-core-cats-with-opi
+    - run-core-cats-with-diego
+    - run-core-cats-freshini
   - put: eirini-release-master
     params:
       repository: eirini-release

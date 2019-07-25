@@ -1,4 +1,0 @@
-meta:
-  cluster-name: with-diego
-  enable-opi-staging: "false"
-  unlock-passed: run-core-cats-with-diego

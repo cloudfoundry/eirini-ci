@@ -2,157 +2,48 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
   prune:
   - meta
+  modify:
+    delete:
+      - "jobs.name:prepare-cluster-((world-name))"
+    set:
+     - path: jobs.name:check-cluster-readiness-((world-name)).plan.get:cluster-((world-name))-staging-event-created.passed.0
+       value: create-cluster-((world-name))
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
-  to: {{cluster-with-diego}}
-
-- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/modules/lock.yml
-      - $PROJECT_ROOT/pipelines/ci/with-diego.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
-  to: {{eirini-with-diego}}
-
-# With-OPI
-- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/with-opi.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
-  to: {{cluster-with-opi}}
-
-- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/modules/lock.yml
-      - $PROJECT_ROOT/pipelines/ci/with-opi.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
-      - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
-  to: {{eirini-with-opi}}
-
-# Freshini
-- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/freshini.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
-  to: {{cluster-freshini}}
-
-- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/modules/lock.yml
-      - $PROJECT_ROOT/pipelines/ci/freshini.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
-      - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
-  to: {{eirini-freshini}}
-
-# With-Diego CATs
-- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
-  prune:
-  - meta
-  - skipped_cats
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/with-diego.yml
-      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-  to: {{cats-with-diego}}
-
-# With-OPI CATs
-- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
-  prune:
-  - meta
-  - skipped_cats
-  go_patch: true
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/with-opi.yml
-      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-  to: {{cats-with-opi}}
-
-# Freshini CATs
-- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
-  prune:
-  - meta
-  - skipped_cats
-  go_patch: true
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/freshini.yml
-      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
-      - $PROJECT_ROOT/pipelines/modules/nuke-cf.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
-  to: {{cats-freshini}}
-
-# -------------
-
-- base: $PROJECT_ROOT/pipelines/modules/ff-master.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/ci/ff.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/ff-master.yml
-  to: {{ff-master}}
+  to: {{create-cluster}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/ci/with-diego.yml
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/test-and-build-docker-images.yml
   to: {{test-and-build-docker}}
 
-- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+- base: $PROJECT_ROOT/pipelines/modules/update-image-version-files.yml
   merge:
   - with:
       files:
-      - {{cluster-with-diego}}
-      - {{cluster-with-opi}}
-      - {{cluster-freshini}}
-      - {{test-and-build-docker}}
-      - {{eirini-with-diego}}
-      - {{eirini-with-opi}}
-      - {{eirini-freshini}}
-      - {{cats-with-diego}}
-      - {{cats-with-opi}}
-      - {{cats-freshini}}
-      - {{ff-master}}
-  to: $PIPELINE_YML
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/update-image-version-files.yml
+  to: {{update-image-version-files}}
 
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  modify:
+    delete:
+      # delete prepare-cluster job from groups
+      - "groups.name:all.jobs.6"
+      - "groups.name:cluster-((world-name)).jobs.1"
+  merge:
+  - with:
+      files:
+      - {{create-cluster}}
+      - {{test-and-build-docker}}
+      - {{update-image-version-files}}
+  to: $PIPELINE_YML

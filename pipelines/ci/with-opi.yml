@@ -1,4 +1,0 @@
-meta:
-  cluster-name: with-opi
-  enable-opi-staging: "true"
-  unlock-passed: run-core-cats-with-opi

@@ -1,4 +1,4 @@
 meta:
-  cluster-name: with-opi-new
+  cluster-name: with-opi
   enable-opi-staging: "true"
-  unlock-passed: run-core-cats-with-opi-new
+  unlock-passed: run-core-cats-with-opi
