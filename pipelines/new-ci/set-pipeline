@@ -6,11 +6,11 @@ IFS=$'\n\t'
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT
 
-readonly world_name=new-ci
+readonly world_name=ci
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
-readonly working_branch=${3:-"new-ci-164492513"}
-readonly ci_branch=${4:-"new-ci-164492513"}
+readonly working_branch=${3:-"master"}
+readonly ci_branch=${4:-"master"}
 readonly worker_count=${5:-"3"}
 readonly storage_class="hostpath"
 readonly rootfs_version="${6:-"v66.0.0"}"
@@ -36,7 +36,7 @@ fly --target "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
-  --var eirini-release-branch="new-ci-164492513" \
+  --var eirini-release-branch="develop" \
   --var rootfs_version="$rootfs_version" \
   --var eirini-branch="$working_branch" \
   --var worker_count="$worker_count" \
