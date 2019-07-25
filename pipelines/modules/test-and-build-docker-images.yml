@@ -175,35 +175,41 @@ resources:
   type: docker-image
   source:
     repository: eirini/opi
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: docker-opi-init
   type: docker-image
   source:
     repository: eirini/opi-init
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: docker-secret-smuggler
   type: docker-image
   source:
     repository: eirini/secret-smuggler
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: docker-bits-waiter
   type: docker-image
   source:
     repository: eirini/bits-waiter
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: docker-rootfs-patcher
   type: docker-image
   source:
     repository: eirini/rootfs-patcher
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: docker-fluentd
   type: docker-image
   source:
     repository: eirini/loggregator-fluentd
+    tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
