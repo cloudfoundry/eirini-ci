@@ -14,9 +14,9 @@ export PROJECT_ROOT
 readonly world_name=$1
 readonly target="${2:-eirini}"
 readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
-readonly eirini_branch=${4:-"new-ci-164492513"}
+readonly eirini_branch=${4:-"master"}
 readonly eirini_release_branch=${5:-"develop"}
-readonly ci_branch=${6:-"new-ci-164492513"}
+readonly ci_branch=${6:-"master"}
 readonly worker_count=${7:-"1"}
 readonly enable_opi_staging=${8:-""}
 readonly storage_class=${9:-"hostpath"}
