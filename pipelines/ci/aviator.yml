@@ -38,7 +38,7 @@ spruce:
   modify:
     delete:
       # delete prepare-cluster job from groups
-      - "groups.name:all.jobs.6"
+      - "groups.name:all.jobs.8"
       - "groups.name:cluster-((world-name)).jobs.1"
   merge:
   - with:

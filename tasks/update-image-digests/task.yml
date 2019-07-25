@@ -11,6 +11,7 @@ inputs:
 - name: docker-bits-waiter
 - name: docker-rootfs-patcher
 - name: eirini-release
+- name: docker-fluentd
 - name: ci-resources
 outputs:
 - name: eirini-release-updated

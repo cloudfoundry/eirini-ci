@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-readonly IMAGES=("opi" "opi-init" "secret-smuggler" "bits-waiter" "rootfs-patcher")
+readonly IMAGES=("opi" "opi-init" "secret-smuggler" "bits-waiter" "rootfs-patcher" "fluentd")
 
 main() {
   for image in "${IMAGES[@]}"; do

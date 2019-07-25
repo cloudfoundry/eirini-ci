@@ -34,6 +34,10 @@ jobs:
       trigger: true
       passed:
         - create-go-docker-images
+    - get: docker-fluentd
+      trigger: true
+      passed:
+        - create-fluentd-docker-image
   - task: update-image-digests
     file: ci-resources/tasks/update-image-digests/task.yml
   - put: eirini-release

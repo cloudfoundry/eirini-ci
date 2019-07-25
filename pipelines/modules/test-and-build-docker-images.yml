@@ -4,15 +4,19 @@ groups:
   jobs:
   - (( defer prepend ))
   - run-tests
+  - run-fluentd-unit-tests
   - create-go-docker-images
   - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
+  - create-fluentd-docker-image
 - name: test-and-build
   jobs:
   - run-tests
+  - run-fluentd-unit-tests
   - create-go-docker-images
   - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
+  - create-fluentd-docker-image
 jobs:
 - name: run-tests
   plan:
@@ -99,6 +103,31 @@ jobs:
       build: eirini-secret-smuggler/docker/registry/certs/smuggler
       build_args_file: docker-build-args/args.json
 
+- name: run-fluentd-unit-tests
+  plan:
+  - in_parallel:
+    - get: eirini-fluentd
+      trigger: true
+    - get: ci-resources
+  - task: run-unit-tests
+    file: ci-resources/tasks/run-fluentd-tests/task.yml
+    input_mapping:
+      eirini: eirini-fluentd
+- name: create-fluentd-docker-image
+  plan:
+  - get: eirini-fluentd
+    trigger: true
+    passed: [run-fluentd-unit-tests]
+  - get: ci-resources
+  - task: make-docker-build-args
+    file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      eirini: eirini-fluentd
+  - put: docker-fluentd
+    params:
+      build: eirini-fluentd/fluentd/
+      build_args_file: docker-build-args/args.json
+
 resources:
 - name: ci-resources
   type: git
@@ -135,6 +164,13 @@ resources:
     branch: ((eirini-branch))
     paths:
     - docker/registry/certs/smuggler
+- name: eirini-fluentd
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    branch: ((eirini-branch))
+    paths:
+    - fluentd/
 - name: docker-opi
   type: docker-image
   source:
@@ -163,5 +199,11 @@ resources:
   type: docker-image
   source:
     repository: eirini/rootfs-patcher
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: docker-fluentd
+  type: docker-image
+  source:
+    repository: eirini/loggregator-fluentd
     username: ((dockerhub-user))
     password: ((dockerhub-password))
