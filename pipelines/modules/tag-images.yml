@@ -81,9 +81,9 @@ resources:
 - name: deployment-version
   type: semver
   source:
-    driver: git
-    uri: git@github.com:cloudfoundry/eirini-private-config.git
-    branch: master
-    file: environments/kube-clusters/((world-name))/deployment-version
-    private_key: ((github-private-key))
     initial_version: 1.0.0
+    driver: gcs
+    bucket: eirini-ci
+    key: image-versions/((world-name))
+    json_key: ((gcs-json-key))
+

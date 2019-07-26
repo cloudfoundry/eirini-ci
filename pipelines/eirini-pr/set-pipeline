@@ -30,6 +30,7 @@ fly -t "$target" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var pr-webhook-token="$(pass eirini/github/eirini/webhook-token)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var gcs-json-key="$(pass eirini/gcs-json-key)" \
   --var diego-cell-count="$diego_cell_count" \
   --var worker_count="$worker_count" \
   --var storage_class="ibmc-block-gold" \
