@@ -43,13 +43,13 @@ helm-install() {
   if [[ -f deployment-version/version ]]; then
     image_tag=$(cat deployment-version/version)
     override_image_args=(
-     "--set" "opi.init_image=eirini/opi-init"
-     "--set" "opi.image=eirini/opi"
-     "--set" "opi.bits_waiter_image=eirini/bits-waiter"
-     "--set" "opi.rootfs_patcher_image=eirini/rootfs-patcher"
-     "--set" "opi.secret_smuggler_image=eirini/secret-smuggler"
-     "--set" "opi.loggregator_fluentd_image=eirini/loggregator-fluentd"
-     "--set" "opi.image_tag=$image_tag"
+     "--set" "eirini.opi.init_image=eirini/opi-init"
+     "--set" "eirini.opi.image=eirini/opi"
+     "--set" "eirini.opi.bits_waiter_image=eirini/bits-waiter"
+     "--set" "eirini.opi.rootfs_patcher_image=eirini/rootfs-patcher"
+     "--set" "eirini.opi.secret_smuggler_image=eirini/secret-smuggler"
+     "--set" "eirini.opi.loggregator_fluentd_image=eirini/loggregator-fluentd"
+     "--set" "eirini.opi.image_tag=$image_tag"
     )
   fi
 
