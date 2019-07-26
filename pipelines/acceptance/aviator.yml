@@ -4,30 +4,17 @@ spruce:
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
+      - $PROJECT_ROOT/pipelines/acceptance/environment.yml
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
-  to: {{eirini-with-diego}}
-
-# CF sans Diego
-- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
-  prune:
-  - meta
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/pipelines/acceptance/with-opi.yml
-      - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
-  to: {{eirini-with-opi}}
+  to: {{eirini-environment}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/acceptance/with-diego.yml
+      - $PROJECT_ROOT/pipelines/acceptance/environment.yml
   to: {{publish-release}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
@@ -36,13 +23,10 @@ spruce:
   merge:
   - with:
       files:
-      - {{eirini-with-diego}}
-      - {{eirini-with-opi}}
+      - {{eirini-environment}}
       - {{publish-release}}
   modify:
     delete:
       - "resources.name:cluster-acceptance-staging-event-ready"
-      - "resources.name:cluster-cf-sans-diego-staging-event-ready"
       - "jobs.name:deploy-scf-uaa-acceptance.plan.get:cluster-acceptance-staging-event-ready"
-      - "jobs.name:deploy-scf-uaa-cf-sans-diego.plan.get:cluster-cf-sans-diego-staging-event-ready"
   to: $PIPELINE_YML
