@@ -108,6 +108,7 @@ jobs:
   - in_parallel:
     - get: eirini-fluentd
       trigger: true
+      passed: [] # Required for PR pipeline
     - get: ci-resources
   - task: run-unit-tests
     file: ci-resources/tasks/run-fluentd-tests/task.yml

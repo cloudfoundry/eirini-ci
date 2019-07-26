@@ -50,8 +50,11 @@ spruce:
       - "resources.name:eirini"
       - "resources.name:eirini-opi-init"
       - "resources.name:eirini-secret-smuggler"
+      - "resources.name:eirini-fluentd"
       - "jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping"
       - "jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping"
+      - "jobs.name:run-fluentd-unit-tests.plan.task:run-unit-tests.input_mapping"
+      - "jobs.name:create-fluentd-docker-image.plan.task:make-docker-build-args.input_mapping"
       # Disable auto trigger
       - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-eirini-pr-staging-event-ready"
       - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
@@ -73,6 +76,17 @@ spruce:
         value: run-tests
       - path: jobs.name:create-secret-smuggler-docker-image.plan.put:docker-secret-smuggler.params.build
         value: eirini/docker/registry/certs/smuggler
+
+      # Build secret-smuggler image from PR, after the tests pass
+      - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini-fluentd.get
+        value: eirini
+      - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini.passed.+
+        value: run-tests
+      - path: jobs.name:create-fluentd-docker-image.plan.get:eirini-fluentd.get
+        value: eirini
+      - path: jobs.name:create-fluentd-docker-image.plan.put:docker-fluentd.params.build
+        value: eirini/fluentd
+
   merge:
   - with:
       files:
