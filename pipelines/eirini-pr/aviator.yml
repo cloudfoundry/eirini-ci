@@ -63,7 +63,7 @@ spruce:
       - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini-opi-init.get
         value: eirini
       - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini.passed.+
-        value: run-tests
+        value: clean-up-environment
       - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
         value: eirini/docker/opi/init
       - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
@@ -73,7 +73,7 @@ spruce:
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
         value: eirini
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini.passed.+
-        value: run-tests
+        value: clean-up-environment
       - path: jobs.name:create-secret-smuggler-docker-image.plan.put:docker-secret-smuggler.params.build
         value: eirini/docker/registry/certs/smuggler
 
@@ -81,7 +81,7 @@ spruce:
       - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini-fluentd.get
         value: eirini
       - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini.passed.+
-        value: run-tests
+        value: clean-up-environment
       - path: jobs.name:create-fluentd-docker-image.plan.get:eirini-fluentd.get
         value: eirini
       - path: jobs.name:create-fluentd-docker-image.plan.put:docker-fluentd.params.build
