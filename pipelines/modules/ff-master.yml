@@ -12,7 +12,7 @@ resources:
   type: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    branch: ff-test
+    branch: master
     private_key: ((eirini-release-repo-key))
 
 jobs:
