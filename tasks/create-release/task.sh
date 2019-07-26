@@ -8,16 +8,11 @@ readonly VERSION_FILE="eirini-release-version/version"
 readonly VERSION=$(cat "$VERSION_FILE")
 
 main() {
-  change-image-tag
   update-chart-version
   update-requirements-version
   helm-dep-update
   update-requirements-repo
   zip-templates
-}
-
-change-image-tag() {
-  goml set -f eirini-release/helm/eirini/values.yaml -p opi.image_tag -v "$VERSION"
 }
 
 update-chart-version() {

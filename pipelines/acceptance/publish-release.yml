@@ -44,13 +44,6 @@ jobs:
   - get: eirini-release-version
     params:
       bump: minor
-  - task: create-release-images
-    privileged: true
-    params:
-      DOCKER_HUB_USER: ((dockerhub-user))
-      DOCKER_HUB_PASSWORD: ((dockerhub-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/create-release-images/task.yml
   - task: create-release
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
