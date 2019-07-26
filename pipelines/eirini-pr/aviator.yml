@@ -17,7 +17,7 @@ spruce:
       - "jobs.name:deploy-scf-uaa-eirini-pr.plan.task:deploy-uaa.input_mapping"
       - "jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources.trigger"
     set:
-      - path: jobs.name:deploy-scf-eirini-pr.plan.task:deploy-scf.file
+      - path: jobs.name:deploy-scf-eirini-eirini-pr.plan.task:deploy-scf.file
         value: ci-resources/tasks/deploy-scf/task-with-image-override.yml
       - path: jobs.name:deploy-scf-uaa-eirini-pr.plan.get:scf-uaa-resources.get
         value: eirini-release
