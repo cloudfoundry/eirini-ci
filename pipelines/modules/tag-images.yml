@@ -18,29 +18,35 @@ jobs:
       - create-go-docker-images
       - create-opi-init-docker-image
       - create-secret-smuggler-docker-image
+      - create-fluentd-docker-image
     - get: docker-opi
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
       params:
         save: true
     - get: docker-opi-init
       passed:
-        - create-opi-init-docker-image
+      - create-opi-init-docker-image
       params:
         save: true
     - get: docker-secret-smuggler
       passed:
-        - create-secret-smuggler-docker-image
+      - create-secret-smuggler-docker-image
       params:
         save: true
     - get: docker-bits-waiter
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
       params:
         save: true
     - get: docker-rootfs-patcher
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
+      params:
+        save: true
+    - get: docker-fluentd
+      passed:
+      - create-fluentd-docker-image
       params:
         save: true
     - put: deployment-version
@@ -67,6 +73,10 @@ jobs:
       params:
         additional_tags: deployment-version/version
         import_file: docker-rootfs-patcher/image
+    - put: docker-fluentd
+      params:
+        additional_tags: deployment-version/version
+        import_file: docker-fluentd/image
 resources:
 - name: deployment-version
   type: semver
