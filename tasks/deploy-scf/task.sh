@@ -36,24 +36,32 @@ helm-dep-update() {
   popd || exit
 }
 
-override-image-options() {
-  if [[ -f deployment-version/version ]]; then
-    readonly image_tag=$(cat deployment-version/version)
-    "--set opi.init_image=eirini/opi-init --set opi.image=eirini/opi --set opi.bits_waiter_image=eirini/bits-waiter --set opi.rootfs_patcher_image=eirini/rootfs-patcher --set opi.secret_smuggler_image=eirini/secret-smuggler --set opi.image_tag=$image_tag"
-  fi
-}
-
 helm-install() {
-  # shellcheck disable=SC2046
+  local image_tag override_image_args
+
+  override_image_args=()
+  if [[ -f deployment-version/version ]]; then
+    image_tag=$(cat deployment-version/version)
+    override_image_args=(
+     "--set" "opi.init_image=eirini/opi-init"
+     "--set" "opi.image=eirini/opi"
+     "--set" "opi.bits_waiter_image=eirini/bits-waiter"
+     "--set" "opi.rootfs_patcher_image=eirini/rootfs-patcher"
+     "--set" "opi.secret_smuggler_image=eirini/secret-smuggler"
+     "--set" "opi.loggregator_fluentd_image=eirini/loggregator-fluentd"
+     "--set" "opi.image_tag=$image_tag"
+    )
+  fi
+
   helm upgrade --install "scf" \
     "eirini-release/helm/cf" \
     --namespace "scf" \
     --values "$ENVIRONMENT"/scf-config-values.yaml \
+    --force \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
     --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
     --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
-    $(override-image-options) \
-    --force
+    "${override_image_args[@]}"
 }
 
 main
