@@ -6,7 +6,6 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PIPELINE_YML="$PROJECT_ROOT/pipelines/egg/pipeline.yml"
 
 readonly target="${1:-eirini}"
-readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 fly -t "$target" \
   set-pipeline \

@@ -6,7 +6,6 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 
-readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
 export SECRET=""
 export CA_CERT=""
 
