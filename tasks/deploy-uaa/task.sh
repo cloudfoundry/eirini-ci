@@ -16,7 +16,7 @@ main() {
 }
 
 helm-install() {
-  pushd scf-uaa-resources/helm
+  pushd eirini-release/helm
   helm upgrade --install "uaa" \
     "uaa" \
     --namespace "uaa" \
