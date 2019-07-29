@@ -59,17 +59,19 @@ spruce:
       - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-eirini-pr-staging-event-ready"
       - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
     set:
-      # Build opi-init image from PR, after the tests pass
+      # Run test after cleanup-environment
+      - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
+        value: clean-up-environment
+
+      # Build opi-init image from PR, after cleanup environment
       - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini-opi-init.get
         value: eirini
       - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini.passed.+
         value: clean-up-environment
       - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
         value: eirini/docker/opi/init
-      - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
-        value: clean-up-environment
 
-      # Build secret-smuggler image from PR, after the tests pass
+      # Build secret-smuggler image from PR, after cleanup environment
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
         value: eirini
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini.passed.+
@@ -77,7 +79,7 @@ spruce:
       - path: jobs.name:create-secret-smuggler-docker-image.plan.put:docker-secret-smuggler.params.build
         value: eirini/docker/registry/certs/smuggler
 
-      # Build secret-smuggler image from PR, after the tests pass
+      # Build fluentd image from PR, after cleanup environment
       - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini-fluentd.get
         value: eirini
       - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini.passed.+
