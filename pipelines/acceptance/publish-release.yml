@@ -39,8 +39,8 @@ jobs:
     file: ci-resources/tasks/check-for-pending-release/task.yml
   - get: state
   - get: eirini-release
-    params:
-      submodules: all
+    passed:
+    - run-smoke-tests-acceptance
   - get: eirini-release-version
     params:
       bump: minor
