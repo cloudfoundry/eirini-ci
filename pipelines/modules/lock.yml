@@ -20,6 +20,7 @@ jobs:
       release: (( concat "lock-" meta.cluster-name ))
 
 - name: (( concat "lock-" meta.cluster-name ))
+  serial: true
   plan:
   - get: eirini-release
     trigger: true
