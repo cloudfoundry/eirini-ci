@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-set -euo pipefail
+set -eu
 
 cd ci-resources
 # shellcheck disable=SC2046
