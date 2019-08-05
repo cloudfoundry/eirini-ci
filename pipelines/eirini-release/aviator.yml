@@ -73,6 +73,12 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
+  modify:
+    set:
+     - path: jobs.name:deploy-scf-uaa-freshini.plan.task:waiting-for-uaa.attempts
+       value: 50
+     - path: jobs.name:deploy-scf-eirini-freshini.plan.task:smoke-eirini.attempts
+       value: 80
   to: {{eirini-freshini}}
 
 # With-Diego CATs
