@@ -20,8 +20,7 @@ helm-install() {
   helm upgrade --install "uaa" \
     "uaa" \
     --namespace "uaa" \
-    --values "../../$ENVIRONMENT"/scf-config-values.yaml \
-    --force
+    --values "../../$ENVIRONMENT"/scf-config-values.yaml
   popd
 }
 

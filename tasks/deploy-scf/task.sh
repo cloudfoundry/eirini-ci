@@ -57,7 +57,6 @@ helm-install() {
     "eirini-release/helm/cf" \
     --namespace "scf" \
     --values "$ENVIRONMENT"/scf-config-values.yaml \
-    --force \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
     --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
     --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
