@@ -57,10 +57,11 @@ jobs:
           DIEGO_CELL_COUNT: ((diego-cell-count))
       file: ci-resources/tasks/cluster-config/task.yml
     - put: cluster-state
-      params: 
+      params:
         repository: state-modified
         merge: true
     - task: provision-storage
+      attempts: 5
       params:
           IBMCLOUD_ACCOUNT: ((ibmcloud-account))
           IBMCLOUD_USER: ((ibmcloud-user))
