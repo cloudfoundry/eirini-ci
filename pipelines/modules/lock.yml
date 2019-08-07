@@ -50,6 +50,7 @@ resources:
 - (( append ))
 - name: (( concat "lock-" meta.cluster-name ))
   type: pool
+  icon: lock
   source:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: ci-locks

@@ -115,6 +115,7 @@ jobs:
 resources:
   - name: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
     type: semver
+    icon: check-decagram
     source:
       driver: git
       uri: git@github.com:cloudfoundry/eirini-private-config.git
@@ -125,6 +126,7 @@ resources:
 
   - name: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
     type: semver
+    icon: check-decagram
     source:
       driver: git
       uri: git@github.com:cloudfoundry/eirini-private-config.git
@@ -135,6 +137,7 @@ resources:
 
   - name: cluster-state
     type: git
+    icon: folder
     source:
       uri: git@github.com:cloudfoundry/eirini-private-config.git
       branch: master

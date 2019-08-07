@@ -108,16 +108,19 @@ jobs:
 resources:
 - name: ci-resources
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: ((ci-resources-branch))
 - name: eirini-release
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
 - name: scf-uaa-resources
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))
@@ -134,6 +137,7 @@ resources:
     initial_version: 0.1.0
 - name: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
   type: semver
+  icon: check-decagram
   source:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
@@ -143,11 +147,13 @@ resources:
     initial_version: 0.1.0
 - name: cf-smoke-tests
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry/cf-smoke-tests.git
     branch: master
 - name: state
   type: git
+  icon: folder
   source:
     check_every: 500ms
     uri: git@github.com:cloudfoundry/eirini-private-config.git

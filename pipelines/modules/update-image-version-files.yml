@@ -45,6 +45,7 @@ jobs:
 resources:
 - name: eirini-release
   type: git
+  icon: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: ((eirini-release-branch))

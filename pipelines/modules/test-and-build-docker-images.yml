@@ -132,11 +132,13 @@ jobs:
 resources:
 - name: ci-resources
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: ((ci-resources-branch))
 - name: sample-configs
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: ((ci-resources-branch))
@@ -144,6 +146,7 @@ resources:
     - sample-configs
 - name: eirini
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
@@ -153,6 +156,7 @@ resources:
     - fluentd/
 - name: eirini-opi-init
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
@@ -160,6 +164,7 @@ resources:
     - docker/opi/init/
 - name: eirini-secret-smuggler
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
@@ -167,6 +172,7 @@ resources:
     - docker/registry/certs/smuggler
 - name: eirini-fluentd
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini.git
     branch: ((eirini-branch))
@@ -174,6 +180,7 @@ resources:
     - fluentd/
 - name: docker-opi
   type: docker-image
+  icon: docker
   source:
     repository: eirini/opi
     tag: pipeline
@@ -181,6 +188,7 @@ resources:
     password: ((dockerhub-password))
 - name: docker-opi-init
   type: docker-image
+  icon: docker
   source:
     repository: eirini/opi-init
     tag: pipeline
@@ -188,6 +196,7 @@ resources:
     password: ((dockerhub-password))
 - name: docker-secret-smuggler
   type: docker-image
+  icon: docker
   source:
     repository: eirini/secret-smuggler
     tag: pipeline
@@ -195,6 +204,7 @@ resources:
     password: ((dockerhub-password))
 - name: docker-bits-waiter
   type: docker-image
+  icon: docker
   source:
     repository: eirini/bits-waiter
     tag: pipeline
@@ -202,6 +212,7 @@ resources:
     password: ((dockerhub-password))
 - name: docker-rootfs-patcher
   type: docker-image
+  icon: docker
   source:
     repository: eirini/rootfs-patcher
     tag: pipeline
@@ -209,6 +220,7 @@ resources:
     password: ((dockerhub-password))
 - name: docker-fluentd
   type: docker-image
+  icon: docker
   source:
     repository: eirini/loggregator-fluentd
     tag: pipeline

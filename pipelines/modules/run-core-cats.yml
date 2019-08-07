@@ -58,5 +58,6 @@ jobs:
 resources:
 - name: cats
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry/cf-acceptance-tests.git

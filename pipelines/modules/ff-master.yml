@@ -10,6 +10,7 @@ groups:
 resources:
 - name: eirini-release-master
   type: git
+  icon: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: master

@@ -1,6 +1,7 @@
 resources:
 - name: eirini-scf-release
   type: github-release
+  icon: github-circle
   source:
     owner: cloudfoundry-incubator
     repository: eirini-release
@@ -8,6 +9,7 @@ resources:
     drafts: true
 - name: eirini-release-version
   type: semver
+  icon: check-decagram
   source:
     driver: git
     uri: git@github.com:cloudfoundry/eirini-private-config.git
@@ -17,6 +19,7 @@ resources:
     initial_version: 0.1.0
 - name: gh-pages-pr
   type: git
+  icon: git
   source:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: gh-pages-pr
