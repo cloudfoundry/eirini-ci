@@ -36,6 +36,13 @@ commit-changes() {
   cp -r eirini-release/. eirini-release-updated
 }
 
+strip-signed-off() {
+  local repo
+  repo="$1"
+
+  grep -v "Signed-off-by" "$repo/.git/commit_message"
+}
+
 commit-message() {
   local eirini_ref opi_init_ref secret_smuggler_ref fluentd_ref
   eirini_ref=$(cat ./eirini/.git/ref)
@@ -44,10 +51,10 @@ commit-message() {
   fluentd_ref=$(cat ./eirini-fluentd/.git/ref)
 
   local eirini_commit_msg opi_init_commit_msg secret_smuggler_commit_msg fluentd_commit_msg
-  eirini_commit_msg=$(cat ./eirini/.git/commit_message)
-  opi_init_commit_msg=$(cat ./eirini-opi-init/.git/commit_message)
-  secret_smuggler_commit_msg=$(cat ./eirini-secret-smuggler/.git/commit_message)
-  fluentd_commit_msg=$(cat ./eirini-fluentd/.git/commit_message)
+  eirini_commit_msg=$(strip-signed-off ./eirini)
+  opi_init_commit_msg=$(strip-signed-off ./eirini-opi-init)
+  secret_smuggler_commit_msg=$(strip-signed-off ./eirini-secret-smuggler)
+  fluentd_commit_msg=$(strip-signed-off ./eirini-fluentd)
 
   echo -e "Update image versions\n"
 
