@@ -1,16 +1,19 @@
 resources:
 - name: eirini-private-config
   type: git
+  icon: git
   source:
     branch: master
     private_key: ((github-private-key))
     uri: git@github.com:cloudfoundry/eirini-private-config
 - name: postfacto
   type: git
+  icon: egg-easter
   source:
     tag_filter: '*'
     uri: https://github.com/pivotal/postfacto.git
 - name: ci-resources
+  icon: git
   type: git
   source:
     branch: master

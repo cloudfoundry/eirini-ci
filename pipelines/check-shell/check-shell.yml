@@ -22,6 +22,7 @@ jobs:
 resources:
 - name: ci-resources
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master

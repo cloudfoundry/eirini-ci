@@ -1,7 +1,7 @@
 resources:
 - name: eirini-scf-release
   type: github-release
-  icon: github-circle
+  icon: rocket
   source:
     owner: cloudfoundry-incubator
     repository: eirini-release

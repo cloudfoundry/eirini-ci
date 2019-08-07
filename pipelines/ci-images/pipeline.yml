@@ -23,6 +23,7 @@ jobs:
 resources:
 - name: eirini-ci-image-source
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
@@ -31,6 +32,7 @@ resources:
 
 - name: eirini-ibmcloud-image-source
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
@@ -39,6 +41,7 @@ resources:
 
 - name: eirini-scf-builder-image-source
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
@@ -47,6 +50,7 @@ resources:
 
 - name: eirini-ci-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/ci
     username: ((docker_hub_user))
@@ -54,6 +58,7 @@ resources:
 
 - name: eirini-ibmcloud-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/ibmcloud
     username: ((docker_hub_user))
@@ -61,6 +66,7 @@ resources:
 
 - name: eirini-scf-builder-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/scf-builder
     username: ((docker_hub_user))
@@ -68,5 +74,6 @@ resources:
 
 - name: golang-image
   type: docker-image
+  icon: docker
   source:
     repository: golang

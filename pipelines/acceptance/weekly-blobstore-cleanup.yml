@@ -20,6 +20,7 @@ jobs:
 resources:
 - name: sunday-morning
   type: time
+  icon: timer
   source:
     days: [Sunday]
     start: 10:00 AM
