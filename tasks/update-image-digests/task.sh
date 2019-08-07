@@ -62,19 +62,23 @@ commit-message() {
     case $f in
       "helm/eirini/versions/opi-init")
         echo "OPI init commit SHA: $opi_init_ref"
-        echo -e "OPI init commit message: $opi_init_commit_msg\n"
+        echo "OPI init commit message:"
+        echo -e "$opi_init_commit_msg\n"
         ;;
       "helm/eirini/versions/secret-smuggler")
         echo "Secret smuggler commit SHA: $secret_smuggler_ref"
-        echo -e "Secret smuggler commit message: $secret_smuggler_commit_msg\n"
+        echo "Secret smuggler commit message:"
+        echo -e "$secret_smuggler_commit_msg\n"
         ;;
       "helm/eirini/versions/fluentd")
         echo "Fluentd commit SHA: $fluentd_ref"
-        echo -e "Fluentd commit message: $fluentd_commit_msg\n"
+        echo "Fluentd commit message:"
+        echo -e "$fluentd_commit_msg\n"
         ;;
       "helm/eirini/versions/opi")
         echo "Eirini commit SHA: $eirini_ref"
-        echo -e "Eirini commit message: $eirini_commit_msg\n"
+        echo "Eirini commit message:"
+        echo -e "$eirini_commit_msg\n"
         ;;
     esac
   done
