@@ -13,6 +13,10 @@ inputs:
 - name: eirini-release
 - name: docker-fluentd
 - name: ci-resources
+- name: eirini
+- name: eirini-fluentd
+- name: eirini-secret-smuggler
+- name: eirini-opi-init
 outputs:
 - name: eirini-release-updated
 run:

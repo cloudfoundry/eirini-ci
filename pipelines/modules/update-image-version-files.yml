@@ -12,32 +12,44 @@ jobs:
 - name: update-version-files
   plan:
   - in_parallel:
+    - get: eirini
+      passed:
+      - create-go-docker-images
+    - get: eirini-fluentd
+      passed:
+      - crete-fluentd-docker-image
+    - get: eirini-secret-smuggler
+      passed:
+      - create-secret-smuggler-docker-image
+    - get: eirini-opi-init
+      passed:
+      - create-opi-init-docker-image
     - get: eirini-release
     - get: ci-resources
     - get: docker-opi
       trigger: true
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
     - get: docker-opi-init
       trigger: true
       passed:
-        - create-opi-init-docker-image
+      - create-opi-init-docker-image
     - get: docker-secret-smuggler
       trigger: true
       passed:
-        - create-secret-smuggler-docker-image
+      - create-secret-smuggler-docker-image
     - get: docker-bits-waiter
       trigger: true
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
     - get: docker-rootfs-patcher
       trigger: true
       passed:
-        - create-go-docker-images
+      - create-go-docker-images
     - get: docker-fluentd
       trigger: true
       passed:
-        - create-fluentd-docker-image
+      - create-fluentd-docker-image
   - task: update-image-digests
     file: ci-resources/tasks/update-image-digests/task.yml
   - put: eirini-release
