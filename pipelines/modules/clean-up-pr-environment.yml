@@ -14,6 +14,7 @@ resource_types:
 resources:
 - name: (( grab meta.pr-repo ))
   type: pull-request
+  icon: source-pull
   check_every: 2h
   webhook_token: ((pr-webhook-token))
   source:
