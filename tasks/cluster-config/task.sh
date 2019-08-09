@@ -8,7 +8,7 @@ source ci-resources/scripts/ibmcloud-functions
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
-readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-false}
+readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
 readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
@@ -59,8 +59,8 @@ env:
 kube:
     external_ips: []
     storage_class:
-            persistent: "$STORAGE_CLASS"
-            shared: "$STORAGE_CLASS"
+      persistent: "$STORAGE_CLASS"
+      shared: "$STORAGE_CLASS"
     auth: rbac
 
 secrets:
