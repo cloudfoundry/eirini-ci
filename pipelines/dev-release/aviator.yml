@@ -6,7 +6,7 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
-  to: {{cluster-with-diego}}
+  to: {{cluster-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
@@ -16,7 +16,7 @@ spruce:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
-  to: {{eirini-with-diego}}
+  to: {{eirini-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
@@ -26,15 +26,15 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
-      - $PROJECT_ROOT/pipelines/modules/diego-skipped-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml
-  to: {{cats-with-diego}}
+  to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
   - with:
       files:
-      - {{cluster-with-diego}}
-      - {{eirini-with-diego}}
-      - {{cats-with-diego}}
+      - {{cluster-with-opi}}
+      - {{eirini-with-opi}}
+      - {{cats-with-opi}}
   to: $PIPELINE_YML
