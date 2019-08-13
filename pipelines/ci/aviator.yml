@@ -5,6 +5,7 @@ spruce:
   modify:
     delete:
     - "jobs.name:prepare-cluster-((world-name))"
+    - "resources.name:cluster-((world-name))-staging-event-ready"
   merge:
   - with:
       files:
