@@ -17,24 +17,24 @@ groups:
 jobs:
   - name: (( concat "create-cluster-" meta.cluster-name ))
     plan:
-      - get: ci-resources
-      - get: cluster-state
-        trigger: true
-        passed: [(( concat "delete-cluster-" meta.cluster-name ))]
-      - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
-        params:
-          bump: major
-      - task: create-kubernetes-cluster
-        file: ci-resources/tasks/create-cluster/task.yml
-        params:
-          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-          IBMCLOUD_USER: ((ibmcloud-user))
-          IBMCLOUD_PASSWORD: ((ibmcloud-password))
-          CLUSTER_NAME: (( grab meta.cluster-name ))
-          WORKER_COUNT: ((worker_count))
-      - put: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
-        params:
-          file: (( concat "cluster-" meta.cluster-name "-staging-event-created/number" ))
+    - get: ci-resources
+    - get: cluster-state
+      trigger: true
+      passed: [(( concat "delete-cluster-" meta.cluster-name ))]
+    - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
+      params:
+        bump: major
+    - task: create-kubernetes-cluster
+      file: ci-resources/tasks/create-cluster/task.yml
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+        WORKER_COUNT: ((worker_count))
+    - put: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
+      params:
+        file: (( concat "cluster-" meta.cluster-name "-staging-event-created/number" ))
 
   - name: (( concat "prepare-cluster-" meta.cluster-name ))
     plan:
@@ -45,16 +45,16 @@ jobs:
     - get: cluster-state
     - task: create-cluster-config
       params:
-          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-          IBMCLOUD_USER: ((ibmcloud-user))
-          IBMCLOUD_PASSWORD: ((ibmcloud-password))
-          CLUSTER_NAME: (( grab meta.cluster-name ))
-          STORAGE_CLASS: ((storage_class))
-          CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
-          UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
-          NATS_PASSWORD: ((nats_password))
-          ENABLE_OPI_STAGING: (( grab meta.enable-opi-staging ))
-          DIEGO_CELL_COUNT: ((diego-cell-count))
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+        STORAGE_CLASS: ((storage_class))
+        CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
+        UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
+        NATS_PASSWORD: ((nats_password))
+        ENABLE_OPI_STAGING: (( grab meta.enable-opi-staging ))
+        DIEGO_CELL_COUNT: ((diego-cell-count))
       file: ci-resources/tasks/cluster-config/task.yml
     - put: cluster-state
       params:
@@ -63,54 +63,60 @@ jobs:
     - task: provision-storage
       attempts: 5
       params:
-          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-          IBMCLOUD_USER: ((ibmcloud-user))
-          IBMCLOUD_PASSWORD: ((ibmcloud-password))
-          CLUSTER_NAME: (( grab meta.cluster-name ))
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
       file: ci-resources/tasks/provision-storage/task.yml
+    - task: harden-security
+      file: ci-resources/tasks/harden-security/task.yml
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
 
   - name: (( concat "check-cluster-readiness-" meta.cluster-name ))
     plan:
-      - get: ci-resources
-      - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
-        trigger: true
-        passed: [(( concat "prepare-cluster-" meta.cluster-name ))]
-      - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
-        params:
-          bump: major
-      - task: deploy-smoke-test-app
-        file: ci-resources/tasks/deploy-app/task.yml
-        params:
-          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-          IBMCLOUD_USER: ((ibmcloud-user))
-          IBMCLOUD_PASSWORD: ((ibmcloud-password))
-          CLUSTER_NAME: (( grab meta.cluster-name ))
-      - task: check-app-is-up
-        attempts: 50
-        file: ci-resources/tasks/curl-app/task.yml
-      - put: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
-        params:
-          file: (( concat "cluster-" meta.cluster-name "-staging-event-ready/number" ))
-
+    - get: ci-resources
+    - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
+      trigger: true
+      passed: [(( concat "prepare-cluster-" meta.cluster-name ))]
+    - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+      params:
+        bump: major
+    - task: deploy-smoke-test-app
+      file: ci-resources/tasks/deploy-app/task.yml
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+    - task: check-app-is-up
+      attempts: 50
+      file: ci-resources/tasks/curl-app/task.yml
+    - put: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+      params:
+        file: (( concat "cluster-" meta.cluster-name "-staging-event-ready/number" ))
   - name: (( concat "delete-cluster-" meta.cluster-name ))
     plan:
-      - get: ci-resources
-      - task: delete-kubernetes-cluster
-        file: ci-resources/tasks/delete-cluster/task.yml
-        params:
-          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-          IBMCLOUD_USER: ((ibmcloud-user))
-          IBMCLOUD_PASSWORD: ((ibmcloud-password))
-          CLUSTER_NAME: (( grab meta.cluster-name ))
-      - get: cluster-state
-      - task: delete-values-file
-        file: ci-resources/tasks/clean-up-cluster-config/task.yml
-        params:
-          CLUSTER_NAME: (( grab meta.cluster-name ))
-      - put: cluster-state
-        params:
-          merge: true
-          repository: state-modified
+    - get: ci-resources
+    - task: delete-kubernetes-cluster
+      file: ci-resources/tasks/delete-cluster/task.yml
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+    - get: cluster-state
+    - task: delete-values-file
+      file: ci-resources/tasks/clean-up-cluster-config/task.yml
+      params:
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+    - put: cluster-state
+      params:
+        merge: true
+        repository: state-modified
 
 resources:
   - name: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
