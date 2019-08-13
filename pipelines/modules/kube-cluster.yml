@@ -69,7 +69,7 @@ jobs:
         CLUSTER_NAME: (( grab meta.cluster-name ))
       file: ci-resources/tasks/provision-storage/task.yml
     - task: harden-security
-      file: ci-resources/tasks/harden-security/task.yml
+      file: ci-resources/tasks/harden-cluster-security/task.yml
       params:
         IBMCLOUD_ACCOUNT: ((ibmcloud-account))
         IBMCLOUD_USER: ((ibmcloud-user))
