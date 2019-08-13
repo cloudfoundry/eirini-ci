@@ -109,6 +109,17 @@ resources:
       private_key: ((github-private-key))
       initial_version: 0.1.0
 
+  - name: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
+    type: semver
+    icon: check-decagram
+    source:
+      driver: git
+      uri: git@github.com:cloudfoundry/eirini-private-config.git
+      branch: events
+      file: (( concat meta.cluster-name "-event-ready" ))
+      private_key: ((github-private-key))
+      initial_version: 0.1.0
+
   - name: cluster-state
     type: git
     icon: folder
