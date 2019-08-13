@@ -5,13 +5,11 @@ groups:
   - (( defer prepend ))
   - (( concat "create-cluster-" meta.cluster-name ))
   - (( concat "prepare-cluster-" meta.cluster-name ))
-  - (( concat "check-cluster-readiness-" meta.cluster-name ))
   - (( concat "delete-cluster-" meta.cluster-name ))
 - name: (( concat "cluster-" meta.cluster-name ))
   jobs:
   - (( concat "create-cluster-" meta.cluster-name ))
   - (( concat "prepare-cluster-" meta.cluster-name ))
-  - (( concat "check-cluster-readiness-" meta.cluster-name ))
   - (( concat "delete-cluster-" meta.cluster-name ))
 
 jobs:
@@ -75,29 +73,10 @@ jobs:
         IBMCLOUD_USER: ((ibmcloud-user))
         IBMCLOUD_PASSWORD: ((ibmcloud-password))
         CLUSTER_NAME: (( grab meta.cluster-name ))
-
-  - name: (( concat "check-cluster-readiness-" meta.cluster-name ))
-    plan:
-    - get: ci-resources
-    - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
-      trigger: true
-      passed: [(( concat "prepare-cluster-" meta.cluster-name ))]
-    - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
-      params:
-        bump: major
-    - task: deploy-smoke-test-app
-      file: ci-resources/tasks/deploy-app/task.yml
-      params:
-        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-        IBMCLOUD_USER: ((ibmcloud-user))
-        IBMCLOUD_PASSWORD: ((ibmcloud-password))
-        CLUSTER_NAME: (( grab meta.cluster-name ))
-    - task: check-app-is-up
-      attempts: 50
-      file: ci-resources/tasks/curl-app/task.yml
     - put: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
       params:
-        file: (( concat "cluster-" meta.cluster-name "-staging-event-ready/number" ))
+        bump: major
+
   - name: (( concat "delete-cluster-" meta.cluster-name ))
     plan:
     - get: ci-resources

@@ -5,9 +5,6 @@ spruce:
   modify:
     delete:
     - "jobs.name:prepare-cluster-((world-name))"
-    set:
-    - path: jobs.name:check-cluster-readiness-((world-name)).plan.get:cluster-((world-name))-staging-event-created.passed.0
-      value: create-cluster-((world-name))
   merge:
   - with:
       files:
@@ -17,6 +14,12 @@ spruce:
   to: {{create-cluster}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
+  modify:
+    set:
+    - path: jobs.name:run-tests.plan.0.in_parallel.get:cluster-((world-name))-staging-event-ready.get
+      value: cluster-((world-name))-staging-event-created
+    - path: jobs.name:run-tests.plan.0.in_parallel.get:cluster-((world-name))-staging-event-created.passed.0
+      value: create-cluster-((world-name))
   merge:
   - with:
       files:

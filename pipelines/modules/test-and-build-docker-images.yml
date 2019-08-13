@@ -24,7 +24,7 @@ jobs:
     - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
       trigger: true
       passed:
-      - (( concat "check-cluster-readiness-" meta.cluster-name ))
+      - (( concat "prepare-cluster-" meta.cluster-name ))
     - get: eirini
       trigger: true
       passed: [] # Required for PR pipeline

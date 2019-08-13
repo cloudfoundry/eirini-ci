@@ -28,7 +28,7 @@ jobs:
       - get: (( grab meta.pr-repo ))
       - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
         passed:
-          - (( concat "check-cluster-readiness-" meta.cluster-name ))
+          - (( concat "prepare-cluster-" meta.cluster-name ))
       - get: ci-resources
       - put: (( grab meta.pr-repo ))
         params:
