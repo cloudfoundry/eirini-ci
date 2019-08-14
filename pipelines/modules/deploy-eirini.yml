@@ -58,7 +58,6 @@ jobs:
   - get: ci-resources
   - get: state
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
-    trigger: true
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
