@@ -1,4 +1,4 @@
-FROM golang:stretch
+FROM golang:latest
 
 ENV PATH="$GOPATH/bin:${PATH}"
 
@@ -22,14 +22,6 @@ RUN curl --fail --silent --show-error --location https://packages.cloudfoundry.o
   && echo "deb https://packages.cloudfoundry.org/debian stable main" | tee /etc/apt/sources.list.d/cloudfoundry-cli.list \
   && apt-get update \
   && apt-get install -y cf-cli \
-  && rm -rf /var/lib/apt/lists/*
-
-# Docker
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
-  && apt-key fingerprint 0EBFCD88 \
-  && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
-  && apt-get update \
-  && apt-get install -y docker-ce=17.09.1~ce-0~debian \
   && rm -rf /var/lib/apt/lists/*
 
 # ginkgo && shfmt
