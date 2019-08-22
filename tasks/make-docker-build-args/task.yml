@@ -6,7 +6,7 @@ image_resource:
     repository: eirini/ci
 
 inputs:
-- name: eirini
+- name: repository
 - name: ci-resources
 
 outputs:

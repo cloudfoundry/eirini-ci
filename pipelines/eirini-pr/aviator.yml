@@ -51,14 +51,18 @@ spruce:
       - "resources.name:eirini-opi-init"
       - "resources.name:eirini-secret-smuggler"
       - "resources.name:eirini-fluentd"
-      - "jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping"
-      - "jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping"
       - "jobs.name:run-fluentd-unit-tests.plan.task:run-unit-tests.input_mapping"
-      - "jobs.name:create-fluentd-docker-image.plan.task:make-docker-build-args.input_mapping"
       # Disable auto trigger
       - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-eirini-pr-staging-event-ready"
       - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
     set:
+      - path: jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping.repository
+        value: eirini
+      - path: jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping.repository
+        value: eirini
+      - path: jobs.name:create-fluentd-docker-image.plan.task:make-docker-build-args.input_mapping.repository
+        value: eirini
+
       # Run test after cleanup-environment
       - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
         value: clean-up-environment

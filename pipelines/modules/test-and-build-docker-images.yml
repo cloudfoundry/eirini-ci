@@ -56,6 +56,8 @@ jobs:
     - get: ci-resources
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      repository: eirini
   - in_parallel:
     - put: docker-opi
       params:
@@ -82,7 +84,7 @@ jobs:
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
     input_mapping:
-      eirini: eirini-opi-init
+      repository: eirini-opi-init
   - put: docker-opi-init
     params:
       build: eirini-opi-init/docker/opi/init
@@ -97,7 +99,7 @@ jobs:
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
     input_mapping:
-      eirini: eirini-secret-smuggler
+      repository: eirini-secret-smuggler
   - put: docker-secret-smuggler
     params:
       build: eirini-secret-smuggler/docker/registry/certs/smuggler
@@ -113,7 +115,7 @@ jobs:
   - task: run-unit-tests
     file: ci-resources/tasks/run-fluentd-tests/task.yml
     input_mapping:
-      eirini: eirini-fluentd
+      repository: eirini-fluentd
 - name: create-fluentd-docker-image
   plan:
   - get: eirini-fluentd
@@ -123,7 +125,7 @@ jobs:
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
     input_mapping:
-      eirini: eirini-fluentd
+      repository: eirini-fluentd
   - put: docker-fluentd
     params:
       build: eirini-fluentd/fluentd/
