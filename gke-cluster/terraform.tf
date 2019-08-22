@@ -58,7 +58,7 @@ resource "google_container_node_pool" "node-pool" {
   node_config {
     preemptible  = true
     machine_type = "${var.node_machine_type}"
-    image_type = "cos_containerd"
+    image_type = "COS_CONTAINERD"
 
     metadata = {
       disable-legacy-endpoints = "true"
@@ -71,3 +71,6 @@ resource "google_container_node_pool" "node-pool" {
   }
 }
 
+resource "google_compute_global_address" "global-address" {
+  name = "registry-address"
+}
