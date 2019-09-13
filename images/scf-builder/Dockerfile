@@ -27,7 +27,7 @@ RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc && \
     bundle config --global silence_root_warning true
 
 # Golang
-ENV GOLANG_VERSION="1.12.5" GOROOT="/goroot" GOPATH="/gopath"
+ENV GOLANG_VERSION="1.13" GOROOT="/goroot" GOPATH="/gopath"
 RUN mkdir $GOROOT \
     && mkdir $GOPATH \
     && curl https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz| tar xvzf - -C $GOROOT --strip-components=1
