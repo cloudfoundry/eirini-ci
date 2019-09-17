@@ -9,9 +9,10 @@ jobs:
 - name: (( concat "run-core-cats-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
   plan:
-  - get: cats
-  - get: state
-  - get: ci-resources
+  - in_parallel:
+    - get: cats
+    - get: state
+    - get: ci-resources
   - task: run cats
     params:
       SKIP_SSL_VALIDATION: true
