@@ -41,7 +41,7 @@ jobs:
       INCLUDE_TASKS: false
       INCLUDE_V3: false
       INCLUDE_ZIPKIN: true
-      NO_OF_TEST_NODES: 8
+      NO_OF_TEST_NODES: 16
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
