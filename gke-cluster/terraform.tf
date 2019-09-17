@@ -22,6 +22,12 @@ provider "google" {
   region      = "${var.region}"
 }
 
+terraform {
+  backend "gcs" {
+    bucket = "eirini-ci"
+  }
+}
+
 resource "google_compute_network" "network" {
   name = "${var.name}"
 }
