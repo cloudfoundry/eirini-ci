@@ -66,7 +66,7 @@ run_tests() {
   cp -a cats "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
   cd "$GOPATH"/src/github.com/cloudfoundry/cf-acceptance-tests
   ./bin/update_submodules
-  ./bin/test -slowSpecThreshold=120 -randomizeAllSpecs -nodes="${NO_OF_TEST_NODES}" -keepGoing -skip="$SKIPPED_TESTS" -flakeAttempts=2
+  ./bin/test -mod=vendor -slowSpecThreshold=120 -randomizeAllSpecs -nodes="${NO_OF_TEST_NODES}" -keepGoing -skip="$SKIPPED_TESTS" -flakeAttempts=2
 }
 
 main
