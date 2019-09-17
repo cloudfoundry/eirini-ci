@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Loop forever until the status of the cluster $1 equals to $2
+# In Concourse, use timeout to limit waiting https://concourse-ci.org/timeout-step-modifier.html
+wait-for-state() {
+  declare -r name=$1
+  declare -r desired_status=$2
+
+  until cluster-state-is "$name" "$desired_status"; do
+    cluster-state "$name" | jq --raw-output '.state'
+    sleep 10
+  done
+}
+
+# Exit nonzero unless the cluster $1 is in the status given as $2
+cluster-state-is() {
+  declare -r name=$1
+  declare -r desired_status=$2
+
+  cluster-state "$name" | jq '.status == $status' --arg status "$desired_status" --exit-status >/dev/null
+}
+
+# Show details about the cluster
+cluster-state() {
+  declare -r name=$1
+  gcloud container clusters describe "$name" --region=europe-west1 --format json 
+}
+
+# Log in to the Google Cloud
+gcloud-login() {
+  echo "$SERVICE_ACCOUNT_JSON" >service-account.json
+  export GOOGLE_CLOUD_KEYFILE_JSON="$PWD/service-account.json"
+  gcloud auth activate-service-account --key-file="$GOOGLE_CLOUD_KEYFILE_JSON"
+}
+
+terraform-init() {
+  declare -r name=$1
+  terraform init -backend-config="prefix=terraform/state/$name"
+}
+
+# Create a new cluster with the name given as $1
+create-cluster() {
+  declare -r name=$1
+  declare -r worker_count=$2
+  terraform apply -var "name=$name" \
+    -var "node_count_per_zone=$worker_count"
+}
+
+# Delete the cluster with the name given as $1
+delete-cluster() {
+  declare -r name=$1
+  terraform destroy -var "name=$name" -auto-approve
+}
+
+# Exit nonzero unless the cluster $1 exists
+cluster-exists() {
+  declare -r name=$1
+  gcloud container clusters describe "$name" --region=europe-west1 >/dev/null 2>&1
+}
+
+# Loop forever until the status of the cluster $1 is gone
+wait-for-deletion() {
+  declare -r name=$1
+
+  until ! cluster-exists "$name"; do
+    cluster-state "$name" | jq --raw-output '.status' || true
+    sleep 10
+  done
+}
+
+export-kubeconfig() {
+  declare -r name=$1
+  gcloud container clusters get-credentials "$name" --region europe-west1
+}
