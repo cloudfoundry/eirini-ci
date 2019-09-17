@@ -6,19 +6,33 @@ jobs:
   - get: eirini-ci-image-source
     trigger: true
   - put: eirini-ci-image
-    params: {build: eirini-ci-image-source/images/ci}
+    params:
+      build: eirini-ci-image-source/images/ci
 - name: update-eirini-ibmcloud-image
   plan:
   - get: eirini-ibmcloud-image-source
     trigger: true
   - put: eirini-ibmcloud-image
-    params: {build: eirini-ibmcloud-image-source/images/ibmcloud}
+    params:
+      build: eirini-ibmcloud-image-source/images/ibmcloud
 - name: update-eirini-scf-builder-image
   plan:
   - get: eirini-scf-builder-image-source
     trigger: true
   - put: eirini-scf-builder-image
-    params: {build: eirini-scf-builder-image-source/images/scf-builder}
+    params:
+      build: eirini-scf-builder-image-source/images/scf-builder
+- name: update-fsbuilder-image
+  plan:
+  - get: golang-image
+    trigger: true
+  - get: fsbuilder-source
+    trigger: true
+    params:
+      skip_download: true
+  - put: fsbuilder-image
+    params:
+      build: fsbuilder-source/image/fsbuilder
 
 resources:
 - name: eirini-ci-image-source
@@ -77,3 +91,20 @@ resources:
   icon: docker
   source:
     repository: golang
+
+- name: fsbuilder-source
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirinifs
+    branch: master
+    paths:
+    - image/fsbuilder/Dockerfile
+
+- name: fsbuilder-image
+  type: docker-image
+  icon: docker
+  source:
+    repository: eirini/fsbuilder
+    username: ((docker_hub_user))
+    password: ((docker_hub_password))

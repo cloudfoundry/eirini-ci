@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if [ "$1" == "help" ]; then
+if [ "${1:-x}" == "help" ]; then
   cat <<EOF
   Usage:
 
