@@ -1,0 +1,3 @@
+meta:
+  cluster-name: ((world-name))
+  enable-opi-staging: "true"

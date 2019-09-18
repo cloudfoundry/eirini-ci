@@ -1,0 +1,16 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/modules/gcp-kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+  to: {{cluster-with-opi}}
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - {{cluster-with-opi}}
+  to: $PIPELINE_YML

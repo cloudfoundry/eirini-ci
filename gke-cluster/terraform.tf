@@ -78,10 +78,10 @@ resource "google_container_node_pool" "node-pool" {
 }
 
 resource "google_compute_global_address" "global-address" {
-  name = "registry-address"
+  name = "${var.name}-registry-address"
 }
 
 resource "google_compute_address" "regional-address" {
-  name = "uaa-address"
+  name = "${var.name}-uaa-address"
   region = "europe-west1"
 }
