@@ -31,6 +31,8 @@ jobs:
     - get: ci-resources
     - get: sample-configs
       trigger: true
+    - get: golang-lint
+      trigger: true
   - in_parallel:
     - task: run-unit-tests
       file: ci-resources/tasks/run-unit-tests/task.yml
@@ -241,3 +243,9 @@ resources:
     tag: v1-debian-elasticsearch
     username: ((dockerhub-user))
     password: ((dockerhub-password))
+- name: golang-lint
+  type: docker-image
+  icon: docker
+  source:
+    repository: golangci/golangci-lint
+    tag: latest
