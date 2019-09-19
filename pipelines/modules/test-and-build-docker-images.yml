@@ -112,18 +112,21 @@ jobs:
       trigger: true
       passed: [] # Required for PR pipeline
     - get: ci-resources
-    - get: fluentd-image
-      trigger: true
   - task: run-unit-tests
     file: ci-resources/tasks/run-fluentd-tests/task.yml
     input_mapping:
       eirini: eirini-fluentd
 - name: create-fluentd-docker-image
   plan:
-  - get: eirini-fluentd
-    trigger: true
-    passed: [run-fluentd-unit-tests]
-  - get: ci-resources
+  - in_parallel:
+    - get: eirini-fluentd
+      trigger: true
+      passed: [run-fluentd-unit-tests]
+    - get: ci-resources
+    - get: fluentd-image
+      trigger: true
+      params:
+        skip_download: true
   - task: make-docker-build-args
     file: ci-resources/tasks/make-docker-build-args/task.yml
     input_mapping:
