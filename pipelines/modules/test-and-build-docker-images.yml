@@ -117,7 +117,7 @@ jobs:
   - task: run-unit-tests
     file: ci-resources/tasks/run-fluentd-tests/task.yml
     input_mapping:
-      repository: eirini-fluentd
+      eirini: eirini-fluentd
 - name: create-fluentd-docker-image
   plan:
   - get: eirini-fluentd
