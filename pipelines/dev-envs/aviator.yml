@@ -1,0 +1,46 @@
+spruce:
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/zagreb.yml
+  to: {{zagreb}}
+
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/pune.yml
+  to: {{pune}}
+
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/kharkiv.yml
+  to: {{kharkiv}}
+
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/sofia.yml
+  to: {{sofia}}
+
+- base: $PROJECT_ROOT/pipelines/modules/empty.yml
+  merge:
+  - with:
+      files:
+      - {{zagreb}}
+      - {{pune}}
+      - {{kharkiv}}
+      - {{sofia}}
+  to: $PIPELINE_YML
