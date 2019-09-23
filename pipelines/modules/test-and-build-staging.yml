@@ -5,13 +5,11 @@ groups:
   - (( defer prepend ))
   - staging-test
   - build-native-staging-images
-  - update-staging-version-files
 - name: test-and-build
   jobs:
   - (( defer prepend ))
   - staging-test
   - build-native-staging-images
-  - update-staging-version-files
 
 jobs:
 - name: staging-test
@@ -79,45 +77,6 @@ jobs:
         build: eirini-staging
         dockerfile: eirini-staging/image/uploader/Dockerfile
 
-- name: update-staging-version-files
-  plan:
-  - in_parallel:
-    - get: eirini-staging
-      trigger: true
-      passed:
-      - build-native-staging-images
-    - get: staging-downloader-image
-      passed:
-      - build-native-staging-images
-      params:
-        skip_download: true
-    - get: staging-executor-image
-      passed:
-      - build-native-staging-images
-      params:
-        skip_download: true
-    - get: staging-uploader-image
-      passed:
-      - build-native-staging-images
-      params:
-        skip_download: true
-    - get: ci-resources
-    - get: eirini-release
-  - task: update-version-files
-    file: ci-resources/tasks/update-image-digests/task.yml
-    input_mapping:
-      image-code-repository: eirini-staging
-      image1: staging-downloader-image
-      image2: staging-executor-image
-      image3: staging-uploader-image
-    params:
-      IMAGE1_NAME: staging-downloader
-      IMAGE2_NAME: staging-executor
-      IMAGE3_NAME: staging-uploader
-      COMPONENT_NAME: Eirini Staging
-  - put: eirini-release
-    params:
-      repository: eirini-release-updated
 resources:
 - name: eirini-staging
   type: git
