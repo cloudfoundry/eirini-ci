@@ -38,6 +38,13 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/update-image-version-files.yml
   to: {{update-image-version-files}}
 
+- base: $PROJECT_ROOT/pipelines/modules/test-and-build-staging.yml
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev/meta.yml
+  to: {{test-and-build-staging}}
+
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   modify:
     delete:
@@ -49,4 +56,5 @@ spruce:
       - {{create-cluster}}
       - {{test-and-build-docker}}
       - {{update-image-version-files}}
+      - {{test-and-build-staging}}
   to: $PIPELINE_YML

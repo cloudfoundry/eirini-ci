@@ -1,0 +1,74 @@
+groups:
+- (( defer merge ))
+- name: all
+  jobs:
+  - (( defer prepend ))
+  - staging-test
+- name: test-and-build
+  jobs:
+  - (( defer prepend ))
+  - staging-test
+jobs:
+- name: staging-test
+  plan:
+  - in_parallel:
+    - get: eirini-staging
+      trigger: true
+    - get: golang-lint
+      trigger: true
+      params:
+        skip_download: true
+    - get: ci-resources
+  - in_parallel:
+    - task: unit-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirini/ci
+        inputs:
+        - name: eirini-staging
+        run:
+          dir: eirini-staging
+          path: scripts/test.sh
+
+    - task: lint
+      file: ci-resources/tasks/run-static-checks/task.yml
+      input_mapping:
+        eirini: eirini-staging
+    - task: integration-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirinistaging/eirini-na-ci-test
+        inputs:
+        - name: eirini-staging
+        run:
+          dir: eirini-staging
+          path: ginkgo
+          args:
+          - -mod=vendor
+          - -r
+          - integration
+
+resources:
+- name: eirini-staging
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-staging
+    branch: master
+- name: golang-lint
+  type: docker-image
+  icon: docker
+  source:
+    repository: golangci/golangci-lint
+    tag: latest
+- name: ci-resources
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+    branch: ((ci-resources-branch))
