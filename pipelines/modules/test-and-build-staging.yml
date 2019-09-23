@@ -104,7 +104,7 @@ jobs:
     - get: ci-resources
     - get: eirini-release
   - task: update-version-files
-    file: ci-resources/tasks/update-image-digests-new/task.yml
+    file: ci-resources/tasks/update-image-digests/task.yml
     input_mapping:
       image-code-repository: eirini-staging
       image1: staging-downloader-image

@@ -42,7 +42,7 @@ jobs:
       params:
         skip_download: true
   - task: update-version-files
-    file: ci-resources/tasks/update-image-digests-new/task.yml
+    file: ci-resources/tasks/update-image-digests/task.yml
     input_mapping:
       image-code-repository: eirini
       image1: docker-opi
@@ -71,7 +71,7 @@ jobs:
       params:
         skip_download: true
   - task: update-version-files
-    file: ci-resources/tasks/update-image-digests-new/task.yml
+    file: ci-resources/tasks/update-image-digests/task.yml
     input_mapping:
       image-code-repository: eirini-fluentd
       image1: docker-fluentd
@@ -96,7 +96,7 @@ jobs:
       params:
         skip_download: true
   - task: update-version-files
-    file: ci-resources/tasks/update-image-digests-new/task.yml
+    file: ci-resources/tasks/update-image-digests/task.yml
     input_mapping:
       image-code-repository: eirini-secret-smuggler
       image1: docker-secret-smuggler
@@ -121,7 +121,7 @@ jobs:
       params:
         skip_download: true
   - task: update-version-files
-    file: ci-resources/tasks/update-image-digests-new/task.yml
+    file: ci-resources/tasks/update-image-digests/task.yml
     input_mapping:
       image-code-repository: eirini-opi-init
       image1: docker-opi-init

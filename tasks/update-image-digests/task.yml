@@ -5,19 +5,20 @@ image_resource:
   source:
     repository: eirini/ci
 inputs:
-- name: docker-opi
-- name: docker-opi-init
-- name: docker-secret-smuggler
-- name: docker-bits-waiter
-- name: docker-rootfs-patcher
 - name: eirini-release
-- name: docker-fluentd
+- name: image-code-repository
+- name: image1
+- name: image2
+  optional: true
+- name: image3
+  optional: true
 - name: ci-resources
-- name: eirini
-- name: eirini-fluentd
-- name: eirini-secret-smuggler
-- name: eirini-opi-init
 outputs:
 - name: eirini-release-updated
+params:
+  IMAGE1_NAME:
+  IMAGE2_NAME:
+  IMAGE3_NAME:
+  COMPONENT_NAME:
 run:
   path: ci-resources/tasks/update-image-digests/task.sh

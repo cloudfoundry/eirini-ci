@@ -1,25 +1,33 @@
 #!/bin/bash
 
-set -euxo pipefail
-
-readonly IMAGES=("opi" "opi-init" "secret-smuggler" "bits-waiter" "rootfs-patcher" "fluentd")
+set -euo pipefail
 
 main() {
-  for image in "${IMAGES[@]}"; do
-    update-digest "$image"
-  done
-  commit-changes
+  update-digest image1 "$IMAGE1_NAME"
+
+  if [[ -d image2 ]]; then
+    update-digest image2 "$IMAGE2_NAME"
+  fi
+
+  if [[ -d image3 ]]; then
+    update-digest image3 "$IMAGE3_NAME"
+  fi
+
+  # shellcheck disable=SC2153
+  commit-changes "$COMPONENT_NAME"
 }
 
 update-digest() {
-  local image_name
-  image_name="$1"
-  echo -n "$(cat "docker-$image_name/digest")" >eirini-release/helm/eirini/versions/"$image_name"
+  local image_path image_name
+  image_path="$1"
+  image_name="$2"
+  echo -n "$(cat "$image_path/digest")" >eirini-release/helm/eirini/versions/"$image_name"
 }
 
 commit-changes() {
   local msg
-  msg=$(commit-message)
+  component_name="$1"
+  msg=$(commit-message "$component_name")
   pushd eirini-release
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
@@ -44,44 +52,15 @@ strip-signed-off() {
 }
 
 commit-message() {
-  local eirini_ref opi_init_ref secret_smuggler_ref fluentd_ref
-  eirini_ref=$(cat ./eirini/.git/ref)
-  opi_init_ref=$(cat ./eirini-opi-init/.git/ref)
-  secret_smuggler_ref=$(cat ./eirini-secret-smuggler/.git/ref)
-  fluentd_ref=$(cat ./eirini-fluentd/.git/ref)
-
-  local eirini_commit_msg opi_init_commit_msg secret_smuggler_commit_msg fluentd_commit_msg
-  eirini_commit_msg=$(strip-signed-off ./eirini)
-  opi_init_commit_msg=$(strip-signed-off ./eirini-opi-init)
-  secret_smuggler_commit_msg=$(strip-signed-off ./eirini-secret-smuggler)
-  fluentd_commit_msg=$(strip-signed-off ./eirini-fluentd)
+  local ref component_name commit_msg
+  component_name="$1"
+  ref=$(cat ./image-code-repository/.git/ref)
+  commit_msg=$(strip-signed-off ./image-code-repository)
 
   echo -e "Update image versions\n"
-
-  for f in $(git -C eirini-release diff --name-only); do
-    case $f in
-      "helm/eirini/versions/opi-init")
-        echo "OPI init commit SHA: $opi_init_ref"
-        echo "OPI init commit message:"
-        echo -e "$opi_init_commit_msg\n"
-        ;;
-      "helm/eirini/versions/secret-smuggler")
-        echo "Secret smuggler commit SHA: $secret_smuggler_ref"
-        echo "Secret smuggler commit message:"
-        echo -e "$secret_smuggler_commit_msg\n"
-        ;;
-      "helm/eirini/versions/fluentd")
-        echo "Fluentd commit SHA: $fluentd_ref"
-        echo "Fluentd commit message:"
-        echo -e "$fluentd_commit_msg\n"
-        ;;
-      "helm/eirini/versions/opi")
-        echo "Eirini commit SHA: $eirini_ref"
-        echo "Eirini commit message:"
-        echo -e "$eirini_commit_msg\n"
-        ;;
-    esac
-  done
+  echo "$component_name commit SHA: $ref"
+  echo "$component_name commit message:"
+  echo -e "$commit_msg\n"
 }
 
 main
