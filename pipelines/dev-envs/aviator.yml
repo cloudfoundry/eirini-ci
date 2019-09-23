@@ -35,6 +35,24 @@ spruce:
       - $PROJECT_ROOT/pipelines/dev-envs/sofia.yml
   to: {{sofia}}
 
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/kyoto.yml
+  to: {{kyoto}}
+
+- base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/dev-envs/lisbon.yml
+  to: {{lisbon}}
+
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
   - with:
@@ -43,4 +61,6 @@ spruce:
       - {{pune}}
       - {{kharkiv}}
       - {{sofia}}
+      - {{kyoto}}
+      - {{lisbon}}
   to: $PIPELINE_YML
