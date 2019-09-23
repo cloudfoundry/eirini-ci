@@ -4,10 +4,13 @@ groups:
   jobs:
   - (( defer prepend ))
   - staging-test
+  - build-native-staging-images
 - name: test-and-build
   jobs:
   - (( defer prepend ))
   - staging-test
+  - build-native-staging-images
+
 jobs:
 - name: staging-test
   plan:
@@ -54,6 +57,57 @@ jobs:
           - -r
           - integration
 
+- name: build-native-staging-images
+  plan:
+  - get: eirini-staging
+    trigger: true
+    passed:
+    - staging-test
+  - in_parallel:
+    - put: staging-downloader-image
+      params:
+        build: eirini-staging
+        dockerfile: eirini-staging/image/downloader/Dockerfile
+    - put: staging-executor-image
+      params:
+        build: eirini-staging
+        dockerfile: eirini-staging/image/executor/Dockerfile
+    - put: staging-uploader-image
+      params:
+        build: eirini-staging
+        dockerfile: eirini-staging/image/uploader/Dockerfile
+
+- name: update-staging-version-files
+  plan:
+  - in_parallel:
+    - get: eirini-staging
+      trigger: true
+      passed:
+      - build-native-staging-images
+    - get: staging-downloader-image
+      passed:
+      - build-native-staging-images
+    - get: staging-executor-image
+      passed:
+      - build-native-staging-images
+    - get: staging-uploader-image
+      passed:
+      - build-native-staging-images
+    - get: ci-resources
+    - get: eirini-release
+  - task: update-version-files
+    file: ci-resources/tasks/update-image-digests-new/task.yml
+    input_mapping:
+      image-code-repository: eirini-staging
+      image1: staging-downloader-image
+      image2: staging-executor-image
+      image3: staging-uploader-image
+    params:
+      IMAGE1_NAME: staging-downloader
+      IMAGE2_NAME: staging-executor
+      IMAGE3_NAME: staging-uploader
+      COMPONENT_NAME: Eirini Staging
+
 resources:
 - name: eirini-staging
   type: git
@@ -72,3 +126,22 @@ resources:
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: ((ci-resources-branch))
+
+- name: staging-downloader-image
+  type: docker-image
+  source:
+    repository: eirini/recipe-downloader
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: staging-executor-image
+  type: docker-image
+  source:
+    repository: eirini/recipe-executor
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
+- name: staging-uploader-image
+  type: docker-image
+  source:
+    repository: eirini/recipe-uploader
+    username: ((dockerhub-user))
+    password: ((dockerhub-password))
