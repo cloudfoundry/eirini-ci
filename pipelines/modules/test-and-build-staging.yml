@@ -115,7 +115,9 @@ jobs:
       IMAGE2_NAME: staging-executor
       IMAGE3_NAME: staging-uploader
       COMPONENT_NAME: Eirini Staging
-
+  - put: eirini-release
+    params:
+      repository: eirini-release-updated
 resources:
 - name: eirini-staging
   type: git
