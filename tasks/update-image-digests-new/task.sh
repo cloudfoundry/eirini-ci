@@ -62,3 +62,5 @@ commit-message() {
   echo "$component_name commit message:"
   echo -e "$commit_msg\n"
 }
+
+main

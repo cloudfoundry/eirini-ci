@@ -5,11 +5,13 @@ groups:
   - (( defer prepend ))
   - staging-test
   - build-native-staging-images
+  - update-staging-version-files
 - name: test-and-build
   jobs:
   - (( defer prepend ))
   - staging-test
   - build-native-staging-images
+  - update-staging-version-files
 
 jobs:
 - name: staging-test
@@ -87,12 +89,18 @@ jobs:
     - get: staging-downloader-image
       passed:
       - build-native-staging-images
+      params:
+        skip_download: true
     - get: staging-executor-image
       passed:
       - build-native-staging-images
+      params:
+        skip_download: true
     - get: staging-uploader-image
       passed:
       - build-native-staging-images
+      params:
+        skip_download: true
     - get: ci-resources
     - get: eirini-release
   - task: update-version-files
