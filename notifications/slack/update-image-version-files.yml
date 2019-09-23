@@ -1,4 +1,10 @@
 jobs:
 - ((merge))
-- name: update-version-files
+- name: update-eirini-version-files
+  .: (( inject hooks.failure ))
+- name: update-secret-smuggler-version-files
+  .: (( inject hooks.failure ))
+- name: update-fluentd-version-files
+  .: (( inject hooks.failure ))
+- name: update-opi-init-version-files
   .: (( inject hooks.failure ))
