@@ -21,7 +21,7 @@ install-nginx-chart(){
     --namespace nginx \
     --install \
     --set rbac.create=true \
-    --set "controller.extraArgs=--enable-ssl-passthrough" \
+    --set controller.extraArgs.enable-ssl-passthrough="" \
     stable/nginx-ingress
 }
 
