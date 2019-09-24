@@ -62,6 +62,8 @@ spruce:
       # Build fluentd image for every commt on eirini
       - path: jobs.name:run-fluentd-unit-tests.plan.0.in_parallel.get:eirini-fluentd.get
         value: eirini
+      - path: jobs.name:create-fluentd-docker-image.plan.0.in_parallel.get:eirini-fluentd.get
+        value: eirini
       - path: jobs.name:create-fluentd-docker-image.plan.get:eirini-fluentd.get
         value: eirini
       - path: jobs.name:create-fluentd-docker-image.plan.put:docker-fluentd.params.build
