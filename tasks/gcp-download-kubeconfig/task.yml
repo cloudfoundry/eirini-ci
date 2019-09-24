@@ -1,0 +1,20 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: google/cloud-sdk
+
+inputs:
+  - name: ci-resources
+  - name: cluster-state
+
+outputs:
+  - name: kube
+
+params:
+  GCP_SERVICE_ACCOUNT_JSON:
+  CLUSTER_NAME:
+
+run:
+  path: ci-resources/tasks/gcp-download-kubeconfig/task.sh
