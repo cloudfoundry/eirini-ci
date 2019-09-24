@@ -21,13 +21,12 @@ install-nginx-chart(){
     --namespace nginx \
     --install \
     --set rbac.create=true \
-    --set controller.extraArgs.enable-ssl-passthrough="" \
     stable/nginx-ingress
 }
 
 install-cert-manager-chart(){
   kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
-  kubectl create namespace cert-manager
+  kubectl get namespace cert-manager || kubectl create namespace cert-manager
   kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
