@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/ci
+
+inputs:
+- name: repository
+- name: ci-resources
+
+outputs:
+- name: repository-updated
+
+run:
+  path: ci-resources/tasks/bump-go-packages/task.sh

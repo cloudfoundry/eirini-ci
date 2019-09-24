@@ -1,0 +1,55 @@
+groups:
+- (( merge ))
+- name: all
+  jobs:
+  - (( prepend ))
+  - bump-go
+- name: test-and-build
+  jobs:
+  - (( prepend ))
+  - bump-go
+jobs:
+- name: bump-go
+  plan:
+  - in_parallel:
+    - get: bump-day
+      trigger: true
+    - get: eirini-master
+      passed: [] # Required for PR pipeline
+    - get: ci-resources
+  - task: bump-go-packages
+    file: ci-resources/tasks/bump-go-packages/task.yml
+    input_mapping:
+      repository: eirini-master
+  - put: eirini
+    params:
+      force: true
+      repository: repository-updated
+
+resources:
+- name: ci-resources
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+    branch: ((ci-resources-branch))
+- name: bump-day
+  type: time
+  source:
+    # start: 12:00 AM
+    # stop: 1:00 AM
+    # days: [Sunday]
+    interval: 1m
+- name: eirini-master
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    branch: master
+- name: eirini
+  type: git
+  icon: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini.git
+    branch: ((eirini-branch))
+    private_key: ((eirini-repo-key))
