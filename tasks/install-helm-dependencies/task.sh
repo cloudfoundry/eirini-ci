@@ -20,7 +20,7 @@ install-nginx-chart() {
   local static_ip
   gcloud_auth
   static_ip="$(get_static_ip)"
-  helm upgrade nginx-ingress  \
+  helm upgrade nginx-ingress \
     --namespace nginx \
     --install \
     --set rbac.create=true \
