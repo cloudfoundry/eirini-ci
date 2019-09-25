@@ -16,7 +16,7 @@ init-helm() {
   helm init --service-account tiller --upgrade
 }
 
-install-nginx-chart(){
+install-nginx-chart() {
   local static_ip
   gcloud_auth
   static_ip="$(get_static_ip)"
@@ -24,11 +24,11 @@ install-nginx-chart(){
     --namespace nginx \
     --install \
     --set rbac.create=true \
-    --set controller.service.loadBalancerIP="$static_ip"
+    --set controller.service.loadBalancerIP="$static_ip" \
     stable/nginx-ingress
 }
 
-install-cert-manager-chart(){
+install-cert-manager-chart() {
   kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
   kubectl get namespace cert-manager || kubectl create namespace cert-manager
   kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true --overwrite
@@ -41,12 +41,12 @@ install-cert-manager-chart(){
     jetstack/cert-manager
 }
 
-gcloud_auth(){
+gcloud_auth() {
   echo "$GCP_SERVICE_ACCOUNT_JSON" >service-account.json
   gcloud auth activate-service-account --key-file="service-account.json" >/dev/null 2>&1
 }
 
-get_static_ip(){
+get_static_ip() {
   gcloud compute addresses describe "$CLUSTER_NAME-uaa-address" --region=europe-west1 --format json | jq --raw-output ".address"
 }
 

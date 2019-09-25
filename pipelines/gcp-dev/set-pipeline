@@ -42,6 +42,7 @@ fly --target "$target" \
   --var gcs-json-key="$(pass eirini/gcs-json-key)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --var eirini-release-branch="$eirini_release_branch" \
+  --var eirini-branch="$eirini_branch" \
   --var worker_count="$worker_count" \
   --var storage_class="$storage_class" \
   --var enable_opi_staging="${enable_opi_staging}" \

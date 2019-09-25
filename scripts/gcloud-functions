@@ -23,7 +23,7 @@ cluster-state-is() {
 # Show details about the cluster
 cluster-state() {
   declare -r name=$1
-  gcloud container clusters describe "$name" --region=europe-west1 --format json 
+  gcloud container clusters describe "$name" --region=europe-west1 --format json
 }
 
 # Log in to the Google Cloud
