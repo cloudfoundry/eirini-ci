@@ -11,6 +11,7 @@ fly:
   name: ci-images
   target: $TARGET
   config: spruced.yml
+  expose: true
   load_vars_from:
   - $PRIVATE_REPO/concourse/common.yml
   vars:

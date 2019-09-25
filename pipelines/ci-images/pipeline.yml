@@ -22,17 +22,17 @@ jobs:
   - put: eirini-scf-builder-image
     params:
       build: eirini-scf-builder-image-source/images/scf-builder
-- name: update-fsbuilder-image
+- name: update-gcloud-image
   plan:
   - get: golang-image
     trigger: true
-  - get: fsbuilder-source
+  - get: gcloud-source
     trigger: true
     params:
       skip_download: true
-  - put: fsbuilder-image
+  - put: gcloud-image
     params:
-      build: fsbuilder-source/image/fsbuilder
+      build: gcloud-source/images/gcloud
 
 resources:
 - name: eirini-ci-image-source
@@ -92,19 +92,19 @@ resources:
   source:
     repository: golang
 
-- name: fsbuilder-source
+- name: gcloud-source
   type: git
   icon: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirinifs
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
     branch: master
     paths:
-    - image/fsbuilder/Dockerfile
+    - images/gcloud/Dockerfile
 
-- name: fsbuilder-image
+- name: gcloud-image
   type: docker-image
   icon: docker
   source:
-    repository: eirini/fsbuilder
+    repository: eirini/gcloud
     username: ((docker_hub_user))
     password: ((docker_hub_password))
