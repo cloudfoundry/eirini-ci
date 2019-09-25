@@ -24,7 +24,7 @@ variable "dns-zone" {
 
 variable "dns-name" {
   type = string
-  default = "ci-envs.eirini.cf-app.com"
+  default = "ci-envs.eirini.cf-app.com."
 }
 
 
@@ -54,6 +54,7 @@ resource "google_container_cluster" "cluster" {
   # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count = 1
+  master_authorized_networks_config{}
 
   ip_allocation_policy {
     use_ip_aliases = true
