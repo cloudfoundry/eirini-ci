@@ -3,12 +3,16 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: eirini/ibmcloud
+    repository: eirini/gcloud
 
 inputs:
   - name: ci-resources
   - name: cluster-state
   - name: kube
+
+params:
+  GCP_SERVICE_ACCOUNT_JSON:
+  CLUSTER_NAME:
 
 run:
   path: ci-resources/tasks/install-helm-dependencies/task.sh

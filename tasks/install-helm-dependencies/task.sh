@@ -17,10 +17,14 @@ init-helm() {
 }
 
 install-nginx-chart(){
+  local static_ip
+  gcloud_auth
+  static_ip="$(get_static_ip)"
   helm upgrade nginx-ingress  \
     --namespace nginx \
     --install \
     --set rbac.create=true \
+    --set controller.service.loadBalancerIP="$static_ip"
     stable/nginx-ingress
 }
 
@@ -35,6 +39,15 @@ install-cert-manager-chart(){
     --namespace cert-manager \
     --version v0.10.0 \
     jetstack/cert-manager
+}
+
+gcloud_auth(){
+  echo "$GCP_SERVICE_ACCOUNT_JSON" >service-account.json
+  gcloud auth activate-service-account --key-file="service-account.json" >/dev/null 2>&1
+}
+
+get_static_ip(){
+  gcloud compute addresses describe "$CLUSTER_NAME-uaa-address" --region=europe-west1 --format json | jq --raw-output ".address"
 }
 
 main
