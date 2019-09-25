@@ -10,11 +10,9 @@ inputs:
 - name: ci-resources
 - name: eirini-release
 - name: state
+- name: kube
 
 params:
-  IBMCLOUD_ACCOUNT:
-  IBMCLOUD_USER:
-  IBMCLOUD_PASSWORD:
   CLUSTER_NAME:
 
 run:

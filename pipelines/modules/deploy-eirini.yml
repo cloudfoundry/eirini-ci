@@ -29,14 +29,17 @@ jobs:
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     params:
       bump: major
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: deploy-uaa
     input_mapping:
         eirini-release: scf-uaa-resources
     file: ci-resources/tasks/deploy-uaa/task.yml
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
   - task: waiting-for-uaa
     attempts: 30

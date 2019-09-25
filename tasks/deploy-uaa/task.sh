@@ -3,14 +3,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
 readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
+export KUBECONFIG="$PWD/kube/config"
 
 main() {
-  ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
   helm init --upgrade --wait
   helm-install
 }
