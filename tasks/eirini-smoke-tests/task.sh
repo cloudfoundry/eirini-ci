@@ -4,12 +4,9 @@ set -euo pipefail
 IFS=$'\n\t'
 
 readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
 main() {
-  ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+  export KUBECONFIG="$PWD/kube/config"
   CF_DOMAIN="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
   sleep 10
 

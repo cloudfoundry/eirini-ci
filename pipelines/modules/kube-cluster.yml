@@ -41,6 +41,13 @@ jobs:
       trigger: true
       passed: [(( concat "create-cluster-" meta.cluster-name ))]
     - get: cluster-state
+    - task: download-kubeconfig
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+      file: ci-resources/tasks/download-kubeconfig/task.yml
     - task: create-cluster-config
       params:
         IBMCLOUD_ACCOUNT: ((ibmcloud-account))
@@ -80,6 +87,13 @@ jobs:
   - name: (( concat "delete-cluster-" meta.cluster-name ))
     plan:
     - get: ci-resources
+    - task: download-kubeconfig
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+      file: ci-resources/tasks/download-kubeconfig/task.yml
     - task: delete-kubernetes-cluster
       file: ci-resources/tasks/delete-cluster/task.yml
       params:

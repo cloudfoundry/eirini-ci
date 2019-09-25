@@ -6,6 +6,7 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
+- name: kube
 - name: ci-resources
 
 params:

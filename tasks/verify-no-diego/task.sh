@@ -3,15 +3,12 @@
 set -eo pipefail
 IFS=$'\n\t'
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
 export SECRET=""
 export CA_CERT=""
 
 main() {
-  ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+  export KUBECONFIG="$PWD/kube/config"
   verify-no-diego
 }
 

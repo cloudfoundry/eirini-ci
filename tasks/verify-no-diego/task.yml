@@ -7,8 +7,9 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-- name: ci-resources
-- name: state
+  - name: ci-resources
+  - name: kube
+  - name: state
 
 params:
   IBMCLOUD_ACCOUNT:

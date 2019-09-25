@@ -2,11 +2,8 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
-ibmcloud-login
-export-kubeconfig "$CLUSTER_NAME"
+export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+export KUBECONFIG="$PWD/kube/config"
 
 readonly jq_cmd='.subjects |= map(select(.name != "system:serviceaccounts" and .name != "system:authenticated" ))'
 

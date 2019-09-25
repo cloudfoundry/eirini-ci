@@ -3,9 +3,6 @@
 set -eo pipefail
 IFS=$'\n\t'
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
 readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
 export SECRET=""
 export CA_CERT=""
@@ -13,8 +10,8 @@ export BITS_TLS_CRT=""
 export BITS_TLS_KEY=""
 
 main() {
-  ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+  export KUBECONFIG="$PWD/kube/config"
   export-certs
   helm-dep-update
   helm init --upgrade --wait

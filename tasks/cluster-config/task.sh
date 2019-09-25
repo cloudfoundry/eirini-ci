@@ -3,17 +3,14 @@
 set -xeuo pipefail
 IFS=$'\n\t'
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
 readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
 readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
-  ibmcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+  export KUBECONFIG="$PWD/kube/config"
   init-helm
   set-kube-state
   set-external-ips

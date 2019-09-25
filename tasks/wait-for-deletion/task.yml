@@ -13,7 +13,8 @@ params:
   CLUSTER_NAME:
 
 inputs:
-- name: ci-resources
+  - name: ci-resources
+  - name: kube
 
 run:
   path: ci-resources/tasks/wait-for-deletion/task.sh

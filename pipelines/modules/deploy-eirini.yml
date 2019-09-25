@@ -34,6 +34,7 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_USER: ((ibmcloud-user))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: deploy-uaa
     input_mapping:
@@ -62,6 +63,13 @@ jobs:
   - get: state
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
@@ -99,6 +107,13 @@ jobs:
   - get: cf-smoke-tests
   - get: state
   - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run smoke tests
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))

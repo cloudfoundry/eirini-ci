@@ -19,6 +19,13 @@ jobs:
     passed:
     - (( concat "run-core-cats-" meta.cluster-name ))
     trigger: true
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: nuke
     params:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))

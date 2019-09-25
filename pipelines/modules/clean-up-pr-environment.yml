@@ -34,6 +34,13 @@ jobs:
         params:
           path: (( grab meta.pr-repo ))
           status: pending
+      - task: download-kubeconfig
+        params:
+          IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+          IBMCLOUD_USER: ((ibmcloud-user))
+          IBMCLOUD_PASSWORD: ((ibmcloud-password))
+          CLUSTER_NAME: (( grab meta.cluster-name ))
+        file: ci-resources/tasks/download-kubeconfig/task.yml
       - task: clean-up-environment
         file: ci-resources/tasks/reset-environment/task.yml
         params:

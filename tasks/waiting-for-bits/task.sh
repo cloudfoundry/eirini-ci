@@ -4,14 +4,11 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-
-# shellcheck disable=SC1091
 source ci-resources/scripts/kube-functions
 
 main() {
-  ibmcloud-login
-  export-kubeconfig "${CLUSTER_NAME:?Cluster name not provided}"
+  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
+  export KUBECONFIG="$PWD/kube/config"
 
   local -r expected_image_digest="$(<bits-latest/digest)"
   if actual-digest-equals "name=bits" "$expected_image_digest"; then
