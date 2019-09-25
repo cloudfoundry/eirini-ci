@@ -57,6 +57,8 @@ jobs:
     - task: install-helm-dependencies
       params:
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
       file: ci-resources/tasks/install-helm-dependencies/task.yml
     - put: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
       params:
