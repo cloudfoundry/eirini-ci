@@ -17,6 +17,17 @@ variable "node_machine_type" {
   default = "n1-standard-4"
 }
 
+variable "dns-zone" {
+  type = string
+  default = "ci-envs"
+}
+
+variable "dns-name" {
+  type = string
+  default = "ci-envs.eirini.cf-app.com"
+}
+
+
 provider "google" {
   project     = "cff-eirini-peace-pods"
   region      = "${var.region}"
@@ -77,11 +88,43 @@ resource "google_container_node_pool" "node-pool" {
   }
 }
 
-resource "google_compute_global_address" "global-address" {
-  name = "${var.name}-registry-address"
+resource "google_compute_address" "ingress-address" {
+  name = "${var.name}-address"
+  region = "europe-west1"
 }
 
-resource "google_compute_address" "regional-address" {
-  name = "${var.name}-uaa-address"
-  region = "europe-west1"
+resource "google_dns_record_set" "gorouter-root" {
+  name = "${var.name}.${var.dns-name}"
+  managed_zone = "${var.dns-zone}"
+  type = "A"
+  ttl  = 300
+
+  rrdatas = ["${google_compute_address.ingress-address.address}"]
+}
+
+resource "google_dns_record_set" "gorouter-wildcard" {
+  name = "*.${var.name}.${var.dns-name}"
+  managed_zone = "${var.dns-zone}"
+  type = "A"
+  ttl  = 300
+
+  rrdatas = ["${google_compute_address.ingress-address.address}"]
+}
+
+resource "google_dns_record_set" "uaa-root" {
+  name = "uaa.${var.name}.${var.dns-name}"
+  managed_zone = "${var.dns-zone}"
+  type = "A"
+  ttl  = 300
+
+  rrdatas = ["${google_compute_address.ingress-address.address}"]
+}
+
+resource "google_dns_record_set" "uaa-wildcard" {
+  name = "*.uaa.${var.name}.${var.dns-name}"
+  managed_zone = "${var.dns-zone}"
+  type = "A"
+  ttl  = 300
+
+  rrdatas = ["${google_compute_address.ingress-address.address}"]
 }
