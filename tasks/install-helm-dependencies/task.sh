@@ -47,7 +47,7 @@ gcloud_auth() {
 }
 
 get_static_ip() {
-  gcloud compute addresses describe "$CLUSTER_NAME-uaa-address" --region=europe-west1 --format json | jq --raw-output ".address"
+  gcloud compute addresses describe "$CLUSTER_NAME-address" --region=europe-west1 --format json | jq --raw-output ".address"
 }
 
 main
