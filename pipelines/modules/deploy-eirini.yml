@@ -45,9 +45,6 @@ jobs:
   - task: waiting-for-uaa
     attempts: 30
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/waiting-for-uaa/task.yml
   - put: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
@@ -73,32 +70,20 @@ jobs:
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((world-name))
   - task: smoke-eirini
     attempts: 50
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
   - task: block-network-access
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/block-network-access/task.yml
   - task: recheck-smoke-eirini-because-scf-restart
     attempts: 50
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
 - name: (( concat "run-smoke-tests-" meta.cluster-name ))
@@ -116,9 +101,6 @@ jobs:
     file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run smoke tests
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/run-smoke-tests/task.yml
 

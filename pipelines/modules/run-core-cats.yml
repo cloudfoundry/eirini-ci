@@ -13,6 +13,13 @@ jobs:
     - get: cats
     - get: state
     - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      CLUSTER_NAME: (( grab meta.cluster-name ))
+    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run cats
     params:
       SKIP_SSL_VALIDATION: true
@@ -43,25 +50,12 @@ jobs:
       INCLUDE_V3: false
       INCLUDE_ZIPKIN: true
       NO_OF_TEST_NODES: 16
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
       SKIPPED_TESTS: (( grab skipped_cats))
     file: ci-resources/tasks/run-cats/task.yml
-  - task: download-kubeconfig
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: cleanup-blobstore
     file: ci-resources/tasks/cleanup-blobstore/task.yml
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
 resources:
 - name: cats
