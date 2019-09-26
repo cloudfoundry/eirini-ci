@@ -25,7 +25,7 @@ spruce:
       - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
       - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
     set:
-      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:deploy_scf.params.USE_CERT_MANAGER
+      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:deploy-scf.params.USE_CERT_MANAGER
         value: true
       - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.file
         value:
