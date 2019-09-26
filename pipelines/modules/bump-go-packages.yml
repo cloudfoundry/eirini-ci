@@ -4,12 +4,14 @@ groups:
   jobs:
   - (( prepend ))
   - bump-go
+  - merge-bump
 - name: test-and-build
   jobs:
   - (( prepend ))
   - bump-go
+  - merge-bump
 jobs:
-- name: bump-go
+- name: bump-go-eirini
   plan:
   - in_parallel:
     - get: bump-day
@@ -25,6 +27,15 @@ jobs:
     params:
       force: true
       repository: repository-updated
+- name: merge-bump
+  plan:
+  - get: eirini
+    trigger: true
+    passed:
+    - (( concat "run-core-cats-" meta.cluster-name ))
+  - put: eirini-master
+    params:
+      repository: eirini
 
 resources:
 - name: ci-resources
@@ -36,16 +47,16 @@ resources:
 - name: bump-day
   type: time
   source:
-    # start: 12:00 AM
-    # stop: 1:00 AM
-    # days: [Sunday]
-    interval: 1m
+    start: 12:00 AM
+    stop: 1:00 AM
+    days: [Sunday]
 - name: eirini-master
   type: git
   icon: git
   source:
-    uri: https://github.com/cloudfoundry-incubator/eirini.git
+    uri: git@github.com:cloudfoundry-incubator/eirini.git
     branch: master
+    private_key: ((eirini-repo-key))
 - name: eirini
   type: git
   icon: git
