@@ -7,7 +7,6 @@ image_resource:
 
 inputs:
   - name: ci-resources
-  - name: cluster-state
 
 outputs:
   - name: kube
