@@ -13,9 +13,9 @@ spruce:
   - meta
   modify:
     delete:
-      - jobs.name:deploy-scf-scf-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
-      - jobs.name:deploy-scf-scf-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
-      - jobs.name:deploy-scf-scf-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
+      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
+      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
+      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
 
       - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
       - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
@@ -25,10 +25,10 @@ spruce:
       - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
       - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
     set:
-      - path: jobs.name:deploy-scf-scf-((world-name)).plan.task:download-kubeconfig.file
+      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.file
         value:
           ci-resources/tasks/gcp-download-kubeconfig/task.yml
-      - path: jobs.name:deploy-scf-scf-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
+      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
         value:
           ((gcp-service-account-json))
       - path: jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.file
