@@ -6,7 +6,6 @@ IFS=$'\n\t'
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
 readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
-readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
   set-kube-state
@@ -43,8 +42,8 @@ env:
 
 kube:
     storage_class:
-      persistent: "$STORAGE_CLASS"
-      shared: "$STORAGE_CLASS"
+      persistent: standard
+      shared: standard
     auth: rbac
 
 secrets:
