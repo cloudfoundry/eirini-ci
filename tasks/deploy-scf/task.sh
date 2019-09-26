@@ -57,6 +57,10 @@ helm-install() {
       "--set" "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
       "--set" "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
     )
+  else
+    cert_args=(
+      "--set" "eirini.bits.useExistingSecret=true"
+    )
   fi
 
   helm upgrade --install "scf" \
