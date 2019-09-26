@@ -19,8 +19,6 @@ readonly eirini_release_branch=${5:-"develop"}
 readonly ci_branch=${6:-"master"}
 readonly worker_count=${7:-"3"}
 readonly enable_opi_staging=${8:-""}
-readonly storage_class=${9:-"hostpath"}
-readonly diego_cell_count="${10:-"3"}"
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -44,7 +42,7 @@ fly --target "$target" \
   --var eirini-release-branch="$eirini_release_branch" \
   --var eirini-branch="$eirini_branch" \
   --var worker_count="$worker_count" \
-  --var storage_class="$storage_class" \
+  --var storage_class=standard \
   --var enable_opi_staging="${enable_opi_staging}" \
-  --var diego-cell-count="$diego_cell_count" \
+  --var diego-cell-count=3 \
   --load-vars-from "$private_repo/concourse/common.yml"
