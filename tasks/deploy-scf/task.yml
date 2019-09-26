@@ -13,10 +13,8 @@ inputs:
 - name: state
 
 params:
-  IBMCLOUD_ACCOUNT:
-  IBMCLOUD_USER:
-  IBMCLOUD_PASSWORD:
   CLUSTER_NAME:
+  USE_CERT_MANAGER: false
 
 run:
   path: ci-resources/tasks/deploy-scf/task.sh
