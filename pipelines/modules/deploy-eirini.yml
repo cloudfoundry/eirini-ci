@@ -79,6 +79,9 @@ jobs:
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
   - task: block-network-access
     params:
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/block-network-access/task.yml
   - task: recheck-smoke-eirini-because-scf-restart
