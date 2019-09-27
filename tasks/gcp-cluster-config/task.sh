@@ -23,7 +23,8 @@ bits:
   env:
     DOMAIN: $cluster_domain
   kube:
-    external_ips: []
+    external_ips:
+    - delete-me-later
   opi:
     ingress_endpoint: $cluster_domain
     use_registry_ingress: true
@@ -38,6 +39,7 @@ env:
 
     UAA_HOST: uaa.$cluster_domain
     UAA_PORT: 443
+    UAA_PUBLIC_PORT: 443
     ENABLE_OPI_STAGING: $ENABLE_STAGING
 
 kube:
