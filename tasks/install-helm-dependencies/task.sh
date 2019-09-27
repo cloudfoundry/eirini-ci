@@ -20,7 +20,7 @@ create-dns-editor-secret() {
 }
 
 create-issuer() {
-  kubectl apply -f eirini-release/cert-manager/dns-issues.yaml
+  kubectl apply -f eirini-release/cert-manager/dns-issuer.yaml
 }
 
 create-uaa-certificate() {

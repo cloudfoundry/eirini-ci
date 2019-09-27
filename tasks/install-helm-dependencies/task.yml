@@ -9,9 +9,11 @@ inputs:
   - name: ci-resources
   - name: cluster-state
   - name: kube
+  - name: eirini-release
 
 params:
   GCP_SERVICE_ACCOUNT_JSON:
+  DNS_SERVICE_ACCOUNT:
   CLUSTER_NAME:
 
 run:
