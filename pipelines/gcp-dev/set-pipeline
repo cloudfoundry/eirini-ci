@@ -14,11 +14,10 @@ export PROJECT_ROOT
 readonly world_name=$1
 readonly target="${2:-eirini}"
 readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
-readonly eirini_branch=${4:-"master"}
-readonly eirini_release_branch=${5:-"develop"}
-readonly ci_branch=${6:-"master"}
-readonly worker_count=${7:-"3"}
-readonly enable_opi_staging=${8:-""}
+readonly eirini_release_branch=${4:-"develop"}
+readonly ci_branch=${5:-"master"}
+readonly worker_count=${6:-"3"}
+readonly enable_opi_staging=${7:-""}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -39,8 +38,8 @@ fly --target "$target" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var gcs-json-key="$(pass eirini/gcs-json-key)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var eirini-release-branch="$eirini_release_branch" \
-  --var eirini-branch="$eirini_branch" \
   --var worker_count="$worker_count" \
   --var storage_class=standard \
   --var enable_opi_staging="${enable_opi_staging}" \
