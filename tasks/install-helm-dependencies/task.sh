@@ -9,6 +9,26 @@ main() {
   init-helm
   install-nginx-chart
   install-cert-manager-chart
+  create-dns-editor-secret
+  create-issuer
+  create-uaa-certificate
+  create-router-certificate
+}
+
+create-dns-editor-secret() {
+  kubectl get secret -n cert-manager dns-account-json || kubectl create secret generic -n cert-manager dns-account-json --from-literal=service-account.json="$DNS_SERVICE_ACCOUNT"
+}
+
+create-issuer() {
+  kubectl apply -f eirini-release/cert-manager/dns-issues.yaml
+}
+
+create-uaa-certificate() {
+  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" eirini-release/cert-manager/cert.yml)
+}
+
+create-router-certificate() {
+  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" eirini-release/cert-manager/router-cert.yml)
 }
 
 init-helm() {
