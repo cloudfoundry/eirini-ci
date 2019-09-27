@@ -16,6 +16,7 @@ spruce:
       - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
       - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
       - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
+      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:block-network-access
 
       - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
       - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
