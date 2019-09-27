@@ -21,7 +21,10 @@ main() {
 export-certs() {
   SECRET=$(kubectl get pods --namespace uaa --output jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
   CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa --output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
-  if [ "$USE_CERT_MANAGER" == "false" ]; then
+  if [ "$USE_CERT_MANAGER" == "true" ]; then
+    BITS_TLS_CRT="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
+    BITS_TLS_KEY="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
+  else
     BITS_TLS_CRT="$(kubectl get secret "$(kubectl config current-context)" --namespace default -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
     BITS_TLS_KEY="$(kubectl get secret "$(kubectl config current-context)" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
   fi
@@ -52,14 +55,14 @@ helm-install() {
     )
   fi
 
-  if [ "$USE_CERT_MANAGER" == "false" ]; then
+  if [ "$USE_CERT_MANAGER" == "true" ]; then
     cert_args=(
-      "--set" "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
-      "--set" "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
+      "--set" "ingress.tls.crt=${BITS_TLS_CRT}"
+      "--set" "ingress.tls.key=${BITS_TLS_KEY}"
     )
   else
     cert_args=(
-      "--set" "eirini.bits.useExistingSecret=true"
+      "--set" "secrets.UAA_CA_CERT=${CA_CERT}"
     )
   fi
 
@@ -67,7 +70,8 @@ helm-install() {
     "eirini-release/helm/cf" \
     --namespace "scf" \
     --values "$ENVIRONMENT"/scf-config-values.yaml \
-    --set "secrets.UAA_CA_CERT=${CA_CERT}" \
+    --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
+    --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
     "${cert_args[@]}" \
     "${override_image_args[@]}"
 }
