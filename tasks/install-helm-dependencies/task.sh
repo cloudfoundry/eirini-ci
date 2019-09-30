@@ -20,15 +20,15 @@ create-dns-editor-secret() {
 }
 
 create-issuer() {
-  kubectl apply -f eirini-release/cert-manager/dns-issuer.yaml
+  kubectl apply -f ci-resources/cert-manager/letsencrypt-dns-issuer.yaml
 }
 
 create-uaa-certificate() {
-  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" eirini-release/cert-manager/cert.yml)
+  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/uaa-cert.yml)
 }
 
 create-router-certificate() {
-  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" eirini-release/cert-manager/router-cert.yml)
+  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/router-cert.yml)
 }
 
 init-helm() {

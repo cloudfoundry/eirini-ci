@@ -28,6 +28,8 @@ fly -t "$target" \
   --var eirini-release-branch=develop \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var worker_count="$worker_count" \
   --var storage_class="ibmc-block-gold" \
   --var enable_opi_staging=false \

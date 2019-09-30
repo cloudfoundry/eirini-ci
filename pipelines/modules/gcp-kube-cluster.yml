@@ -33,7 +33,6 @@ jobs:
   plan:
   - in_parallel:
     - get: ci-resources
-    - get: eirini-release
     - get: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
       trigger: true
       passed: [(( concat "create-cluster-" meta.cluster-name ))]
@@ -75,6 +74,7 @@ jobs:
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      WORKER_COUNT: ((worker_count))
   - get: cluster-state
   - task: delete-values-file
     file: ci-resources/tasks/clean-up-cluster-config/task.yml
@@ -119,9 +119,3 @@ resources:
     uri: git@github.com:cloudfoundry/eirini-private-config.git
     branch: master
     private_key: ((github-private-key))
-- name: eirini-release
-  type: git
-  icon: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
-    branch: ((eirini-release-branch))

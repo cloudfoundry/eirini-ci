@@ -1,0 +1,13 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: uaa-crt
+  namespace: cert-manager
+spec:
+  secretName: uaa-ingress
+  dnsNames:
+  - uaa.<dnsName>
+  - "*.uaa.<dnsName>"
+  issuerRef:
+    name: letsencrypt-dns-issuer
+    kind: ClusterIssuer
