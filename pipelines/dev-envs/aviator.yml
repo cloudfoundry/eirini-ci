@@ -32,8 +32,8 @@ spruce:
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/pipelines/dev-envs/sofia.yml
-  to: {{sofia}}
+      - $PROJECT_ROOT/pipelines/dev-envs/veliko-tarnovo.yml
+  to: {{veliko-tarnovo}}
 
 - base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
   prune:
@@ -60,7 +60,7 @@ spruce:
       - {{zagreb}}
       - {{pune}}
       - {{kharkiv}}
-      - {{sofia}}
+      - {{veliko-tarnovo}}
       - {{kyoto}}
       - {{lisbon}}
   to: $PIPELINE_YML
