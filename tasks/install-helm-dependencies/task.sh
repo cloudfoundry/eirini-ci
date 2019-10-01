@@ -33,7 +33,7 @@ create-router-certificate() {
 
 init-helm() {
   kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
-  helm init --service-account tiller --upgrade
+  helm init --service-account tiller --upgrade --wait
 }
 
 install-nginx-chart() {
