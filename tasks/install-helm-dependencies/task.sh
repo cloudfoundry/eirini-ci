@@ -45,7 +45,8 @@ install-nginx-chart() {
     --install \
     --set rbac.create=true \
     --set controller.service.loadBalancerIP="$static_ip" \
-    stable/nginx-ingress
+    stable/nginx-ingress \
+    --wait
 }
 
 install-cert-manager-chart() {
@@ -58,7 +59,8 @@ install-cert-manager-chart() {
     --install \
     --namespace cert-manager \
     --version v0.10.0 \
-    jetstack/cert-manager
+    jetstack/cert-manager \
+    --wait
 }
 
 gcloud_auth() {
