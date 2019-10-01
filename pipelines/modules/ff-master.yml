@@ -25,6 +25,7 @@ jobs:
     - run-core-cats-with-opi
     - run-core-cats-with-diego
     - run-core-cats-freshini
+    - run-core-cats-gkerini
   - put: eirini-release-master
     params:
       repository: eirini-release
