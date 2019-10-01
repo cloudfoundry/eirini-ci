@@ -7,4 +7,4 @@ gcloud auth activate-service-account --key-file="kube/service-account.json"
 gcloud config set container/use_application_default_credentials true
 
 export KUBECONFIG=kube/config
-gcloud beta container clusters get-credentials "$CLUSTER_NAME" --region europe-west1
+gcloud beta container clusters get-credentials "$CLUSTER_NAME" --region europe-west1-b
