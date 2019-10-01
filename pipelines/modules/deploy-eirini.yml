@@ -30,18 +30,15 @@ jobs:
     params:
       bump: major
   - task: download-kubeconfig
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml
+    params: (( grab cloud-specific.download-kubeconfig.params ))
+    file: (( grab cloud-specific.download-kubeconfig.file ))
   - task: deploy-uaa
     input_mapping:
         eirini-release: scf-uaa-resources
     file: ci-resources/tasks/deploy-uaa/task.yml
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
+      USE_CERT_MANAGER: (( grab cloud-specific.use-cert-manager ))
   - task: waiting-for-uaa
     attempts: 70
     params:
@@ -61,17 +58,14 @@ jobs:
   - get: (( concat "cluster-" meta.cluster-name "-staging-event-uaa-ready" ))
     passed: [(( concat "deploy-scf-uaa-" meta.cluster-name ))]
   - task: download-kubeconfig
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml
+    params: (( grab cloud-specific.download-kubeconfig.params ))
+    file: (( grab cloud-specific.download-kubeconfig.file ))
   - task: deploy-scf
     file: ci-resources/tasks/deploy-scf/task.yml
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
       VERSIONING_CLUSTER: ((world-name))
+      USE_CERT_MANAGER: (( grab cloud-specific.use-cert-manager ))
   - task: smoke-eirini
     attempts: 70
     params:
@@ -95,13 +89,6 @@ jobs:
   - get: cf-smoke-tests
   - get: state
   - get: ci-resources
-  - task: download-kubeconfig
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml
   - task: run smoke tests
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))

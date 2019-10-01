@@ -2,10 +2,8 @@ jobs:
 - name: (( concat "run-smoke-tests-" meta.cluster-name ))
   plan:
   - (( append ))
+  - task: download-kubeconfig
+    params: (( grab cloud-specific.download-kubeconfig.params ))
+    file: (( grab cloud-specific.download-kubeconfig.file ))
   - task: verify no diego
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/verify-no-diego/task.yml

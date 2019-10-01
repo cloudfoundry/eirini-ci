@@ -11,48 +11,15 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   modify:
     delete:
-      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
-      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
-      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
-      - jobs.name:deploy-scf-eirini-((world-name)).plan.task:block-network-access
-
-      - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
-      - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
-      - jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
-
-      - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
-      - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
-      - jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
-    set:
-      - path: jobs.name:deploy-scf-uaa-((world-name)).plan.task:deploy-uaa.params.USE_CERT_MANAGER
-        value: true
-      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:deploy-scf.params.USE_CERT_MANAGER
-        value: true
-      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.file
-        value:
-          ci-resources/tasks/gcp-download-kubeconfig/task.yml
-      - path: jobs.name:deploy-scf-eirini-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
-        value:
-          ((gcp-service-account-json))
-      - path: jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.file
-        value:
-          ci-resources/tasks/gcp-download-kubeconfig/task.yml
-      - path: jobs.name:deploy-scf-uaa-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
-        value:
-          ((gcp-service-account-json))
-      - path: jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.file
-        value:
-          ci-resources/tasks/gcp-download-kubeconfig/task.yml
-      - path: jobs.name:run-smoke-tests-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
-        value:
-          ((gcp-service-account-json))
-        
+    - jobs.name:deploy-scf-eirini-((world-name)).plan.task:block-network-access
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/gke.yml
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
   to: {{eirini-with-opi}}
 
@@ -60,21 +27,11 @@ spruce:
   prune:
   - meta
   - skipped_cats
-  modify:
-    delete:
-      - jobs.name:run-core-cats-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_ACCOUNT
-      - jobs.name:run-core-cats-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_USER
-      - jobs.name:run-core-cats-((world-name)).plan.task:download-kubeconfig.params.IBMCLOUD_PASSWORD
-    set: 
-      - path: jobs.name:run-core-cats-((world-name)).plan.task:download-kubeconfig.file
-        value:
-          ci-resources/tasks/gcp-download-kubeconfig/task.yml
-      - path: jobs.name:run-core-cats-((world-name)).plan.task:download-kubeconfig.params.GCP_SERVICE_ACCOUNT_JSON
-        value:
-          ((gcp-service-account-json))
+  - cloud-specific
   merge:
   - with:
       files:
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/gke.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml

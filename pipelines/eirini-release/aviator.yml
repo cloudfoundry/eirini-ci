@@ -13,6 +13,7 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   merge:
   - with:
       files:
@@ -21,6 +22,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{eirini-with-diego}}
 
 # With-OPI
@@ -38,6 +40,7 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   merge:
   - with:
       files:
@@ -47,6 +50,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{eirini-with-opi}}
 
 # Freshini
@@ -64,6 +68,7 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   merge:
   - with:
       files:
@@ -73,6 +78,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
       - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   modify:
     set:
      - path: jobs.name:deploy-scf-uaa-freshini.plan.task:waiting-for-uaa.attempts
@@ -81,11 +87,43 @@ spruce:
        value: 80
   to: {{eirini-freshini}}
 
+# GKE
+- base: $PROJECT_ROOT/pipelines/modules/gcp-kube-cluster.yml
+  prune:
+  - meta
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/eirini-release/gke.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/kube-cluster.yml
+  to: {{cluster-gkerini}}
+
+- base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - meta
+  - cloud-specific
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/modules/lock.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/gke.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+      - $PROJECT_ROOT/pipelines/modules/verify-no-diego.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-deployment.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/gke.yml
+  modify:
+    delete:
+    - jobs.name:deploy-scf-eirini-gkerini.plan.task:block-network-access
+  to: {{eirini-gkerini}}
+
 # With-Diego CATs
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
   - skipped_cats
+  - cloud-specific
   merge:
   - with:
       files:
@@ -94,6 +132,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{cats-with-diego}}
 
 # With-OPI CATs
@@ -101,6 +140,7 @@ spruce:
   prune:
   - meta
   - skipped_cats
+  - cloud-specific
   go_patch: true
   merge:
   - with:
@@ -110,6 +150,7 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{cats-with-opi}}
 
 # Freshini CATs
@@ -117,6 +158,7 @@ spruce:
   prune:
   - meta
   - skipped_cats
+  - cloud-specific
   go_patch: true
   merge:
   - with:
@@ -127,7 +169,27 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{cats-freshini}}
+
+# GKE
+- base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
+  prune:
+  - meta
+  - skipped_cats
+  - cloud-specific
+  go_patch: true
+  merge:
+  - with:
+      files:
+      - $PROJECT_ROOT/pipelines/eirini-release/gke.yml
+      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
+      - $PROJECT_ROOT/notifications/slack/hook.yml
+      - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
+      - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/gke.yml
+  to: {{cats-gkerini}}
+
 
 # Fast Forward
 - base: $PROJECT_ROOT/pipelines/modules/ff-master.yml
@@ -146,12 +208,15 @@ spruce:
       - {{cluster-with-diego}}
       - {{cluster-with-opi}}
       - {{cluster-freshini}}
+      - {{cluster-gkerini}}
       - {{eirini-with-diego}}
       - {{eirini-with-opi}}
       - {{eirini-freshini}}
+      - {{eirini-gkerini}}
       - {{cats-with-diego}}
       - {{cats-with-opi}}
       - {{cats-freshini}}
+      - {{cats-gkerini}}
       - {{ff-master}}
   to: $PIPELINE_YML
 
