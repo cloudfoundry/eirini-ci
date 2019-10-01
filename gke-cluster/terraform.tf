@@ -53,7 +53,7 @@ resource "google_container_cluster" "cluster" {
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
   remove_default_node_pool = true
-  initial_node_count = 1
+  initial_node_count = var.node_count_per_zone
   master_authorized_networks_config{}
 
   ip_allocation_policy {
@@ -69,7 +69,7 @@ resource "google_container_cluster" "cluster" {
 
 resource "google_container_node_pool" "node-pool" {
   name       = "${var.name}"
-  location   = "${var.region}"
+  location   = "${var.region}-b"
   cluster    = "${google_container_cluster.cluster.name}"
   node_count = var.node_count_per_zone
 
