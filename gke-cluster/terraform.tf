@@ -54,7 +54,6 @@ resource "google_container_cluster" "cluster" {
   # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count = var.node_count_per_zone
-  master_authorized_networks_config{}
 
   ip_allocation_policy {
     use_ip_aliases = true
