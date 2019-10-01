@@ -45,7 +45,7 @@ resource "google_compute_network" "network" {
 
 resource "google_container_cluster" "cluster" {
   name     = "${var.name}"
-  location = "${var.region}"
+  location = "${var.region}-b"
 
   network = "${google_compute_network.network.name}"
 
