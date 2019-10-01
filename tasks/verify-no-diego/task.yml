@@ -9,15 +9,6 @@ image_resource:
 inputs:
   - name: ci-resources
   - name: kube
-  - name: state
-
-params:
-  IBMCLOUD_ACCOUNT:
-  IBMCLOUD_USER:
-  IBMCLOUD_PASSWORD:
-  COMPONENT:
-  CLUSTER_NAME:
-  HELM_CHART:
 
 run:
   path: ci-resources/tasks/verify-no-diego/task.sh
