@@ -13,5 +13,5 @@ spec:
         clouddns:
           project: cff-eirini-peace-pods
           serviceAccountSecretRef:
-            name: account-json
+            name: dns-account-json
             key: service-account.json
