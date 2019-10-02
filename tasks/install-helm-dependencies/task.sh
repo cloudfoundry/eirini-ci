@@ -39,7 +39,7 @@ wait-for-certificates() {
   while true; do
     if [[ $(cert-status "router-crt") == "True" ]] &&
       [[ $(cert-status "uaa-crt") == "True" ]] &&
-      [[ $(cert-status "router-crt") == "True" ]]; then
+      [[ $(cert-status "bits-crt") == "True" ]]; then
       break
     fi
     counter=$((counter + 1))
@@ -50,7 +50,6 @@ wait-for-certificates() {
     fi
     sleep 1
   done
-  void
 }
 
 init-helm() {
