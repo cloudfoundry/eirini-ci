@@ -1,4 +1,3 @@
 skipped_cats:
   "uses the buildpack cache after first staging\
-  |reverse log proxy streams logs\
-  |Users can manage droplet bits for an app"
+  |reverse log proxy streams logs"
