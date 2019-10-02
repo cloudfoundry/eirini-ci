@@ -39,13 +39,12 @@ wait-for-certificates() {
   while true; do
     if [[ $(cert-status "router-crt") == "True" ]] &&
       [[ $(cert-status "uaa-crt") == "True" ]] &&
-      [[ $(cert-status "router-crt") == "True" ]]
-        then
-      break;
+      [[ $(cert-status "router-crt") == "True" ]]; then
+      break
     fi
     counter=$((counter + 1))
 
-    if [[ "$counter" -gt 600 ]]; then
+    if [[ $counter -gt 600 ]]; then
       echo "Failed to get router certificate" >&2
       exit 1
     fi
