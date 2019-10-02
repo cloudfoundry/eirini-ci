@@ -1,6 +1,8 @@
 # Acceptance
 spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
+  prune:
+  - cloud-specific
   merge:
   - with:
       files:
@@ -8,6 +10,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/deploy-eirini.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{eirini-environment}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/publish-release.yml
@@ -18,10 +21,13 @@ spruce:
   to: {{publish-release}}
 
 - base: $PROJECT_ROOT/pipelines/acceptance/weekly-blobstore-cleanup.yml
+  prune:
+  - cloud-specific
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/acceptance/environment.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{weekly-blobstore-cleanup}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml

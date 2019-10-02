@@ -10,6 +10,9 @@ jobs:
   - get: ci-resources
   - get: sunday-morning
     trigger: true
+  - task: download-kubeconfig
+    params: (( grab cloud-specific.download-kubeconfig.params ))
+    file: (( grab cloud-specific.download-kubeconfig.file ))
   - task: cleanup-blobstore
     file: ci-resources/tasks/cleanup-blobstore/task.yml
     params:
