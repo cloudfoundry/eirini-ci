@@ -10,10 +10,7 @@ main() {
   export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
   export KUBECONFIG="$PWD/kube/config"
 
-  local ready
-  ready=$(is-pod-ready uaa uaa-0)
-
-  if [ "$ready" = "true" ]; then
+  if is-pod-ready uaa uaa-0; then
     echo UAA is ready
     exit 0
   else
