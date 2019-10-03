@@ -5,7 +5,7 @@ is-pod-ready() {
   declare -r resource_name="${2:?Resource name not provided}"
   local ready
   local phase
-  ready="$(kubectl get pods "$resource_name" --namespace "$namespace" --output json | jq '.status.conditions[] | select(.type == "ContainersReady") | .status')"
+  ready="$(kubectl get pods "$resource_name" --namespace "$namespace" --output json | jq --raw-output '.status.conditions[] | select(.type == "ContainersReady") | .status')"
   phase="$(kubectl get pods "$resource_name" --namespace "$namespace" --output jsonpath='{.status.phase}')"
   [[ "$ready" == "True" && "$phase" == "Running" ]]
 }
