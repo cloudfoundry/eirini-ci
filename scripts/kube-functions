@@ -1,9 +1,12 @@
 #!/bin/bash
 
-is-container-ready() {
+is-pod-ready() {
   declare -r namespace="${1:?Namespace not provided}"
   declare -r resource_name="${2:?Resource name not provided}"
-  kubectl get pods "$resource_name" --namespace "$namespace" --output jsonpath='{.status.containerStatuses[0].ready}'
+  local ready, phase
+  ready="$(kubectl get pods "$resource_name" --namespace "$namespace" --output json | jq '.status.conditions[] | select(.type == "ContainersReady") | .status')"
+  phase="$(kubectl get pods "$resource_name" --namespace "$namespace" --output jsonpath='{.status.phase}')"
+  [[ "$ready" == "True" && "$phase" == "Running" ]]
 }
 
 is-labeled-container-ready() {

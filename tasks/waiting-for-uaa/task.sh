@@ -11,7 +11,7 @@ main() {
   export KUBECONFIG="$PWD/kube/config"
 
   local ready
-  ready=$(is-container-ready uaa uaa-0)
+  ready=$(is-pod-ready uaa uaa-0)
 
   if [ "$ready" = "true" ]; then
     echo UAA is ready
