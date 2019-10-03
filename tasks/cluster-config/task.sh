@@ -36,7 +36,10 @@ bits:
     DOMAIN: $node_ip.nip.io
   kube:
     external_ips: []
-  opi:
+  ingress:
+    endpoint: $ingress_endpoint
+    use: true
+  opi: # delete me later
     ingress_endpoint: $ingress_endpoint
     use_registry_ingress: true
   secrets:

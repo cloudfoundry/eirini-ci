@@ -22,10 +22,13 @@ set-kube-state() {
 bits:
   env:
     DOMAIN: $cluster_domain
-  kube:
+  kube: # delete me later
     external_ips:
     - delete-me-later
-  opi:
+  ingress:
+    endpoint: $cluster_domain
+    use: true
+  opi: # delete me later
     ingress_endpoint: $cluster_domain
     use_registry_ingress: true
   secrets:
