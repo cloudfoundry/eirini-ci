@@ -73,14 +73,20 @@ jobs:
     params:
      GITHUB_TOKEN: ((github-access-token))
     file: ci-resources/tasks/create-github-pr/task.yml
+
   - task: checkout-eirini-sha
     privileged: true
-    file: ci-resources/tasks/checkout-eirini-sha
+    file: ci-resources/tasks/checkout-sha-by-image
+    input_mapping:
+      repository: eirini
+    output_mapping:
+      repository-modified: eirini-modified
   - put: eirini
     params:
       repository: eirini-modified
       only_tag: true
       tag: eirini-release-version/version
+
   - put: eirini-release-version
     params:
       file: eirini-release-version/version
