@@ -20,8 +20,8 @@ main() {
 
 export-certs() {
   if [ "$USE_CERT_MANAGER" == "true" ]; then
-    BITS_TLS_CRT="$(kubectl get secret bits-ingress --namespace cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-    BITS_TLS_KEY="$(kubectl get secret bits-ingress --namespace cert-manager -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
+    INGRESS_CRT="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
+    INGRESS_KEY="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
     ROOT_CA="$(curl -s https://letsencrypt.org/certs/isrgrootx1.pem.txt)"
     INTERMEDIATE_CA="$(curl -s https://letsencrypt.org/certs/letsencryptauthorityx3.pem.txt)"
     CA_CERT="${ROOT_CA}
@@ -60,12 +60,16 @@ helm-install() {
   fi
 
   if [ "$USE_CERT_MANAGER" == "true" ]; then
-    local ingress_crt ingress_key
-    ingress_crt="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-    ingress_key="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
     cert_args=(
-      "--set" "ingress.tls.crt=${ingress_crt}"
-      "--set" "ingress.tls.key=${ingress_key}"
+      "--set" "ingress.tls.crt=${INGRESS_CRT}"
+      "--set" "ingress.tls.key=${INGRESS_KEY}"
+    )
+  else
+    cert_args=(
+      "--set" "bits.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
+      "--set" "bits.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
+      "--set" "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
+      "--set" "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
     )
   fi
 
@@ -73,10 +77,6 @@ helm-install() {
     "eirini-release/helm/cf" \
     --namespace "scf" \
     --values "$ENVIRONMENT"/scf-config-values.yaml \
-    --set "bits.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
-    --set "bits.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
-    --set "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}" \
-    --set "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}" \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
     "${cert_args[@]}" \
     "${override_image_args[@]}"
