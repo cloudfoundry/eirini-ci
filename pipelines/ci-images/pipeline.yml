@@ -8,6 +8,8 @@ jobs:
   - put: eirini-ci-image
     params:
       build: eirini-ci-image-source/images/ci
+    get_params:
+      skip_download: true
 - name: update-eirini-ibmcloud-image
   plan:
   - get: eirini-ibmcloud-image-source
@@ -15,6 +17,8 @@ jobs:
   - put: eirini-ibmcloud-image
     params:
       build: eirini-ibmcloud-image-source/images/ibmcloud
+    get_params:
+      skip_download: true
 - name: update-eirini-scf-builder-image
   plan:
   - get: eirini-scf-builder-image-source
@@ -22,6 +26,8 @@ jobs:
   - put: eirini-scf-builder-image
     params:
       build: eirini-scf-builder-image-source/images/scf-builder
+    get_params:
+      skip_download: true
 - name: update-gcloud-image
   plan:
   - get: golang-image
@@ -33,7 +39,17 @@ jobs:
   - put: gcloud-image
     params:
       build: gcloud-source/images/gcloud
-
+    get_params:
+      skip_download: true
+- name: update-buildah-image
+  plan:
+  - get: buildah-image-source
+    trigger: true
+  - put: buildah-image
+    params:
+      build: buildah-image-source/images/buildah
+    get_params:
+      skip_download: true
 resources:
 - name: eirini-ci-image-source
   type: git
@@ -61,6 +77,15 @@ resources:
     branch: master
     paths:
     - images/scf-builder/Dockerfile
+
+- name: buildah-image-source
+  type: git
+  icon: git
+  source:
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+    branch: master
+    paths:
+    - images/buildah/Dockerfile
 
 - name: eirini-ci-image
   type: docker-image
@@ -106,5 +131,13 @@ resources:
   icon: docker
   source:
     repository: eirini/gcloud
+    username: ((docker_hub_user))
+    password: ((docker_hub_password))
+
+- name: buildah-image
+  type: docker-image
+  icon: docker
+  source:
+    repository: eirini/buildah
     username: ((docker_hub_user))
     password: ((docker_hub_password))
