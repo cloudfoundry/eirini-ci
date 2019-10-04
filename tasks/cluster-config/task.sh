@@ -9,7 +9,6 @@ readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
 readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
-  export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
   export KUBECONFIG="$PWD/kube/config"
   init-helm
   set-kube-state
@@ -26,7 +25,7 @@ set-kube-state() {
   local node_ip
   local ingress_endpoint
   node_ip="$(get-node-ip)"
-  ingress_endpoint="$(get-ingress-endpoint)"
+  ingress_endpoint="$(<ingress/endpoint)"
 
   pushd cluster-state
   mkdir --parent "$CLUSTER_DIR"
@@ -108,11 +107,6 @@ get-node-ip() {
 
 get-node-ips() {
   kubectl get nodes --output jsonpath='{ $.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
-  echo
-}
-
-get-ingress-endpoint() {
-  ibmcloud ks cluster-get "$CLUSTER_NAME" --json | jq --raw-output '.ingressHostname'
   echo
 }
 

@@ -48,11 +48,15 @@ jobs:
         IBMCLOUD_PASSWORD: ((ibmcloud-password))
         CLUSTER_NAME: (( grab meta.cluster-name ))
       file: ci-resources/tasks/download-kubeconfig/task.yml
-    - task: create-cluster-config
+    - task: get-iks-ingress-endpoint
       params:
         IBMCLOUD_ACCOUNT: ((ibmcloud-account))
         IBMCLOUD_USER: ((ibmcloud-user))
         IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+      file: ci-resources/tasks/get-iks-ingress-endpoint/task.yml
+    - task: create-cluster-config
+      params:
         CLUSTER_NAME: (( grab meta.cluster-name ))
         STORAGE_CLASS: ((storage_class))
         CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
