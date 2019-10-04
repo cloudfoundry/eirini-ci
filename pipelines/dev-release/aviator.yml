@@ -11,23 +11,27 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{eirini-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
   - skipped_cats
+  - cloud-specific
   merge:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
