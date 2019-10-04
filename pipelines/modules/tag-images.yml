@@ -16,17 +16,11 @@ jobs:
       trigger: true
       passed:
       - create-go-docker-images
-      - create-opi-init-docker-image
       - create-secret-smuggler-docker-image
       - create-fluentd-docker-image
     - get: docker-opi
       passed:
       - create-go-docker-images
-      params:
-        save: true
-    - get: docker-opi-init
-      passed:
-      - create-opi-init-docker-image
       params:
         save: true
     - get: docker-secret-smuggler
@@ -57,10 +51,6 @@ jobs:
       params:
         additional_tags: deployment-version/version
         load: docker-opi
-    - put: docker-opi-init
-      params:
-        additional_tags: deployment-version/version
-        load: docker-opi-init
     - put: docker-secret-smuggler
       params:
         additional_tags: deployment-version/version

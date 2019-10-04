@@ -4,7 +4,5 @@ jobs:
   .: (( inject hooks.failure ))
 - name: create-go-docker-images
   .: (( inject hooks.failure ))
-- name: create-opi-init-docker-image
-  .: (( inject hooks.failure ))
 - name: create-secret-smuggler-docker-image
   .: (( inject hooks.failure ))

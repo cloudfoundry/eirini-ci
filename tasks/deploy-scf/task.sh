@@ -50,7 +50,6 @@ helm-install() {
   if [[ -f deployment-version/version ]]; then
     image_tag=$(cat deployment-version/version)
     override_image_args=(
-      "--set" "eirini.opi.init_image=eirini/opi-init"
       "--set" "eirini.opi.image=eirini/opi"
       "--set" "eirini.opi.bits_waiter_image=eirini/bits-waiter"
       "--set" "eirini.opi.rootfs_patcher_image=eirini/rootfs-patcher"

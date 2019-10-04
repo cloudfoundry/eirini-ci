@@ -43,19 +43,10 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   modify:
     delete:
-      - "resources.name:eirini-opi-init"
       - "resources.name:eirini-secret-smuggler"
       - "resources.name:eirini-fluentd"
       - "jobs.name:run-fluentd-unit-tests.plan.task:run-unit-tests.input_mapping"
     set:
-      # Build opi-init image for every commt on eirini
-      - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini-opi-init.get
-        value: eirini
-      - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
-        value: eirini/docker/opi/init
-      - path: jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping.repository
-        value: eirini
-
       # Build secret-smuggler image for every commt on eirini
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
         value: eirini

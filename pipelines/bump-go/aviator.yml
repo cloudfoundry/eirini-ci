@@ -49,7 +49,6 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
   modify:
     delete:
-      - "resources.name:eirini-opi-init"
       - "resources.name:eirini-secret-smuggler"
       - "resources.name:eirini-fluentd"
       - "jobs.name:run-fluentd-unit-tests.plan.task:run-unit-tests.input_mapping"
@@ -57,8 +56,6 @@ spruce:
       - "jobs.name:run-tests.plan.0.in_parallel.get:cluster-((world-name))-staging-event-ready.trigger"
       - "jobs.name:run-tests.plan.0.in_parallel.get:sample-configs.trigger"
     set:
-      - path: jobs.name:create-opi-init-docker-image.plan.task:make-docker-build-args.input_mapping.repository
-        value: eirini
       - path: jobs.name:create-secret-smuggler-docker-image.plan.task:make-docker-build-args.input_mapping.repository
         value: eirini
       - path: jobs.name:create-fluentd-docker-image.plan.task:make-docker-build-args.input_mapping.repository
@@ -67,12 +64,6 @@ spruce:
       # Run test after cleanup-environment
       - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
         value: bump-go
-
-      # Build opi-init image from PR, after cleanup environment
-      - path: jobs.name:create-opi-init-docker-image.plan.0.in_parallel.get:eirini-opi-init.get
-        value: eirini
-      - path: jobs.name:create-opi-init-docker-image.plan.put:docker-opi-init.params.build
-        value: eirini/docker/opi/init
 
       # Build secret-smuggler image from PR, after cleanup environment
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get

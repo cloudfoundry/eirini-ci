@@ -6,5 +6,3 @@ jobs:
   .: (( inject hooks.failure ))
 - name: update-fluentd-version-files
   .: (( inject hooks.failure ))
-- name: update-opi-init-version-files
-  .: (( inject hooks.failure ))

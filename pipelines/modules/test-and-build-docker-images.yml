@@ -6,7 +6,6 @@ groups:
   - run-tests
   - run-fluentd-unit-tests
   - create-go-docker-images
-  - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
   - create-fluentd-docker-image
 - name: test-and-build
@@ -14,7 +13,6 @@ groups:
   - run-tests
   - run-fluentd-unit-tests
   - create-go-docker-images
-  - create-opi-init-docker-image
   - create-secret-smuggler-docker-image
   - create-fluentd-docker-image
 jobs:
@@ -78,21 +76,6 @@ jobs:
         build: eirini
         dockerfile: eirini/docker/rootfs-patcher/Dockerfile
         build_args_file: docker-build-args/args.json
-- name: create-opi-init-docker-image
-  plan:
-  - in_parallel:
-    - get: eirini-opi-init
-      trigger: true
-      passed: [] # Required for PR pipeline
-    - get: ci-resources
-  - task: make-docker-build-args
-    file: ci-resources/tasks/make-docker-build-args/task.yml
-    input_mapping:
-      repository: eirini-opi-init
-  - put: docker-opi-init
-    params:
-      build: eirini-opi-init/docker/opi/init
-      build_args_file: docker-build-args/args.json
 - name: create-secret-smuggler-docker-image
   plan:
   - in_parallel:
@@ -165,14 +148,6 @@ resources:
     - docker/opi/init/
     - docker/registry/certs/smuggler/
     - fluentd/
-- name: eirini-opi-init
-  type: git
-  icon: git
-  source:
-    uri: https://github.com/cloudfoundry-incubator/eirini.git
-    branch: ((eirini-branch))
-    paths:
-    - docker/opi/init/
 - name: eirini-secret-smuggler
   type: git
   icon: git
@@ -194,14 +169,6 @@ resources:
   icon: docker
   source:
     repository: eirini/opi
-    tag: pipeline
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
-- name: docker-opi-init
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/opi-init
     tag: pipeline
     username: ((dockerhub-user))
     password: ((dockerhub-password))
