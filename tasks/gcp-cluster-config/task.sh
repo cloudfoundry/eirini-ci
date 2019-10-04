@@ -28,6 +28,9 @@ bits:
   ingress:
     endpoint: $cluster_domain
     use: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      certmanager.k8s.io/issuer: "letsencrypt-dns-issuer"
   opi: # delete me later
     ingress_endpoint: $cluster_domain
     use_registry_ingress: true
