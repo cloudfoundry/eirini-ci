@@ -35,7 +35,6 @@ bits:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
     BLOBSTORE_PASSWORD: $BITS_SECRET
-  tls_secret_name: ingress-tls
 
 env:
     DOMAIN: $cluster_domain

@@ -26,7 +26,6 @@ create-issuer() {
 create-certificates() {
   kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/router-cert.yml)
   kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/uaa-cert.yml)
-  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/bits-cert.yml)
 }
 
 cert-status() {
@@ -39,7 +38,6 @@ wait-for-certificates() {
   while true; do
     if [[ $(cert-status "router-crt") == "True" ]] &&
       [[ $(cert-status "uaa-crt") == "True" ]] &&
-      [[ $(cert-status "bits-crt") == "True" ]]; then
       break
     fi
     counter=$((counter + 1))
