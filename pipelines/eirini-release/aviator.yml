@@ -183,7 +183,7 @@ spruce:
   - with:
       files:
       - $PROJECT_ROOT/pipelines/eirini-release/gke.yml
-      - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
+      - $PROJECT_ROOT/pipelines/modules/gke-opi-skipped-cats.yml
       - $PROJECT_ROOT/notifications/slack/hook.yml
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
