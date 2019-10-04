@@ -37,8 +37,7 @@ wait-for-certificates() {
   local counter=0
   while true; do
     if [[ $(cert-status "router-crt") == "True" ]] &&
-      [[ $(cert-status "uaa-crt") == "True" ]]
-        then
+      [[ $(cert-status "uaa-crt") == "True" ]]; then
       break
     fi
     counter=$((counter + 1))
