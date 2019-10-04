@@ -3,15 +3,15 @@ groups:
 - name: all
   jobs:
   - (( prepend ))
-  - bump-go
+  - bump-go-packages
   - merge-bump
 - name: test-and-build
   jobs:
   - (( prepend ))
-  - bump-go
+  - bump-go-packages
   - merge-bump
 jobs:
-- name: bump-go-eirini
+- name: bump-go-packages
   plan:
   - in_parallel:
     - get: bump-day

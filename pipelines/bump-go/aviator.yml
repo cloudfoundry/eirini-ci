@@ -14,6 +14,7 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/deploy-eirini.yml
   prune:
   - meta
+  - cloud-specific
   modify:
     delete:
       - "jobs.name:deploy-scf-eirini-((world-name)).plan.get:eirini-release.trigger"
@@ -31,12 +32,14 @@ spruce:
       - $PROJECT_ROOT/pipelines/modules/deploy-with-image-tag.yml
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/smoke-tests-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{eirini-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/run-core-cats.yml
   prune:
   - meta
   - skipped_cats
+  - cloud-specific
   merge:
   - with:
       files:
@@ -44,6 +47,7 @@ spruce:
       - $PROJECT_ROOT/pipelines/dev/meta.yml
       - $PROJECT_ROOT/pipelines/modules/opi-skipped-cats.yml
       - $PROJECT_ROOT/pipelines/modules/cats-with-eirini-release-trigger.yml
+      - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
   to: {{cats-with-opi}}
 
 - base: $PROJECT_ROOT/pipelines/modules/test-and-build-docker-images.yml
@@ -63,7 +67,7 @@ spruce:
 
       # Run test after cleanup-environment
       - path: jobs.name:run-tests.plan.0.in_parallel.get:eirini.passed.+
-        value: bump-go
+        value: bump-go-packages
 
       # Build secret-smuggler image from PR, after cleanup environment
       - path: jobs.name:create-secret-smuggler-docker-image.plan.0.in_parallel.get:eirini-secret-smuggler.get
