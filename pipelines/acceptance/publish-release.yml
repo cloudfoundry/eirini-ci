@@ -24,7 +24,13 @@ resources:
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git
     branch: gh-pages-pr
     private_key: ((eirini-release-repo-key))
-
+- name: eirini
+  type: git
+  icon: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini
+    branch: master
+    private_key: ((eirini-repo-key))
 groups:
 - name: publish-release
   jobs:
@@ -67,6 +73,14 @@ jobs:
     params:
      GITHUB_TOKEN: ((github-access-token))
     file: ci-resources/tasks/create-github-pr/task.yml
+  - task: checkout-eirini-sha
+    privileged: true
+    file: ci-resources/tasks/checkout-eirini-sha
+  - put: eirini
+    params:
+      repository: eirini-modified
+      only_tag: true
+      tag: eirini-release-version/version
   - put: eirini-release-version
     params:
       file: eirini-release-version/version

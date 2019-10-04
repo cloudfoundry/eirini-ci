@@ -1,0 +1,16 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: eirini/buildah
+inputs:
+- name: eirini-release
+- name: eirini
+- name: ci-resources
+
+outputs:
+- name: eirini-modified
+
+run:
+  path: ./ci-resources/tasks/checkout-eirini-sha/task.sh
