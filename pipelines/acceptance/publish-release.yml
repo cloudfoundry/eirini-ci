@@ -83,7 +83,7 @@ jobs:
   - get: eirini
   - task: checkout-eirini-sha
     privileged: true
-    file: ci-resources/tasks/checkout-sha-by-image
+    file: ci-resources/tasks/checkout-sha-by-image/task.yml
     params:
       VERSION_FILE: opi
       IMAGE_NAME: eirini/opi
@@ -100,7 +100,7 @@ jobs:
   - get: staging
   - task: checkout-staging-sha
     privileged: true
-    file: ci-resources/tasks/checkout-sha-by-image
+    file: ci-resources/tasks/checkout-sha-by-image/task.yml
     params:
       VERSION_FILE: staging-downloader
       IMAGE_NAME: eirini/recipe-downloader
