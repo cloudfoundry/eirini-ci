@@ -2,6 +2,10 @@ spruce:
 - base: $PROJECT_ROOT/pipelines/modules/kube-cluster.yml
   prune:
   - meta
+  modify:
+    delete:
+      - jobs.name:delete-cluster-((world-name)).plan.get:die-another-day
+      - resources.name:die-another-day
   merge:
   - with:
       files:
