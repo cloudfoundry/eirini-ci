@@ -70,7 +70,14 @@ resource "google_container_node_pool" "node-pool" {
   name       = "${var.name}"
   location   = "${var.region}-b"
   cluster    = "${google_container_cluster.cluster.name}"
-  node_count = var.node_count_per_zone
+  management {
+    auto_repair = true
+    auto_upgrade = true
+  }
+  autoscaling {
+    min_node_count = var.node_count_per_zone
+    max_node_count = 12
+  }
 
   node_config {
     machine_type = "${var.node_machine_type}"
