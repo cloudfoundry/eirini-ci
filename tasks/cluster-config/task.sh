@@ -38,9 +38,6 @@ bits:
   ingress:
     endpoint: $ingress_endpoint
     use: true
-  opi: # delete me later
-    ingress_endpoint: $ingress_endpoint
-    use_registry_ingress: true
   secrets:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET

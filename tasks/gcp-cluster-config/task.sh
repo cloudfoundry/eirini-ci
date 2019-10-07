@@ -22,18 +22,12 @@ set-kube-state() {
 bits:
   env:
     DOMAIN: $cluster_domain
-  kube: # delete me later
-    external_ips:
-    - delete-me-later
   ingress:
     endpoint: $cluster_domain
     use: true
     annotations:
       kubernetes.io/ingress.class: "nginx"
       certmanager.k8s.io/cluster-issuer: "letsencrypt-dns-issuer"
-  opi: # delete me later
-    ingress_endpoint: $cluster_domain
-    use_registry_ingress: true
   secrets:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
