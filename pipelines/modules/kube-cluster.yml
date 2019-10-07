@@ -13,6 +13,33 @@ groups:
   - (( concat "delete-cluster-" meta.cluster-name ))
 
 jobs:
+  - name: (( concat "delete-cluster-" meta.cluster-name ))
+    plan:
+    - get: ci-resources
+    - task: download-kubeconfig
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+      file: ci-resources/tasks/download-kubeconfig/task.yml
+    - task: delete-kubernetes-cluster
+      file: ci-resources/tasks/delete-cluster/task.yml
+      params:
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+    - get: cluster-state
+    - task: delete-values-file
+      file: ci-resources/tasks/clean-up-cluster-config/task.yml
+      params:
+        CLUSTER_NAME: (( grab meta.cluster-name ))
+    - put: cluster-state
+      params:
+        merge: true
+        repository: state-modified
+
   - name: (( concat "create-cluster-" meta.cluster-name ))
     plan:
     - get: ci-resources
@@ -87,33 +114,6 @@ jobs:
     - put: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
       params:
         bump: major
-
-  - name: (( concat "delete-cluster-" meta.cluster-name ))
-    plan:
-    - get: ci-resources
-    - task: download-kubeconfig
-      params:
-        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-        IBMCLOUD_USER: ((ibmcloud-user))
-        IBMCLOUD_PASSWORD: ((ibmcloud-password))
-        CLUSTER_NAME: (( grab meta.cluster-name ))
-      file: ci-resources/tasks/download-kubeconfig/task.yml
-    - task: delete-kubernetes-cluster
-      file: ci-resources/tasks/delete-cluster/task.yml
-      params:
-        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-        IBMCLOUD_USER: ((ibmcloud-user))
-        IBMCLOUD_PASSWORD: ((ibmcloud-password))
-        CLUSTER_NAME: (( grab meta.cluster-name ))
-    - get: cluster-state
-    - task: delete-values-file
-      file: ci-resources/tasks/clean-up-cluster-config/task.yml
-      params:
-        CLUSTER_NAME: (( grab meta.cluster-name ))
-    - put: cluster-state
-      params:
-        merge: true
-        repository: state-modified
 
 resources:
   - name: (( concat "cluster-" meta.cluster-name "-staging-event-created" ))
