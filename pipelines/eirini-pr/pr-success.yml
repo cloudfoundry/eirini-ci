@@ -1,9 +1,0 @@
-jobs:
-  - (( merge ))
-  - name: "run-core-cats-eirini-pr"
-    plan:
-      - (( append ))
-      - put: eirini
-        params:
-          path: eirini
-          status: success

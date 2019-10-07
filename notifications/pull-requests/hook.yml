@@ -1,7 +1,0 @@
-hooks:
-  failure:
-    on_failure:
-      put: (( grab meta.pr-repo ))
-      params:
-        path:  (( grab meta.pr-repo ))
-        status: failure
