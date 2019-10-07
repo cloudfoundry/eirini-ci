@@ -73,7 +73,6 @@ resource "google_container_node_pool" "node-pool" {
   node_count = var.node_count_per_zone
 
   node_config {
-    preemptible  = true
     machine_type = "${var.node_machine_type}"
     image_type = "COS_CONTAINERD"
 
