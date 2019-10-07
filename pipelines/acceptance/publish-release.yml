@@ -31,6 +31,13 @@ resources:
     uri: git@github.com:cloudfoundry-incubator/eirini
     branch: master
     private_key: ((eirini-repo-key))
+- name: staging
+  type: git
+  icon: git
+  source:
+    uri: git@github.com:cloudfoundry-incubator/eirini-staging
+    branch: master
+    private_key: ((eirini-staging-repo-key))
 groups:
 - name: publish-release
   jobs:
@@ -73,10 +80,13 @@ jobs:
     params:
      GITHUB_TOKEN: ((github-access-token))
     file: ci-resources/tasks/create-github-pr/task.yml
-
+  - get: eirini
   - task: checkout-eirini-sha
     privileged: true
     file: ci-resources/tasks/checkout-sha-by-image
+    params:
+      VERSION_FILE: opi
+      IMAGE_NAME: eirini/opi
     input_mapping:
       repository: eirini
     output_mapping:
@@ -84,6 +94,23 @@ jobs:
   - put: eirini
     params:
       repository: eirini-modified
+      only_tag: true
+      tag: eirini-release-version/version
+
+  - get: staging
+  - task: checkout-staging-sha
+    privileged: true
+    file: ci-resources/tasks/checkout-sha-by-image
+    params:
+      VERSION_FILE: staging-downloader
+      IMAGE_NAME: eirini/recipe-downloader
+    input_mapping:
+      repository: staging
+    output_mapping:
+      repository-modified: staging-modified
+  - put: staging
+    params:
+      repository: staging-modified
       only_tag: true
       tag: eirini-release-version/version
 
