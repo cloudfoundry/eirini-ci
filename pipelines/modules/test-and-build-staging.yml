@@ -89,6 +89,7 @@ jobs:
 resources:
 - name: eirini-staging
   type: git
+  icon: git
   source:
     uri: https://github.com/cloudfoundry-incubator/eirini-staging
     branch: master
@@ -107,18 +108,21 @@ resources:
 
 - name: staging-downloader-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/recipe-downloader
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: staging-executor-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/recipe-executor
     username: ((dockerhub-user))
     password: ((dockerhub-password))
 - name: staging-uploader-image
   type: docker-image
+  icon: docker
   source:
     repository: eirini/recipe-uploader
     username: ((dockerhub-user))
