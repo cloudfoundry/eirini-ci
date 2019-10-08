@@ -59,23 +59,32 @@ jobs:
 
 - name: build-native-staging-images
   plan:
-  - get: eirini-staging
-    trigger: true
-    passed:
-    - staging-test
+  - in_parallel:
+    - get: eirini-staging
+      trigger: true
+      passed:
+      - staging-test
+    - get: ci-resources
+  - task: make-docker-build-args
+    file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      repository: eirini-staging
   - in_parallel:
     - put: staging-downloader-image
       params:
         build: eirini-staging
         dockerfile: eirini-staging/image/downloader/Dockerfile
+        build_args_file: docker-build-args/args.json
     - put: staging-executor-image
       params:
         build: eirini-staging
         dockerfile: eirini-staging/image/executor/Dockerfile
+        build_args_file: docker-build-args/args.json
     - put: staging-uploader-image
       params:
         build: eirini-staging
         dockerfile: eirini-staging/image/uploader/Dockerfile
+        build_args_file: docker-build-args/args.json
 
 resources:
 - name: eirini-staging
