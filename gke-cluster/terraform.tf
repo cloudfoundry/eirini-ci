@@ -78,6 +78,7 @@ resource "google_container_node_pool" "node-pool" {
     min_node_count = var.node_count_per_zone
     max_node_count = 12
   }
+  initial_node_count = var.node_count_per_zone
 
   node_config {
     disk_size_gb = 200
