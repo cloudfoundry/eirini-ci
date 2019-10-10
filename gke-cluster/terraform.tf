@@ -80,6 +80,8 @@ resource "google_container_node_pool" "node-pool" {
   }
 
   node_config {
+    disk_size_gb = 200
+    disk_type = "pd-ssd"
     machine_type = "${var.node_machine_type}"
     image_type = "COS_CONTAINERD"
 
