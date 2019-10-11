@@ -24,6 +24,7 @@ jobs:
   plan:
   - get: eirini-release
     trigger: true
+    passed: [ helm-lint ]
   - put: (( concat "lock-" meta.cluster-name ))
     params: {acquire: true}
 

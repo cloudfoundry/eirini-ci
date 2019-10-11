@@ -200,6 +200,12 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/ff-master.yml
   to: {{ff-master}}
 
+# Helm lint
+- base: $PROJECT_ROOT/pipelines/modules/helm-lint.yml
+  prune:
+  - meta
+  to: {{helm-lint}}
+
 # Bring it on!
 - base: $PROJECT_ROOT/pipelines/modules/empty.yml
   merge:
@@ -217,6 +223,7 @@ spruce:
       - {{cats-with-opi}}
       - {{cats-freshini}}
       - {{cats-gkerini}}
+      - {{helm-lint}}
       - {{ff-master}}
   to: $PIPELINE_YML
 
