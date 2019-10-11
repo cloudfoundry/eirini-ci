@@ -1,25 +1,16 @@
 #!/bin/bash
-set -u
-
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-LIGHT_RED='\033[1;31m'
-YELLOW='\033[0;93m'
-NOCOLOR='\033[0m'
+set -euo pipefail
 
 helm init --client-only >/dev/null
-pushd eirini-release/helm/cf || exit
+helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
+pushd eirini-release/helm/cf
 helm dep update
-popd || exit
+diff_req=$(git diff requirements.lock)
+if [ "$diff_req" != "" ]; then
+  echo "requirements.lock is not committed"
+  exit 1
+fi
+popd
 
-exit_code=0
-for filename in ci-resources/sample-configs/*; do
-  if helm lint ./eirini-release/helm/cf --values "$filename"; then
-    echo -e "${GREEN} PASS - ${YELLOW} $(basename "$filename") ${NOCOLOR}"
-  else
-    echo -e "${RED} FAIL - ${LIGHT_RED} $(basename "$filename") ${NOCOLOR}"
-    exit_code=1
-  fi
-done
+eirini-release/scripts/helm-lint.sh
 
-exit $exit_code
