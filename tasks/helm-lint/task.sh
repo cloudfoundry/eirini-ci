@@ -13,4 +13,3 @@ fi
 popd
 
 eirini-release/scripts/helm-lint.sh
-
