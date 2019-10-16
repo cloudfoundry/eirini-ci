@@ -77,7 +77,6 @@ jobs:
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/block-network-access/task.yml
   - task: recheck-smoke-eirini-because-scf-restart
-    attempts: 70
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml
