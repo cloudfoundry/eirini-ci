@@ -40,7 +40,6 @@ jobs:
       CLUSTER_NAME: (( grab meta.cluster-name ))
       USE_CERT_MANAGER: (( grab cloud-specific.use-cert-manager ))
   - task: waiting-for-uaa
-    attempts: 70
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/waiting-for-uaa/task.yml
@@ -67,7 +66,6 @@ jobs:
       VERSIONING_CLUSTER: ((world-name))
       USE_CERT_MANAGER: (( grab cloud-specific.use-cert-manager ))
   - task: smoke-eirini
-    attempts: 70
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
     file: ci-resources/tasks/eirini-smoke-tests/task.yml

@@ -15,13 +15,21 @@ main() {
 }
 
 check-scf-readiness() {
-  local exit_code
-  set +e
-  kubectl get pods --namespace scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep -E "[01]/2|0/1"
-  exit_code="$?"
-  set -e
+  local counter=0
+  while true; do
+    if kubectl get pods --namespace scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep -E "[01]/2|0/1"; then
+      counter=$((counter + 1))
+    else
+      echo "SCF is ready"
+      exit 0
+    fi
 
-  [ "$exit_code" -eq 1 ] || exit 1
+    if [[ $counter -gt 600 ]]; then
+      echo "UAA is NOT ready" >&2
+      exit 1
+    fi
+    sleep 1
+  done
 }
 
 main
