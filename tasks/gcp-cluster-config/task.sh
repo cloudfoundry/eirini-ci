@@ -27,7 +27,7 @@ bits:
     use: true
     annotations:
       kubernetes.io/ingress.class: "nginx"
-      certmanager.k8s.io/cluster-issuer: "letsencrypt-dns-issuer"
+      cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
   secrets:
     BITS_SERVICE_SECRET: $BITS_SECRET
     BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
