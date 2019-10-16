@@ -11,8 +11,6 @@ main() {
   install-cert-manager-chart
   create-dns-editor-secret
   create-issuer
-  create-certificates
-  wait-for-certificates
 }
 
 create-dns-editor-secret() {
@@ -23,31 +21,9 @@ create-issuer() {
   kubectl apply -f ci-resources/cert-manager/letsencrypt-dns-issuer.yaml
 }
 
-create-certificates() {
-  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/router-cert.yml)
-  kubectl apply -f <(sed "s/<dnsName>/${CLUSTER_NAME}.ci-envs.eirini.cf-app.com/" ci-resources/cert-manager/uaa-cert.yml)
-}
-
 cert-status() {
   local cert_name=${1:?No cert name}
   kubectl get certificate -n cert-manager "$cert_name" -o jsonpath='{.status.conditions[?(@.type == "Ready")].status}'
-}
-
-wait-for-certificates() {
-  local counter=0
-  while true; do
-    if [[ $(cert-status "router-crt") == "True" ]] &&
-      [[ $(cert-status "uaa-crt") == "True" ]]; then
-      break
-    fi
-    counter=$((counter + 1))
-
-    if [[ $counter -gt 600 ]]; then
-      echo "Failed to get router certificate" >&2
-      exit 1
-    fi
-    sleep 1
-  done
 }
 
 init-helm() {

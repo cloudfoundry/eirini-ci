@@ -20,8 +20,6 @@ main() {
 
 export-certs() {
   if [ "$USE_CERT_MANAGER" == "true" ]; then
-    INGRESS_CRT="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-    INGRESS_KEY="$(kubectl get secret router-ingress --namespace cert-manager -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
     ROOT_CA="$(curl -s https://letsencrypt.org/certs/isrgrootx1.pem.txt)"
     INTERMEDIATE_CA="$(curl -s https://letsencrypt.org/certs/letsencryptauthorityx3.pem.txt)"
     CA_CERT="${ROOT_CA}
@@ -61,8 +59,6 @@ helm-install() {
 
   if [ "$USE_CERT_MANAGER" == "true" ]; then
     cert_args=(
-      "--set" "ingress.tls.crt=${INGRESS_CRT}"
-      "--set" "ingress.tls.key=${INGRESS_KEY}"
     )
   else
     cert_args=(

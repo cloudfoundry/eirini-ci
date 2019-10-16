@@ -56,6 +56,8 @@ ingress:
   enabled: true
   annotations:
     "nginx.ingress.kubernetes.io/proxy-body-size": "100m"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
 
 sizing:
   diego_cell:
