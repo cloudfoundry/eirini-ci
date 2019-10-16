@@ -69,7 +69,7 @@ install-nginx-chart() {
 }
 
 install-cert-manager-chart() {
-  kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
+  kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml --validate=false
   kubectl get namespace cert-manager || kubectl create namespace cert-manager
   kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true --overwrite
   helm repo add jetstack https://charts.jetstack.io
@@ -77,7 +77,7 @@ install-cert-manager-chart() {
   helm upgrade cert-manager \
     --install \
     --namespace cert-manager \
-    --version v0.10.0 \
+    --version v0.11.0 \
     jetstack/cert-manager \
     --wait
 }
