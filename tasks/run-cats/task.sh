@@ -22,7 +22,8 @@ configure_tests() {
   cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
   local cf_admin_password
   cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
-  cf enable-feature-flag diego_docker
+
+  enable_docker_feature_flag "$cf_domain" "$cf_admin_password"
 
   cat >integration_config.json <<EOF
     {
@@ -61,6 +62,16 @@ configure_tests() {
 EOF
   CONFIG="$(readlink -nf integration_config.json)"
   export CONFIG
+}
+
+enable_docker_feature_flag() {
+  local cf_domain cf_admin_password
+  cf_domain="$1"
+  cf_admin_password="$2"
+
+  cf api "api.$cf_domain" --skip-ssl-validation
+  cf auth admin "$cf_admin_password"
+  cf enable-feature-flag diego_docker
 }
 
 run_tests() {
