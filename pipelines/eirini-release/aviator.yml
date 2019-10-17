@@ -133,6 +133,10 @@ spruce:
       - $PROJECT_ROOT/notifications/slack/run-core-cats.yml
       - $PROJECT_ROOT/pipelines/eirini-release/pass-lock-through-cats.yml
       - $PROJECT_ROOT/pipelines/modules/cloud-specific/iks.yml
+  modify:
+    set:
+     - path: jobs.name:run-core-cats-with-diego.plan.task:run cats.params.INCLUDE_DOCKER
+       value: true
   to: {{cats-with-diego}}
 
 # With-OPI CATs

@@ -22,6 +22,7 @@ configure_tests() {
   cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
   local cf_admin_password
   cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+  cf enable-feature-flag diego_docker
 
   cat >integration_config.json <<EOF
     {
