@@ -16,6 +16,7 @@ main() {
       echo UAA is ready
       exit 0
     fi
+    printf "·"
     counter=$((counter + 1))
 
     if [[ $counter -gt 600 ]]; then

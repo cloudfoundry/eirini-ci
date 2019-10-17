@@ -18,6 +18,7 @@ check-scf-readiness() {
   local counter=0
   while true; do
     if kubectl get pods --namespace scf | grep -E "api-*|eirini-*|^router-*|bits-*" | grep -E "[01]/2|0/1"; then
+      printf "·"
       counter=$((counter + 1))
     else
       echo "SCF is ready"
