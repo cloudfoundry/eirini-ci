@@ -1,8 +1,4 @@
-let Concourse = ./deps/dhall-concourse/types.dhall
-
-let Defaults = ./deps/dhall-concourse/defaults.dhall
-
-let Helpers = ./deps/dhall-concourse/helpers.dhall
+let Concourse = ./deps/concourse.dhall
 
 let Prelude = ./deps/prelude.dhall
 
@@ -10,29 +6,29 @@ let keyText = Prelude.JSON.keyText
 
 let RunTestRequirements =
 	  { eirini :
-		  Concourse.Resource
+		  Concourse.Types.Resource
 	  , ciResources :
-		  Concourse.Resource
+		  Concourse.Types.Resource
 	  , sampleConfigs :
-		  Concourse.Resource
+		  Concourse.Types.Resource
 	  , clusterStagingEventReady :
-		  Concourse.Resource
+		  Concourse.Types.Resource
 	  , clusterName :
 		  Text
 	  }
 
 let getEverything
-	: RunTestRequirements → Concourse.Step
+	: RunTestRequirements → Concourse.Types.Step
 	=   λ(reqs : RunTestRequirements)
 	  → let getEirini =
-			  Helpers.getStep
-			  (   Defaults.GetStep
+			  Concourse.helpers.getStep
+			  (   Concourse.defaults.GetStep
 				⫽ { resource = reqs.eirini, trigger = Some True }
 			  )
 
 		let getClusterEventReady =
-			  Helpers.getStep
-			  (   Defaults.GetStep
+			  Concourse.helpers.getStep
+			  (   Concourse.defaults.GetStep
 				⫽ { resource =
 					  reqs.clusterStagingEventReady
 				  , trigger =
@@ -41,14 +37,14 @@ let getEverything
 			  )
 
 		let getCIResources =
-			  Helpers.getStep
-			  (Defaults.GetStep ⫽ { resource = reqs.ciResources })
+			  Concourse.helpers.getStep
+			  (Concourse.defaults.GetStep ⫽ { resource = reqs.ciResources })
 
 		let getSampleConfigs =
-			  Helpers.getStep
-			  (Defaults.GetStep ⫽ { resource = reqs.sampleConfigs })
+			  Concourse.helpers.getStep
+			  (Concourse.defaults.GetStep ⫽ { resource = reqs.sampleConfigs })
 
-		in  Helpers.aggregateStep
+		in  Concourse.helpers.aggregateStep
 			[ getEirini
 			, getClusterEventReady
 			, getCIResources
@@ -56,13 +52,13 @@ let getEverything
 			]
 
 let runUnitTests
-	: Concourse.Step
-	= Helpers.taskStep
-	  (   Defaults.TaskStep
+	: Concourse.Types.Step
+	= Concourse.helpers.taskStep
+	  (   Concourse.defaults.TaskStep
 		⫽ { task =
 			  "run-unit-tests"
 		  , config =
-			  Concourse.TaskSpec.File
+			  Concourse.Types.TaskSpec.File
 			  "ci-resources/tasks/run-unit-tests/task.yml"
 		  , input_mapping =
 			  Some [ keyText "eirini-source" "eirini" ]
@@ -70,13 +66,13 @@ let runUnitTests
 	  )
 
 let runStaticChecks
-	: Concourse.Step
-	= Helpers.taskStep
-	  (   Defaults.TaskStep
+	: Concourse.Types.Step
+	= Concourse.helpers.taskStep
+	  (   Concourse.defaults.TaskStep
 		⫽ { task =
 			  "run-static-checks"
 		  , config =
-			  Concourse.TaskSpec.File
+			  Concourse.Types.TaskSpec.File
 			  "ci-resources/tasks/run-static-checks/task.yml"
 		  , input_mapping =
 			  Some [ keyText "eirini-source" "eirini" ]
@@ -84,15 +80,15 @@ let runStaticChecks
 	  )
 
 let runIntegrationTests
-	: Text → Concourse.Step
+	: Text → Concourse.Types.Step
 	=   λ(clusterName : Text)
 	  → let downloadKubeConfig =
-			  Helpers.taskStep
-			  (   Defaults.TaskStep
+			  Concourse.helpers.taskStep
+			  (   Concourse.defaults.TaskStep
 				⫽ { task =
 					  "download-kubeconfig"
 				  , config =
-					  Concourse.TaskSpec.File
+					  Concourse.Types.TaskSpec.File
 					  "ci-resources/tasks/download-kubeconfig/task.yml"
 				  , params =
 					  Some
@@ -105,34 +101,34 @@ let runIntegrationTests
 			  )
 
 		let runTests =
-			  Helpers.taskStep
-			  (   Defaults.TaskStep
+			  Concourse.helpers.taskStep
+			  (   Concourse.defaults.TaskStep
 				⫽ { task =
 					  "run-integration-tests"
 				  , config =
-					  Concourse.TaskSpec.File
+					  Concourse.Types.TaskSpec.File
 					  "ci-resources/tasks/run-integration-tests/task.yml"
 				  , input_mapping =
 					  Some [ keyText "eirini-source" "eirini" ]
 				  }
 			  )
 
-		in  Helpers.aggregateStep [ downloadKubeConfig, runTests ]
+		in  Concourse.helpers.aggregateStep [ downloadKubeConfig, runTests ]
 
 let mkRunTestsJob
-	: RunTestRequirements → Concourse.Job
+	: RunTestRequirements → Concourse.Types.Job
 	=   λ(reqs : RunTestRequirements)
 	  → let runAllTests =
-			  Helpers.aggregateStep
+			  Concourse.helpers.aggregateStep
 			  [ runUnitTests
 			  , runStaticChecks
 			  , runIntegrationTests reqs.clusterName
 			  ]
 
-		in  Defaults.Job ⫽ { plan = [ getEverything reqs, runAllTests ] }
+		in  Concourse.defaults.Job ⫽ { plan = [ getEverything reqs, runAllTests ] }
 
 let mkJobs
-	: RunTestRequirements → List Concourse.Job
-	= λ(reqs : RunTestRequirements) → [] : List Concourse.Job
+	: RunTestRequirements → List Concourse.Types.Job
+	= λ(reqs : RunTestRequirements) → [] : List Concourse.Types.Job
 
 in  mkJobs
