@@ -42,9 +42,30 @@ groups:
 - name: publish-release
   jobs:
   - publish-release
+  - bump-minor-version
+  - bump-major-version
 
 jobs:
 - ((merge))
+- name: bump-major-version
+  plan:
+  - get: eirini-release-version
+    params:
+      bump: mmajor
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
+- name: bump-minor-version
+  plan:
+  - get: eirini-release-version
+    passed:
+    - publish-release
+    trigger: true
+    params:
+      bump: minor
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
 - name: publish-release
   plan:
   - get: ci-resources
@@ -58,8 +79,6 @@ jobs:
     passed:
     - run-smoke-tests-acceptance
   - get: eirini-release-version
-    params:
-      bump: minor
   - task: create-release
     params:
       CLUSTER_NAME: (( grab meta.cluster-name ))
@@ -114,6 +133,3 @@ jobs:
       only_tag: true
       tag: eirini-release-version/version
 
-  - put: eirini-release-version
-    params:
-      file: eirini-release-version/version
