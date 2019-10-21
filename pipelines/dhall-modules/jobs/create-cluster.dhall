@@ -23,13 +23,13 @@ let createClusterJob
                     , config = taskFile reqs.ciResources "create-cluster"
                     , params =
                         Some
-                        ( toMap
-                            (   iksParams reqs.iksCreds
-                              ⫽ { CLUSTER_NAME = reqs.clusterName
-                                , WORKER_COUNT = Natural/show reqs.workerCount
-                                }
-                            )
-                        )
+                          ( toMap
+                              (   iksParams reqs.iksCreds
+                                ⫽ { CLUSTER_NAME = reqs.clusterName
+                                  , WORKER_COUNT = Natural/show reqs.workerCount
+                                  }
+                              )
+                          )
                     }
                 )
         

@@ -43,11 +43,12 @@ let prepareClusterJob
                   ⫽ { resource = reqs.clusterState
                     , params =
                         Some
-                        ( toMap
-                            { repository = Prelude.JSON.string "state-modified"
-                            , merge = Prelude.JSON.bool True
-                            }
-                        )
+                          ( toMap
+                              { repository =
+                                  Prelude.JSON.string "state-modified"
+                              , merge = Prelude.JSON.bool True
+                              }
+                          )
                     }
                 )
         
@@ -58,11 +59,18 @@ let prepareClusterJob
                     , config = taskFile reqs.ciResources "provision-storage"
                     , params =
                         Some
-                        ( toMap
-                            (cloudCreds ⫽ { CLUSTER_NAME = reqs.clusterName })
-                        )
+                          ( toMap
+                              (cloudCreds ⫽ { CLUSTER_NAME = reqs.clusterName })
+                          )
                     }
                 )
+        
+        let putClusterReadyEvent =
+              Concourse.helpers.putStep
+                Concourse.schemas.PutStep::{
+                , resource = reqs.clusterReadyEvent
+                , params = Some (toMap { bump = Prelude.JSON.string "major" })
+                }
         
         in    Concourse.defaults.Job
             ⫽ { name = "prepare-cluster-${reqs.clusterName}"
@@ -73,6 +81,7 @@ let prepareClusterJob
                   , createClusterConfig
                   , putClusterState
                   , provisionStorage
+                  , putClusterReadyEvent
                   ]
               }
 
