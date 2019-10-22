@@ -8,9 +8,9 @@ in  { readyEventResource : Concourse.Types.Resource
     , dockerRootfsPatcher : Concourse.Types.Resource
     , dockerBitsWaiter : Concourse.Types.Resource
     , dockerSecretSmuggler : Concourse.Types.Resource
+    , dockerFluentd : Concourse.Types.Resource
     , eiriniSecretSmuggler : Concourse.Types.Resource
     , fluentdRepo : Concourse.Types.Resource
-    , dockerFluentd : Concourse.Types.Resource
     , clusterName : Text
     , iksCreds : ./iks-creds.dhall
     }

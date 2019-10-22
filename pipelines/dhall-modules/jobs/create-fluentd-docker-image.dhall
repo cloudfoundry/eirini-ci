@@ -41,7 +41,9 @@ in    λ(reqs : ../run-test-requirements.dhall)
               , params =
                   Some
                     ( toMap
-                        { build = Prelude.JSON.string "eirini-fluentd"
+                        { build =
+                            Prelude.JSON.string
+                              "${reqs.fluentdRepo.name}/fluentd"
                         , build_args_file =
                             Prelude.JSON.string "docker-build-args/args.json"
                         }
@@ -49,7 +51,7 @@ in    λ(reqs : ../run-test-requirements.dhall)
               }
       
       in  Concourse.schemas.Job::{
-          , name = "create-fluentd-docker-images"
+          , name = "create-fluentd-docker-image"
           , plan =
               [ in_parallel
                   [ ../helpers/get.dhall reqs.ciResources

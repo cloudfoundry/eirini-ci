@@ -28,7 +28,7 @@ in    λ ( reqs
                         ( toMap
                             { build =
                                 Prelude.JSON.string
-                                  "eirini-secret-smuggler/docker/registry/certs/smuggler"
+                                  "${reqs.eiriniSecretSmuggler.name}/docker/registry/certs/smuggler"
                             , build_args_file =
                                 Prelude.JSON.string
                                   "docker-build-args/args.json"

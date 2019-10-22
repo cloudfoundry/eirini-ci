@@ -16,13 +16,6 @@
   let eiriniResource =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
   
-  let fluentdRepo =
-        ../dhall-modules/resources/fluend-repo.dhall "((eirini-branch))"
-  
-  let eiriniSecretSmuggler =
-        ../dhall-modules/resources/eirini-secret-smuggler.dhall
-          "((eirini-branch))"
-  
   let sampleConfigs =
         ../dhall-modules/resources/sample-configs.dhall
           "((ci-resources-branch))"
@@ -37,6 +30,11 @@
         ../dhall-modules/resources/all-dockers.dhall
           "((dockerhub-user))"
           "((dockerhub-password))"
+  
+  let deploymentVersion =
+        ../dhall-modules/resources/deployment-version.dhall
+          "((world-name))"
+          "((gcs-json-key))"
   
   let kubeClusterReqs =
         { ciResources = ciResources
@@ -59,16 +57,27 @@
         { readyEventResource = clusterReadyEvent
         , ciResources = ciResources
         , eiriniResource = eiriniResource
-        , eiriniSecretSmuggler = eiriniSecretSmuggler
+        , eiriniSecretSmuggler = eiriniResource
+        , fluentdRepo = eiriniResource
         , sampleConfigs = sampleConfigs
-        , clusterName = "dhall-test"
+        , clusterName = "((world-name))"
         , dockerOPI = docker.opi
         , dockerBitsWaiter = docker.bitsWaiter
         , dockerRootfsPatcher = docker.rootfsPatcher
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
-        , fluentdRepo = fluentdRepo
         , iksCreds = iksCreds
+        }
+  
+  let tagImagesReqs =
+        { dockerOPI = docker.opi
+        , dockerBitsWaiter = docker.bitsWaiter
+        , dockerRootfsPatcher = docker.rootfsPatcher
+        , dockerSecretSmuggler = docker.secretSmuggler
+        , dockerFluentd = docker.fluentd
+        , worldName = "((world-name))"
+        , eiriniResource = eiriniResource
+        , deploymentVersion = deploymentVersion
         }
   
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
@@ -76,4 +85,8 @@
   let runTestJobs =
         ../dhall-modules/test-and-build-docker-images.dhall runTestReqs
   
-  in  Prelude.List.concat Concourse.Types.Job [ kubeClusterJobs, runTestJobs ]
+  let tagImages = ../dhall-modules/tag-images.dhall tagImagesReqs
+  
+  in  Prelude.List.concat
+        Concourse.Types.Job
+        [ kubeClusterJobs, runTestJobs, tagImages ]
