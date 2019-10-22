@@ -10,8 +10,6 @@ let getTriggerPassed = ../helpers/get-trigger-passed.dhall
 
 let get = ../helpers/get.dhall
 
-let taskFile = ../helpers/task-file.dhall
-
 let putDocker =
         λ(resource : Concourse.Types.Resource)
       → λ(dockerfile : Text)
@@ -34,12 +32,9 @@ let putDocker =
 let createGoDockerImages =
         λ(reqs : RunTestRequirements)
       → let makeDockerBuildArgs =
-              Concourse.helpers.taskStep
-                Concourse.schemas.TaskStep::{
-                , task = "make-docker-build-args"
-                , config = taskFile reqs.ciResources "make-docker-build-args"
-                , input_mapping = Some (toMap { repository = "eirini" })
-                }
+              ../tasks/make-docker-build-args.dhall
+                reqs.ciResources
+                reqs.eiriniResource
         
         in  Concourse.schemas.Job::{
             , name = "create-go-docker-images"

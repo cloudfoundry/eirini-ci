@@ -7,6 +7,8 @@ in  { readyEventResource : Concourse.Types.Resource
     , dockerOPI : Concourse.Types.Resource
     , dockerRootfsPatcher : Concourse.Types.Resource
     , dockerBitsWaiter : Concourse.Types.Resource
+    , dockerSecretSmuggler : Concourse.Types.Resource
+    , eiriniSecretSmuggler : Concourse.Types.Resource
     , clusterName : Text
     , iksCreds : ./iks-creds.dhall
     }

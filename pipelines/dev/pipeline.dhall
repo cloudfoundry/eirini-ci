@@ -16,6 +16,10 @@
   let eiriniResource =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
   
+  let eiriniSecretSmuggler =
+        ../dhall-modules/resources/eirini-secret-smuggler.dhall
+          "((eirini-branch))"
+  
   let sampleConfigs =
         ../dhall-modules/resources/sample-configs.dhall
           "((ci-resources-branch))"
@@ -41,6 +45,11 @@
           "((dockerhub-user))"
           "((dockerhub-password))"
   
+  let dockerSecretSmuggler =
+        ../dhall-modules/resources/docker-secret-smuggler.dhall
+          "((dockerhub-user))"
+          "((dockerhub-password))"
+  
   let kubeClusterReqs =
         { ciResources = ciResources
         , clusterState = clusterState "((github-private-key))"
@@ -62,11 +71,13 @@
         { readyEventResource = clusterReadyEvent
         , ciResources = ciResources
         , eiriniResource = eiriniResource
+        , eiriniSecretSmuggler = eiriniSecretSmuggler
         , sampleConfigs = sampleConfigs
         , clusterName = "dhall-test"
         , dockerOPI = dockerOPI
         , dockerBitsWaiter = dockerBitsWaiter
         , dockerRootfsPatcher = dockerRootfsPatcher
+        , dockerSecretSmuggler = dockerSecretSmuggler
         , iksCreds = iksCreds
         }
   
