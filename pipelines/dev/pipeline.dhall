@@ -30,23 +30,8 @@
         , user = "((ibmcloud-user))"
         }
   
-  let dockerOPI =
-        ../dhall-modules/resources/docker-opi.dhall
-          "((dockerhub-user))"
-          "((dockerhub-password))"
-  
-  let dockerBitsWaiter =
-        ../dhall-modules/resources/docker-bits-waiter.dhall
-          "((dockerhub-user))"
-          "((dockerhub-password))"
-  
-  let dockerRootfsPatcher =
-        ../dhall-modules/resources/docker-rootfs-patcher.dhall
-          "((dockerhub-user))"
-          "((dockerhub-password))"
-  
-  let dockerSecretSmuggler =
-        ../dhall-modules/resources/docker-secret-smuggler.dhall
+  let docker =
+        ../dhall-modules/resources/all-dockers.dhall
           "((dockerhub-user))"
           "((dockerhub-password))"
   
@@ -74,10 +59,10 @@
         , eiriniSecretSmuggler = eiriniSecretSmuggler
         , sampleConfigs = sampleConfigs
         , clusterName = "dhall-test"
-        , dockerOPI = dockerOPI
-        , dockerBitsWaiter = dockerBitsWaiter
-        , dockerRootfsPatcher = dockerRootfsPatcher
-        , dockerSecretSmuggler = dockerSecretSmuggler
+        , dockerOPI = docker.opi
+        , dockerBitsWaiter = docker.bitsWaiter
+        , dockerRootfsPatcher = docker.rootfsPatcher
+        , dockerSecretSmuggler = docker.secretSmuggler
         , iksCreds = iksCreds
         }
   
