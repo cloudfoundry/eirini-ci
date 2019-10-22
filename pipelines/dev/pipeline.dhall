@@ -16,6 +16,9 @@
   let eiriniResource =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
   
+  let fluentdRepo =
+        ../dhall-modules/resources/fluend-repo.dhall "((eirini-branch))"
+  
   let eiriniSecretSmuggler =
         ../dhall-modules/resources/eirini-secret-smuggler.dhall
           "((eirini-branch))"
@@ -63,6 +66,8 @@
         , dockerBitsWaiter = docker.bitsWaiter
         , dockerRootfsPatcher = docker.rootfsPatcher
         , dockerSecretSmuggler = docker.secretSmuggler
+        , dockerFluentd = docker.fluentd
+        , fluentdRepo = fluentdRepo
         , iksCreds = iksCreds
         }
   

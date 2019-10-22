@@ -21,4 +21,10 @@ in    λ(username : Text)
             "eirini/secret-smuggler"
             username
             password
+      , fluentd =
+          dockerResource
+            "docker-fluentd"
+            "eirini/loggregator-fluentd"
+            username
+            password
       }
