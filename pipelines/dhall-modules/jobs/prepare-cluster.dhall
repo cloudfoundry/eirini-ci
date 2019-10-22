@@ -72,12 +72,30 @@ let prepareClusterJob
                 , params = Some (toMap { bump = Prelude.JSON.string "major" })
                 }
         
+        let downloadKubeConfig =
+              ../tasks/download-kubeconfig-iks.dhall
+                reqs.iksCreds
+                reqs.ciResources
+                reqs.clusterName
+        
+        let getIKSIngressEndpoint =
+              Concourse.helpers.taskStep
+                Concourse.schemas.TaskStep::{
+                , task = "get-iks-ingress-endpoint"
+                , config = taskFile reqs.ciResources "get-iks-ingress-endpoint"
+                , params =
+                    Some
+                      (toMap (cloudCreds ⫽ { CLUSTER_NAME = reqs.clusterName }))
+                }
+        
         in    Concourse.defaults.Job
             ⫽ { name = "prepare-cluster-${reqs.clusterName}"
               , plan =
                   [ ../helpers/get.dhall reqs.ciResources
                   , getCreatedEvent
                   , ../helpers/get.dhall reqs.clusterState
+                  , downloadKubeConfig
+                  , getIKSIngressEndpoint
                   , createClusterConfig
                   , putClusterState
                   , provisionStorage
