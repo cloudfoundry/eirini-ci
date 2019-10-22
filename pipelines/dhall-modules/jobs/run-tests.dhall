@@ -2,9 +2,9 @@ let Concourse = ../deps/concourse.dhall
 
 let Prelude = ../deps/prelude.dhall
 
-let aggregate = Concourse.helpers.aggregateStep
-
 let do = Concourse.helpers.doStep
+
+let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let taskFile = ../helpers/task-file.dhall
 
@@ -101,14 +101,14 @@ let runTestsJob =
         in    Concourse.defaults.Job
             ⫽ { name = "run-tests"
               , plan =
-                  [ aggregate
+                  [ in_parallel
                       [ triggerOnClusterReady
                       , triggerOnEirini
                       , triggerOnSampleConfigs
                       , triggerOnGolangLint
                       , getCIResources
                       ]
-                  , aggregate
+                  , in_parallel
                       [ runUnitTests
                       , runStaticChecks
                       , do [ downloadKubeconfig, runIntegrationTests ]

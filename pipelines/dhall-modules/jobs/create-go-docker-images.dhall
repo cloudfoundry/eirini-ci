@@ -1,6 +1,6 @@
 let Concourse = ../deps/concourse.dhall
 
-let aggregate = Concourse.helpers.aggregateStep
+let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let Prelude = ../deps/prelude.dhall
 
@@ -44,12 +44,12 @@ let createGoDockerImages =
         in  Concourse.schemas.Job::{
             , name = "create-go-docker-images"
             , plan =
-                [ aggregate
+                [ in_parallel
                     [ getTriggerPassed reqs.eiriniResource [ "run-tests" ]
                     , get reqs.ciResources
                     ]
                 , makeDockerBuildArgs
-                , aggregate
+                , in_parallel
                     [ putDocker reqs.dockerOPI "opi"
                     , putDocker reqs.dockerBitsWaiter "bits-waiter"
                     , putDocker reqs.dockerRootfsPatcher "rootfs-patcher"
