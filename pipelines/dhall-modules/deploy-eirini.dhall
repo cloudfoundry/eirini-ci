@@ -1,2 +1,5 @@
   λ(reqs : ./deployment-requirements.dhall)
-→ [ ./jobs/deploy-uaa.dhall reqs, ./jobs/deploy-scf.dhall reqs ]
+→ [ ./jobs/deploy-uaa.dhall reqs
+  , ./jobs/deploy-scf.dhall reqs
+  , ./jobs/smoke-tests.dhall reqs
+  ]

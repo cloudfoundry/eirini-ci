@@ -30,6 +30,8 @@
   let uaaResource =
         ../dhall-modules/resources/uaa.dhall "((eirini-release-branch))"
   
+  let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
+  
   let sampleConfigs =
         ../dhall-modules/resources/sample-configs.dhall
           "((ci-resources-branch))"
@@ -109,11 +111,13 @@
         , uaaResources = uaaResource
         , ciResources = ciResources
         , eiriniReleaseResources = eiriniReleaseResource
+        , smokeTestsResource = smokeTestsResource
         , clusterReadyEvent = clusterReadyEvent
         , uaaReadyEvent = uaaReadyEvent
         , clusterState = clusterState
         , downloadKubeconfigTask = downloadKubeconfigTask
         , useCertManager = "false"
+        , iksCreds = iksCreds
         }
   
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs

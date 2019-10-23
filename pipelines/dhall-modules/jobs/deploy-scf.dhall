@@ -2,6 +2,8 @@ let Concourse = ../deps/concourse.dhall
 
 let taskFile = ../helpers/task-file.dhall
 
+let iksParams = ../helpers/iks-params.dhall
+
 in    λ(reqs : ../deployment-requirements.dhall)
     → let getUAAReadyEvent =
             ../helpers/get-passed.dhall
@@ -36,7 +38,13 @@ in    λ(reqs : ../deployment-requirements.dhall)
               Concourse.schemas.TaskStep::{
               , task = "block-network-access"
               , config = taskFile reqs.ciResources "block-network-access"
-              , params = Some (toMap { CLUSTER_NAME = reqs.clusterName })
+              , params =
+                  Some
+                    ( toMap
+                        (   iksParams reqs.iksCreds
+                          ⫽ { CLUSTER_NAME = reqs.clusterName }
+                        )
+                    )
               }
       
       let recheckEirini =
