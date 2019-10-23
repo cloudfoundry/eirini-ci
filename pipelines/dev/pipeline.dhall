@@ -5,16 +5,30 @@
   
   let Concourse = ../dhall-modules/deps/concourse.dhall
   
-  let clusterState = ../dhall-modules/resources/cluster-state.dhall
+  let clusterState =
+        ../dhall-modules/resources/cluster-state.dhall "((github-private-key))"
   
   let ciResources =
         ../dhall-modules/resources/ci-resources.dhall "((ci-resources-branch))"
   
   let clusterReadyEvent =
-        clusterEventResource "dhall-test" "ready" "((github-private-key))"
+        clusterEventResource "((world-name))" "ready" "((github-private-key))"
+  
+  let uaaReadyEvent =
+        clusterEventResource
+          "((world-name))"
+          "uaa-ready"
+          "((github-private-key))"
   
   let eiriniResource =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
+  
+  let eiriniReleaseResource =
+        ../dhall-modules/resources/eirini-release.dhall
+          "((eirini-release-branch))"
+  
+  let uaaResource =
+        ../dhall-modules/resources/uaa.dhall "((eirini-release-branch))"
   
   let sampleConfigs =
         ../dhall-modules/resources/sample-configs.dhall
@@ -36,13 +50,22 @@
           "((world-name))"
           "((gcs-json-key))"
   
+  let downloadKubeconfigTask =
+        ../dhall-modules/tasks/download-kubeconfig-iks.dhall
+          iksCreds
+          ciResources
+          "((world-name))"
+  
   let kubeClusterReqs =
         { ciResources = ciResources
-        , clusterState = clusterState "((github-private-key))"
+        , clusterState = clusterState
         , clusterCreatedEvent =
-            clusterEventResource "dhall-test" "created" "((github-private-key))"
+            clusterEventResource
+              "((world-name))"
+              "created"
+              "((github-private-key))"
         , clusterReadyEvent = clusterReadyEvent
-        , clusterName = "dhall-test"
+        , clusterName = "((world-name))"
         , enableOPIStaging = "true"
         , iksCreds = iksCreds
         , workerCount = workerCount
@@ -80,6 +103,19 @@
         , deploymentVersion = deploymentVersion
         }
   
+  let deploymentReqs =
+        { clusterName = "((world-name))"
+        , worldName = "((world-name))"
+        , uaaResources = uaaResource
+        , ciResources = ciResources
+        , eiriniReleaseResources = eiriniReleaseResource
+        , clusterReadyEvent = clusterReadyEvent
+        , uaaReadyEvent = uaaReadyEvent
+        , clusterState = clusterState
+        , downloadKubeconfigTask = downloadKubeconfigTask
+        , useCertManager = "false"
+        }
+  
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
   
   let runTestJobs =
@@ -87,6 +123,8 @@
   
   let tagImages = ../dhall-modules/tag-images.dhall tagImagesReqs
   
+  let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
+  
   in  Prelude.List.concat
         Concourse.Types.Job
-        [ kubeClusterJobs, runTestJobs, tagImages ]
+        [ kubeClusterJobs, runTestJobs, tagImages, deployEirini ]

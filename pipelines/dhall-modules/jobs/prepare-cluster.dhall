@@ -65,13 +65,6 @@ let prepareClusterJob
                     }
                 )
         
-        let putClusterReadyEvent =
-              Concourse.helpers.putStep
-                Concourse.schemas.PutStep::{
-                , resource = reqs.clusterReadyEvent
-                , params = Some (toMap { bump = Prelude.JSON.string "major" })
-                }
-        
         let downloadKubeConfig =
               ../tasks/download-kubeconfig-iks.dhall
                 reqs.iksCreds
@@ -99,7 +92,7 @@ let prepareClusterJob
                   , createClusterConfig
                   , putClusterState
                   , provisionStorage
-                  , putClusterReadyEvent
+                  , ../helpers/emit-event.dhall reqs.clusterReadyEvent
                   ]
               }
 
