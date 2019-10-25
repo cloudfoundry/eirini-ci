@@ -14,6 +14,7 @@ RUN  apt-get update \
        shellcheck \
        software-properties-common \
        lsb-release \
+       unzip \
        vim \
   && rm -rf /var/lib/apt/lists/*
 
@@ -28,5 +29,5 @@ RUN curl --fail --silent --show-error --location https://packages.cloudfoundry.o
 RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/... mvdan.cc/sh/cmd/shfmt
 
 # goml
-RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.4.0/goml-linux-amd64 && chmod +x /usr/bin/goml
+RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.7.0/goml-linux-amd64 && chmod +x /usr/bin/goml
 
