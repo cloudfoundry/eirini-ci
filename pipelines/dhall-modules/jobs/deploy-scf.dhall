@@ -4,17 +4,37 @@ let taskFile = ../helpers/task-file.dhall
 
 let iksParams = ../helpers/iks-params.dhall
 
-in    λ(reqs : ../deployment-requirements.dhall)
+let ImageLocation = ../image-location.dhall
+
+let DeployTaggedRequirements = ../deploy-tagged-requirements.dhall
+
+in    λ ( reqs
+        : ../deployment-requirements.dhall
+        )
     → let getUAAReadyEvent =
             ../helpers/get-passed.dhall
               reqs.uaaReadyEvent
               [ "deploy-scf-uaa-${reqs.clusterName}" ]
       
+      let deploySCFTaskFile
+          : Concourse.Types.TaskSpec
+          = merge
+              { InRepo =
+                  λ(ignored : {}) → taskFile reqs.ciResources "deploy-scf"
+              , FromTags =
+                    λ ( ignored
+                      : DeployTaggedRequirements
+                      )
+                  → Concourse.Types.TaskSpec.File
+                      "${reqs.ciResources.name}/tasks/deploy-scf/task-with-image-overrides.yml"
+              }
+              reqs.imageLocation
+      
       let deploySCF =
             Concourse.helpers.taskStep
               Concourse.schemas.TaskStep::{
               , task = "deploy-scf"
-              , config = taskFile reqs.ciResources "deploy-scf"
+              , config = deploySCFTaskFile
               , params =
                   Some
                     ( toMap
@@ -55,22 +75,42 @@ in    λ(reqs : ../deployment-requirements.dhall)
               , params = Some (toMap { CLUSTER_NAME = reqs.clusterName })
               }
       
+      let stepsForInRepo = λ(ignored : {}) → [] : List Concourse.Types.Step
+      
+      let stepsForTaggedImages =
+              λ(tagReqs : DeployTaggedRequirements)
+            → [ ../helpers/get-trigger-passed.dhall
+                  tagReqs.eiriniRepo
+                  [ "tag-images" ]
+              , ../helpers/get-passed.dhall
+                  tagReqs.deploymentVersion
+                  [ "tag-images" ]
+              ]
+      
+      let getImageLocationDependentSteps
+          : ImageLocation → List Concourse.Types.Step
+          =   λ(imageLocation : ImageLocation)
+            → merge
+                { InRepo = stepsForInRepo, FromTags = stepsForTaggedImages }
+                imageLocation
+      
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-eirini-${reqs.clusterName}"
           , serial_groups = Some [ reqs.clusterName ]
           , plan =
-              [ ../helpers/get-trigger.dhall reqs.eiriniReleaseResources
-              , ../helpers/get.dhall reqs.ciResources
-              , Concourse.helpers.getStep
-                  Concourse.schemas.GetStep::{
-                  , resource = reqs.clusterState
-                  , get = Some "state"
-                  }
-              , getUAAReadyEvent
-              , reqs.downloadKubeconfigTask
-              , deploySCF
-              , smokeTestEirini
-              , blockNetworkAccess
-              , recheckEirini
-              ]
+                getImageLocationDependentSteps reqs.imageLocation
+              # [ ../helpers/get-trigger.dhall reqs.eiriniReleaseResources
+                , ../helpers/get.dhall reqs.ciResources
+                , Concourse.helpers.getStep
+                    Concourse.schemas.GetStep::{
+                    , resource = reqs.clusterState
+                    , get = Some "state"
+                    }
+                , getUAAReadyEvent
+                , reqs.downloadKubeconfigTask
+                , deploySCF
+                , smokeTestEirini
+                , blockNetworkAccess
+                , recheckEirini
+                ]
           }

@@ -2,6 +2,8 @@ let Concourse = ./deps/concourse.dhall
 
 let IKSCreds = ./iks-creds.dhall
 
+let ImageLocation = ./image-location.dhall
+
 in  { clusterName : Text
     , worldName : Text
     , uaaResources : Concourse.Types.Resource
@@ -14,4 +16,5 @@ in  { clusterName : Text
     , downloadKubeconfigTask : Concourse.Types.Step
     , useCertManager : Text
     , iksCreds : IKSCreds
+    , imageLocation : ImageLocation
     }

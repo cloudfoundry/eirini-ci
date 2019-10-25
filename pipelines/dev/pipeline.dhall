@@ -118,6 +118,11 @@
         , downloadKubeconfigTask = downloadKubeconfigTask
         , useCertManager = "false"
         , iksCreds = iksCreds
+        , imageLocation =
+            (../dhall-modules/image-location.dhall).FromTags
+              { eiriniRepo = eiriniResource
+              , deploymentVersion = deploymentVersion
+              }
         }
   
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
