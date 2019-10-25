@@ -7,11 +7,12 @@ resources:
     private_key: ((github-private-key))
     uri: git@github.com:cloudfoundry/eirini-private-config
 - name: postfacto
-  type: git
   icon: egg-easter
+  type: github-release
   source:
-    tag_filter: '*'
-    uri: https://github.com/pivotal/postfacto.git
+    owner: pivotal
+    repository: postfacto
+    globs: package.zip
 - name: ci-resources
   icon: git
   type: git
@@ -77,7 +78,8 @@ jobs:
           #!/bin/bash
           set -euo pipefail
 
-          cp eirini-private-config/postfacto-deployment/api/config.js postfacto/api/config.js
+          unzip postfacto/package.zip -d postfacto/
+          cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/config.js
           mysql_password="$(cat mysql-password/password)"
           redis_password="$(cat redis-password/password)"
           scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
@@ -87,18 +89,10 @@ jobs:
           cf auth admin "$cf_admin_password"
           cf target -o postfacto -s postfacto
           cf push -f eirini-private-config/postfacto-deployment/api/manifest.yml \
-            -p postfacto/api \
+            -p postfacto/package/assets \
             --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
             --var pcf-url=acceptance.eu-gb.containers.appdomain.cloud \
-            --var redis-password=${redis_password} --var mysql-password=${mysql_password} \
-            -b ruby_buildpack
-
-          cp -r eirini-private-config/postfacto-deployment/web/config.js postfacto/web/public/config.js
-          cf push -f eirini-private-config/postfacto-deployment/web/manifest.yml \
-            -p postfacto/web \
-            --var api-app-name=postfacto-api --var web-app-name=postfacto-web \
-            -m 5G -k 10G \
-            -b nodejs_buildpack
+            --var redis-password=${redis_password} --var mysql-password=${mysql_password}
       inputs:
       - name: postfacto
       - name: eirini-private-config
