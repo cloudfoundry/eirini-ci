@@ -101,11 +101,7 @@ in    λ ( reqs
                 getImageLocationDependentSteps reqs.imageLocation
               # [ ../helpers/get-trigger.dhall reqs.eiriniReleaseResources
                 , ../helpers/get.dhall reqs.ciResources
-                , Concourse.helpers.getStep
-                    Concourse.schemas.GetStep::{
-                    , resource = reqs.clusterState
-                    , get = Some "state"
-                    }
+                , ../helpers/get-named.dhall reqs.clusterState "state"
                 , getUAAReadyEvent
                 , reqs.downloadKubeconfigTask
                 , deploySCF

@@ -36,7 +36,7 @@ let runSmokeTests =
                   getImageLocationDependentSteps reqs.imageLocation
                 # [ triggerOnEiriniRelease
                   , ../helpers/get.dhall reqs.ciResources
-                  , ../helpers/get.dhall reqs.clusterState
+                  , ../helpers/get-named.dhall reqs.clusterState "state"
                   , ../helpers/get.dhall reqs.smokeTestsResource
                   , Concourse.helpers.taskStep
                       Concourse.schemas.TaskStep::{

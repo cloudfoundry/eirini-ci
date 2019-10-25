@@ -3,7 +3,7 @@ let Concourse = ../deps/concourse.dhall
 let Prelude = ../deps/prelude.dhall
 
 in  Concourse.schemas.Resource::{
-    , name = "smoke-tests"
+    , name = "cf-smoke-tests"
     , type = Concourse.Types.ResourceType.InBuilt "git"
     , icon = Some "git"
     , source =
