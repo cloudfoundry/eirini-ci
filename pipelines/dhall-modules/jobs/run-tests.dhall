@@ -10,7 +10,7 @@ let taskFile = ../helpers/task-file.dhall
 
 let iksParams = ../helpers/iks-params.dhall
 
-let RunTestRequirements = ../run-test-requirements.dhall
+let RunTestRequirements = ../types/run-test-requirements.dhall
 
 let golangLintResource =
       Concourse.schemas.Resource::{

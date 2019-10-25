@@ -5,7 +5,7 @@ let in_parallel = Concourse.helpers.inParallelStepSimple
 let Prelude = ./deps/prelude.dhall
 
 let tagImagesJob =
-        λ(reqs : ./tag-images-requirements.dhall)
+        λ(reqs : ./types/tag-images-requirements.dhall)
       → let triggerOnEirini =
               ./helpers/get-trigger-passed.dhall
                 reqs.eiriniResource
@@ -77,4 +77,4 @@ let tagImagesJob =
                 ]
             }
 
-in  λ(reqs : ./tag-images-requirements.dhall) → [ tagImagesJob reqs ]
+in  λ(reqs : ./types/tag-images-requirements.dhall) → [ tagImagesJob reqs ]

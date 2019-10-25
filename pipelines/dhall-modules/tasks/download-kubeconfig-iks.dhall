@@ -1,6 +1,6 @@
 let Concourse = ../deps/concourse.dhall
 
-let IKSCreds = ../iks-creds.dhall
+let IKSCreds = ../types/iks-creds.dhall
 
 let taskFile = ../helpers/task-file.dhall
 

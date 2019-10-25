@@ -1,6 +1,6 @@
 let Concourse = ../deps/concourse.dhall
 
-let ClusterRequirements = ../cluster-requirements.dhall
+let ClusterRequirements = ../types/cluster-requirements.dhall
 
 let taskFile = ../helpers/task-file.dhall
 

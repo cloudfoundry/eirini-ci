@@ -5,7 +5,7 @@ let in_parallel = Concourse.helpers.inParallelStepSimple
 let taskFile = ../helpers/task-file.dhall
 
 let runFluentdUnitTests =
-        λ(reqs : ../run-test-requirements.dhall)
+        λ(reqs : ../types/run-test-requirements.dhall)
       → Concourse.schemas.Job::{
         , name = "run-fluentd-unit-tests"
         , plan =

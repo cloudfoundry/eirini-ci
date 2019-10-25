@@ -5,7 +5,7 @@ let in_parallel = Concourse.helpers.inParallelStepSimple
 let Prelude = ../deps/prelude.dhall
 
 in    λ ( reqs
-        : ../run-test-requirements.dhall
+        : ../types/run-test-requirements.dhall
         )
     → let makeDockerBuildArgs =
             ../tasks/make-docker-build-args.dhall

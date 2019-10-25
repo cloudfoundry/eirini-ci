@@ -58,6 +58,8 @@
           ciResources
           "((world-name))"
   
+  let ImageLocation = ../dhall-modules/types/image-location.dhall
+  
   let kubeClusterReqs =
         { ciResources = ciResources
         , clusterState = clusterState
@@ -119,7 +121,7 @@
         , useCertManager = "false"
         , iksCreds = iksCreds
         , imageLocation =
-            (../dhall-modules/image-location.dhall).FromTags
+            ImageLocation.FromTags
               { eiriniRepo = eiriniResource
               , deploymentVersion = deploymentVersion
               }

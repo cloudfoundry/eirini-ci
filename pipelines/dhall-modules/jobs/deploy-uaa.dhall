@@ -2,7 +2,7 @@ let Concourse = ../deps/concourse.dhall
 
 let taskFile = ../helpers/task-file.dhall
 
-in    λ(reqs : ../deployment-requirements.dhall)
+in    λ(reqs : ../types/deployment-requirements.dhall)
     → let deployUAA =
             Concourse.helpers.taskStep
               Concourse.schemas.TaskStep::{

@@ -1,4 +1,4 @@
-let ClusterRequirements = ../cluster-requirements.dhall
+let ClusterRequirements = ../types/cluster-requirements.dhall
 
 let Prelude = ../deps/prelude.dhall
 

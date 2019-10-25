@@ -4,12 +4,12 @@ let taskFile = ../helpers/task-file.dhall
 
 let iksParams = ../helpers/iks-params.dhall
 
-let ImageLocation = ../image-location.dhall
+let ImageLocation = ../types/image-location.dhall
 
-let DeployTaggedRequirements = ../deploy-tagged-requirements.dhall
+let DeployTaggedRequirements = ../types/deploy-tagged-requirements.dhall
 
 in    λ ( reqs
-        : ../deployment-requirements.dhall
+        : ../types/deployment-requirements.dhall
         )
     → let getUAAReadyEvent =
             ../helpers/get-passed.dhall

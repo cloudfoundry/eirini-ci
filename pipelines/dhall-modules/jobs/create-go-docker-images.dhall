@@ -4,7 +4,7 @@ let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let Prelude = ../deps/prelude.dhall
 
-let RunTestRequirements = ../run-test-requirements.dhall
+let RunTestRequirements = ../types/run-test-requirements.dhall
 
 let getTriggerPassed = ../helpers/get-trigger-passed.dhall
 

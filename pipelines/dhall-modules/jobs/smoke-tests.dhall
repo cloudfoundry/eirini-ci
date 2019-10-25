@@ -1,25 +1,28 @@
 let Concourse = ../deps/concourse.dhall
 
-let SmokeTestRequirements = ../deployment-requirements.dhall
+let Requirements = ../types/deployment-requirements.dhall
+
+let TaggedImageRequirements = ../types/deploy-tagged-requirements.dhall
+
+let ImageLocation = ../types/image-location.dhall
 
 let taskFile = ../helpers/task-file.dhall
 
 let runSmokeTests =
-        λ(reqs : SmokeTestRequirements)
+        λ(reqs : Requirements)
       → let stepsForInRepo = λ(ignored : {}) → [] : List Concourse.Types.Step
         
         let upstreamJobs = [ "deploy-scf-eirini-${reqs.clusterName}" ]
         
         let stepsForTaggedImages =
-                λ(tagReqs : ../deploy-tagged-requirements.dhall)
+                λ(tagReqs : TaggedImageRequirements)
               → [ ../helpers/get-trigger-passed.dhall
                     tagReqs.eiriniRepo
                     upstreamJobs
                 ]
         
-        let getImageLocationDependentSteps
-            : ../image-location.dhall → List Concourse.Types.Step
-            =   λ(imageLocation : ../image-location.dhall)
+        let getImageLocationDependentSteps =
+                λ(imageLocation : ImageLocation)
               → merge
                   { InRepo = stepsForInRepo, FromTags = stepsForTaggedImages }
                   imageLocation

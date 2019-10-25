@@ -1,4 +1,4 @@
-let Concourse = ./deps/concourse.dhall
+let Concourse = ../deps/concourse.dhall
 
 in  { deploymentVersion : Concourse.Types.Resource
     , dockerOPI : Concourse.Types.Resource

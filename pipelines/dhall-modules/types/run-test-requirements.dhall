@@ -1,4 +1,4 @@
-let Concourse = ./deps/concourse.dhall
+let Concourse = ../deps/concourse.dhall
 
 in  { readyEventResource : Concourse.Types.Resource
     , ciResources : Concourse.Types.Resource

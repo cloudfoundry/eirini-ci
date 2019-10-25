@@ -1,6 +1,6 @@
 let Concourse = ./deps/concourse.dhall
 
-let ClusterRequirements = ./cluster-requirements.dhall
+let ClusterRequirements = ./types/cluster-requirements.dhall
 
 let createClusterJob = ./jobs/create-cluster.dhall
 

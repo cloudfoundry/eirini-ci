@@ -4,7 +4,7 @@ let Prelude = ../deps/prelude.dhall
 
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
-in    λ(reqs : ../run-test-requirements.dhall)
+in    λ(reqs : ../types/run-test-requirements.dhall)
     → let triggerOnFluentdRepo =
             ../helpers/get-trigger-passed.dhall
               reqs.fluentdRepo

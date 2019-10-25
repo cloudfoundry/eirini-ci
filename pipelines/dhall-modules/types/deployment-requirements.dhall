@@ -1,4 +1,4 @@
-let Concourse = ./deps/concourse.dhall
+let Concourse = ../deps/concourse.dhall
 
 let IKSCreds = ./iks-creds.dhall
 
