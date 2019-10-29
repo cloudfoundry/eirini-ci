@@ -12,6 +12,7 @@ let inputs =
       , worldName = "((world-name))"
       , eiriniBranch = "((eirini-branch))"
       , eiriniReleaseBranch = "((eirini-release-branch))"
+      , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
       , iksCreds = iksCreds
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
@@ -35,6 +36,11 @@ let clusterCreatedEvent =
       clusterEventResource inputs.worldName "created" inputs.githubPrivateKey
 
 let eiriniRepo = ../dhall-modules/resources/eirini.dhall inputs.eiriniBranch
+
+let writableEiriniReleaseRepo =
+      ../dhall-modules/resources/writeable-eirini-release.dhall
+        inputs.eiriniReleaseBranch
+        inputs.eiriniReleasePrivateKey
 
 let fluentdRepo =
       ../dhall-modules/resources/fluend-repo.dhall inputs.eiriniBranch
@@ -84,9 +90,25 @@ let runTestReqs =
       , upstream = { name = "create-cluster", event = clusterCreatedEvent }
       }
 
+let updateVersionReqs =
+      { writeableEiriniReleaseRepo = writableEiriniReleaseRepo
+      , ciResources = ciResources
+      , eiriniRepo = eiriniRepo
+      , fluentdRepo = fluentdRepo
+      , secretSmugglerRepo = secretSmugglerRepo
+      , dockerOPI = docker.opi
+      , dockerRootfsPatcher = docker.rootfsPatcher
+      , dockerBitsWaiter = docker.bitsWaiter
+      }
+
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
 
 let runTestJobs =
       ../dhall-modules/test-and-build-docker-images.dhall runTestReqs
 
-in  Prelude.List.concat Concourse.Types.Job [ kubeClusterJobs, runTestJobs ]
+let updateVersionJobs =
+      ../dhall-modules/update-version-files.dhall updateVersionReqs
+
+in  Prelude.List.concat
+      Concourse.Types.Job
+      [ kubeClusterJobs, runTestJobs, updateVersionJobs ]
