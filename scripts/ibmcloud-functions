@@ -92,5 +92,7 @@ wait-for-deletion() {
 
 export-kubeconfig() {
   declare -r cluster_name=$1
-  eval "$(ibmcloud ks cluster-config "$cluster_name" --export)"
+  local export_command
+  export_command="$(ibmcloud ks cluster-config "$cluster_name" --export)"
+  eval "${export_command}"
 }
