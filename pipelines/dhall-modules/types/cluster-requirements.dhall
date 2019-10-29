@@ -11,8 +11,5 @@ in  { ciResources : Concourse.Types.Resource
     , iksCreds : IKSCreds
     , workerCount : Natural
     , storageClass : Text
-    , clusterAdminPassword : Text
-    , uaaAdminClientSecret : Text
-    , natsPassword : Text
-    , diegoCellCount : Text
+    , clusterPreparation : ./cluster-prep.dhall
     }

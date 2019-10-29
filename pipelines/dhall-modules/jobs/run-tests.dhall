@@ -31,9 +31,9 @@ let runTestsJob =
       → let triggerOnClusterReady =
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{
-                , resource = reqs.readyEventResource
+                , resource = reqs.upstream.event
                 , trigger = Some True
-                , passed = Some [ "prepare-cluster-${reqs.clusterName}" ]
+                , passed = Some [ "${reqs.upstream.name}-${reqs.clusterName}" ]
                 }
         
         let triggerOnEirini =

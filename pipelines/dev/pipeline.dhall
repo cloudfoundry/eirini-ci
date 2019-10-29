@@ -77,6 +77,8 @@
   
   let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
   
+  let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
+  
   let kubeClusterReqs =
         { ciResources = ciResources
         , clusterState = clusterState
@@ -91,15 +93,17 @@
         , iksCreds = iksCreds
         , workerCount = workerCount
         , storageClass = inputs.storageClass
-        , clusterAdminPassword = inputs.clusterAdminPassword
-        , uaaAdminClientSecret = inputs.uaaAdminClientSecret
-        , natsPassword = inputs.natsPassword
-        , diegoCellCount = inputs.diegoCellCount
+        , clusterPreparation =
+            ClusterPrep.Required
+              { clusterAdminPassword = inputs.clusterAdminPassword
+              , uaaAdminClientSecret = inputs.uaaAdminClientSecret
+              , natsPassword = inputs.natsPassword
+              , diegoCellCount = inputs.diegoCellCount
+              }
         }
   
   let runTestReqs =
-        { readyEventResource = clusterReadyEvent
-        , ciResources = ciResources
+        { ciResources = ciResources
         , eiriniRepo = eiriniRepo
         , secretSmugglerRepo = EiriniOrRepo.UseEirini
         , fluentdRepo = EiriniOrRepo.UseEirini
@@ -111,6 +115,7 @@
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
         , iksCreds = iksCreds
+        , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
         }
   
   let tagImagesReqs =

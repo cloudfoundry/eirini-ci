@@ -1,5 +1,7 @@
 let ClusterRequirements = ../types/cluster-requirements.dhall
 
+let PrepRequirements = ../types/cluster-prep-requirements.dhall
+
 let Concourse = ../deps/concourse.dhall
 
 let Prelude = ../deps/prelude.dhall
@@ -9,8 +11,9 @@ let taskFile = ../helpers/task-file.dhall
 let iksParams = ../helpers/iks-params.dhall
 
 let prepareClusterJob
-    : ClusterRequirements → Concourse.Types.Job
+    : ClusterRequirements → PrepRequirements → Concourse.Types.Job
     =   λ(reqs : ClusterRequirements)
+      → λ(prepReqs : PrepRequirements)
       → let getCreatedEvent =
               ../helpers/get-trigger-passed.dhall
                 reqs.clusterCreatedEvent
@@ -19,11 +22,11 @@ let prepareClusterJob
         let createClusterParams =
               { CLUSTER_NAME = reqs.clusterName
               , STORAGE_CLASS = reqs.storageClass
-              , CLUSTER_ADMIN_PASSWORD = reqs.clusterAdminPassword
-              , UAA_ADMIN_CLIENT_SECRET = reqs.uaaAdminClientSecret
-              , NATS_PASSWORD = reqs.natsPassword
+              , CLUSTER_ADMIN_PASSWORD = prepReqs.clusterAdminPassword
+              , UAA_ADMIN_CLIENT_SECRET = prepReqs.uaaAdminClientSecret
+              , NATS_PASSWORD = prepReqs.natsPassword
               , ENABLE_OPI_STAGING = reqs.enableOPIStaging
-              , DIEGO_CELL_COUNT = reqs.diegoCellCount
+              , DIEGO_CELL_COUNT = prepReqs.diegoCellCount
               }
         
         let cloudCreds = iksParams reqs.iksCreds

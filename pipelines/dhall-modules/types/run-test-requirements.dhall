@@ -1,7 +1,6 @@
 let Concourse = ../deps/concourse.dhall
 
-in  { readyEventResource : Concourse.Types.Resource
-    , ciResources : Concourse.Types.Resource
+in  { ciResources : Concourse.Types.Resource
     , eiriniRepo : Concourse.Types.Resource
     , secretSmugglerRepo : ./eirini-or-repo.dhall
     , fluentdRepo : ./eirini-or-repo.dhall
@@ -13,4 +12,5 @@ in  { readyEventResource : Concourse.Types.Resource
     , dockerFluentd : Concourse.Types.Resource
     , clusterName : Text
     , iksCreds : ./iks-creds.dhall
+    , upstream : { event : Concourse.Types.Resource, name : Text }
     }
