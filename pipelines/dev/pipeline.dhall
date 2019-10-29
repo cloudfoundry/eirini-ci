@@ -1,62 +1,77 @@
   λ(workerCount : Natural)
 → let clusterEventResource = ../dhall-modules/resources/cluster-event.dhall
   
-  let Prelude = ../dhall-modules/deps/prelude.dhall
-  
-  let Concourse = ../dhall-modules/deps/concourse.dhall
-  
-  let clusterState =
-        ../dhall-modules/resources/cluster-state.dhall "((github-private-key))"
-  
-  let ciResources =
-        ../dhall-modules/resources/ci-resources.dhall "((ci-resources-branch))"
-  
-  let clusterReadyEvent =
-        clusterEventResource "((world-name))" "ready" "((github-private-key))"
-  
-  let uaaReadyEvent =
-        clusterEventResource
-          "((world-name))"
-          "uaa-ready"
-          "((github-private-key))"
-  
-  let eiriniRepo =
-        ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
-  
-  let eiriniReleaseRepo =
-        ../dhall-modules/resources/eirini-release.dhall
-          "((eirini-release-branch))"
-  
-  let uaaResource =
-        ../dhall-modules/resources/uaa.dhall "((eirini-release-branch))"
-  
-  let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
-  
-  let sampleConfigs =
-        ../dhall-modules/resources/sample-configs.dhall
-          "((ci-resources-branch))"
-  
   let iksCreds =
         { account = "((ibmcloud-account))"
         , password = "((ibmcloud-password))"
         , user = "((ibmcloud-user))"
         }
   
+  let inputs =
+        { githubPrivateKey = "((github-private-key))"
+        , eiriniCIBranch = "((ci-resources-branch))"
+        , worldName = "((world-name))"
+        , eiriniBranch = "((eirini-branch))"
+        , eiriniReleaseBranch = "((eirini-release-branch))"
+        , iksCreds = iksCreds
+        , dockerhubUser = "((dockerhub-user))"
+        , dockerhubPassword = "((dockerhub-password))"
+        , gcsJSONKey = "((gcs-json-key))"
+        , storageClass = "((storage_class))"
+        , clusterAdminPassword = "((cluster_admin_password))"
+        , uaaAdminClientSecret = "((uaa_admin_client_secret))"
+        , natsPassword = "((nats_password))"
+        , diegoCellCount = "((diego-cell-count))"
+        }
+  
+  let Prelude = ../dhall-modules/deps/prelude.dhall
+  
+  let Concourse = ../dhall-modules/deps/concourse.dhall
+  
+  let clusterState =
+        ../dhall-modules/resources/cluster-state.dhall inputs.githubPrivateKey
+  
+  let ciResources =
+        ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
+  
+  let clusterReadyEvent =
+        clusterEventResource inputs.worldName "ready" inputs.githubPrivateKey
+  
+  let uaaReadyEvent =
+        clusterEventResource
+          inputs.worldName
+          "uaa-ready"
+          inputs.githubPrivateKey
+  
+  let eiriniRepo = ../dhall-modules/resources/eirini.dhall inputs.eiriniBranch
+  
+  let eiriniReleaseRepo =
+        ../dhall-modules/resources/eirini-release.dhall
+          inputs.eiriniReleaseBranch
+  
+  let uaaResource =
+        ../dhall-modules/resources/uaa.dhall inputs.eiriniReleaseBranch
+  
+  let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
+  
+  let sampleConfigs =
+        ../dhall-modules/resources/sample-configs.dhall inputs.eiriniCIBranch
+  
   let docker =
         ../dhall-modules/resources/all-dockers.dhall
-          "((dockerhub-user))"
-          "((dockerhub-password))"
+          inputs.dockerhubUser
+          inputs.dockerhubPassword
   
   let deploymentVersion =
         ../dhall-modules/resources/deployment-version.dhall
-          "((world-name))"
-          "((gcs-json-key))"
+          inputs.worldName
+          inputs.gcsJSONKey
   
   let downloadKubeconfigTask =
         ../dhall-modules/tasks/download-kubeconfig-iks.dhall
           iksCreds
           ciResources
-          "((world-name))"
+          inputs.worldName
   
   let ImageLocation = ../dhall-modules/types/image-location.dhall
   
@@ -67,19 +82,19 @@
         , clusterState = clusterState
         , clusterCreatedEvent =
             clusterEventResource
-              "((world-name))"
+              inputs.worldName
               "created"
-              "((github-private-key))"
+              inputs.githubPrivateKey
         , clusterReadyEvent = clusterReadyEvent
-        , clusterName = "((world-name))"
+        , clusterName = inputs.worldName
         , enableOPIStaging = "true"
         , iksCreds = iksCreds
         , workerCount = workerCount
-        , storageClass = "((storage_class))"
-        , clusterAdminPassword = "((cluster_admin_password))"
-        , uaaAdminClientSecret = "((uaa_admin_client_secret))"
-        , natsPassword = "((nats_password))"
-        , diegoCellCount = "((diego-cell-count))"
+        , storageClass = inputs.storageClass
+        , clusterAdminPassword = inputs.clusterAdminPassword
+        , uaaAdminClientSecret = inputs.uaaAdminClientSecret
+        , natsPassword = inputs.natsPassword
+        , diegoCellCount = inputs.diegoCellCount
         }
   
   let runTestReqs =
@@ -89,7 +104,7 @@
         , secretSmugglerRepo = EiriniOrRepo.UseEirini
         , fluentdRepo = EiriniOrRepo.UseEirini
         , sampleConfigs = sampleConfigs
-        , clusterName = "((world-name))"
+        , clusterName = inputs.worldName
         , dockerOPI = docker.opi
         , dockerBitsWaiter = docker.bitsWaiter
         , dockerRootfsPatcher = docker.rootfsPatcher
@@ -104,14 +119,14 @@
         , dockerRootfsPatcher = docker.rootfsPatcher
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
-        , worldName = "((world-name))"
+        , worldName = inputs.worldName
         , eiriniRepo = eiriniRepo
         , deploymentVersion = deploymentVersion
         }
   
   let deploymentReqs =
-        { clusterName = "((world-name))"
-        , worldName = "((world-name))"
+        { clusterName = inputs.worldName
+        , worldName = inputs.worldName
         , uaaResources = uaaResource
         , ciResources = ciResources
         , eiriniReleaseRepo = eiriniReleaseRepo
@@ -124,9 +139,7 @@
         , iksCreds = iksCreds
         , imageLocation =
             ImageLocation.FromTags
-              { eiriniRepo = eiriniRepo
-              , deploymentVersion = deploymentVersion
-              }
+              { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }
         , skippedCats = None Text
         }
   
