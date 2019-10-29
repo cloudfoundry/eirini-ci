@@ -17,4 +17,5 @@ in  { clusterName : Text
     , useCertManager : Text
     , iksCreds : IKSCreds
     , imageLocation : ImageLocation
+    , skippedCats : Optional Text
     }

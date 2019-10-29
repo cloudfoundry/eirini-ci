@@ -125,6 +125,7 @@
               { eiriniRepo = eiriniResource
               , deploymentVersion = deploymentVersion
               }
+        , skippedCats = None Text
         }
   
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
