@@ -23,7 +23,7 @@
   let eiriniRepo =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
   
-  let eiriniReleaseResource =
+  let eiriniReleaseRepo =
         ../dhall-modules/resources/eirini-release.dhall
           "((eirini-release-branch))"
   
@@ -114,7 +114,7 @@
         , worldName = "((world-name))"
         , uaaResources = uaaResource
         , ciResources = ciResources
-        , eiriniReleaseResources = eiriniReleaseResource
+        , eiriniReleaseRepo = eiriniReleaseRepo
         , smokeTestsResource = smokeTestsResource
         , clusterReadyEvent = clusterReadyEvent
         , uaaReadyEvent = uaaReadyEvent

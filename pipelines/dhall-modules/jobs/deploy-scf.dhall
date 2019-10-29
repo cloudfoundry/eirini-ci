@@ -99,7 +99,7 @@ in    λ ( reqs
           , serial_groups = Some [ reqs.clusterName ]
           , plan =
                 getImageLocationDependentSteps reqs.imageLocation
-              # [ ../helpers/get-trigger.dhall reqs.eiriniReleaseResources
+              # [ ../helpers/get-trigger.dhall reqs.eiriniReleaseRepo
                 , ../helpers/get.dhall reqs.ciResources
                 , ../helpers/get-named.dhall reqs.clusterState "state"
                 , getUAAReadyEvent

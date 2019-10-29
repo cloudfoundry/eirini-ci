@@ -36,7 +36,7 @@ let runCoreCats =
         
         let triggerOnEiriniRelease =
               ../helpers/get-trigger-passed.dhall
-                reqs.eiriniReleaseResources
+                reqs.eiriniReleaseRepo
                 upstreamJobs
         
         let getSteps =
