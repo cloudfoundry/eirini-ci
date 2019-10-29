@@ -8,7 +8,7 @@ let tagImagesJob =
         λ(reqs : ./types/tag-images-requirements.dhall)
       → let triggerOnEirini =
               ./helpers/get-trigger-passed.dhall
-                reqs.eiriniResource
+                reqs.eiriniRepo
                 [ "create-go-docker-images"
                 , "create-secret-smuggler-docker-image"
                 , "create-fluentd-docker-image"

@@ -7,17 +7,20 @@ let Prelude = ../deps/prelude.dhall
 in    λ ( reqs
         : ../types/run-test-requirements.dhall
         )
-    → let makeDockerBuildArgs =
-            ../tasks/make-docker-build-args.dhall
-              reqs.ciResources
-              reqs.eiriniSecretSmuggler
+    → let gitRepo =
+            ../helpers/eirini-or-repo-get-repo.dhall
+              reqs.eiriniRepo
+              reqs.secretSmugglerRepo
+      
+      let makeDockerBuildArgs =
+            ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
       
       in  Concourse.schemas.Job::{
           , name = "create-secret-smuggler-docker-image"
           , plan =
               [ in_parallel
                   [ ../helpers/get.dhall reqs.ciResources
-                  , ../helpers/get-trigger.dhall reqs.eiriniSecretSmuggler
+                  , ../helpers/get-trigger.dhall gitRepo
                   ]
               , makeDockerBuildArgs
               , Concourse.helpers.putStep
@@ -28,7 +31,7 @@ in    λ ( reqs
                         ( toMap
                             { build =
                                 Prelude.JSON.string
-                                  "${reqs.eiriniSecretSmuggler.name}/docker/registry/certs/smuggler"
+                                  "${gitRepo.name}/docker/registry/certs/smuggler"
                             , build_args_file =
                                 Prelude.JSON.string
                                   "docker-build-args/args.json"

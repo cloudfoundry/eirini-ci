@@ -39,7 +39,7 @@ let runTestsJob =
         let triggerOnEirini =
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{
-                , resource = reqs.eiriniResource
+                , resource = reqs.eiriniRepo
                 , trigger = Some True
                 }
         

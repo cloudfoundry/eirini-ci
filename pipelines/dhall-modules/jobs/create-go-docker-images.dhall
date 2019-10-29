@@ -34,13 +34,13 @@ let createGoDockerImages =
       → let makeDockerBuildArgs =
               ../tasks/make-docker-build-args.dhall
                 reqs.ciResources
-                reqs.eiriniResource
+                reqs.eiriniRepo
         
         in  Concourse.schemas.Job::{
             , name = "create-go-docker-images"
             , plan =
                 [ in_parallel
-                    [ getTriggerPassed reqs.eiriniResource [ "run-tests" ]
+                    [ getTriggerPassed reqs.eiriniRepo [ "run-tests" ]
                     , get reqs.ciResources
                     ]
                 , makeDockerBuildArgs

@@ -18,11 +18,11 @@ let deleteClusterJob
                     , config = taskFile reqs.ciResources "delete-cluster"
                     , params =
                         Some
-                        ( toMap
-                            (   iksParams reqs.iksCreds
-                              ⫽ { CLUSTER_NAME = reqs.clusterName }
-                            )
-                        )
+                          ( toMap
+                              (   iksParams reqs.iksCreds
+                                ⫽ { CLUSTER_NAME = reqs.clusterName }
+                              )
+                          )
                     }
                 )
         
@@ -42,11 +42,12 @@ let deleteClusterJob
                   ⫽ { resource = reqs.clusterState
                     , params =
                         Some
-                        ( toMap
-                            { merge = Prelude.JSON.string "true"
-                            , repository = Prelude.JSON.string "state-modified"
-                            }
-                        )
+                          ( toMap
+                              { merge = Prelude.JSON.bool True
+                              , repository =
+                                  Prelude.JSON.string "state-modified"
+                              }
+                          )
                     }
                 )
         

@@ -5,9 +5,14 @@ let Prelude = ../deps/prelude.dhall
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
 in    λ(reqs : ../types/run-test-requirements.dhall)
-    → let triggerOnFluentdRepo =
-            ../helpers/get-trigger-passed.dhall
+    → let gitRepo =
+            ../helpers/eirini-or-repo-get-repo.dhall
+              reqs.eiriniRepo
               reqs.fluentdRepo
+      
+      let triggerOnFluentdRepo =
+            ../helpers/get-trigger-passed.dhall
+              gitRepo
               [ "run-fluentd-unit-tests" ]
       
       let baseImage =
@@ -41,9 +46,7 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               , params =
                   Some
                     ( toMap
-                        { build =
-                            Prelude.JSON.string
-                              "${reqs.fluentdRepo.name}/fluentd"
+                        { build = Prelude.JSON.string "${gitRepo.name}/fluentd"
                         , build_args_file =
                             Prelude.JSON.string "docker-build-args/args.json"
                         }
@@ -58,9 +61,7 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
                   , triggerOnFluentdRepo
                   , triggerOnBaseImage
                   ]
-              , ../tasks/make-docker-build-args.dhall
-                  reqs.ciResources
-                  reqs.fluentdRepo
+              , ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
               , putDocker
               ]
           }

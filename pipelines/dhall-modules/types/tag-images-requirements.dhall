@@ -6,6 +6,6 @@ in  { deploymentVersion : Concourse.Types.Resource
     , dockerBitsWaiter : Concourse.Types.Resource
     , dockerSecretSmuggler : Concourse.Types.Resource
     , dockerFluentd : Concourse.Types.Resource
-    , eiriniResource : Concourse.Types.Resource
+    , eiriniRepo : Concourse.Types.Resource
     , worldName : Text
     }

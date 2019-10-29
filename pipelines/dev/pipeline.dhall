@@ -20,7 +20,7 @@
           "uaa-ready"
           "((github-private-key))"
   
-  let eiriniResource =
+  let eiriniRepo =
         ../dhall-modules/resources/eirini.dhall "((eirini-branch))"
   
   let eiriniReleaseResource =
@@ -60,6 +60,8 @@
   
   let ImageLocation = ../dhall-modules/types/image-location.dhall
   
+  let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
+  
   let kubeClusterReqs =
         { ciResources = ciResources
         , clusterState = clusterState
@@ -83,9 +85,9 @@
   let runTestReqs =
         { readyEventResource = clusterReadyEvent
         , ciResources = ciResources
-        , eiriniResource = eiriniResource
-        , eiriniSecretSmuggler = eiriniResource
-        , fluentdRepo = eiriniResource
+        , eiriniRepo = eiriniRepo
+        , secretSmugglerRepo = EiriniOrRepo.UseEirini
+        , fluentdRepo = EiriniOrRepo.UseEirini
         , sampleConfigs = sampleConfigs
         , clusterName = "((world-name))"
         , dockerOPI = docker.opi
@@ -103,7 +105,7 @@
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
         , worldName = "((world-name))"
-        , eiriniResource = eiriniResource
+        , eiriniRepo = eiriniRepo
         , deploymentVersion = deploymentVersion
         }
   
@@ -122,7 +124,7 @@
         , iksCreds = iksCreds
         , imageLocation =
             ImageLocation.FromTags
-              { eiriniRepo = eiriniResource
+              { eiriniRepo = eiriniRepo
               , deploymentVersion = deploymentVersion
               }
         , skippedCats = None Text
