@@ -42,6 +42,8 @@ let writableEiriniReleaseRepo =
         inputs.eiriniReleaseBranch
         inputs.eiriniReleasePrivateKey
 
+let eiriniStagingRepo = ../dhall-modules/resources/eirini-staging.dhall
+
 let fluentdRepo =
       ../dhall-modules/resources/fluend-repo.dhall inputs.eiriniBranch
 
@@ -101,7 +103,13 @@ let updateVersionReqs =
       , dockerBitsWaiter = docker.bitsWaiter
       }
 
+let runStagingTestReqs =
+      { ciResources = ciResources, eiriniStagingRepo = eiriniStagingRepo }
+
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
+
+let runStagingTestJobs =
+      ../dhall-modules/test-and-build-staging-images.dhall runStagingTestReqs
 
 let runTestJobs =
       ../dhall-modules/test-and-build-docker-images.dhall runTestReqs
@@ -111,4 +119,4 @@ let updateVersionJobs =
 
 in  Prelude.List.concat
       Concourse.Types.Job
-      [ kubeClusterJobs, runTestJobs, updateVersionJobs ]
+      [ kubeClusterJobs, runTestJobs, updateVersionJobs, runStagingTestJobs ]
