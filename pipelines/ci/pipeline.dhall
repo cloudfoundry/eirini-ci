@@ -101,10 +101,19 @@ let updateVersionReqs =
       , dockerOPI = docker.opi
       , dockerRootfsPatcher = docker.rootfsPatcher
       , dockerBitsWaiter = docker.bitsWaiter
+      , eiriniStagingRepo = eiriniStagingRepo
+      , dockerDownloader = docker.stagingDownloader
+      , dockerExecutor = docker.stagingExecutor
+      , dockerUploader = docker.stagingUploader
       }
 
 let runStagingTestReqs =
-      { ciResources = ciResources, eiriniStagingRepo = eiriniStagingRepo }
+      { ciResources = ciResources
+      , eiriniStagingRepo = eiriniStagingRepo
+      , stagingDownloader = docker.stagingDownloader
+      , stagingExecutor = docker.stagingExecutor
+      , stagingUploader = docker.stagingUploader
+      }
 
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
 

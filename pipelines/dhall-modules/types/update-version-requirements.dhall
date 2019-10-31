@@ -8,4 +8,8 @@ in  { writeableEiriniReleaseRepo : Concourse.Types.Resource
     , dockerOPI : Concourse.Types.Resource
     , dockerRootfsPatcher : Concourse.Types.Resource
     , dockerBitsWaiter : Concourse.Types.Resource
+    , eiriniStagingRepo : Concourse.Types.Resource
+    , dockerDownloader : Concourse.Types.Resource
+    , dockerExecutor : Concourse.Types.Resource
+    , dockerUploader : Concourse.Types.Resource
     }

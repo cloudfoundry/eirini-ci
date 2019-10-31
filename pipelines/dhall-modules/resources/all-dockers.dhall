@@ -27,4 +27,22 @@ in    λ(username : Text)
             "eirini/loggregator-fluentd"
             username
             password
+      , stagingDownloader =
+          dockerResource
+            "docker-staging-downloader"
+            "eirini/recipe-downloader"
+            username
+            password
+      , stagingExecutor =
+          dockerResource
+            "docker-staging-executor"
+            "eirini/recipe-executor"
+            username
+            password
+      , stagingUploader =
+          dockerResource
+            "docker-staging-uploader"
+            "eirini/recipe-uploader"
+            username
+            password
       }

@@ -12,4 +12,17 @@
           , upstreamJob = "create-go-docker-images"
           }
       )
+  , ./jobs/update-version-files.dhall
+      (   reqs.{ writeableEiriniReleaseRepo, ciResources }
+        ⫽ { repo = reqs.eiriniStagingRepo
+          , componentName = "Eirini Staging"
+          , image1 =
+              { docker = reqs.dockerDownloader, name = "staging-downloader" }
+          , image2 =
+              Some { docker = reqs.dockerExecutor, name = "staging-executor" }
+          , image3 =
+              Some { docker = reqs.dockerUploader, name = "staging-uploader" }
+          , upstreamJob = "create-staging-docker-images"
+          }
+      )
   ]

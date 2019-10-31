@@ -2,13 +2,9 @@ let Concourse = ../deps/concourse.dhall
 
 let Prelude = ../deps/prelude.dhall
 
-let do = Concourse.helpers.doStep
-
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let taskFile = ../helpers/task-file.dhall
-
-let iksParams = ../helpers/iks-params.dhall
 
 let RunTestRequirements = ../types/run-test-requirements.dhall
 
@@ -77,20 +73,6 @@ let runTestsJob =
                 , config = taskFile reqs.ciResources "run-static-checks"
                 }
         
-        let downloadKubeconfig =
-              Concourse.helpers.taskStep
-                Concourse.schemas.TaskStep::{
-                , task = "download-kubeconfig"
-                , config = taskFile reqs.ciResources "download-kubeconfig"
-                , params =
-                    Some
-                      ( toMap
-                          (   iksParams reqs.iksCreds
-                            ⫽ { CLUSTER_NAME = reqs.clusterName }
-                          )
-                      )
-                }
-        
         let runIntegrationTests =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -109,10 +91,7 @@ let runTestsJob =
                       , getCIResources
                       ]
                   , in_parallel
-                      [ runUnitTests
-                      , runStaticChecks
-                      , do [ downloadKubeconfig, runIntegrationTests ]
-                      ]
+                      [ runUnitTests, runStaticChecks, runIntegrationTests ]
                   ]
               }
 

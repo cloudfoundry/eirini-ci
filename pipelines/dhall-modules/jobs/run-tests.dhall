@@ -1,63 +1,29 @@
 let Concourse = ../deps/concourse.dhall
 
-let Prelude = ../deps/prelude.dhall
-
 let do = Concourse.helpers.doStep
 
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let taskFile = ../helpers/task-file.dhall
 
-let iksParams = ../helpers/iks-params.dhall
-
 let RunTestRequirements = ../types/run-test-requirements.dhall
 
-let golangLintResource =
-      Concourse.schemas.Resource::{
-      , name = "golang-lint"
-      , type = Concourse.Types.ResourceType.InBuilt "docker-image"
-      , icon = Some "docker"
-      , source =
-          Some
-            ( toMap
-                { repository = Prelude.JSON.string "golangci/golangci-lint"
-                , tag = Prelude.JSON.string "latest"
-                }
-            )
-      }
+let triggerOnGolangLint = ../helpers/trigger-on-golang-lint.dhall
+
+let getTrigger = ../helpers/get-trigger.dhall
+
+let getTriggerPassed = ../helpers/get-trigger-passed.dhall
 
 let runTestsJob =
         λ(reqs : RunTestRequirements)
       → let triggerOnClusterReady =
-              Concourse.helpers.getStep
-                Concourse.schemas.GetStep::{
-                , resource = reqs.upstream.event
-                , trigger = Some True
-                , passed = Some [ "${reqs.upstream.name}-${reqs.clusterName}" ]
-                }
+              getTriggerPassed
+                reqs.upstream.event
+                [ "${reqs.upstream.name}-${reqs.clusterName}" ]
         
-        let triggerOnEirini =
-              Concourse.helpers.getStep
-                Concourse.schemas.GetStep::{
-                , resource = reqs.eiriniRepo
-                , trigger = Some True
-                }
+        let triggerOnEirini = getTrigger reqs.eiriniRepo
         
-        let triggerOnSampleConfigs =
-              Concourse.helpers.getStep
-                Concourse.schemas.GetStep::{
-                , resource = reqs.sampleConfigs
-                , trigger = Some True
-                }
-        
-        let triggerOnGolangLint =
-              Concourse.helpers.getStep
-                Concourse.schemas.GetStep::{
-                , resource = golangLintResource
-                , trigger = Some True
-                , params =
-                    Some (toMap { skip_download = Prelude.JSON.bool True })
-                }
+        let triggerOnSampleConfigs = getTrigger reqs.sampleConfigs
         
         let getCIResources =
               Concourse.helpers.getStep
@@ -78,18 +44,10 @@ let runTestsJob =
                 }
         
         let downloadKubeconfig =
-              Concourse.helpers.taskStep
-                Concourse.schemas.TaskStep::{
-                , task = "download-kubeconfig"
-                , config = taskFile reqs.ciResources "download-kubeconfig"
-                , params =
-                    Some
-                      ( toMap
-                          (   iksParams reqs.iksCreds
-                            ⫽ { CLUSTER_NAME = reqs.clusterName }
-                          )
-                      )
-                }
+              ../tasks/download-kubeconfig-iks.dhall
+                reqs.iksCreds
+                reqs.ciResources
+                reqs.clusterName
         
         let runIntegrationTests =
               Concourse.helpers.taskStep
