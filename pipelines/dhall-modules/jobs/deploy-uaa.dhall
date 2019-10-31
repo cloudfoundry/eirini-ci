@@ -30,6 +30,7 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-uaa-${reqs.clusterName}"
           , serial_groups = Some [ reqs.clusterName ]
+          , public = Some True
           , plan =
               [ ../helpers/get-trigger-passed.dhall
                   reqs.clusterReadyEvent

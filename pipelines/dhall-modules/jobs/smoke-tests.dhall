@@ -35,6 +35,7 @@ let runSmokeTests =
         in  Concourse.schemas.Job::{
             , name = "run-smoke-tests-${reqs.clusterName}"
             , serial_groups = Some [ reqs.clusterName ]
+            , public = Some True
             , plan =
                   getImageLocationDependentSteps reqs.imageLocation
                 # [ triggerOnEiriniRelease

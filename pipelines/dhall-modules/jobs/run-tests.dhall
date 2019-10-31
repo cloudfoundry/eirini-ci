@@ -100,6 +100,7 @@ let runTestsJob =
         
         in    Concourse.defaults.Job
             ⫽ { name = "run-tests"
+              , public = Some True
               , plan =
                   [ in_parallel
                       [ triggerOnClusterReady

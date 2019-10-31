@@ -89,6 +89,7 @@ let runCoreCats =
         in  Concourse.schemas.Job::{
             , name = "run-core-cats-${reqs.clusterName}"
             , serial_groups = Some [ reqs.clusterName ]
+            , public = Some True
             , plan =
                 [ in_parallel getSteps
                 , Concourse.helpers.taskStep

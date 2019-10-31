@@ -97,6 +97,7 @@ in    λ ( reqs
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-eirini-${reqs.clusterName}"
           , serial_groups = Some [ reqs.clusterName ]
+          , public = Some True
           , plan =
                 getImageLocationDependentSteps reqs.imageLocation
               # [ ../helpers/get-trigger.dhall reqs.eiriniReleaseRepo
