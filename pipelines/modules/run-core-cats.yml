@@ -8,6 +8,7 @@ groups:
 jobs:
 - name: (( concat "run-core-cats-" meta.cluster-name ))
   serial_groups: [ (( grab meta.cluster-name )) ]
+  public: true
   plan:
   - in_parallel:
     - get: cats

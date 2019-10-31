@@ -17,6 +17,7 @@ groups:
   - create-fluentd-docker-image
 jobs:
 - name: run-tests
+  public: true
   plan:
   - in_parallel:
     - get: (( concat "cluster-" meta.cluster-name "-staging-event-ready" ))
