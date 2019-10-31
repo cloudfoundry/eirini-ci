@@ -2,8 +2,6 @@ let Concourse = ../deps/concourse.dhall
 
 let Prelude = ../deps/prelude.dhall
 
-let trigger = ./get-trigger.dhall
-
 let golangLintResource =
       Concourse.schemas.Resource::{
       , name = "golang-lint"
@@ -18,4 +16,9 @@ let golangLintResource =
             )
       }
 
-in  trigger golangLintResource
+in  Concourse.helpers.getStep
+      Concourse.schemas.GetStep::{
+      , resource = golangLintResource
+      , trigger = Some True
+      , params = Some (toMap { skip_download = Prelude.JSON.bool True })
+      }

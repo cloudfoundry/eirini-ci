@@ -105,6 +105,8 @@ let updateVersionReqs =
       , dockerDownloader = docker.stagingDownloader
       , dockerExecutor = docker.stagingExecutor
       , dockerUploader = docker.stagingUploader
+      , dockerFluentd = docker.fluentd
+      , dockerSecretSmuggler = docker.secretSmuggler
       }
 
 let runStagingTestReqs =

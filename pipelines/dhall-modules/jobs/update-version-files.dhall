@@ -51,11 +51,14 @@ in    λ(reqs : JobReqs)
       
       let optionalDockerInputMapping =
               λ(optImage : Optional ImageReq)
+            → λ(keyName : Text)
             → Opt.fold
                 ImageReq
                 optImage
                 (Map.Type Text Text)
-                (λ(i : ImageReq) → toMap { image2 = i.docker.name })
+                (   λ(i : ImageReq)
+                  → [ { mapKey = keyName, mapValue = i.docker.name } ]
+                )
                 ([] : Map.Type Text Text)
       
       let optionalName =
@@ -84,8 +87,8 @@ in    λ(reqs : JobReqs)
                               { image-code-repository = reqs.repo.name
                               , image1 = reqs.image1.docker.name
                               }
-                          # optionalDockerInputMapping reqs.image2
-                          # optionalDockerInputMapping reqs.image3
+                          # optionalDockerInputMapping reqs.image2 "image2"
+                          # optionalDockerInputMapping reqs.image3 "image3"
                         )
                   , params =
                       Some
