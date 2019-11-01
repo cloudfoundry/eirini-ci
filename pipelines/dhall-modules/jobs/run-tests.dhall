@@ -14,6 +14,8 @@ let getTrigger = ../helpers/get-trigger.dhall
 
 let getTriggerPassed = ../helpers/get-trigger-passed.dhall
 
+let slackNotification = ../helpers/slack_on_fail.dhall
+
 let runTestsJob =
         λ(reqs : RunTestRequirements)
       → let triggerOnClusterReady =
@@ -59,6 +61,7 @@ let runTestsJob =
         in    Concourse.defaults.Job
             ⫽ { name = "run-tests"
               , public = Some True
+              , on_failure = slackNotification
               , plan =
                   [ in_parallel
                       [ triggerOnClusterReady
