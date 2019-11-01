@@ -100,5 +100,16 @@ in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
                             }
                         )
                   }
+              , Concourse.helpers.putStep
+                  Concourse.schemas.PutStep::{
+                  , resource = writeableEiriniReleaseRepo
+                  , params =
+                      Some
+                        ( toMap
+                            { repository =
+                                Prelude.JSON.string "eirini-release-updated"
+                            }
+                        )
+                  }
               ]
           }
