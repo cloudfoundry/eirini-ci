@@ -76,6 +76,7 @@ let kubeClusterReqs =
       , workerCount = env:worker_count ? 1
       , storageClass = inputs.storageClass
       , clusterPreparation = ClusterPrep.NotRequired
+      , failureNotification = slackNotification
       }
 
 let runTestReqs =
@@ -110,6 +111,7 @@ let updateVersionReqs =
       , dockerUploader = docker.stagingUploader
       , dockerFluentd = docker.fluentd
       , dockerSecretSmuggler = docker.secretSmuggler
+      , failureNotification = slackNotification
       }
 
 let runStagingTestReqs =
@@ -118,6 +120,7 @@ let runStagingTestReqs =
       , stagingDownloader = docker.stagingDownloader
       , stagingExecutor = docker.stagingExecutor
       , stagingUploader = docker.stagingUploader
+      , failureNotification = slackNotification
       }
 
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs

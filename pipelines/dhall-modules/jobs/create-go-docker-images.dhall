@@ -50,6 +50,7 @@ let createGoDockerImages =
                     , putDocker reqs.dockerRootfsPatcher "rootfs-patcher"
                     ]
                 ]
+            , on_failure = reqs.failureNotification
             }
 
 in  createGoDockerImages

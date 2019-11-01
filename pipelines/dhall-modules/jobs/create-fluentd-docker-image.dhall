@@ -64,4 +64,5 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               , ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
               , putDocker
               ]
+          , on_failure = reqs.failureNotification
           }

@@ -36,6 +36,7 @@ let runFluentdUnitTests =
                     , input_mapping = inputMapping
                     }
                 ]
+            , on_failure = reqs.failureNotification
             }
 
 in  runFluentdUnitTests

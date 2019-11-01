@@ -5,6 +5,7 @@ in    λ(reqs : ./types/update-version-requirements.dhall)
             ./jobs/update-version-files.dhall
               reqs.writeableEiriniReleaseRepo
               reqs.ciResources
+              reqs.failureNotification
       
       in  [ update
               { repo = reqs.eiriniRepo

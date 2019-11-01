@@ -25,6 +25,7 @@ let JobReqs =
 
 in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
     → λ(ciResources : Concourse.Types.Resource)
+    → λ(failureNotification : Optional Concourse.Types.Step)
     → λ(reqs : JobReqs)
     → let triggerOnRepo =
             ../helpers/get-trigger-passed.dhall reqs.repo [ reqs.upstreamJob ]
@@ -67,6 +68,7 @@ in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
       
       in  Concourse.schemas.Job::{
           , name = "update-${reqs.componentName}-version-files"
+          , on_failure = failureNotification
           , plan =
               [ in_parallel
                   (   [ ../helpers/get.dhall writeableEiriniReleaseRepo

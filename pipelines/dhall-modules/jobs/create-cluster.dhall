@@ -39,6 +39,7 @@ let createClusterJob
                   , createCluster
                   , ../helpers/emit-event.dhall reqs.clusterCreatedEvent
                   ]
+              , on_failure = reqs.failureNotification
               }
 
 in  createClusterJob

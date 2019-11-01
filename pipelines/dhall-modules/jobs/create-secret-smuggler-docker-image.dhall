@@ -39,4 +39,5 @@ in    λ ( reqs
                         )
                   }
               ]
+          , on_failure = reqs.failureNotification
           }

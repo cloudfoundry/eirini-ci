@@ -113,6 +113,7 @@ let runTestsJob =
                   , in_parallel
                       [ runUnitTests, runStaticChecks, runIntegrationTests ]
                   ]
+              , on_failure = reqs.failureNotification
               }
 
 in  runTestsJob

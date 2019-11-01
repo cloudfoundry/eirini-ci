@@ -50,6 +50,7 @@ let createGoDockerImages =
                     , putDocker reqs.stagingUploader "uploader"
                     ]
                 ]
+            , on_failure = reqs.failureNotification
             }
 
 in  createGoDockerImages
