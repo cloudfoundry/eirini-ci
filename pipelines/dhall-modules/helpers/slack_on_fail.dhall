@@ -41,6 +41,7 @@ in  Some
                           Job is *$BUILD_JOB_NAME*
                           Build name is *$BUILD_NAME*
                           ''
+                    , channel = Prelude.JSON.string "#eirini-ci"
                     , attachments =
                         Prelude.JSON.string
                           ''
