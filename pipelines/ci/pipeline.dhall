@@ -71,7 +71,7 @@ let kubeClusterReqs =
       , clusterName = inputs.worldName
       , enableOPIStaging = "true"
       , iksCreds = iksCreds
-      , workerCount = 1
+      , workerCount = env:worker_count ? 1
       , storageClass = inputs.storageClass
       , clusterPreparation = ClusterPrep.NotRequired
       }
