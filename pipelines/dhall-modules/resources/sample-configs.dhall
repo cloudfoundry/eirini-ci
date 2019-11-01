@@ -8,6 +8,7 @@ let ciResources
       →   Concourse.defaults.Resource
         ⫽ { name = "sample-configs"
           , type = Concourse.Types.ResourceType.InBuilt "git"
+          , icon = Some "git"
           , source =
               Some
                 ( toMap
