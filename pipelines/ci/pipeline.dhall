@@ -63,6 +63,8 @@ let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
 
 let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 
+let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
+
 let kubeClusterReqs =
       { ciResources = ciResources
       , clusterState = clusterState
@@ -90,6 +92,7 @@ let runTestReqs =
       , dockerFluentd = docker.fluentd
       , iksCreds = iksCreds
       , upstream = { name = "create-cluster", event = clusterCreatedEvent }
+      , failureNotification = slackNotification
       }
 
 let updateVersionReqs =

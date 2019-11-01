@@ -13,4 +13,5 @@ in  { ciResources : Concourse.Types.Resource
     , clusterName : Text
     , iksCreds : ./iks-creds.dhall
     , upstream : { event : Concourse.Types.Resource, name : Text }
+    , failureNotification : Optional Concourse.Types.Step
     }
