@@ -1,9 +1,13 @@
 let ImageReq = ./types/update-version-image-requirements.dhall
 
 in    λ(reqs : ./types/update-version-requirements.dhall)
-    → [ ./jobs/update-version-files.dhall
-          (   reqs.{ writeableEiriniReleaseRepo, ciResources }
-            ⫽ { repo = reqs.eiriniRepo
+    → let update =
+            ./jobs/update-version-files.dhall
+              reqs.writeableEiriniReleaseRepo
+              reqs.ciResources
+      
+      in  [ update
+              { repo = reqs.eiriniRepo
               , componentName = "eirini"
               , image1 = { docker = reqs.dockerOPI, name = "opi" }
               , image2 =
@@ -15,10 +19,8 @@ in    λ(reqs : ./types/update-version-requirements.dhall)
                     }
               , upstreamJob = "create-go-docker-images"
               }
-          )
-      , ./jobs/update-version-files.dhall
-          (   reqs.{ writeableEiriniReleaseRepo, ciResources }
-            ⫽ { repo = reqs.eiriniStagingRepo
+          , update
+              { repo = reqs.eiriniStagingRepo
               , componentName = "staging"
               , image1 =
                   { docker = reqs.dockerDownloader
@@ -32,20 +34,16 @@ in    λ(reqs : ./types/update-version-requirements.dhall)
                     { docker = reqs.dockerUploader, name = "staging-uploader" }
               , upstreamJob = "create-staging-docker-images"
               }
-          )
-      , ./jobs/update-version-files.dhall
-          (   reqs.{ writeableEiriniReleaseRepo, ciResources }
-            ⫽ { repo = reqs.fluentdRepo
+          , update
+              { repo = reqs.fluentdRepo
               , componentName = "fluentd"
               , image1 = { docker = reqs.dockerFluentd, name = "fluentd" }
               , image2 = None ImageReq
               , image3 = None ImageReq
               , upstreamJob = "create-fluentd-docker-image"
               }
-          )
-      , ./jobs/update-version-files.dhall
-          (   reqs.{ writeableEiriniReleaseRepo, ciResources }
-            ⫽ { repo = reqs.secretSmugglerRepo
+          , update
+              { repo = reqs.secretSmugglerRepo
               , componentName = "secret-smuggler"
               , image1 =
                   { docker = reqs.dockerSecretSmuggler
@@ -55,5 +53,4 @@ in    λ(reqs : ./types/update-version-requirements.dhall)
               , image3 = None ImageReq
               , upstreamJob = "create-secret-smuggler-docker-image"
               }
-          )
-      ]
+          ]

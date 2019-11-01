@@ -15,9 +15,7 @@ let taskFile = ../helpers/task-file.dhall
 let ImageReq = ../types/update-version-image-requirements.dhall
 
 let JobReqs =
-      { writeableEiriniReleaseRepo : Concourse.Types.Resource
-      , ciResources : Concourse.Types.Resource
-      , repo : Concourse.Types.Resource
+      { repo : Concourse.Types.Resource
       , componentName : Text
       , image1 : ImageReq
       , image2 : Optional ImageReq
@@ -25,7 +23,9 @@ let JobReqs =
       , upstreamJob : Text
       }
 
-in    λ(reqs : JobReqs)
+in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
+    → λ(ciResources : Concourse.Types.Resource)
+    → λ(reqs : JobReqs)
     → let triggerOnRepo =
             ../helpers/get-trigger-passed.dhall reqs.repo [ reqs.upstreamJob ]
       
@@ -69,8 +69,8 @@ in    λ(reqs : JobReqs)
           , name = "update-${reqs.componentName}-version-files"
           , plan =
               [ in_parallel
-                  (   [ ../helpers/get.dhall reqs.writeableEiriniReleaseRepo
-                      , ../helpers/get.dhall reqs.ciResources
+                  (   [ ../helpers/get.dhall writeableEiriniReleaseRepo
+                      , ../helpers/get.dhall ciResources
                       , triggerOnRepo
                       , triggerOnNewImage reqs.image1.docker
                       ]
@@ -80,7 +80,7 @@ in    λ(reqs : JobReqs)
               , Concourse.helpers.taskStep
                   Concourse.schemas.TaskStep::{
                   , task = "update-version-files"
-                  , config = taskFile reqs.ciResources "update-image-digests"
+                  , config = taskFile ciResources "update-image-digests"
                   , input_mapping =
                       Some
                         (   toMap

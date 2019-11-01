@@ -8,15 +8,16 @@ let ciResources
       →   Concourse.defaults.Resource
         ⫽ { name = "ci-resources"
           , type = Concourse.Types.ResourceType.InBuilt "git"
+          , icon = Some "git"
           , source =
               Some
-              ( toMap
-                  { uri =
-                      Prelude.JSON.string
-                        "https://github.com/cloudfoundry-incubator/eirini-ci"
-                  , branch = Prelude.JSON.string branch
-                  }
-              )
+                ( toMap
+                    { uri =
+                        Prelude.JSON.string
+                          "https://github.com/cloudfoundry-incubator/eirini-ci"
+                    , branch = Prelude.JSON.string branch
+                    }
+                )
           }
 
 in  ciResources
