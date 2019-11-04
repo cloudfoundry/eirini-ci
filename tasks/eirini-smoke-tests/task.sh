@@ -25,7 +25,7 @@ check-scf-readiness() {
       exit 0
     fi
 
-    if [[ $counter -gt 780 ]]; then
+    if [[ $counter -gt 1080 ]]; then
       echo "SCF is NOT ready" >&2
       exit 1
     fi
