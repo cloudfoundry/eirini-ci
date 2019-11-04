@@ -9,6 +9,7 @@ resources:
 - name: postfacto
   icon: egg-easter
   type: github-release
+  check_every: 12h
   source:
     owner: pivotal
     repository: postfacto
