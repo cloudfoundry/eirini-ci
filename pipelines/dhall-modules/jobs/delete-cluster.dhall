@@ -8,6 +8,8 @@ let taskFile = ../helpers/task-file.dhall
 
 let iksParams = ../helpers/iks-params.dhall
 
+let deleteTimer = ../resources/delete-timer.dhall
+
 let deleteClusterJob
     : ClusterRequirements → Concourse.Types.Job
     =   λ(reqs : ClusterRequirements)
@@ -54,7 +56,8 @@ let deleteClusterJob
         in    Concourse.defaults.Job
             ⫽ { name = "delete-cluster-${reqs.clusterName}"
               , plan =
-                  [ ../helpers/get.dhall reqs.ciResources
+                  [ ../helpers/get-trigger.dhall deleteTimer
+		  , ../helpers/get.dhall reqs.ciResources
                   , deleteCluster
                   , ../helpers/get.dhall reqs.clusterState
                   , deleteValuesFile
