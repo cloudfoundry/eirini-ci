@@ -33,7 +33,7 @@ jobs:
     file: ci-resources/tasks/update-diego-templates/task.yml
   - task: update-eirinifs-version
     input_mapping:
-      eirini-release-modified: eirini-release
+      eirini-release: eirini-release-modified
     config:
       platform: linux
       image_resource:
