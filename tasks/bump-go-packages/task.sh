@@ -20,12 +20,10 @@ commit() {
 
 bump() {
   go get github.com/maxbrunsfeld/counterfeiter
-  export PATH=$PATH:$GOPATH/bin/
   pushd repository
-  go get -u ./...
+  go get -u ./... || go generate ./...
   go mod tidy
   go mod vendor
-  go generate ./...
   popd
 }
 
