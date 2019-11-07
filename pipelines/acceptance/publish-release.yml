@@ -51,7 +51,7 @@ jobs:
   plan:
   - get: eirini-release-version
     params:
-      bump: mmajor
+      bump: major
   - put: eirini-release-version
     params:
       file: eirini-release-version/version
