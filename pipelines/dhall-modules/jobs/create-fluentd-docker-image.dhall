@@ -16,20 +16,10 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               [ "run-fluentd-unit-tests" ]
       
       let baseImage =
-            Concourse.schemas.Resource::{
-            , name = "fluentd-image"
-            , type = Concourse.Types.ResourceType.InBuilt "docker-image"
-            , icon = Some "docker"
-            , source =
-                Some
-                  ( toMap
-                      { repository =
-                          Prelude.JSON.string
-                            "fluent/fluentd-kubernetes-daemonset"
-                      , tag = Prelude.JSON.string "v1-debian-elasticsearch"
-                      }
-                  )
-            }
+            ../helpers/docker-resource-no-creds.dhall
+              "fluentd-image"
+              "fluent/fluentd-kubernetes-daemonset"
+              (Some "v1-debian-elasticsearch")
       
       let triggerOnBaseImage =
             Concourse.helpers.getStep

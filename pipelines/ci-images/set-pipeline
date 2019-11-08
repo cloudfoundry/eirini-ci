@@ -11,15 +11,14 @@ EOF
   exit 0
 fi
 
-DOCKER_HUB_PASSWORD="$(pass eirini/docker-hub)"
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR"/../.. && pwd)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
+target="${1:-eirini}"
 
-export DOCKER_HUB_PASSWORD
-export SCRIPT_DIR
-export PROJECT_ROOT
-
-export TARGET="${1:-eirini}"
-export PRIVATE_REPO="${2:-$PROJECT_ROOT/../eirini-private-config}"
-
-aviator -f "$SCRIPT_DIR"/aviator.yml
+fly -t "${target}" \
+  set-pipeline \
+  -p ci-images \
+  -c <(dhall-fly <<< "$script_dir/pipeline.dhall") \
+  -v docker_hub_user=eiriniuser \
+  -v docker_hub_password="$(pass eirini/docker-hub)" \
+  --load-vars-from "$private_repo/concourse/common.yml"
