@@ -18,7 +18,7 @@ target="${1:-eirini}"
 fly -t "${target}" \
   set-pipeline \
   -p ci-images \
-  -c <(dhall-fly <<< "$script_dir/pipeline.dhall") \
+  -c <(dhall-fly <<<"$script_dir/pipeline.dhall") \
   -v docker_hub_user=eiriniuser \
   -v docker_hub_password="$(pass eirini/docker-hub)" \
   --load-vars-from "$private_repo/concourse/common.yml"
