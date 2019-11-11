@@ -100,6 +100,7 @@
               , natsPassword = inputs.natsPassword
               , diegoCellCount = inputs.diegoCellCount
               }
+        , failureNotification = None Concourse.Types.Step
         }
   
   let runTestReqs =
@@ -116,6 +117,7 @@
         , dockerFluentd = docker.fluentd
         , iksCreds = iksCreds
         , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
+        , failureNotification = None Concourse.Types.Step
         }
   
   let tagImagesReqs =
