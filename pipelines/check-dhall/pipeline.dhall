@@ -15,7 +15,8 @@ let job =
       Concourse.schemas.Job::{
       , name = "check-dhall"
       , plan =
-          [ ../dhall-modules/helpers/get-trigger.dhall ciResources
+          [ ../dhall-modules/helpers/get-trigger.dhall
+              ciResources
           , Concourse.helpers.taskStep
               Concourse.schemas.TaskStep::{
               , task = "check-dhall"
@@ -33,11 +34,16 @@ let job =
                     , run =
                         Concourse.schemas.TaskRunConfig::{
                         , path = "bash"
-                        , args = Some ["-c", ''
-                        set -euo pipefail
-
-                        find ${ciResources.name} -name pipeline.dhall -type f | xargs -n 1 -t dhall type --quiet --file
-                        '']
+                        , args =
+                            Some
+                              [ "-c"
+                              , ''
+                                set -euo pipefail
+                                
+                                find "${ciResources.name}" -name pipeline.dhall -type f | xargs -n 1 -t dhall type --quiet --file
+                                echo "✅ Pipeline is fine ✅"
+                                ''
+                              ]
                         }
                     }
               }
