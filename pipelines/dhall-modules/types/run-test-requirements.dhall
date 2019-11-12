@@ -10,6 +10,9 @@ in  { ciResources : Concourse.Types.Resource
     , dockerBitsWaiter : Concourse.Types.Resource
     , dockerSecretSmuggler : Concourse.Types.Resource
     , dockerFluentd : Concourse.Types.Resource
+    , dockerRouteCollector : Concourse.Types.Resource
+    , dockerRoutePodInformer : Concourse.Types.Resource
+    , dockerRouteStatefulsetInformer : Concourse.Types.Resource
     , clusterName : Text
     , iksCreds : ./iks-creds.dhall
     , upstream : { event : Concourse.Types.Resource, name : Text }

@@ -48,6 +48,11 @@ let createGoDockerImages =
                     [ putDocker reqs.dockerOPI "opi"
                     , putDocker reqs.dockerBitsWaiter "bits-waiter"
                     , putDocker reqs.dockerRootfsPatcher "rootfs-patcher"
+                    , putDocker reqs.dockerRouteCollector "route-collector"
+                    , putDocker reqs.dockerRoutePodInformer "route-pod-informer"
+                    , putDocker
+                        reqs.dockerRouteStatefulsetInformer
+                        "route-statefulset-informer"
                     ]
                 ]
             , on_failure = reqs.failureNotification

@@ -115,6 +115,9 @@
         , dockerRootfsPatcher = docker.rootfsPatcher
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
+        , dockerRouteCollector = docker.routeCollector
+        , dockerRoutePodInformer = docker.routePodInformer
+        , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
         , iksCreds = iksCreds
         , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
         , failureNotification = None Concourse.Types.Step
@@ -126,6 +129,9 @@
         , dockerRootfsPatcher = docker.rootfsPatcher
         , dockerSecretSmuggler = docker.secretSmuggler
         , dockerFluentd = docker.fluentd
+        , dockerRouteCollector = docker.routeCollector
+        , dockerRoutePodInformer = docker.routePodInformer
+        , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
         , worldName = inputs.worldName
         , eiriniRepo = eiriniRepo
         , deploymentVersion = deploymentVersion

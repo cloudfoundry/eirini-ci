@@ -1,54 +1,40 @@
-let dockerResource = ../helpers/docker-resource.dhall
-
-in    λ(username : Text)
-    → λ(password : Text)
-    → { opi = dockerResource "docker-opi" "eirini/opi" (None Text) username password
-      , bitsWaiter =
-          dockerResource
-            "docker-bits-waiter"
-            "eirini/bits-waiter"
+  λ(username : Text)
+→ λ(password : Text)
+→ let dockerResource = ../helpers/docker-resource.dhall
+  
+  let eiriniDockerResource =
+          λ(name : Text)
+        → dockerResource
+            "docker-${name}"
+            "eirini/${name}"
             (None Text)
             username
             password
-      , rootfsPatcher =
-          dockerResource
-            "docker-rootfs-patcher"
-            "eirini/rootfs-patcher"
+  
+  let stagingDockerResource =
+          λ(name : Text)
+        → dockerResource
+            "docker-staging-${name}"
+            "eirini/recipe-${name}"
             (None Text)
             username
             password
-      , secretSmuggler =
-          dockerResource
-            "docker-secret-smuggler"
-            "eirini/secret-smuggler"
-            (None Text)
-            username
-            password
+  
+  in  { opi = eiriniDockerResource "opi"
+      , bitsWaiter = eiriniDockerResource "bits-waiter"
+      , rootfsPatcher = eiriniDockerResource "rootfs-patcher"
+      , secretSmuggler = eiriniDockerResource "secret-smuggler"
+      , routeCollector = eiriniDockerResource "route-collector"
+      , routePodInformer = eiriniDockerResource "route-pod-informer"
+      , routeStatefulsetInformer =
+          eiriniDockerResource "route-statefulset-informer"
+      , stagingDownloader = stagingDockerResource "downloader"
+      , stagingExecutor = stagingDockerResource "executor"
+      , stagingUploader = stagingDockerResource "uploader"
       , fluentd =
           dockerResource
             "docker-fluentd"
             "eirini/loggregator-fluentd"
-            (None Text)
-            username
-            password
-      , stagingDownloader =
-          dockerResource
-            "docker-staging-downloader"
-            "eirini/recipe-downloader"
-            (None Text)
-            username
-            password
-      , stagingExecutor =
-          dockerResource
-            "docker-staging-executor"
-            "eirini/recipe-executor"
-            (None Text)
-            username
-            password
-      , stagingUploader =
-          dockerResource
-            "docker-staging-uploader"
-            "eirini/recipe-uploader"
             (None Text)
             username
             password

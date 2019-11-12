@@ -32,7 +32,7 @@ let tagImagesJob =
                     Some (toMap { pre = Prelude.JSON.string reqs.worldName })
                 }
         
-        let updateImage =
+        let putImageWithTag =
                 λ(resource : Concourse.Types.Resource)
               → Concourse.helpers.putStep
                   Concourse.schemas.PutStep::{
@@ -60,6 +60,15 @@ let tagImagesJob =
                         reqs.dockerBitsWaiter
                         "create-go-docker-images"
                     , getDockerImage
+                        reqs.dockerRouteCollector
+                        "create-go-docker-images"
+                    , getDockerImage
+                        reqs.dockerRoutePodInformer
+                        "create-go-docker-images"
+                    , getDockerImage
+                        reqs.dockerRouteStatefulsetInformer
+                        "create-go-docker-images"
+                    , getDockerImage
                         reqs.dockerSecretSmuggler
                         "create-secret-smuggler-docker-image"
                     , getDockerImage
@@ -68,11 +77,14 @@ let tagImagesJob =
                     , putDeploymentVersion
                     ]
                 , in_parallel
-                    [ updateImage reqs.dockerOPI
-                    , updateImage reqs.dockerRootfsPatcher
-                    , updateImage reqs.dockerBitsWaiter
-                    , updateImage reqs.dockerSecretSmuggler
-                    , updateImage reqs.dockerFluentd
+                    [ putImageWithTag reqs.dockerOPI
+                    , putImageWithTag reqs.dockerRootfsPatcher
+                    , putImageWithTag reqs.dockerBitsWaiter
+                    , putImageWithTag reqs.dockerSecretSmuggler
+                    , putImageWithTag reqs.dockerFluentd
+                    , putImageWithTag reqs.dockerRouteCollector
+                    , putImageWithTag reqs.dockerRoutePodInformer
+                    , putImageWithTag reqs.dockerRouteStatefulsetInformer
                     ]
                 ]
             }
