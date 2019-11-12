@@ -53,6 +53,9 @@ helm-install() {
       "--set" "eirini.opi.rootfs_patcher_image=eirini/rootfs-patcher"
       "--set" "eirini.opi.secret_smuggler_image=eirini/secret-smuggler"
       "--set" "eirini.opi.loggregator_fluentd_image=eirini/loggregator-fluentd"
+      "--set" "eirini.opi.route_collector_image=eirini/route-collector"
+      "--set" "eirini.opi.route_pod_informer_image=eirini/route-pod-informer"
+      "--set" "eirini.opi.route_statefulset_informer_image=eirini/route-statefulset-informer"
       "--set" "eirini.opi.image_tag=$image_tag"
     )
   fi
