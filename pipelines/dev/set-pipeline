@@ -26,7 +26,7 @@ readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
 
-aviator -f "$basedir"/aviator.yml
+dhall-fly <<<"$basedir/pipeline.dhall $worker_count" >"$PIPELINE_YML"
 
 fly --target "$target" \
   set-pipeline \
