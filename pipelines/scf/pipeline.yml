@@ -22,15 +22,13 @@ jobs:
     params:
       merge: true
       repository: eirini-release-modified
-- name: update-diego-chart-templates
+- name: update-eirinifs-version
   plan:
   - get: ci-resources
   - get: eirini-release
     passed: [scf-build]
     trigger: true
   - get: eirinifs-release
-  - task: update-diego-templates
-    file: ci-resources/tasks/update-diego-templates/task.yml
   - task: update-eirinifs-version
     input_mapping:
       eirini-release: eirini-release-modified
