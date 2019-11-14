@@ -30,8 +30,6 @@ jobs:
     trigger: true
   - get: eirinifs-release
   - task: update-eirinifs-version
-    input_mapping:
-      eirini-release: eirini-release-modified
     config:
       platform: linux
       image_resource:
