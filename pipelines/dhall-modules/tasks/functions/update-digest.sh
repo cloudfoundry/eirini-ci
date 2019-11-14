@@ -8,9 +8,10 @@ update-digest() {
 }
 
 commit-changes() {
-  local msg component_name
+  local msg component_name repo
   component_name="$1"
-  msg=$(commit-message "$component_name")
+  repo="$2"
+  msg=$(commit-message "$component_name" "$repo")
   pushd eirini-release || exit
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
@@ -35,10 +36,11 @@ strip-signed-off() {
 }
 
 commit-message() {
-  local ref component_name commit_msg
+  local ref component_name commit_msg repo
   component_name="$1"
-  ref=$(cat ./image-code-repository/.git/ref)
-  commit_msg=$(strip-signed-off ./image-code-repository)
+  repo="$2"
+  ref=$(cat "$repo/.git/ref")
+  commit_msg=$(strip-signed-off "$repo")
 
   echo -e "Update image versions\n"
   echo "$component_name commit SHA: $ref"

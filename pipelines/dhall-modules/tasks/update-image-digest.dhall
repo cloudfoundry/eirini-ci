@@ -19,7 +19,9 @@ let JobReqs =
       , upstreamJob : Text
       }
 
-in    λ(writeableEiriniReleaseRepo : Types.Resource)
+in    λ ( writeableEiriniReleaseRepo
+        : Types.Resource
+        )
     → λ(reqs : JobReqs)
     → let imageInput =
               λ(imageReq : ImageReq)
@@ -48,6 +50,7 @@ in    λ(writeableEiriniReleaseRepo : Types.Resource)
                   , image_resource =
                       Some
                         schemas.ImageResource::{
+                        , type = "docker-image"
                         , source =
                             Some
                               (toMap { repository = JSON.string "eirini/ci" })
@@ -73,7 +76,7 @@ in    λ(writeableEiriniReleaseRepo : Types.Resource)
                               
                               ${`Text`.concatSep "\n" updateDigestLines}
                               
-                              commit-changes "${reqs.componentName}"
+                              commit-changes "${reqs.componentName}" "./${codeRepoInput.name}"
                               ''
                             ]
                       }
