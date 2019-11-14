@@ -101,7 +101,6 @@ let runTestReqs =
 
 let updateVersionReqs =
       { writeableEiriniReleaseRepo = writableEiriniReleaseRepo
-      , ciResources = ciResources
       , eiriniRepo = eiriniRepo
       , fluentdRepo = fluentdRepo
       , secretSmugglerRepo = secretSmugglerRepo

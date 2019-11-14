@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 update-digest() {
   local image_path image_name
   image_path="$1"
@@ -10,10 +8,10 @@ update-digest() {
 }
 
 commit-changes() {
-  local msg
+  local msg component_name
   component_name="$1"
   msg=$(commit-message "$component_name")
-  pushd eirini-release
+  pushd eirini-release || exit
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
     git add helm/eirini/versions/

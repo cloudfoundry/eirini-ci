@@ -16,7 +16,6 @@ let JobReqs =
       }
 
 in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
-    → λ(ciResources : Concourse.Types.Resource)
     → λ(failureNotification : Optional Concourse.Types.Step)
     → λ(reqs : JobReqs)
     → let triggerOnRepo =
@@ -42,14 +41,12 @@ in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
           , plan =
               [ in_parallel
                   (   [ ../helpers/get.dhall writeableEiriniReleaseRepo
-                      , ../helpers/get.dhall ciResources
                       , triggerOnRepo
                       ]
                     # triggerOnNewImages
                   )
               , ../tasks/update-image-digest.dhall
                   writeableEiriniReleaseRepo
-                  ciResources
                   reqs
               , Concourse.helpers.putStep
                   Concourse.schemas.PutStep::{

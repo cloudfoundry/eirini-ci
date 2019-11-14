@@ -19,10 +19,7 @@ let JobReqs =
       , upstreamJob : Text
       }
 
-in    λ ( writeableEiriniReleaseRepo
-        : Types.Resource
-        )
-    → λ(ciResources : Types.Resource)
+in    λ(writeableEiriniReleaseRepo : Types.Resource)
     → λ(reqs : JobReqs)
     → let imageInput =
               λ(imageReq : ImageReq)
@@ -72,7 +69,7 @@ in    λ ( writeableEiriniReleaseRepo
                             , ''
                               set -euo pipefail
                               
-                              source "${ciResources.name}/tasks/update-image-digests/task.sh"
+                              ${./functions/update-digest.sh as Text}
                               
                               ${`Text`.concatSep "\n" updateDigestLines}
                               
