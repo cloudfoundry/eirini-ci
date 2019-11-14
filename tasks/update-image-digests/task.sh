@@ -1,22 +1,3 @@
-#!/bin/bash
-
-set -euo pipefail
-
-main() {
-  update-digest image1 "$IMAGE1_NAME"
-
-  if [[ -d image2 ]]; then
-    update-digest image2 "$IMAGE2_NAME"
-  fi
-
-  if [[ -d image3 ]]; then
-    update-digest image3 "$IMAGE3_NAME"
-  fi
-
-  # shellcheck disable=SC2153
-  commit-changes "$COMPONENT_NAME"
-}
-
 update-digest() {
   local image_path image_name
   image_path="$1"
@@ -62,5 +43,3 @@ commit-message() {
   echo "$component_name commit message:"
   echo -e "$commit_msg\n"
 }
-
-main

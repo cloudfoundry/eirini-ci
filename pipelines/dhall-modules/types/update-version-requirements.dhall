@@ -13,6 +13,9 @@ in  { writeableEiriniReleaseRepo : Concourse.Types.Resource
     , dockerExecutor : Concourse.Types.Resource
     , dockerUploader : Concourse.Types.Resource
     , dockerFluentd : Concourse.Types.Resource
+    , dockerRouteCollector : Concourse.Types.Resource
+    , dockerRoutePodInformer : Concourse.Types.Resource
+    , dockerRouteStatefulsetInformer : Concourse.Types.Resource
     , dockerSecretSmuggler : Concourse.Types.Resource
     , failureNotification : Optional Concourse.Types.Step
     }

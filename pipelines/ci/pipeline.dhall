@@ -91,6 +91,9 @@ let runTestReqs =
       , dockerRootfsPatcher = docker.rootfsPatcher
       , dockerSecretSmuggler = docker.secretSmuggler
       , dockerFluentd = docker.fluentd
+      , dockerRouteCollector = docker.routeCollector
+      , dockerRoutePodInformer = docker.routePodInformer
+      , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
       , iksCreds = iksCreds
       , upstream = { name = "create-cluster", event = clusterCreatedEvent }
       , failureNotification = slackNotification
@@ -111,6 +114,9 @@ let updateVersionReqs =
       , dockerUploader = docker.stagingUploader
       , dockerFluentd = docker.fluentd
       , dockerSecretSmuggler = docker.secretSmuggler
+      , dockerRouteCollector = docker.routeCollector
+      , dockerRoutePodInformer = docker.routePodInformer
+      , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
       , failureNotification = slackNotification
       }
 
