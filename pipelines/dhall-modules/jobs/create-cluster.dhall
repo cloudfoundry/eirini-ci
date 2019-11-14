@@ -4,8 +4,6 @@ let ClusterRequirements = ../types/cluster-requirements.dhall
 
 let taskFile = ../helpers/task-file.dhall
 
-let iksParams = ../helpers/iks-params.dhall
-
 let createClusterJob
     : ClusterRequirements → Concourse.Types.Job
     =   λ(reqs : ClusterRequirements)
@@ -14,19 +12,26 @@ let createClusterJob
                 reqs.clusterState
                 [ "delete-cluster-${reqs.clusterName}" ]
         
+        let taskName =
+              merge
+                { IKSCreds = λ(_ : ../types/iks-creds.dhall) → "create-cluster"
+                , GKECreds =
+                    λ(_ : ../types/gke-creds.dhall) → "gcp-create-cluster"
+                }
+                reqs.creds
+        
         let createCluster =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
                   ⫽ { task = "create-kubernetes-cluster"
-                    , config = taskFile reqs.ciResources "create-cluster"
+                    , config = taskFile reqs.ciResources taskName
                     , params =
                         Some
-                          ( toMap
-                              (   iksParams reqs.iksCreds
-                                ⫽ { CLUSTER_NAME = reqs.clusterName
-                                  , WORKER_COUNT = Natural/show reqs.workerCount
-                                  }
-                              )
+                          (   toMap
+                                { CLUSTER_NAME = reqs.clusterName
+                                , WORKER_COUNT = Natural/show reqs.workerCount
+                                }
+                            # ../helpers/get-creds.dhall reqs.creds
                           )
                     }
                 )

@@ -1,0 +1,1 @@
+{ serviceAccountJSON : Text, dnsServiceAccountJSON : Text }

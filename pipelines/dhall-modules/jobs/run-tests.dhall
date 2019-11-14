@@ -44,10 +44,10 @@ let runTestsJob =
                 }
         
         let downloadKubeconfig =
-              ../tasks/download-kubeconfig-iks.dhall
-                reqs.iksCreds
+              ../tasks/download-kubeconfig.dhall
                 reqs.ciResources
                 reqs.clusterName
+                reqs.creds
         
         let runIntegrationTests =
               Concourse.helpers.taskStep

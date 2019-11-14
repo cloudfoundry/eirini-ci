@@ -13,7 +13,6 @@
         , worldName = "((world-name))"
         , eiriniBranch = "((eirini-branch))"
         , eiriniReleaseBranch = "((eirini-release-branch))"
-        , iksCreds = iksCreds
         , dockerhubUser = "((dockerhub-user))"
         , dockerhubPassword = "((dockerhub-password))"
         , gcsJSONKey = "((gcs-json-key))"
@@ -23,6 +22,8 @@
         , natsPassword = "((nats_password))"
         , diegoCellCount = "((diego-cell-count))"
         }
+  
+  let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
   
   let Prelude = ../dhall-modules/deps/prelude.dhall
   
@@ -67,12 +68,6 @@
           inputs.worldName
           inputs.gcsJSONKey
   
-  let downloadKubeconfigTask =
-        ../dhall-modules/tasks/download-kubeconfig-iks.dhall
-          iksCreds
-          ciResources
-          inputs.worldName
-  
   let ImageLocation = ../dhall-modules/types/image-location.dhall
   
   let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
@@ -90,7 +85,7 @@
         , clusterReadyEvent = clusterReadyEvent
         , clusterName = inputs.worldName
         , enableOPIStaging = "true"
-        , iksCreds = iksCreds
+        , creds = creds
         , workerCount = workerCount
         , storageClass = inputs.storageClass
         , clusterPreparation =
@@ -118,7 +113,7 @@
         , dockerRouteCollector = docker.routeCollector
         , dockerRoutePodInformer = docker.routePodInformer
         , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
-        , iksCreds = iksCreds
+        , creds = creds
         , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
         , failureNotification = None Concourse.Types.Step
         }
@@ -147,9 +142,8 @@
         , clusterReadyEvent = clusterReadyEvent
         , uaaReadyEvent = uaaReadyEvent
         , clusterState = clusterState
-        , downloadKubeconfigTask = downloadKubeconfigTask
+        , creds = creds
         , useCertManager = "false"
-        , iksCreds = iksCreds
         , imageLocation =
             ImageLocation.FromTags
               { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }

@@ -54,18 +54,29 @@ in    λ ( reqs
               }
       
       let blockNetworkAccess =
-            Concourse.helpers.taskStep
-              Concourse.schemas.TaskStep::{
-              , task = "block-network-access"
-              , config = taskFile reqs.ciResources "block-network-access"
-              , params =
-                  Some
-                    ( toMap
-                        (   iksParams reqs.iksCreds
-                          ⫽ { CLUSTER_NAME = reqs.clusterName }
+              λ(iksCreds : ../types/iks-creds.dhall)
+            → [ Concourse.helpers.taskStep
+                  Concourse.schemas.TaskStep::{
+                  , task = "block-network-access"
+                  , config = taskFile reqs.ciResources "block-network-access"
+                  , params =
+                      Some
+                        ( toMap
+                            (   iksParams iksCreds
+                              ⫽ { CLUSTER_NAME = reqs.clusterName }
+                            )
                         )
-                    )
+                  }
+              ]
+      
+      let cloudSpecificSteps =
+            merge
+              { IKSCreds = blockNetworkAccess
+              , GKECreds =
+                    λ(_ : ../types/gke-creds.dhall)
+                  → [] : List Concourse.Types.Step
               }
+              reqs.creds
       
       let recheckEirini =
             Concourse.helpers.taskStep
@@ -94,6 +105,12 @@ in    λ ( reqs
                 { InRepo = stepsForInRepo, FromTags = stepsForTaggedImages }
                 imageLocation
       
+      let downloadKubeconfigTask =
+            ../tasks/download-kubeconfig.dhall
+              reqs.ciResources
+              reqs.clusterName
+              reqs.creds
+      
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-eirini-${reqs.clusterName}"
           , serial_groups = Some [ reqs.clusterName ]
@@ -104,10 +121,10 @@ in    λ ( reqs
                 , ../helpers/get.dhall reqs.ciResources
                 , ../helpers/get-named.dhall reqs.clusterState "state"
                 , getUAAReadyEvent
-                , reqs.downloadKubeconfigTask
+                , downloadKubeconfigTask
                 , deploySCF
                 , smokeTestEirini
-                , blockNetworkAccess
-                , recheckEirini
                 ]
+              # cloudSpecificSteps
+              # [ recheckEirini ]
           }

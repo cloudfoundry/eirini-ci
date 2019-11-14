@@ -14,7 +14,7 @@ in  { ciResources : Concourse.Types.Resource
     , dockerRoutePodInformer : Concourse.Types.Resource
     , dockerRouteStatefulsetInformer : Concourse.Types.Resource
     , clusterName : Text
-    , iksCreds : ./iks-creds.dhall
+    , creds : ./creds.dhall
     , upstream : { event : Concourse.Types.Resource, name : Text }
     , failureNotification : Optional Concourse.Types.Step
     }

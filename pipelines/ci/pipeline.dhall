@@ -13,11 +13,12 @@ let inputs =
       , eiriniBranch = "((eirini-branch))"
       , eiriniReleaseBranch = "((eirini-release-branch))"
       , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
-      , iksCreds = iksCreds
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
       , storageClass = "((storage_class))"
       }
+
+let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
 
 let Prelude = ../dhall-modules/deps/prelude.dhall
 
@@ -72,7 +73,7 @@ let kubeClusterReqs =
       , clusterReadyEvent = clusterReadyEvent
       , clusterName = inputs.worldName
       , enableOPIStaging = "true"
-      , iksCreds = iksCreds
+      , creds = creds
       , workerCount = env:worker_count ? 1
       , storageClass = inputs.storageClass
       , clusterPreparation = ClusterPrep.NotRequired
@@ -94,7 +95,7 @@ let runTestReqs =
       , dockerRouteCollector = docker.routeCollector
       , dockerRoutePodInformer = docker.routePodInformer
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
-      , iksCreds = iksCreds
+      , creds = creds
       , upstream = { name = "create-cluster", event = clusterCreatedEvent }
       , failureNotification = slackNotification
       }

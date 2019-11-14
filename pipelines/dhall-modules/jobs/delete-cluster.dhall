@@ -6,24 +6,28 @@ let Concourse = ../deps/concourse.dhall
 
 let taskFile = ../helpers/task-file.dhall
 
-let iksParams = ../helpers/iks-params.dhall
-
 let deleteTimer = ../resources/delete-timer.dhall
 
 let deleteClusterJob
     : ClusterRequirements → Concourse.Types.Job
     =   λ(reqs : ClusterRequirements)
-      → let deleteCluster =
+      → let taskName =
+              merge
+                { IKSCreds = λ(_ : ../types/iks-creds.dhall) → "delete-cluster"
+                , GKECreds =
+                    λ(_ : ../types/gke-creds.dhall) → "gcp-delete-cluster"
+                }
+                reqs.creds
+        
+        let deleteCluster =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
                   ⫽ { task = "delete-kubernetes-cluster"
-                    , config = taskFile reqs.ciResources "delete-cluster"
+                    , config = taskFile reqs.ciResources taskName
                     , params =
                         Some
-                          ( toMap
-                              (   iksParams reqs.iksCreds
-                                ⫽ { CLUSTER_NAME = reqs.clusterName }
-                              )
+                          (   toMap { CLUSTER_NAME = reqs.clusterName }
+                            # ../helpers/get-creds.dhall reqs.creds
                           )
                     }
                 )
@@ -57,7 +61,7 @@ let deleteClusterJob
             ⫽ { name = "delete-cluster-${reqs.clusterName}"
               , plan =
                   [ ../helpers/get-trigger.dhall deleteTimer
-		  , ../helpers/get.dhall reqs.ciResources
+                  , ../helpers/get.dhall reqs.ciResources
                   , deleteCluster
                   , ../helpers/get.dhall reqs.clusterState
                   , deleteValuesFile

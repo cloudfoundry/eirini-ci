@@ -42,7 +42,10 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
                   , resource = reqs.clusterState
                   , get = Some "state"
                   }
-              , reqs.downloadKubeconfigTask
+              , ../tasks/download-kubeconfig.dhall
+                  reqs.ciResources
+                  reqs.clusterName
+                  reqs.creds
               , deployUAA
               , waitForUAA
               , ../helpers/emit-event.dhall reqs.uaaReadyEvent

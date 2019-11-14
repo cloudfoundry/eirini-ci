@@ -2,16 +2,16 @@ let ClusterRequirements = ../types/cluster-requirements.dhall
 
 let PrepRequirements = ../types/cluster-prep-requirements.dhall
 
-let Concourse = ../deps/concourse.dhall
+let defaults = (../deps/concourse.dhall).defaults
+
+let Types = (../deps/concourse.dhall).Types
+
+let helpers = (../deps/concourse.dhall).helpers
 
 let Prelude = ../deps/prelude.dhall
 
-let taskFile = ../helpers/task-file.dhall
-
-let iksParams = ../helpers/iks-params.dhall
-
 let prepareClusterJob
-    : ClusterRequirements → PrepRequirements → Concourse.Types.Job
+    : ClusterRequirements → PrepRequirements → Types.Job
     =   λ(reqs : ClusterRequirements)
       → λ(prepReqs : PrepRequirements)
       → let getCreatedEvent =
@@ -19,7 +19,7 @@ let prepareClusterJob
                 reqs.clusterCreatedEvent
                 [ "create-cluster-${reqs.clusterName}" ]
         
-        let createClusterParams =
+        let configParams =
               { CLUSTER_NAME = reqs.clusterName
               , STORAGE_CLASS = reqs.storageClass
               , CLUSTER_ADMIN_PASSWORD = prepReqs.clusterAdminPassword
@@ -29,20 +29,9 @@ let prepareClusterJob
               , DIEGO_CELL_COUNT = prepReqs.diegoCellCount
               }
         
-        let cloudCreds = iksParams reqs.iksCreds
-        
-        let createClusterConfig =
-              Concourse.helpers.taskStep
-                (   Concourse.defaults.TaskStep
-                  ⫽ { task = "create-cluster-config"
-                    , config = taskFile reqs.ciResources "cluster-config"
-                    , params = Some (toMap (cloudCreds ⫽ createClusterParams))
-                    }
-                )
-        
         let putClusterState =
-              Concourse.helpers.putStep
-                (   Concourse.defaults.PutStep
+              helpers.putStep
+                (   defaults.PutStep
                   ⫽ { resource = reqs.clusterState
                     , params =
                         Some
@@ -55,48 +44,33 @@ let prepareClusterJob
                     }
                 )
         
-        let provisionStorage =
-              Concourse.helpers.taskStep
-                (   Concourse.defaults.TaskStep
-                  ⫽ { task = "provision-storage"
-                    , config = taskFile reqs.ciResources "provision-storage"
-                    , params =
-                        Some
-                          ( toMap
-                              (cloudCreds ⫽ { CLUSTER_NAME = reqs.clusterName })
-                          )
-                    }
-                )
+        let cloudSpecificSteps =
+              merge
+                { IKSCreds =
+                    ./steps/iks-specific-prepare-steps.dhall reqs configParams
+                , GKECreds =
+                    ./steps/gke-specific-prepare-steps.dhall reqs configParams
+                }
+                reqs.creds
         
         let downloadKubeConfig =
-              ../tasks/download-kubeconfig-iks.dhall
-                reqs.iksCreds
+              ../tasks/download-kubeconfig.dhall
                 reqs.ciResources
                 reqs.clusterName
+                reqs.creds
         
-        let getIKSIngressEndpoint =
-              Concourse.helpers.taskStep
-                Concourse.schemas.TaskStep::{
-                , task = "get-iks-ingress-endpoint"
-                , config = taskFile reqs.ciResources "get-iks-ingress-endpoint"
-                , params =
-                    Some
-                      (toMap (cloudCreds ⫽ { CLUSTER_NAME = reqs.clusterName }))
-                }
-        
-        in    Concourse.defaults.Job
+        in    defaults.Job
             ⫽ { name = "prepare-cluster-${reqs.clusterName}"
               , plan =
-                  [ ../helpers/get.dhall reqs.ciResources
-                  , getCreatedEvent
-                  , ../helpers/get.dhall reqs.clusterState
-                  , downloadKubeConfig
-                  , getIKSIngressEndpoint
-                  , createClusterConfig
-                  , putClusterState
-                  , provisionStorage
-                  , ../helpers/emit-event.dhall reqs.clusterReadyEvent
-                  ]
+                    [ ../helpers/get.dhall reqs.ciResources
+                    , getCreatedEvent
+                    , ../helpers/get.dhall reqs.clusterState
+                    , downloadKubeConfig
+                    ]
+                  # cloudSpecificSteps
+                  # [ ../helpers/emit-event.dhall reqs.clusterReadyEvent
+                    , putClusterState
+                    ]
               }
 
 in  prepareClusterJob
