@@ -1,7 +1,5 @@
 let Concourse = ../deps/concourse.dhall
 
-let IKSCreds = ./iks-creds.dhall
-
 let Creds = ./creds.dhall
 
 in  { ciResources : Concourse.Types.Resource
