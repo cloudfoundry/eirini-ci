@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -euo pipefail
+
 update-digest() {
   local image_path image_name
   image_path="$1"
