@@ -56,6 +56,7 @@ helm-install() {
       "--set" "eirini.opi.route_collector_image=eirini/route-collector"
       "--set" "eirini.opi.route_pod_informer_image=eirini/route-pod-informer"
       "--set" "eirini.opi.route_statefulset_informer_image=eirini/route-statefulset-informer"
+      "--set" "eirini.opi.metrics_collector_image=eirini/metrics-collector"
       "--set" "eirini.opi.image_tag=$image_tag"
     )
   fi
