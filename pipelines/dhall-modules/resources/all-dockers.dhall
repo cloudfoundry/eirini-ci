@@ -28,6 +28,7 @@
       , routePodInformer = eiriniDockerResource "route-pod-informer"
       , routeStatefulsetInformer =
           eiriniDockerResource "route-statefulset-informer"
+      , metricsCollector = eiriniDockerResource "metrics-collector"
       , stagingDownloader = stagingDockerResource "downloader"
       , stagingExecutor = stagingDockerResource "executor"
       , stagingUploader = stagingDockerResource "uploader"

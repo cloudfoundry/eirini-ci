@@ -95,6 +95,7 @@ let runTestReqs =
       , dockerRouteCollector = docker.routeCollector
       , dockerRoutePodInformer = docker.routePodInformer
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+      , dockerMetricsCollector = docker.metricsCollector
       , creds = creds
       , upstream = { name = "create-cluster", event = clusterCreatedEvent }
       , failureNotification = slackNotification
