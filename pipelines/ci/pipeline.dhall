@@ -118,6 +118,7 @@ let updateVersionReqs =
       , dockerRouteCollector = docker.routeCollector
       , dockerRoutePodInformer = docker.routePodInformer
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+      , dockerMetricsCollector = docker.metricsCollector
       , failureNotification = slackNotification
       }
 

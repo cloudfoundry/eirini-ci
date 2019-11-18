@@ -18,6 +18,7 @@
               , { docker = reqs.dockerRouteStatefulsetInformer
                 , name = "route-statefulset-informer"
                 }
+	      , { docker = reqs.dockerMetricsCollector, name = "metrics-collector" }
               ]
           , upstreamJob = "create-go-docker-images"
           }
