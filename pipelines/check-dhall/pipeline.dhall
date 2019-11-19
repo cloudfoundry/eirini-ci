@@ -48,6 +48,7 @@ let job =
                     }
               }
           ]
+      , on_failure = ../dhall-modules/helpers/slack_on_fail.dhall
       }
 
 in  [ job ]
