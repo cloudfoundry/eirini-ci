@@ -17,12 +17,8 @@ let eirini
                           "https://github.com/cloudfoundry-incubator/eirini.git"
                     , branch = Prelude.JSON.string branch
                     , ignore_paths =
-                        Prelude.JSON.array
-                          [ Prelude.JSON.string "docker/opi/init/"
-                          , Prelude.JSON.string
-                              "docker/registry/certs/smuggler/"
-                          , Prelude.JSON.string "fluentd/"
-                          ]
+                        ../helpers/text-list-to-json.dhall
+                          ../facts/non-go-eirini-paths.dhall
                     }
                 )
           }

@@ -80,27 +80,6 @@ let kubeClusterReqs =
       , failureNotification = slackNotification
       }
 
-let runTestReqs =
-      { ciResources = ciResources
-      , eiriniRepo = eiriniRepo
-      , secretSmugglerRepo = EiriniOrRepo.UseRepo secretSmugglerRepo
-      , fluentdRepo = EiriniOrRepo.UseRepo fluentdRepo
-      , sampleConfigs = sampleConfigs
-      , clusterName = inputs.worldName
-      , dockerOPI = docker.opi
-      , dockerBitsWaiter = docker.bitsWaiter
-      , dockerRootfsPatcher = docker.rootfsPatcher
-      , dockerSecretSmuggler = docker.secretSmuggler
-      , dockerFluentd = docker.fluentd
-      , dockerRouteCollector = docker.routeCollector
-      , dockerRoutePodInformer = docker.routePodInformer
-      , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
-      , dockerMetricsCollector = docker.metricsCollector
-      , creds = creds
-      , upstream = { name = "create-cluster", event = clusterCreatedEvent }
-      , failureNotification = slackNotification
-      }
-
 let updateVersionReqs =
       { writeableEiriniReleaseRepo = writableEiriniReleaseRepo
       , eiriniRepo = eiriniRepo
@@ -137,7 +116,28 @@ let runStagingTestJobs =
       ../dhall-modules/test-and-build-staging-images.dhall runStagingTestReqs
 
 let runTestJobs =
-      ../dhall-modules/test-and-build-docker-images.dhall runTestReqs
+      ../dhall-modules/test-and-build-docker-images.dhall
+        { ciResources = ciResources
+        , eiriniRepo = eiriniRepo
+        , secretSmugglerRepo = EiriniOrRepo.UseRepo secretSmugglerRepo
+        , fluentdRepo = EiriniOrRepo.UseRepo fluentdRepo
+        , sampleConfigs = sampleConfigs
+        , clusterName = inputs.worldName
+        , dockerOPI = docker.opi
+        , dockerBitsWaiter = docker.bitsWaiter
+        , dockerRootfsPatcher = docker.rootfsPatcher
+        , dockerSecretSmuggler = docker.secretSmuggler
+        , dockerFluentd = docker.fluentd
+        , dockerRouteCollector = docker.routeCollector
+        , dockerRoutePodInformer = docker.routePodInformer
+        , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+        , dockerMetricsCollector = docker.metricsCollector
+        , creds = creds
+        , upstream = { name = "create-cluster", event = clusterCreatedEvent }
+        , failureNotification = slackNotification
+        , eiriniUpstreams = None (List Text)
+        , enableNonCodeAutoTriggers = True
+        }
 
 let updateVersionJobs =
       ../dhall-modules/update-version-files.dhall updateVersionReqs

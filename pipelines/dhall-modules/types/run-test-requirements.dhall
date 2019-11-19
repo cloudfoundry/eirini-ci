@@ -17,5 +17,7 @@ in  { ciResources : Concourse.Types.Resource
     , clusterName : Text
     , creds : ./creds.dhall
     , upstream : { event : Concourse.Types.Resource, name : Text }
+    , eiriniUpstreams : Optional (List Text)
     , failureNotification : Optional Concourse.Types.Step
+    , enableNonCodeAutoTriggers : Bool
     }

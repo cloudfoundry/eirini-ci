@@ -11,7 +11,7 @@ readonly world_name=bump-go
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
-aviator -f "$basedir"/aviator.yml
+dhall-fly <<< "$basedir/pipeline.dhall" >"$PIPELINE_YML"
 
 fly -t "$target" \
   set-pipeline \

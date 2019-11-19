@@ -15,4 +15,5 @@ in  { clusterName : Text
     , creds : ./creds.dhall
     , imageLocation : ImageLocation
     , skippedCats : Optional Text
+    , autoTriggerOnEiriniRelease : Bool
     }
