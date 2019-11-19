@@ -92,6 +92,12 @@ let setUpEnvironment
               , imageLocation = ImageLocation.InRepo {=}
               , skippedCats = None Text
               , autoTriggerOnEiriniRelease = True
+              , lockResource =
+                  Some
+                    ( ../dhall-modules/resources/lock.dhall
+                        reqs.clusterName
+                        reqs.stateGitHubPrivateKey
+                    )
               }
         
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs

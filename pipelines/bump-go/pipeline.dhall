@@ -125,6 +125,7 @@ let deploymentReqs =
             { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }
       , skippedCats = None Text
       , autoTriggerOnEiriniRelease = False
+      , lockResource = None Concourse.Types.Resource
       }
 
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs

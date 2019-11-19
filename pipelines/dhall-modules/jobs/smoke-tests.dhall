@@ -32,12 +32,15 @@ let runSmokeTests =
                 reqs.eiriniReleaseRepo
                 upstreamJobs
         
+        let lockSteps = ./steps/lock-steps.dhall reqs.lockResource upstreamJobs
+        
         in  Concourse.schemas.Job::{
             , name = "run-smoke-tests-${reqs.clusterName}"
             , serial_groups = Some [ reqs.clusterName ]
             , public = Some True
             , plan =
                   getImageLocationDependentSteps reqs.imageLocation
+                # lockSteps
                 # [ triggerOnEiriniRelease
                   , ../helpers/get.dhall reqs.ciResources
                   , ../helpers/get-named.dhall reqs.clusterState "state"

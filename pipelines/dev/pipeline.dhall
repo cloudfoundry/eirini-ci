@@ -160,8 +160,9 @@
                 }
           , skippedCats = None Text
           , autoTriggerOnEiriniRelease = True
+          , lockResource = None Concourse.Types.Resource
           }
-
+  
   in  Prelude.List.concat
         Concourse.Types.Job
         [ kubeClusterJobs, runTestJobs, tagImages, deployEirini ]

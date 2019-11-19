@@ -39,8 +39,11 @@ let runCoreCats =
                 reqs.eiriniReleaseRepo
                 upstreamJobs
         
+        let lockSteps = ./steps/lock-steps.dhall reqs.lockResource upstreamJobs
+        
         let getSteps =
                 getImageLocationDependentSteps reqs.imageLocation
+              # lockSteps
               # [ triggerOnEiriniRelease
                 , ../helpers/get.dhall reqs.ciResources
                 , ../helpers/get-named.dhall reqs.clusterState "state"

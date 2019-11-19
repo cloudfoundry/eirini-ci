@@ -16,4 +16,5 @@ in  { clusterName : Text
     , imageLocation : ImageLocation
     , skippedCats : Optional Text
     , autoTriggerOnEiriniRelease : Bool
+    , lockResource : Optional Concourse.Types.Resource
     }
