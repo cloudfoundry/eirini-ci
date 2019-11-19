@@ -13,7 +13,7 @@ let tagImagesJob =
                 , "create-secret-smuggler-docker-image"
                 , "create-fluentd-docker-image"
                 ]
-        
+
         let getDockerImage =
                 λ(resource : Concourse.Types.Resource)
               → λ(passed : Text)
@@ -23,7 +23,7 @@ let tagImagesJob =
                   , passed = Some [ passed ]
                   , params = Some (toMap { save = Prelude.JSON.bool True })
                   }
-        
+
         let putDeploymentVersion =
               Concourse.helpers.putStep
                 Concourse.schemas.PutStep::{
@@ -31,7 +31,7 @@ let tagImagesJob =
                 , params =
                     Some (toMap { pre = Prelude.JSON.string reqs.worldName })
                 }
-        
+
         let putImageWithTag =
                 λ(resource : Concourse.Types.Resource)
               → Concourse.helpers.putStep
@@ -46,7 +46,7 @@ let tagImagesJob =
                             }
                         )
                   }
-        
+
         in  Concourse.schemas.Job::{
             , name = "tag-images"
             , plan =
@@ -69,6 +69,9 @@ let tagImagesJob =
                         reqs.dockerRouteStatefulsetInformer
                         "create-go-docker-images"
                     , getDockerImage
+                        reqs.dockerMetricsCollector
+                        "create-go-docker-images"
+                    , getDockerImage
                         reqs.dockerSecretSmuggler
                         "create-secret-smuggler-docker-image"
                     , getDockerImage
@@ -85,6 +88,7 @@ let tagImagesJob =
                     , putImageWithTag reqs.dockerRouteCollector
                     , putImageWithTag reqs.dockerRoutePodInformer
                     , putImageWithTag reqs.dockerRouteStatefulsetInformer
+                    , putImageWithTag reqs.dockerMetricsCollector
                     ]
                 ]
             }

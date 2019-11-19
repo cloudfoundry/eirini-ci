@@ -98,20 +98,6 @@
         , failureNotification = None Concourse.Types.Step
         }
 
-  let tagImagesReqs =
-        { dockerOPI = docker.opi
-        , dockerBitsWaiter = docker.bitsWaiter
-        , dockerRootfsPatcher = docker.rootfsPatcher
-        , dockerSecretSmuggler = docker.secretSmuggler
-        , dockerFluentd = docker.fluentd
-        , dockerRouteCollector = docker.routeCollector
-        , dockerRoutePodInformer = docker.routePodInformer
-        , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
-        , worldName = inputs.worldName
-        , eiriniRepo = eiriniRepo
-        , deploymentVersion = deploymentVersion
-        }
-
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
 
   let runTestJobs =
@@ -138,7 +124,21 @@
           , enableNonCodeAutoTriggers = True
           }
 
-  let tagImages = ../dhall-modules/tag-images.dhall tagImagesReqs
+  let tagImages =
+        ../dhall-modules/tag-images.dhall
+          { dockerOPI = docker.opi
+          , dockerBitsWaiter = docker.bitsWaiter
+          , dockerRootfsPatcher = docker.rootfsPatcher
+          , dockerSecretSmuggler = docker.secretSmuggler
+          , dockerFluentd = docker.fluentd
+          , dockerRouteCollector = docker.routeCollector
+          , dockerRoutePodInformer = docker.routePodInformer
+          , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+          , dockerMetricsCollector = docker.metricsCollector
+          , worldName = inputs.worldName
+          , eiriniRepo = eiriniRepo
+          , deploymentVersion = deploymentVersion
+          }
 
   let deployEirini =
         ../dhall-modules/deploy-eirini.dhall

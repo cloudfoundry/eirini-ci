@@ -9,6 +9,7 @@ in  { deploymentVersion : Concourse.Types.Resource
     , dockerRouteCollector : Concourse.Types.Resource
     , dockerRoutePodInformer : Concourse.Types.Resource
     , dockerRouteStatefulsetInformer : Concourse.Types.Resource
+    , dockerMetricsCollector : Concourse.Types.Resource
     , eiriniRepo : Concourse.Types.Resource
     , worldName : Text
     }
