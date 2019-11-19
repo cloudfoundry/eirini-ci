@@ -159,6 +159,7 @@ let runTestJobs =
         , dockerRouteCollector = docker.routeCollector
         , dockerRoutePodInformer = docker.routePodInformer
         , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+        , dockerMetricsCollector = docker.metricsCollector
         , creds = creds
         , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
         , failureNotification = None Concourse.Types.Step
@@ -178,10 +179,10 @@ let bumpGo =
         , ciResources = ciResources
         }
 
-let foo
+let jobs
     : List Concourse.Types.Job
     = Prelude.List.concat
         Concourse.Types.Job
         [ kubeClusterJobs, runTestJobs, tagImages, deployEirini, bumpGo ]
 
-in  foo
+in  jobs
