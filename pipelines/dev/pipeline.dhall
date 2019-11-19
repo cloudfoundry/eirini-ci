@@ -130,6 +130,7 @@
           , dockerRouteCollector = docker.routeCollector
           , dockerRoutePodInformer = docker.routePodInformer
           , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
+          , dockerMetricsCollector = docker.metricsCollector
           , creds = creds
           , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
           , failureNotification = None Concourse.Types.Step
