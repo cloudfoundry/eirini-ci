@@ -56,7 +56,6 @@ resource "google_container_cluster" "cluster" {
   initial_node_count = var.node_count_per_zone
 
   ip_allocation_policy {
-    use_ip_aliases = true
   }
 
   maintenance_policy {
