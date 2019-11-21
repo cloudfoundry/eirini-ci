@@ -79,12 +79,31 @@ let gkeDeploymentReqs =
       , diegoCellCount = inputs.diegoCellCount
       }
 
+let clusterNames =
+      [ gkeDeploymentReqs.clusterName
+      , freshiniDeploymentReqs.clusterName
+      , withOpiDeploymentReqs.clusterName
+      ]
+
+let ffMasterReqs =
+      { eiriniCIBranch = inputs.eiriniCIBranch
+      , eiriniReleaseBranch = inputs.eiriniReleaseBranch
+      , githubPrivateKey = inputs.githubPrivateKey
+      , clusterNames = clusterNames
+      }
+
 let withOpiEnvironment = ./set-up-ci-environment.dhall withOpiDeploymentReqs
 
 let freshiniEnvironment = ./set-up-ci-environment.dhall freshiniDeploymentReqs
 
 let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
+let ffMasterModule = ../dhall-modules/ff-master.dhall ffMasterReqs
+
 in  Prelude.List.concat
       Concourse.Types.Job
-      [ withOpiEnvironment, gkeEnvironment, freshiniEnvironment ]
+      [ withOpiEnvironment
+      , gkeEnvironment
+      , freshiniEnvironment
+      , ffMasterModule
+      ]
