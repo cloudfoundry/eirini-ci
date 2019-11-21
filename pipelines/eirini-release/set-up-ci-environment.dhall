@@ -19,8 +19,6 @@ let setUpEnvironment
               ../dhall-modules/resources/cluster-state.dhall
                 reqs.stateGitHubPrivateKey
 
-        let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
-
         let eiriniReleaseRepo =
               ../dhall-modules/resources/eirini-release.dhall
                 reqs.eiriniReleaseBranch
@@ -65,7 +63,7 @@ let setUpEnvironment
                     , natsPassword = reqs.natsPassword
                     , diegoCellCount = reqs.diegoCellCount
                     }
-              , failureNotification = slackNotification
+              , failureNotification = None Concourse.Types.Step
               }
 
         let useCertManager =

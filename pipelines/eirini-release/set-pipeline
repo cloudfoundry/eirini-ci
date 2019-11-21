@@ -7,11 +7,13 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly world_name=eirini-release-dhall
+readonly world_name=eirini-release
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly worker_count=${3:-"3"}
 readonly diego_cell_count="${4:-"3"}"
+
+export worker_count
 
 dhall-fly <<<"$basedir/pipeline.dhall" >"$PIPELINE_YML"
 
@@ -22,7 +24,7 @@ fly -t "$target" \
   --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
-  --var ci-resources-branch="eirini-release-dhall-169499681" \
+  --var ci-resources-branch="master" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var eirini-release-branch=develop \

@@ -34,7 +34,7 @@ let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
 
 let withOpiDeploymentReqs =
       { worldName = inputs.worldName
-      , clusterName = "dhall-with-opi"
+      , clusterName = "with-opi"
       , enableOpiStaging = "true"
       , storageClass = inputs.storageClass
       , eiriniCIBranch = inputs.eiriniCIBranch
@@ -50,7 +50,7 @@ let withOpiDeploymentReqs =
 
 let freshiniDeploymentReqs =
       { worldName = inputs.worldName
-      , clusterName = "dhall-freshini"
+      , clusterName = "freshini"
       , enableOpiStaging = "true"
       , storageClass = inputs.storageClass
       , eiriniCIBranch = inputs.eiriniCIBranch
@@ -68,7 +68,7 @@ let gkeCreds = (../dhall-modules/types/creds.dhall).GKECreds gkeCredsInputs
 
 let gkeDeploymentReqs =
       { worldName = inputs.worldName
-      , clusterName = "dhall-gkerini"
+      , clusterName = "gkerini"
       , enableOpiStaging = "true"
       , eiriniCIBranch = inputs.eiriniCIBranch
       , eiriniReleaseBranch = inputs.eiriniReleaseBranch
@@ -103,10 +103,19 @@ let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
 let ffMasterModule = ../dhall-modules/ff-master.dhall ffMasterReqs
 
-in  Prelude.List.concat
+let jobsWithoutNotification =
+      Prelude.List.concat
+        Concourse.Types.Job
+        [ withOpiEnvironment
+        , gkeEnvironment
+        , freshiniEnvironment
+        , ffMasterModule
+        ]
+
+let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
+
+in  Prelude.List.map
       Concourse.Types.Job
-      [ withOpiEnvironment
-      , gkeEnvironment
-      , freshiniEnvironment
-      , ffMasterModule
-      ]
+      Concourse.Types.Job
+      (λ(j : Concourse.Types.Job) → j ⫽ { on_failure = slackNotification })
+      jobsWithoutNotification
