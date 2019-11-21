@@ -18,7 +18,7 @@ let deleteClusterJob
                     λ(_ : ../types/gke-creds.dhall) → "gcp-delete-cluster"
                 }
                 reqs.creds
-        
+
         let deleteCluster =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
@@ -26,12 +26,15 @@ let deleteClusterJob
                     , config = taskFile reqs.ciResources taskName
                     , params =
                         Some
-                          (   toMap { CLUSTER_NAME = reqs.clusterName }
+                          (   toMap
+                                { CLUSTER_NAME = reqs.clusterName
+                                , WORKER_COUNT = Natural/show reqs.workerCount
+                                }
                             # ../helpers/get-creds.dhall reqs.creds
                           )
                     }
                 )
-        
+
         let deleteValuesFile =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
@@ -41,7 +44,7 @@ let deleteClusterJob
                     , params = Some (toMap { CLUSTER_NAME = reqs.clusterName })
                     }
                 )
-        
+
         let putClusterState =
               Concourse.helpers.putStep
                 (   Concourse.defaults.PutStep
@@ -56,7 +59,7 @@ let deleteClusterJob
                           )
                     }
                 )
-        
+
         in    Concourse.defaults.Job
             ⫽ { name = "delete-cluster-${reqs.clusterName}"
               , plan =
