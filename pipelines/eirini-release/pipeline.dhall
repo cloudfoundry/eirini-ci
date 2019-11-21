@@ -91,7 +91,7 @@ let clusterNames =
 let ffMasterReqs =
       { eiriniCIBranch = inputs.eiriniCIBranch
       , eiriniReleaseBranch = inputs.eiriniReleaseBranch
-      , githubPrivateKey = inputs.githubPrivateKey
+      , eiriniReleasePrivateKey = inputs.eiriniReleasePrivateKey
       , clusterNames = clusterNames
       }
 

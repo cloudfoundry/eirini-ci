@@ -5,7 +5,7 @@ in    λ(reqs : ./types/ff-master-requirements.dhall)
             ./resources/eirini-release.dhall reqs.eiriniReleaseBranch
 
       let eiriniReleaseMasterRepo =
-            ./resources/eirini-release-master.dhall reqs.githubPrivateKey
+            ./resources/eirini-release-master.dhall reqs.eiriniReleasePrivateKey
 
       let upstreamSteps =
             Prelude.List.map

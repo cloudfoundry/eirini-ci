@@ -1,5 +1,5 @@
 { eiriniCIBranch : Text
 , eiriniReleaseBranch : Text
-, githubPrivateKey : Text
+, eiriniReleasePrivateKey : Text
 , clusterNames : List Text
 }
