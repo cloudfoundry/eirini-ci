@@ -6,7 +6,7 @@ in    λ(repo : Concourse.Types.Resource)
     → λ(master : Concourse.Types.Resource)
     → λ(upstreamSteps : List Text)
     → Concourse.schemas.Job::{
-      , name = "fast-forward-master-relase"
+      , name = "fast-forward-master-release"
       , plan =
           [ ../helpers/get-trigger-passed.dhall repo upstreamSteps
           , Concourse.helpers.putStep
