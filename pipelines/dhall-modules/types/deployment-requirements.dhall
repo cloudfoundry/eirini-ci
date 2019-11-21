@@ -17,4 +17,5 @@ in  { clusterName : Text
     , skippedCats : Optional Text
     , autoTriggerOnEiriniRelease : Bool
     , lockResource : Optional Concourse.Types.Resource
+    , isFreshini : Bool
     }

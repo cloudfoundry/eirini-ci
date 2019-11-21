@@ -11,43 +11,43 @@ let setUpEnvironment
     =   λ(reqs : EnvironmentRequirements)
       → let ciResources =
               ../dhall-modules/resources/ci-resources.dhall reqs.eiriniCIBranch
-        
+
         let clusterEventResource =
               ../dhall-modules/resources/cluster-event.dhall
-        
+
         let clusterState =
               ../dhall-modules/resources/cluster-state.dhall
                 reqs.stateGitHubPrivateKey
-        
+
         let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
-        
+
         let eiriniReleaseRepo =
               ../dhall-modules/resources/eirini-release.dhall
                 reqs.eiriniReleaseBranch
-        
+
         let uaaReadyEvent =
               clusterEventResource
                 reqs.clusterName
                 "uaa-ready"
                 reqs.stateGitHubPrivateKey
-        
+
         let uaaResource =
               ../dhall-modules/resources/uaa.dhall reqs.eiriniReleaseBranch
-        
+
         let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
-        
+
         let clusterReadyEvent =
               clusterEventResource
                 reqs.clusterName
                 "ready"
                 reqs.stateGitHubPrivateKey
-        
+
         let clusterCreatedEvent =
               clusterEventResource
                 reqs.clusterName
                 "created"
                 reqs.stateGitHubPrivateKey
-        
+
         let clusterReqs =
               { ciResources = ciResources
               , clusterState = clusterState
@@ -67,7 +67,7 @@ let setUpEnvironment
                     }
               , failureNotification = slackNotification
               }
-        
+
         let useCertManager =
               merge
                 { IKSCreds =
@@ -76,7 +76,7 @@ let setUpEnvironment
                     λ(_ : ../dhall-modules/types/gke-creds.dhall) → "true"
                 }
                 reqs.creds
-        
+
         let deploymentReqs =
               { clusterName = reqs.clusterName
               , worldName = reqs.worldName
@@ -98,12 +98,13 @@ let setUpEnvironment
                         reqs.clusterName
                         reqs.stateGitHubPrivateKey
                     )
+              , isFreshini = reqs.isFreshini
               }
-        
+
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
-        
+
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
-        
+
         in  kubeClusterJobs # deploySCFJobs
 
 in  setUpEnvironment

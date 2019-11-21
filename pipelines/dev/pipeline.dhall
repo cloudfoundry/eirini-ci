@@ -161,6 +161,7 @@
           , skippedCats = None Text
           , autoTriggerOnEiriniRelease = True
           , lockResource = None Concourse.Types.Resource
+	  , isFreshini = False
           }
   
   in  Prelude.List.concat

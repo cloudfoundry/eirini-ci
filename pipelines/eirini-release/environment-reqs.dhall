@@ -1,5 +1,3 @@
-let Concourse = ../dhall-modules/deps/concourse.dhall
-
 let Creds = ../dhall-modules/types/creds.dhall
 
 in  { clusterName : Text
@@ -14,4 +12,5 @@ in  { clusterName : Text
     , uaaAdminClientSecret : Text
     , natsPassword : Text
     , diegoCellCount : Text
+    , isFreshini : Bool
     }

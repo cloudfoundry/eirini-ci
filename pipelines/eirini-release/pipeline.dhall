@@ -45,6 +45,7 @@ let withOpiDeploymentReqs =
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
       , diegoCellCount = inputs.diegoCellCount
+      , isFreshini = False
       }
 
 let freshiniDeploymentReqs =
@@ -60,6 +61,7 @@ let freshiniDeploymentReqs =
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
       , diegoCellCount = inputs.diegoCellCount
+      , isFreshini = True
       }
 
 let gkeCreds = (../dhall-modules/types/creds.dhall).GKECreds gkeCredsInputs
@@ -77,6 +79,7 @@ let gkeDeploymentReqs =
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
       , diegoCellCount = inputs.diegoCellCount
+      , isFreshini = False
       }
 
 let clusterNames =
