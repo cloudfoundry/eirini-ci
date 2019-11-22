@@ -75,6 +75,11 @@ let setUpEnvironment
                 }
                 reqs.creds
 
+        let lockResource =
+              ../dhall-modules/resources/lock.dhall
+                reqs.clusterName
+                reqs.stateGitHubPrivateKey
+
         let deploymentReqs =
               { clusterName = reqs.clusterName
               , worldName = reqs.worldName
@@ -90,19 +95,42 @@ let setUpEnvironment
               , imageLocation = ImageLocation.InRepo {=}
               , skippedCats = None Text
               , autoTriggerOnEiriniRelease = True
-              , lockResource =
-                  Some
-                    ( ../dhall-modules/resources/lock.dhall
-                        reqs.clusterName
-                        reqs.stateGitHubPrivateKey
-                    )
-              , isFreshini = reqs.isFreshini
+              , lockResource = Some lockResource
               }
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-        in  kubeClusterJobs # deploySCFJobs
+        let locksUpstream =
+                    if reqs.isFreshini
+
+              then  [ "nuke-scf" ]
+
+              else  [ "run-core-cats-${reqs.clusterName}" ]
+
+        let lockJobs =
+              ../dhall-modules/locks.dhall
+                { upstream = locksUpstream
+                , lockResource = lockResource
+                , ciResources = ciResources
+                , eiriniReleaseRepo = eiriniReleaseRepo
+                }
+
+        let nukeScfJobs =
+                    if reqs.isFreshini
+
+              then  [ ../dhall-modules/jobs/nuke-scf.dhall
+                        deploymentReqs.{ ciResources
+                                       , eiriniReleaseRepo
+                                       , lockResource
+                                       , clusterName
+                                       , creds
+                                       }
+                    ]
+
+              else  [] : List Concourse.Types.Job
+
+        in  kubeClusterJobs # deploySCFJobs # lockJobs # nukeScfJobs
 
 in  setUpEnvironment

@@ -1,12 +1,12 @@
   λ(workerCount : Natural)
 → let clusterEventResource = ../dhall-modules/resources/cluster-event.dhall
-  
+
   let iksCreds =
         { account = "((ibmcloud-account))"
         , password = "((ibmcloud-password))"
         , user = "((ibmcloud-user))"
         }
-  
+
   let inputs =
         { githubPrivateKey = "((github-private-key))"
         , eiriniCIBranch = "((ci-resources-branch))"
@@ -22,58 +22,58 @@
         , natsPassword = "((nats_password))"
         , diegoCellCount = "((diego-cell-count))"
         }
-  
+
   let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
-  
+
   let Prelude = ../dhall-modules/deps/prelude.dhall
-  
+
   let Concourse = ../dhall-modules/deps/concourse.dhall
-  
+
   let clusterState =
         ../dhall-modules/resources/cluster-state.dhall inputs.githubPrivateKey
-  
+
   let ciResources =
         ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
-  
+
   let clusterReadyEvent =
         clusterEventResource inputs.worldName "ready" inputs.githubPrivateKey
-  
+
   let uaaReadyEvent =
         clusterEventResource
           inputs.worldName
           "uaa-ready"
           inputs.githubPrivateKey
-  
+
   let eiriniRepo = ../dhall-modules/resources/eirini.dhall inputs.eiriniBranch
-  
+
   let eiriniReleaseRepo =
         ../dhall-modules/resources/eirini-release.dhall
           inputs.eiriniReleaseBranch
-  
+
   let uaaResource =
         ../dhall-modules/resources/uaa.dhall inputs.eiriniReleaseBranch
-  
+
   let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
-  
+
   let sampleConfigs =
         ../dhall-modules/resources/sample-configs.dhall inputs.eiriniCIBranch
-  
+
   let docker =
         ../dhall-modules/resources/all-dockers.dhall
           inputs.dockerhubUser
           inputs.dockerhubPassword
-  
+
   let deploymentVersion =
         ../dhall-modules/resources/deployment-version.dhall
           inputs.worldName
           inputs.gcsJSONKey
-  
+
   let ImageLocation = ../dhall-modules/types/image-location.dhall
-  
+
   let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
-  
+
   let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
-  
+
   let kubeClusterReqs =
         { ciResources = ciResources
         , clusterState = clusterState
@@ -97,9 +97,9 @@
               }
         , failureNotification = None Concourse.Types.Step
         }
-  
+
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
-  
+
   let runTestJobs =
         ../dhall-modules/test-and-build-docker-images.dhall
           { ciResources = ciResources
@@ -123,7 +123,7 @@
           , eiriniUpstreams = None (List Text)
           , enableNonCodeAutoTriggers = True
           }
-  
+
   let tagImages =
         ../dhall-modules/tag-images.dhall
           { dockerOPI = docker.opi
@@ -139,7 +139,7 @@
           , eiriniRepo = eiriniRepo
           , deploymentVersion = deploymentVersion
           }
-  
+
   let deployEirini =
         ../dhall-modules/deploy-eirini.dhall
           { clusterName = inputs.worldName
@@ -161,9 +161,8 @@
           , skippedCats = None Text
           , autoTriggerOnEiriniRelease = True
           , lockResource = None Concourse.Types.Resource
-	  , isFreshini = False
           }
-  
+
   in  Prelude.List.concat
         Concourse.Types.Job
         [ kubeClusterJobs, runTestJobs, tagImages, deployEirini ]

@@ -1,6 +1,14 @@
 let Concourse = ../deps/concourse.dhall
 
-in    λ(reqs : ../types/deployment-requirements.dhall)
+let Requirements =
+      { ciResources : Concourse.Types.Resource
+      , lockResource : Optional Concourse.Types.Resource
+      , eiriniReleaseRepo : Concourse.Types.Resource
+      , clusterName : Text
+      , creds : ../types/creds.dhall
+      }
+
+in    λ(reqs : Requirements)
     → let upstream = [ "run-core-cats-${reqs.clusterName}" ]
 
       let lockSteps = ./steps/lock-steps.dhall reqs.lockResource upstream

@@ -2,14 +2,14 @@ let Concourse = ../deps/concourse.dhall
 
 let JSON = (../deps/prelude.dhall).JSON
 
-in    λ(reqs : ../types/deployment-requirements.dhall)
+in    λ(eiriniReleaseRepo : Concourse.Types.Resource)
     → λ(lock : Concourse.Types.Resource)
     → Concourse.schemas.Job::{
-      , name = "lock-${reqs.clusterName}"
+      , name = lock.name
       , serial = Some True
       , plan =
           [ ../helpers/get-trigger-passed.dhall
-              reqs.eiriniReleaseRepo
+              eiriniReleaseRepo
               [ "helm-lint" ]
           , Concourse.helpers.putStep
               Concourse.schemas.PutStep::{
