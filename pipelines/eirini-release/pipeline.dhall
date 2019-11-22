@@ -103,6 +103,15 @@ let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
 let ffMasterModule = ../dhall-modules/ff-master.dhall ffMasterReqs
 
+let eiriniReleaseRepo =
+      ../dhall-modules/resources/eirini-release.dhall inputs.eiriniReleaseBranch
+
+let ciResources =
+      ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
+
+let helmLint =
+      ../dhall-modules/jobs/helm-lint.dhall ciResources eiriniReleaseRepo
+
 let jobsWithoutNotification =
       Prelude.List.concat
         Concourse.Types.Job
@@ -110,6 +119,7 @@ let jobsWithoutNotification =
         , gkeEnvironment
         , freshiniEnvironment
         , ffMasterModule
+        , [ helmLint ]
         ]
 
 let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall

@@ -8,7 +8,9 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
       , name = "lock-${reqs.clusterName}"
       , serial = Some True
       , plan =
-          [ ../helpers/get-trigger.dhall reqs.eiriniReleaseRepo
+          [ ../helpers/get-trigger-passed.dhall
+              reqs.eiriniReleaseRepo
+              [ "helm-lint" ]
           , Concourse.helpers.putStep
               Concourse.schemas.PutStep::{
               , resource = lock
