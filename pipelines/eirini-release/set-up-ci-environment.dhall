@@ -9,30 +9,20 @@ let ImageLocation = ../dhall-modules/types/image-location.dhall
 let setUpEnvironment
     : EnvironmentRequirements → List Concourse.Types.Job
     =   λ(reqs : EnvironmentRequirements)
-      → let ciResources =
-              ../dhall-modules/resources/ci-resources.dhall reqs.eiriniCIBranch
-
-        let clusterEventResource =
+      → let clusterEventResource =
               ../dhall-modules/resources/cluster-event.dhall
 
         let clusterState =
               ../dhall-modules/resources/cluster-state.dhall
                 reqs.stateGitHubPrivateKey
 
-        let eiriniReleaseRepo =
-              ../dhall-modules/resources/eirini-release.dhall
-                reqs.eiriniReleaseBranch
+        let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
 
         let uaaReadyEvent =
               clusterEventResource
                 reqs.clusterName
                 "uaa-ready"
                 reqs.stateGitHubPrivateKey
-
-        let uaaResource =
-              ../dhall-modules/resources/uaa.dhall reqs.eiriniReleaseBranch
-
-        let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
 
         let clusterReadyEvent =
               clusterEventResource
@@ -47,7 +37,7 @@ let setUpEnvironment
                 reqs.stateGitHubPrivateKey
 
         let clusterReqs =
-              { ciResources = ciResources
+              { ciResources = reqs.ciResources
               , clusterState = clusterState
               , clusterCreatedEvent = clusterCreatedEvent
               , clusterReadyEvent = clusterReadyEvent
@@ -82,10 +72,9 @@ let setUpEnvironment
 
         let deploymentReqs =
               { clusterName = reqs.clusterName
-              , worldName = reqs.worldName
-              , uaaResources = uaaResource
-              , ciResources = ciResources
-              , eiriniReleaseRepo = eiriniReleaseRepo
+              , uaaResources = reqs.uaaResource
+              , ciResources = reqs.ciResources
+              , eiriniReleaseRepo = reqs.eiriniReleaseRepo
               , smokeTestsResource = smokeTestsResource
               , clusterReadyEvent = clusterReadyEvent
               , uaaReadyEvent = uaaReadyEvent
@@ -113,8 +102,8 @@ let setUpEnvironment
               ../dhall-modules/locks.dhall
                 { upstream = locksUpstream
                 , lockResource = lockResource
-                , ciResources = ciResources
-                , eiriniReleaseRepo = eiriniReleaseRepo
+                , ciResources = reqs.ciResources
+                , eiriniReleaseRepo = reqs.eiriniReleaseRepo
                 }
 
         let nukeScfJobs =

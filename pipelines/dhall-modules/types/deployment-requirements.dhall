@@ -3,7 +3,6 @@ let Concourse = ../deps/concourse.dhall
 let ImageLocation = ./image-location.dhall
 
 in  { clusterName : Text
-    , worldName : Text
     , uaaResources : Concourse.Types.Resource
     , ciResources : Concourse.Types.Resource
     , eiriniReleaseRepo : Concourse.Types.Resource

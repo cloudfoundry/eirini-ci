@@ -110,7 +110,6 @@ let kubeClusterReqs =
 
 let deploymentReqs =
       { clusterName = inputs.worldName
-      , worldName = inputs.worldName
       , uaaResources = uaaResource
       , ciResources = ciResources
       , eiriniReleaseRepo = eiriniReleaseRepo

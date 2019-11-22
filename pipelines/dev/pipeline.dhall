@@ -143,7 +143,6 @@
   let deployEirini =
         ../dhall-modules/deploy-eirini.dhall
           { clusterName = inputs.worldName
-          , worldName = inputs.worldName
           , uaaResources = uaaResource
           , ciResources = ciResources
           , eiriniReleaseRepo = eiriniReleaseRepo

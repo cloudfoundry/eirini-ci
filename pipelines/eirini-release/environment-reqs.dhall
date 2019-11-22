@@ -1,11 +1,10 @@
+let Concourse = ../dhall-modules/deps/concourse.dhall
+
 let Creds = ../dhall-modules/types/creds.dhall
 
 in  { clusterName : Text
-    , worldName : Text
     , enableOpiStaging : Text
     , storageClass : Text
-    , eiriniCIBranch : Text
-    , eiriniReleaseBranch : Text
     , creds : Creds
     , stateGitHubPrivateKey : Text
     , clusterAdminPassword : Text
@@ -13,4 +12,7 @@ in  { clusterName : Text
     , natsPassword : Text
     , diegoCellCount : Text
     , isFreshini : Bool
+    , ciResources : Concourse.Types.Resource
+    , eiriniReleaseRepo : Concourse.Types.Resource
+    , uaaResource : Concourse.Types.Resource
     }

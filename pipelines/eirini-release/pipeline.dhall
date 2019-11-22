@@ -16,9 +16,7 @@ let gkeCredsInputs =
 let inputs =
       { githubPrivateKey = "((github-private-key))"
       , eiriniCIBranch = "((ci-resources-branch))"
-      , worldName = "((world-name))"
-      , eiriniBranch = "((eirini-branch))"
-      , eiriniReleaseBranch = "((eirini-release-branch))"
+      , eiriniReleaseBranch = "develop"
       , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
@@ -32,55 +30,41 @@ let inputs =
 
 let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
 
-let withOpiDeploymentReqs =
-      { worldName = inputs.worldName
-      , clusterName = "with-opi"
-      , enableOpiStaging = "true"
+let eiriniReleaseRepo =
+      ../dhall-modules/resources/eirini-release.dhall inputs.eiriniReleaseBranch
+
+let ciResources =
+      ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
+
+let uaaResource =
+      ../dhall-modules/resources/uaa.dhall inputs.eiriniReleaseBranch
+
+let commonDeploymentReqs =
+      { enableOpiStaging = "true"
       , storageClass = inputs.storageClass
-      , eiriniCIBranch = inputs.eiriniCIBranch
-      , eiriniReleaseBranch = inputs.eiriniReleaseBranch
-      , creds = iksCreds
+      , ciResources = ciResources
+      , eiriniReleaseRepo = eiriniReleaseRepo
       , stateGitHubPrivateKey = inputs.githubPrivateKey
       , clusterAdminPassword = inputs.clusterAdminPassword
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
       , diegoCellCount = inputs.diegoCellCount
-      , isFreshini = False
+      , uaaResource = uaaResource
       }
 
+let withOpiDeploymentReqs =
+        commonDeploymentReqs
+      ⫽ { clusterName = "with-opi", creds = iksCreds, isFreshini = False }
+
 let freshiniDeploymentReqs =
-      { worldName = inputs.worldName
-      , clusterName = "freshini"
-      , enableOpiStaging = "true"
-      , storageClass = inputs.storageClass
-      , eiriniCIBranch = inputs.eiriniCIBranch
-      , eiriniReleaseBranch = inputs.eiriniReleaseBranch
-      , creds = iksCreds
-      , stateGitHubPrivateKey = inputs.githubPrivateKey
-      , clusterAdminPassword = inputs.clusterAdminPassword
-      , uaaAdminClientSecret = inputs.uaaAdminClientSecret
-      , natsPassword = inputs.natsPassword
-      , diegoCellCount = inputs.diegoCellCount
-      , isFreshini = True
-      }
+        commonDeploymentReqs
+      ⫽ { clusterName = "freshini", creds = iksCreds, isFreshini = True }
 
 let gkeCreds = (../dhall-modules/types/creds.dhall).GKECreds gkeCredsInputs
 
 let gkeDeploymentReqs =
-      { worldName = inputs.worldName
-      , clusterName = "gkerini"
-      , enableOpiStaging = "true"
-      , eiriniCIBranch = inputs.eiriniCIBranch
-      , eiriniReleaseBranch = inputs.eiriniReleaseBranch
-      , storageClass = "missing"
-      , creds = gkeCreds
-      , stateGitHubPrivateKey = inputs.githubPrivateKey
-      , clusterAdminPassword = inputs.clusterAdminPassword
-      , uaaAdminClientSecret = inputs.uaaAdminClientSecret
-      , natsPassword = inputs.natsPassword
-      , diegoCellCount = inputs.diegoCellCount
-      , isFreshini = False
-      }
+        commonDeploymentReqs
+      ⫽ { clusterName = "gkerini", creds = gkeCreds, isFreshini = False }
 
 let clusterNames =
       [ gkeDeploymentReqs.clusterName
@@ -102,12 +86,6 @@ let freshiniEnvironment = ./set-up-ci-environment.dhall freshiniDeploymentReqs
 let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
 let ffMasterModule = ../dhall-modules/ff-master.dhall ffMasterReqs
-
-let eiriniReleaseRepo =
-      ../dhall-modules/resources/eirini-release.dhall inputs.eiriniReleaseBranch
-
-let ciResources =
-      ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
 
 let helmLint =
       ../dhall-modules/jobs/helm-lint.dhall ciResources eiriniReleaseRepo
