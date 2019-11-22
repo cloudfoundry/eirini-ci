@@ -2,7 +2,7 @@ variable "name" {
   type = string
 }
 
-variable "node_count_per_zone" {
+variable "node-count-per-zone" {
   type = number
   default = 1
 }
@@ -12,12 +12,12 @@ variable "region" {
   default = "europe-west1"
 }
 
-variable "node_machine_type" {
+variable "node-machine-type" {
   type = string
   default = "n1-standard-4"
 }
 
-variable "dns-zone" {
+variable "dns-zone-name" {
   type = string
   default = "ci-envs"
 }
@@ -27,9 +27,13 @@ variable "dns-name" {
   default = "ci-envs.eirini.cf-app.com."
 }
 
+variable "project-id" {
+  type = string
+  default = "cff-eirini-peace-pods"
+}
 
 provider "google" {
-  project     = "cff-eirini-peace-pods"
+  project     = "${var.project-id}"
   region      = "${var.region}"
 }
 
@@ -37,6 +41,42 @@ terraform {
   backend "gcs" {
     bucket = "eirini-ci"
   }
+}
+
+resource "google_service_account" "eirini" {
+  account_id   = "${var.name}"
+  display_name = "${var.name}"
+}
+
+resource "google_service_account_key" "eirini" {
+  service_account_id = google_service_account.eirini.name
+}
+
+resource "google_project_iam_custom_role" "eirini_dns" {
+  role_id     = "${var.name}_dns_role"
+  title       = "${var.name} DNS Role"
+  permissions = [
+    "dns.changes.create",
+    "dns.changes.get",
+    "dns.managedZones.list",
+    "dns.resourceRecordSets.create",
+    "dns.resourceRecordSets.delete",
+    "dns.resourceRecordSets.list",
+    "dns.resourceRecordSets.update",
+  ]
+}
+
+resource "google_project_iam_binding" "erini_dns" {
+  role    = "projects/${var.project-id}/roles/${google_project_iam_custom_role.eirini_dns.role_id}"
+
+  members = [
+    "serviceAccount:${google_service_account.eirini.email}",
+  ]
+}
+
+resource "local_file" "private_service_account_key" {
+    sensitive_content     = "${google_service_account_key.eirini.private_key}"
+    filename = "sa-private-key.json"
 }
 
 resource "google_compute_network" "network" {
@@ -53,10 +93,7 @@ resource "google_container_cluster" "cluster" {
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
   remove_default_node_pool = true
-  initial_node_count = var.node_count_per_zone
-
-  ip_allocation_policy {
-  }
+  initial_node_count = var.node-count-per-zone
 
   maintenance_policy {
     daily_maintenance_window {
@@ -65,7 +102,7 @@ resource "google_container_cluster" "cluster" {
   }
 }
 
-resource "google_container_node_pool" "node-pool" {
+resource "google_container_node_pool" "node_pool" {
   name       = "${var.name}"
   location   = "${var.region}-b"
   cluster    = "${google_container_cluster.cluster.name}"
@@ -74,15 +111,15 @@ resource "google_container_node_pool" "node-pool" {
     auto_upgrade = true
   }
   autoscaling {
-    min_node_count = var.node_count_per_zone
+    min_node_count = var.node-count-per-zone
     max_node_count = 12
   }
-  initial_node_count = var.node_count_per_zone
+  initial_node_count = var.node-count-per-zone
 
   node_config {
     disk_size_gb = 200
     disk_type = "pd-ssd"
-    machine_type = "${var.node_machine_type}"
+    machine_type = "${var.node-machine-type}"
     image_type = "COS_CONTAINERD"
 
     metadata = {
@@ -96,43 +133,47 @@ resource "google_container_node_pool" "node-pool" {
   }
 }
 
-resource "google_compute_address" "ingress-address" {
-  name = "${var.name}-address"
+resource "google_compute_address" "ingress_address" {
+  name = "${var.name}"
   region = "europe-west1"
 }
 
-resource "google_dns_record_set" "gorouter-root" {
+output "static_ip" {
+  value = "${google_compute_address.ingress_address.address}"
+}
+
+resource "google_dns_record_set" "gorouter_root" {
   name = "${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone}"
+  managed_zone = "${var.dns-zone-name}"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress-address.address}"]
+  rrdatas = ["${google_compute_address.ingress_address.address}"]
 }
 
-resource "google_dns_record_set" "gorouter-wildcard" {
+resource "google_dns_record_set" "gorouter_wildcard" {
   name = "*.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone}"
+  managed_zone = "${var.dns-zone-name}"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress-address.address}"]
+  rrdatas = ["${google_compute_address.ingress_address.address}"]
 }
 
-resource "google_dns_record_set" "uaa-root" {
+resource "google_dns_record_set" "uaa_root" {
   name = "uaa.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone}"
+  managed_zone = "${var.dns-zone-name}"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress-address.address}"]
+  rrdatas = ["${google_compute_address.ingress_address.address}"]
 }
 
-resource "google_dns_record_set" "uaa-wildcard" {
+resource "google_dns_record_set" "uaa_wildcard" {
   name = "*.uaa.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone}"
+  managed_zone = "${var.dns-zone-name}"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress-address.address}"]
+  rrdatas = ["${google_compute_address.ingress_address.address}"]
 }
