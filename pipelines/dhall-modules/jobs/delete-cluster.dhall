@@ -70,7 +70,6 @@ let deleteClusterJob
                   , deleteValuesFile
                   , putClusterState
                   ]
-              , on_failure = reqs.failureNotification
               }
 
 in  deleteClusterJob

@@ -35,7 +35,7 @@ let createGoDockerImages =
               ../tasks/make-docker-build-args.dhall
                 reqs.ciResources
                 reqs.eiriniStagingRepo
-        
+
         in  Concourse.schemas.Job::{
             , name = "create-staging-docker-images"
             , plan =
@@ -50,7 +50,6 @@ let createGoDockerImages =
                     , putDocker reqs.stagingUploader "uploader"
                     ]
                 ]
-            , on_failure = reqs.failureNotification
             }
 
 in  createGoDockerImages

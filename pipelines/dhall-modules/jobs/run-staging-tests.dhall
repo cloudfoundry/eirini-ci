@@ -18,24 +18,24 @@ let runTestsJob =
                 , resource = reqs.eiriniStagingRepo
                 , trigger = Some True
                 }
-        
+
         let getCIResources =
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{ resource = reqs.ciResources }
-        
+
         let unitTestImage =
               Concourse.schemas.ImageResource::{
               , type = "docker-image"
               , source =
                   Some (toMap { repository = Prelude.JSON.string "eirini/ci" })
               }
-        
+
         let unitTestInput =
               { name = "eirini-staging"
               , optional = None Bool
               , path = None Text
               }
-        
+
         let unitTestsConfig =
               Concourse.Types.TaskSpec.Config
                 Concourse.schemas.TaskConfig::{
@@ -47,14 +47,14 @@ let runTestsJob =
                 , image_resource = Some unitTestImage
                 , inputs = Some [ unitTestInput ]
                 }
-        
+
         let runUnitTests =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
                 , task = "run-unit-tests"
                 , config = unitTestsConfig
                 }
-        
+
         let runStaticChecks =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -62,7 +62,7 @@ let runTestsJob =
                 , config = taskFile reqs.ciResources "run-static-checks"
                 , input_mapping = Some (toMap { eirini = "eirini-staging" })
                 }
-        
+
         let integrationTestImage =
               Concourse.schemas.ImageResource::{
               , type = "docker-image"
@@ -75,14 +75,14 @@ let runTestsJob =
                         }
                     )
               }
-        
+
         let integrationTestRun =
               Concourse.schemas.TaskRunConfig::{
               , path = "ginkgo"
               , dir = Some "eirini-staging"
               , args = Some [ "-mod=vendor", "-r", "integration" ]
               }
-        
+
         let runIntegrationTests =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -101,7 +101,7 @@ let runTestsJob =
                             ]
                       }
                 }
-        
+
         in    Concourse.defaults.Job
             ⫽ { name = "staging-test"
               , plan =
@@ -113,7 +113,6 @@ let runTestsJob =
                   , in_parallel
                       [ runUnitTests, runStaticChecks, runIntegrationTests ]
                   ]
-              , on_failure = reqs.failureNotification
               }
 
 in  runTestsJob

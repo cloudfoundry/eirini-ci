@@ -41,7 +41,7 @@ let imageSource =
 let buildImageJob =
         λ(name : Text)
       → let repository = imageSource name
-        
+
         in  Concourse.schemas.Job::{
             , name = "update-${name}-image"
             , plan =
@@ -61,7 +61,6 @@ let buildImageJob =
                         Some (toMap { skip_download = JSON.bool True })
                     }
                 ]
-            , on_failure = sendSlackNotification
             }
 
 let getGolangImage =

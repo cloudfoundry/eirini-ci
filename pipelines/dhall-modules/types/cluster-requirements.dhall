@@ -12,5 +12,4 @@ in  { ciResources : Concourse.Types.Resource
     , workerCount : Natural
     , storageClass : Text
     , clusterPreparation : ./cluster-prep.dhall
-    , failureNotification : Optional Concourse.Types.Step
     }

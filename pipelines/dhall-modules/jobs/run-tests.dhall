@@ -71,7 +71,6 @@ let runTestsJob =
         in    Concourse.defaults.Job
             ⫽ { name = "run-tests"
               , public = Some True
-              , on_failure = reqs.failureNotification
               , plan =
                   [ in_parallel
                       [ getClusterReady

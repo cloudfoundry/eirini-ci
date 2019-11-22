@@ -11,7 +11,7 @@ let createClusterJob
               ../helpers/get-trigger-passed.dhall
                 reqs.clusterState
                 [ "delete-cluster-${reqs.clusterName}" ]
-        
+
         let taskName =
               merge
                 { IKSCreds = λ(_ : ../types/iks-creds.dhall) → "create-cluster"
@@ -19,7 +19,7 @@ let createClusterJob
                     λ(_ : ../types/gke-creds.dhall) → "gcp-create-cluster"
                 }
                 reqs.creds
-        
+
         let createCluster =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
@@ -35,7 +35,7 @@ let createClusterJob
                           )
                     }
                 )
-        
+
         in    Concourse.defaults.Job
             ⫽ { name = "create-cluster-${reqs.clusterName}"
               , plan =
@@ -44,7 +44,6 @@ let createClusterJob
                   , createCluster
                   , ../helpers/emit-event.dhall reqs.clusterCreatedEvent
                   ]
-              , on_failure = reqs.failureNotification
               }
 
 in  createClusterJob

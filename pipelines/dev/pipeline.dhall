@@ -93,7 +93,6 @@
               , uaaAdminClientSecret = inputs.uaaAdminClientSecret
               , natsPassword = inputs.natsPassword
               }
-        , failureNotification = None Concourse.Types.Step
         }
 
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
@@ -117,7 +116,6 @@
           , dockerMetricsCollector = docker.metricsCollector
           , creds = creds
           , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
-          , failureNotification = None Concourse.Types.Step
           , eiriniUpstreams = None (List Text)
           , enableNonCodeAutoTriggers = True
           }

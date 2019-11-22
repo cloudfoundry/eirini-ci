@@ -2,7 +2,6 @@
 → let update =
         ./jobs/update-version-files.dhall
           reqs.writeableEiriniReleaseRepo
-          reqs.failureNotification
   
   in  [ update
           { repo = reqs.eiriniRepo

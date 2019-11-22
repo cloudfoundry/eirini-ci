@@ -17,7 +17,7 @@ let slackResource =
                     )
               , type = "docker-image"
               }
-      
+
       in  Concourse.schemas.Resource::{
           , name = "slack"
           , type = Concourse.Types.ResourceType.Custom slackResourceType
@@ -26,37 +26,43 @@ let slackResource =
               Some (toMap { url = Prelude.JSON.string "((slack_webhook))" })
           }
 
-in  Some
-      ( Concourse.helpers.putStep
-          Concourse.schemas.PutStep::{
-          , resource = slackResource
-          , params =
-              Some
-                ( toMap
-                    { text =
-                        Prelude.JSON.string
-                          ''
-                          Pipeline *$BUILD_PIPELINE_NAME* failed :cry:
-                          
-                          Job is *$BUILD_JOB_NAME*
-                          Build name is *$BUILD_NAME*
-                          ''
-                    , channel = Prelude.JSON.string "#eirini-ci"
-                    , attachments =
-                        Prelude.JSON.string
-                          ''
-                            [{
-                                "color": "danger",
-                                "actions": [
-                                      {
-                                        "type": "button",
-                                        "text": "View in Concourse",
-                                        "url": "https://jetson.eirini.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
-                                      }
-                                ]
-                            }]
-                          ''
-                    }
-                )
-          }
-      )
+let hook =
+      Some
+        ( Concourse.helpers.putStep
+            Concourse.schemas.PutStep::{
+            , resource = slackResource
+            , params =
+                Some
+                  ( toMap
+                      { text =
+                          Prelude.JSON.string
+                            ''
+                            Pipeline *$BUILD_PIPELINE_NAME* failed :cry:
+
+                            Job is *$BUILD_JOB_NAME*
+                            Build name is *$BUILD_NAME*
+                            ''
+                      , channel = Prelude.JSON.string "#eirini-ci"
+                      , attachments =
+                          Prelude.JSON.string
+                            ''
+                              [{
+                                  "color": "danger",
+                                  "actions": [
+                                        {
+                                          "type": "button",
+                                          "text": "View in Concourse",
+                                          "url": "https://jetson.eirini.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
+                                        }
+                                  ]
+                              }]
+                            ''
+                      }
+                  )
+            }
+        )
+
+in  Prelude.List.map
+      Concourse.Types.Job
+      Concourse.Types.Job
+      (λ(j : Concourse.Types.Job) → j ⫽ { on_failure = hook })

@@ -16,11 +16,10 @@ let JobReqs =
       }
 
 in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
-    → λ(failureNotification : Optional Concourse.Types.Step)
     → λ(reqs : JobReqs)
     → let triggerOnRepo =
             ../helpers/get-trigger-passed.dhall reqs.repo [ reqs.upstreamJob ]
-      
+
       let triggerOnNewImage =
               λ(imageReq : ImageReq)
             → Concourse.helpers.getStep
@@ -31,13 +30,12 @@ in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
                 , params =
                     Some (toMap { skip_download = Prelude.JSON.bool True })
                 }
-      
+
       let triggerOnNewImages =
             Prelude.List.map ImageReq Step triggerOnNewImage reqs.images
-      
+
       in  Concourse.schemas.Job::{
           , name = "update-${reqs.componentName}-version-files"
-          , on_failure = failureNotification
           , plan =
               [ in_parallel
                   (   [ ../helpers/get.dhall writeableEiriniReleaseRepo

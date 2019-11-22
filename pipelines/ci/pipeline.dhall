@@ -64,8 +64,6 @@ let EiriniOrRepo = ../dhall-modules/types/eirini-or-repo.dhall
 
 let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 
-let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
-
 let kubeClusterReqs =
       { ciResources = ciResources
       , clusterState = clusterState
@@ -77,7 +75,6 @@ let kubeClusterReqs =
       , workerCount = env:worker_count ? 1
       , storageClass = inputs.storageClass
       , clusterPreparation = ClusterPrep.NotRequired
-      , failureNotification = slackNotification
       }
 
 let updateVersionReqs =
@@ -98,7 +95,6 @@ let updateVersionReqs =
       , dockerRoutePodInformer = docker.routePodInformer
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
       , dockerMetricsCollector = docker.metricsCollector
-      , failureNotification = slackNotification
       }
 
 let runStagingTestReqs =
@@ -107,7 +103,6 @@ let runStagingTestReqs =
       , stagingDownloader = docker.stagingDownloader
       , stagingExecutor = docker.stagingExecutor
       , stagingUploader = docker.stagingUploader
-      , failureNotification = slackNotification
       }
 
 let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
@@ -134,7 +129,6 @@ let runTestJobs =
         , dockerMetricsCollector = docker.metricsCollector
         , creds = creds
         , upstream = { name = "create-cluster", event = clusterCreatedEvent }
-        , failureNotification = slackNotification
         , eiriniUpstreams = None (List Text)
         , enableNonCodeAutoTriggers = True
         }
@@ -142,6 +136,9 @@ let runTestJobs =
 let updateVersionJobs =
       ../dhall-modules/update-version-files.dhall updateVersionReqs
 
-in  Prelude.List.concat
-      Concourse.Types.Job
-      [ kubeClusterJobs, runTestJobs, updateVersionJobs, runStagingTestJobs ]
+let jobs =
+      Prelude.List.concat
+        Concourse.Types.Job
+        [ kubeClusterJobs, runTestJobs, updateVersionJobs, runStagingTestJobs ]
+
+in  ../dhall-modules/helpers/slack_on_fail.dhall jobs

@@ -4,17 +4,15 @@ let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let Prelude = ../deps/prelude.dhall
 
-in    λ ( reqs
-        : ../types/run-test-requirements.dhall
-        )
+in    λ(reqs : ../types/run-test-requirements.dhall)
     → let gitRepo =
             ../helpers/eirini-or-repo-get-repo.dhall
               reqs.eiriniRepo
               reqs.secretSmugglerRepo
-      
+
       let makeDockerBuildArgs =
             ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
-      
+
       in  Concourse.schemas.Job::{
           , name = "create-secret-smuggler-docker-image"
           , plan =
@@ -39,5 +37,4 @@ in    λ ( reqs
                         )
                   }
               ]
-          , on_failure = reqs.failureNotification
           }

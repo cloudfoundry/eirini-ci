@@ -35,7 +35,7 @@ let createGoDockerImages =
               ../tasks/make-docker-build-args.dhall
                 reqs.ciResources
                 reqs.eiriniRepo
-        
+
         in  Concourse.schemas.Job::{
             , name = "create-go-docker-images"
             , plan =
@@ -56,7 +56,6 @@ let createGoDockerImages =
                         "route-statefulset-informer"
                     ]
                 ]
-            , on_failure = reqs.failureNotification
             }
 
 in  createGoDockerImages

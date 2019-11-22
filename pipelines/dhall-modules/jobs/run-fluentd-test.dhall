@@ -12,7 +12,7 @@ let runFluentdUnitTests =
               ../helpers/eirini-or-repo-get-repo.dhall
                 reqs.eiriniRepo
                 reqs.fluentdRepo
-        
+
         let inputMapping =
               merge
                 { UseEirini = None (Prelude.Map.Type Text Text)
@@ -21,7 +21,7 @@ let runFluentdUnitTests =
                     → Some (toMap { eirini = r.name })
                 }
                 reqs.fluentdRepo
-        
+
         in  Concourse.schemas.Job::{
             , name = "run-fluentd-unit-tests"
             , plan =
@@ -36,7 +36,6 @@ let runFluentdUnitTests =
                     , input_mapping = inputMapping
                     }
                 ]
-            , on_failure = reqs.failureNotification
             }
 
 in  runFluentdUnitTests

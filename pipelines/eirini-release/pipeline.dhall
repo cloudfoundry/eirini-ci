@@ -86,7 +86,7 @@ let ffMasterModule =
 let helmLint =
       ../dhall-modules/jobs/helm-lint.dhall ciResources eiriniReleaseRepo
 
-let jobsWithoutNotification =
+let jobs =
       Prelude.List.concat
         Concourse.Types.Job
         [ withOpiEnvironment
@@ -96,10 +96,4 @@ let jobsWithoutNotification =
         , [ helmLint ]
         ]
 
-let slackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
-
-in  Prelude.List.map
-      Concourse.Types.Job
-      Concourse.Types.Job
-      (λ(j : Concourse.Types.Job) → j ⫽ { on_failure = slackNotification })
-      jobsWithoutNotification
+in  ../dhall-modules/helpers/slack_on_fail.dhall jobs

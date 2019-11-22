@@ -52,7 +52,6 @@ let setUpEnvironment
                     , uaaAdminClientSecret = reqs.uaaAdminClientSecret
                     , natsPassword = reqs.natsPassword
                     }
-              , failureNotification = None Concourse.Types.Step
               }
 
         let useCertManager =
