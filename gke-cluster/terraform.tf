@@ -12,6 +12,11 @@ variable "region" {
   default = "europe-west1"
 }
 
+variable "zone" {
+  type = string
+  default = "europe-west1-b"
+}
+
 variable "node-machine-type" {
   type = string
   default = "n1-standard-4"
@@ -75,8 +80,8 @@ resource "google_project_iam_binding" "erini_dns" {
 }
 
 resource "local_file" "private_service_account_key" {
-    sensitive_content     = "${google_service_account_key.eirini.private_key}"
-    filename = "sa-private-key.json"
+  sensitive_content     = "${google_service_account_key.eirini.private_key}"
+  filename = "sa-private-key.json"
 }
 
 resource "google_compute_network" "network" {
@@ -85,7 +90,7 @@ resource "google_compute_network" "network" {
 
 resource "google_container_cluster" "cluster" {
   name     = "${var.name}"
-  location = "${var.region}-b"
+  location = "${var.zone}"
 
   network = "${google_compute_network.network.name}"
 
@@ -104,7 +109,7 @@ resource "google_container_cluster" "cluster" {
 
 resource "google_container_node_pool" "node_pool" {
   name       = "${var.name}"
-  location   = "${var.region}-b"
+  location   = "${var.zone}"
   cluster    = "${google_container_cluster.cluster.name}"
   management {
     auto_repair = true
@@ -135,7 +140,7 @@ resource "google_container_node_pool" "node_pool" {
 
 resource "google_compute_address" "ingress_address" {
   name = "${var.name}"
-  region = "europe-west1"
+  region = "${var.region}"
 }
 
 output "static_ip" {
