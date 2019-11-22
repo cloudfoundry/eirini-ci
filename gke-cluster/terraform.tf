@@ -46,6 +46,9 @@ terraform {
   backend "gcs" {
     bucket = "eirini-ci"
   }
+  required_providers {
+    google = "~> 2.20"
+  }
 }
 
 resource "google_service_account" "eirini" {
