@@ -67,10 +67,6 @@ secrets:
 services:
   loadbalanced: false
 
-sizing:
-  diego_cell:
-    count: $DIEGO_CELL_COUNT
-
 eirini:
   opi:
     use_registry_ingress: true

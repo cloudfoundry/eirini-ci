@@ -1,13 +1,7 @@
 let Prelude = ./deps/prelude.dhall
 
 in    λ(reqs : ./types/ff-master-requirements.dhall)
-    → let eiriniReleaseRepo =
-            ./resources/eirini-release.dhall reqs.eiriniReleaseBranch
-
-      let eiriniReleaseMasterRepo =
-            ./resources/eirini-release-master.dhall reqs.eiriniReleasePrivateKey
-
-      let upstreamSteps =
+    → let upstreamSteps =
             Prelude.List.map
               Text
               Text
@@ -15,7 +9,7 @@ in    λ(reqs : ./types/ff-master-requirements.dhall)
               reqs.clusterNames
 
       in  [ ./jobs/fast-forward-master-release.dhall
-              eiriniReleaseRepo
-              eiriniReleaseMasterRepo
+              reqs.eiriniReleaseRepo
+              reqs.writeableReleaseRepoMaster
               upstreamSteps
           ]

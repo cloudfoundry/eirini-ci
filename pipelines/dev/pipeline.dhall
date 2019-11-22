@@ -20,7 +20,6 @@
         , clusterAdminPassword = "((cluster_admin_password))"
         , uaaAdminClientSecret = "((uaa_admin_client_secret))"
         , natsPassword = "((nats_password))"
-        , diegoCellCount = "((diego-cell-count))"
         }
 
   let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
@@ -93,7 +92,6 @@
               { clusterAdminPassword = inputs.clusterAdminPassword
               , uaaAdminClientSecret = inputs.uaaAdminClientSecret
               , natsPassword = inputs.natsPassword
-              , diegoCellCount = inputs.diegoCellCount
               }
         , failureNotification = None Concourse.Types.Step
         }

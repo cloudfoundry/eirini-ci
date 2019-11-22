@@ -18,7 +18,7 @@ let prepareClusterJob
               ../helpers/get-trigger-passed.dhall
                 reqs.clusterCreatedEvent
                 [ "create-cluster-${reqs.clusterName}" ]
-        
+
         let configParams =
               { CLUSTER_NAME = reqs.clusterName
               , STORAGE_CLASS = reqs.storageClass
@@ -26,9 +26,8 @@ let prepareClusterJob
               , UAA_ADMIN_CLIENT_SECRET = prepReqs.uaaAdminClientSecret
               , NATS_PASSWORD = prepReqs.natsPassword
               , ENABLE_OPI_STAGING = reqs.enableOPIStaging
-              , DIEGO_CELL_COUNT = prepReqs.diegoCellCount
               }
-        
+
         let putClusterState =
               helpers.putStep
                 (   defaults.PutStep
@@ -43,7 +42,7 @@ let prepareClusterJob
                           )
                     }
                 )
-        
+
         let cloudSpecificSteps =
               merge
                 { IKSCreds =
@@ -52,13 +51,13 @@ let prepareClusterJob
                     ./steps/gke-specific-prepare-steps.dhall reqs configParams
                 }
                 reqs.creds
-        
+
         let downloadKubeConfig =
               ../tasks/download-kubeconfig.dhall
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
-        
+
         in    defaults.Job
             ⫽ { name = "prepare-cluster-${reqs.clusterName}"
               , plan =

@@ -10,7 +10,6 @@ in  { clusterName : Text
     , clusterAdminPassword : Text
     , uaaAdminClientSecret : Text
     , natsPassword : Text
-    , diegoCellCount : Text
     , isFreshini : Bool
     , ciResources : Concourse.Types.Resource
     , eiriniReleaseRepo : Concourse.Types.Resource

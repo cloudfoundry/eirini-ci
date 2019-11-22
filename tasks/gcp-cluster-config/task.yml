@@ -19,7 +19,6 @@ params:
   UAA_ADMIN_CLIENT_SECRET:
   NATS_PASSWORD:
   ENABLE_OPI_STAGING:
-  DIEGO_CELL_COUNT:
 
 run:
   path: ci-resources/tasks/gcp-cluster-config/task.sh

@@ -59,10 +59,6 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
 
-sizing:
-  diego_cell:
-    count: $DIEGO_CELL_COUNT
-
 eirini:
   opi:
     use_registry_ingress: true

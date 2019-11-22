@@ -15,8 +15,6 @@ let gkeCredsInputs =
 
 let inputs =
       { githubPrivateKey = "((github-private-key))"
-      , eiriniCIBranch = "((ci-resources-branch))"
-      , eiriniReleaseBranch = "develop"
       , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
@@ -25,19 +23,22 @@ let inputs =
       , clusterAdminPassword = "((cluster_admin_password))"
       , uaaAdminClientSecret = "((uaa_admin_client_secret))"
       , natsPassword = "((nats_password))"
-      , diegoCellCount = "((diego-cell-count))"
       }
 
 let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
 
+let gkeCreds = (../dhall-modules/types/creds.dhall).GKECreds gkeCredsInputs
+
 let eiriniReleaseRepo =
-      ../dhall-modules/resources/eirini-release.dhall inputs.eiriniReleaseBranch
+      ../dhall-modules/resources/eirini-release.dhall "develop"
 
-let ciResources =
-      ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
+let writeableReleaseRepoMaster =
+      ../dhall-modules/resources/eirini-release-master.dhall
+        inputs.eiriniReleasePrivateKey
 
-let uaaResource =
-      ../dhall-modules/resources/uaa.dhall inputs.eiriniReleaseBranch
+let uaaResource = ../dhall-modules/resources/uaa.dhall "develop"
+
+let ciResources = ../dhall-modules/resources/ci-resources.dhall "master"
 
 let commonDeploymentReqs =
       { enableOpiStaging = "true"
@@ -48,7 +49,6 @@ let commonDeploymentReqs =
       , clusterAdminPassword = inputs.clusterAdminPassword
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
-      , diegoCellCount = inputs.diegoCellCount
       , uaaResource = uaaResource
       }
 
@@ -60,8 +60,6 @@ let freshiniDeploymentReqs =
         commonDeploymentReqs
       ⫽ { clusterName = "freshini", creds = iksCreds, isFreshini = True }
 
-let gkeCreds = (../dhall-modules/types/creds.dhall).GKECreds gkeCredsInputs
-
 let gkeDeploymentReqs =
         commonDeploymentReqs
       ⫽ { clusterName = "gkerini", creds = gkeCreds, isFreshini = False }
@@ -72,20 +70,18 @@ let clusterNames =
       , withOpiDeploymentReqs.clusterName
       ]
 
-let ffMasterReqs =
-      { eiriniCIBranch = inputs.eiriniCIBranch
-      , eiriniReleaseBranch = inputs.eiriniReleaseBranch
-      , eiriniReleasePrivateKey = inputs.eiriniReleasePrivateKey
-      , clusterNames = clusterNames
-      }
-
 let withOpiEnvironment = ./set-up-ci-environment.dhall withOpiDeploymentReqs
 
 let freshiniEnvironment = ./set-up-ci-environment.dhall freshiniDeploymentReqs
 
 let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
-let ffMasterModule = ../dhall-modules/ff-master.dhall ffMasterReqs
+let ffMasterModule =
+      ../dhall-modules/ff-master.dhall
+        { eiriniReleaseRepo = eiriniReleaseRepo
+        , writeableReleaseRepoMaster = writeableReleaseRepoMaster
+        , clusterNames = clusterNames
+        }
 
 let helmLint =
       ../dhall-modules/jobs/helm-lint.dhall ciResources eiriniReleaseRepo

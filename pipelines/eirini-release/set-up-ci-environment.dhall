@@ -43,7 +43,7 @@ let setUpEnvironment
               , clusterReadyEvent = clusterReadyEvent
               , clusterName = reqs.clusterName
               , enableOPIStaging = reqs.enableOpiStaging
-              , workerCount = env:worker_count ? 1
+              , workerCount = 3
               , storageClass = reqs.storageClass
               , creds = reqs.creds
               , clusterPreparation =
@@ -51,7 +51,6 @@ let setUpEnvironment
                     { clusterAdminPassword = reqs.clusterAdminPassword
                     , uaaAdminClientSecret = reqs.uaaAdminClientSecret
                     , natsPassword = reqs.natsPassword
-                    , diegoCellCount = reqs.diegoCellCount
                     }
               , failureNotification = None Concourse.Types.Step
               }

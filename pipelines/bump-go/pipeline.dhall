@@ -20,7 +20,6 @@ let inputs =
       , clusterAdminPassword = "((cluster_admin_password))"
       , uaaAdminClientSecret = "((uaa_admin_client_secret))"
       , natsPassword = "((nats_password))"
-      , diegoCellCount = "0"
       }
 
 let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
@@ -103,7 +102,6 @@ let kubeClusterReqs =
             { clusterAdminPassword = inputs.clusterAdminPassword
             , uaaAdminClientSecret = inputs.uaaAdminClientSecret
             , natsPassword = inputs.natsPassword
-            , diegoCellCount = inputs.diegoCellCount
             }
       , failureNotification = None Concourse.Types.Step
       }
