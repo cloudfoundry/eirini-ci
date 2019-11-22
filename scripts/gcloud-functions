@@ -43,7 +43,7 @@ create-cluster() {
   declare -r name=$1
   declare -r worker_count=$2
   terraform apply -var "name=$name" \
-    -var "node_count_per_zone=$worker_count"
+    -var "node-count-per-zone=$worker_count"
 }
 
 # Delete the cluster with the name given as $1
