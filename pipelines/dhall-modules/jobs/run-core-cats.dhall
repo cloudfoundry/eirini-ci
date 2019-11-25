@@ -89,18 +89,34 @@ let runCoreCats =
                 , USE_LOG_CACHE = "false"
                 }
         
+        let downloadKubeconfigTask =
+              ../tasks/download-kubeconfig.dhall
+                reqs.ciResources
+                reqs.clusterName
+                reqs.creds
+        
+        let checkLeftoverPodsTask =
+              Concourse.helpers.taskStep
+                Concourse.schemas.TaskStep::{
+                , task = "check leftover pods"
+                , config = taskFile reqs.ciResources "check-leftover-pods"
+                }
+        
         in  Concourse.schemas.Job::{
             , name = "run-core-cats-${reqs.clusterName}"
             , serial_groups = Some [ reqs.clusterName ]
             , public = Some True
             , plan =
                 [ in_parallel getSteps
+                , downloadKubeconfigTask
+                , checkLeftoverPodsTask
                 , Concourse.helpers.taskStep
                     Concourse.schemas.TaskStep::{
                     , task = "run core cats"
                     , config = taskFile reqs.ciResources "run-cats"
                     , params = Some catsParams
                     }
+                , checkLeftoverPodsTask
                 ]
             }
 
