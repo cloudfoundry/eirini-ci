@@ -6,8 +6,35 @@ IFS=$'\n\t'
 main() {
   export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
   export KUBECONFIG="$PWD/kube/config"
+  wait_for_service_availability
   install_block_storage_prodivder
   install_hostpath_provider
+}
+
+wait_for_service_availability() {
+  local counter=0
+  while true; do
+    local services="$(kubectl get apiservice --no-headers=true)"
+    if any_unnavailable_services "$services"; then
+      echo "----"
+      counter=$((counter + 1))
+    else
+      echo "All services are available"
+      exit 0
+    fi
+
+    if [[ $counter -gt 30 ]]; then
+      echo "Unavalable services" >&2
+      echo "$services" >&2
+      exit 1
+    fi
+    sleep 1
+  done
+}
+
+any_unnavailable_services() {
+  local services="$1"
+  echo "$services"  | awk '{print $3}' | grep "False"
 }
 
 install_block_storage_prodivder() {
