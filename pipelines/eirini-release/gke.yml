@@ -1,4 +1,0 @@
-meta:
-  cluster-name: gkerini
-  enable-opi-staging: "true"
-  unlock-passed: run-core-cats-gkerini
