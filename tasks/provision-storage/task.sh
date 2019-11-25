@@ -13,8 +13,9 @@ main() {
 
 wait_for_service_availability() {
   local counter=0
+  local services
   while true; do
-    local services="$(kubectl get apiservice --no-headers=true)"
+    services="$(kubectl get apiservice --no-headers=true)"
     if any_unnavailable_services "$services"; then
       echo "----"
       counter=$((counter + 1))
@@ -34,7 +35,7 @@ wait_for_service_availability() {
 
 any_unnavailable_services() {
   local services="$1"
-  echo "$services"  | awk '{print $3}' | grep "False"
+  echo "$services" | awk '{print $3}' | grep "False"
 }
 
 install_block_storage_prodivder() {
