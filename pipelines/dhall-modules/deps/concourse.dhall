@@ -1,2 +1,2 @@
-  https://raw.githubusercontent.com/akshaymankar/dhall-concourse/0.4.0/package.dhall sha256:837ee81b8ffd7898a935829fe181e77562e4f261980e2ef19ee206e4c53d422d
-? https://raw.githubusercontent.com/akshaymankar/dhall-concourse/0.4.0/package.dhall
+  https://raw.githubusercontent.com/akshaymankar/dhall-concourse/0.5.0/package.dhall sha256:fced4f16012e01baa4a562e7c1740a8b359412e680bf2200a32d3363fd59f67a
+? https://raw.githubusercontent.com/akshaymankar/dhall-concourse/0.5.0/package.dhall

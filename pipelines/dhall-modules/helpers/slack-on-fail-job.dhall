@@ -62,7 +62,4 @@ let hook =
             }
         )
 
-in  Prelude.List.map
-      Concourse.Types.Job
-      Concourse.Types.Job
-      (λ(j : Concourse.Types.Job) → j ⫽ { on_failure = hook })
+in  λ(j : Concourse.Types.Job) → j ⫽ { on_failure = hook }

@@ -135,7 +135,7 @@ let updateVersionJobs =
 
 let jobs =
       Prelude.List.concat
-        Concourse.Types.Job
+        Concourse.Types.GroupedJob
         [ kubeClusterJobs, runTestJobs, updateVersionJobs, runStagingTestJobs ]
 
-in  ../dhall-modules/helpers/slack_on_fail.dhall jobs
+in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs

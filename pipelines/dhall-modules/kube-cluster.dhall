@@ -9,7 +9,7 @@ let deleteClusterJob = ./jobs/delete-cluster.dhall
 let prepareClusterJobFn = ./jobs/prepare-cluster.dhall
 
 let kubeCluster
-    : ClusterRequirements → List Concourse.Types.Job
+    : ClusterRequirements → List Concourse.Types.GroupedJob
     =   λ(reqs : ClusterRequirements)
       → let prepareClusterJob =
               merge
@@ -20,6 +20,10 @@ let kubeCluster
                 }
                 reqs.clusterPreparation
 
-        in  [ deleteClusterJob reqs, createClusterJob reqs ] # prepareClusterJob
+        let jobs =
+                [ deleteClusterJob reqs, createClusterJob reqs ]
+              # prepareClusterJob
+
+        in  ./helpers/group-jobs.dhall [ "cluster-${reqs.clusterName}" ] jobs
 
 in  kubeCluster
