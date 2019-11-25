@@ -21,7 +21,7 @@ wait_for_service_availability() {
       counter=$((counter + 1))
     else
       echo "All services are available"
-      exit 0
+      return 0
     fi
 
     if [[ $counter -gt 30 ]]; then
