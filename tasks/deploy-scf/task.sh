@@ -26,9 +26,9 @@ export-certs() {
 
 ${INTERMEDIATE_CA}"
   else
-    secret_name="$(kubectl get secrets | grep "$CLUSTER_NAME")"
-    BITS_TLS_CRT="$(kubectl get secret "$secret_name" --namespace default -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-    BITS_TLS_KEY="$(kubectl get secret "$secret_name" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
+    secret_name="$(kubectl get secrets -o name | grep "$CLUSTER_NAME")"
+    BITS_TLS_CRT="$(kubectl get "$secret_name" --namespace default -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
+    BITS_TLS_KEY="$(kubectl get "$secret_name" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
     SECRET=$(kubectl get pods --namespace uaa --output jsonpath='{.items[*].spec.containers[?(.name=="uaa")].env[?(.name=="INTERNAL_CA_CERT")].valueFrom.secretKeyRef.name}')
     CA_CERT="$(kubectl get secret "$SECRET" --namespace uaa --output jsonpath="{.data['internal-ca-cert']}" | base64 --decode -)"
   fi
