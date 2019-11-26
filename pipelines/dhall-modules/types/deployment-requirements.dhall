@@ -6,7 +6,7 @@ in  { clusterName : Text
     , uaaResources : Concourse.Types.Resource
     , ciResources : Concourse.Types.Resource
     , eiriniReleaseRepo : Concourse.Types.Resource
-    , clusterReadyEvent : Concourse.Types.Resource
+    , clusterReadyEvent : Optional Concourse.Types.Resource
     , uaaReadyEvent : Concourse.Types.Resource
     , clusterState : Concourse.Types.Resource
     , smokeTestsResource : Concourse.Types.Resource

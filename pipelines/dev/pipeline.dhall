@@ -143,7 +143,7 @@
           , ciResources = ciResources
           , eiriniReleaseRepo = eiriniReleaseRepo
           , smokeTestsResource = smokeTestsResource
-          , clusterReadyEvent = clusterReadyEvent
+          , clusterReadyEvent = Some clusterReadyEvent
           , uaaReadyEvent = uaaReadyEvent
           , clusterState = clusterState
           , creds = creds

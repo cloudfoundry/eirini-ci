@@ -26,28 +26,36 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
               , config = taskFile reqs.ciResources "waiting-for-uaa"
               , params = Some (toMap { CLUSTER_NAME = reqs.clusterName })
               }
-      
+
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-uaa-${reqs.clusterName}"
           , serial_groups = Some [ reqs.clusterName ]
           , public = Some True
           , plan =
-              [ ../helpers/get-trigger-passed.dhall
+                Optional/fold
+                  Concourse.Types.Resource
                   reqs.clusterReadyEvent
-                  [ "prepare-cluster-${reqs.clusterName}" ]
-              , ../helpers/get-trigger.dhall reqs.uaaResources
-              , ../helpers/get.dhall reqs.ciResources
-              , Concourse.helpers.getStep
-                  Concourse.schemas.GetStep::{
-                  , resource = reqs.clusterState
-                  , get = Some "state"
-                  }
-              , ../tasks/download-kubeconfig.dhall
-                  reqs.ciResources
-                  reqs.clusterName
-                  reqs.creds
-              , deployUAA
-              , waitForUAA
-              , ../helpers/emit-event.dhall reqs.uaaReadyEvent
-              ]
+                  (List Concourse.Types.Step)
+                  (   λ(r : Concourse.Types.Resource)
+                    → [ ../helpers/get-trigger-passed.dhall
+                          r
+                          [ "prepare-cluster-${reqs.clusterName}" ]
+                      ]
+                  )
+                  ([] : List Concourse.Types.Step)
+              # [ ../helpers/get-trigger.dhall reqs.uaaResources
+                , ../helpers/get.dhall reqs.ciResources
+                , Concourse.helpers.getStep
+                    Concourse.schemas.GetStep::{
+                    , resource = reqs.clusterState
+                    , get = Some "state"
+                    }
+                , ../tasks/download-kubeconfig.dhall
+                    reqs.ciResources
+                    reqs.clusterName
+                    reqs.creds
+                , deployUAA
+                , waitForUAA
+                , ../helpers/emit-event.dhall reqs.uaaReadyEvent
+                ]
           }

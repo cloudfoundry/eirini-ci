@@ -74,7 +74,7 @@ let setUpEnvironment
               , ciResources = reqs.ciResources
               , eiriniReleaseRepo = reqs.eiriniReleaseRepo
               , smokeTestsResource = smokeTestsResource
-              , clusterReadyEvent = clusterReadyEvent
+              , clusterReadyEvent = Some clusterReadyEvent
               , uaaReadyEvent = uaaReadyEvent
               , clusterState = clusterState
               , creds = reqs.creds
