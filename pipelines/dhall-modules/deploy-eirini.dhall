@@ -2,5 +2,4 @@
 → [ ./jobs/deploy-uaa.dhall reqs
   , ./jobs/deploy-scf.dhall reqs
   , ./jobs/smoke-tests.dhall reqs
-  , ./jobs/run-core-cats.dhall reqs
   ]

@@ -89,6 +89,9 @@ let setUpEnvironment
 
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
+        let runCatsJob =
+              [ ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs ]
+
         let locksUpstream =
                     if reqs.isFreshini
 
@@ -118,6 +121,10 @@ let setUpEnvironment
 
               else  [] : List Concourse.Types.Job
 
-        in  kubeClusterJobs # deploySCFJobs # lockJobs # nukeScfJobs
+        in    kubeClusterJobs
+            # deploySCFJobs
+            # runCatsJob
+            # lockJobs
+            # nukeScfJobs
 
 in  setUpEnvironment
