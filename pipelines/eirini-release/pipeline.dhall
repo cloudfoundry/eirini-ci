@@ -23,6 +23,7 @@ let inputs =
       , clusterAdminPassword = "((cluster_admin_password))"
       , uaaAdminClientSecret = "((uaa_admin_client_secret))"
       , natsPassword = "((nats_password))"
+      , grafanaAdminPassword = "((grafana-admin-password))"
       }
 
 let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
@@ -86,6 +87,17 @@ let ffMasterModule =
 let helmLint =
       ../dhall-modules/jobs/helm-lint.dhall ciResources eiriniReleaseRepo
 
+let installMonitoring =
+      ../dhall-modules/jobs/install-monitoring.dhall
+        { ciResources = ciResources
+        , clusterName = "gkerini"
+        , grafanaAdminPassword = inputs.grafanaAdminPassword
+        , creds = gkeCreds
+        , privateRepo =
+            ../dhall-modules/resources/cluster-state.dhall
+              inputs.githubPrivateKey
+        }
+
 let jobs =
       Prelude.List.concat
         Concourse.Types.Job
@@ -93,7 +105,7 @@ let jobs =
         , gkeEnvironment
         , freshiniEnvironment
         , ffMasterModule
-        , [ helmLint ]
+        , [ helmLint, installMonitoring ]
         ]
 
 in  ../dhall-modules/helpers/slack_on_fail.dhall jobs
