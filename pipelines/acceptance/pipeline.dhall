@@ -1,5 +1,7 @@
 let Concourse = ../dhall-modules/deps/concourse.dhall
 
+let Prelude = ../dhall-modules/deps/prelude.dhall
+
 let ImageLocation = ../dhall-modules/types/image-location.dhall
 
 let clusterName = "acceptance"
@@ -39,6 +41,21 @@ let uaaReadyEvent =
 let clusterState =
       ../dhall-modules/resources/cluster-state.dhall inputs.githubPrivateKey
 
+let cleanupTimer =
+        Concourse.defaults.Resource
+      ⫽ { name = "sunday-morning"
+        , type = Concourse.Types.ResourceType.InBuilt "time"
+        , icon = Some "timer"
+        , source =
+            Some
+              ( toMap
+                  { start = Prelude.JSON.string "10:00 AM"
+                  , stop = Prelude.JSON.string "11:00 AM"
+                  , days = Prelude.JSON.array [ Prelude.JSON.string "Sunday" ]
+                  }
+              )
+        }
+
 let deploymentReqs =
       { clusterName = clusterName
       , uaaResources = uaaResource
@@ -58,4 +75,13 @@ let deploymentReqs =
 
 let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-in  deploySCFJobs
+let cleanupBlobstoreJob =
+      ../dhall-modules/jobs/cleanup-blobstore.dhall
+        ciResources
+        cleanupTimer
+        iksCredsInputs
+        clusterName
+
+let jobs = deploySCFJobs # cleanupBlobstoreJob
+
+in ../dhall-modules/helpers/slack_on_fail.dhall jobs
