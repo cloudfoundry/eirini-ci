@@ -14,4 +14,5 @@ in  { clusterName : Text
     , ciResources : Concourse.Types.Resource
     , eiriniReleaseRepo : Concourse.Types.Resource
     , uaaResource : Concourse.Types.Resource
+    , grafanaAdminPassword : Text
     }

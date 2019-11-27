@@ -10,6 +10,7 @@ let Requirements =
       { creds : ../types/creds.dhall
       , privateRepo : Concourse.Types.Resource
       , ciResources : Concourse.Types.Resource
+      , upstreamEvent : Concourse.Types.Resource
       , clusterName : Text
       , grafanaAdminPassword : Text
       }
@@ -88,11 +89,20 @@ in    λ(reqs : Requirements)
               reqs.clusterName
               reqs.creds
 
+      let triggerOnClusterReady =
+            Concourse.helpers.getStep
+              Concourse.schemas.GetStep::{
+              , resource = reqs.upstreamEvent
+              , trigger = Some True
+              , passed = Some [ "prepare-cluster-${reqs.clusterName}" ]
+              }
+
       in  Concourse.schemas.Job::{
-          , name = "install-monitoring"
+          , name = "install-monitoring-${reqs.clusterName}"
           , plan =
               [ ../helpers/get.dhall reqs.privateRepo
               , ../helpers/get.dhall reqs.ciResources
+              , triggerOnClusterReady
               , downloadKubeConfig
               , ingressEndpointTask
               , installTask

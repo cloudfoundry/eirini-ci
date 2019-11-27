@@ -121,10 +121,21 @@ let setUpEnvironment
 
               else  [] : List Concourse.Types.Job
 
+        let installMonitoring =
+              ../dhall-modules/jobs/install-monitoring.dhall
+                { ciResources = reqs.ciResources
+                , clusterName = reqs.clusterName
+                , grafanaAdminPassword = reqs.grafanaAdminPassword
+                , creds = reqs.creds
+                , upstreamEvent = clusterReadyEvent
+                , privateRepo = clusterState
+                }
+
         in    kubeClusterJobs
             # deploySCFJobs
             # runCatsJob
             # lockJobs
             # nukeScfJobs
+            # [ installMonitoring ]
 
 in  setUpEnvironment
