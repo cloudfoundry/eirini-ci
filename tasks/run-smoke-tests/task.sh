@@ -41,7 +41,6 @@ configure_tests() {
       "windows_stack"                   : "windows2012R2",
       "enable_etcd_cluster_check_tests" : false,
       "etcd_ip_address"                 : "",
-      "backend"                         : "diego",
       "isolation_segment_name"          : "is1",
       "isolation_segment_domain"        : "is1.bosh-lite.com",
       "enable_isolation_segment_tests"  : false,
