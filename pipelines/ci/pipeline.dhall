@@ -70,7 +70,6 @@ let kubeClusterReqs =
       , clusterCreatedEvent = clusterCreatedEvent
       , clusterReadyEvent = clusterReadyEvent
       , clusterName = inputs.worldName
-      , enableOPIStaging = "true"
       , creds = creds
       , workerCount = env:worker_count ? 1
       , storageClass = inputs.storageClass

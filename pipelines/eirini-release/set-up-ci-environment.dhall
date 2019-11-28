@@ -42,7 +42,6 @@ let setUpEnvironment
               , clusterCreatedEvent = clusterCreatedEvent
               , clusterReadyEvent = clusterReadyEvent
               , clusterName = reqs.clusterName
-              , enableOPIStaging = reqs.enableOpiStaging
               , workerCount = 3
               , storageClass = reqs.storageClass
               , creds = reqs.creds

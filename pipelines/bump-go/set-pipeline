@@ -32,6 +32,5 @@ fly -t "$target" \
   --var gcs-json-key="$(pass eirini/gcs-json-key)" \
   --var worker_count="3" \
   --var storage_class="ibmc-block-gold" \
-  --var enable_opi_staging=true \
   --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

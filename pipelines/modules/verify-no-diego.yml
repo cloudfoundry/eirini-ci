@@ -1,9 +1,0 @@
-jobs:
-- name: (( concat "run-smoke-tests-" meta.cluster-name ))
-  plan:
-  - (( append ))
-  - task: download-kubeconfig
-    params: (( grab cloud-specific.download-kubeconfig.params ))
-    file: (( grab cloud-specific.download-kubeconfig.file ))
-  - task: verify no diego
-    file: ci-resources/tasks/verify-no-diego/task.yml

@@ -4,7 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if [[ "$#" -lt 1 ]]; then
-  echo "Usage $0 <world_name> [<target>] [<private_repo>] [working_branch] [ci_branch] [worker_count] [enable_opi_staging]" >&2
+  echo "Usage $0 <world_name> [<target>] [<private_repo>] [working_branch] [ci_branch] [worker_count] [storate_class]" >&2
   exit 1
 fi
 
@@ -17,9 +17,7 @@ readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
 readonly eirini_release_branch=${4:-"develop"}
 readonly ci_branch=${5:-"master"}
 readonly worker_count=${6:-"3"}
-readonly enable_opi_staging=${7:-""}
-readonly storage_class=${8:-"hostpath"}
-readonly diego_cell_count="${9:-"3"}"
+readonly storage_class=${7:-"hostpath"}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -41,6 +39,4 @@ fly --target "$target" \
   --var eirini-release-branch="$eirini_release_branch" \
   --var worker_count="$worker_count" \
   --var storage_class="$storage_class" \
-  --var enable_opi_staging="${enable_opi_staging}" \
-  --var diego-cell-count="$diego_cell_count" \
   --load-vars-from "$private_repo/concourse/common.yml"

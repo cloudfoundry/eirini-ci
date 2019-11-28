@@ -10,7 +10,6 @@ readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly world_name=acceptance
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
-readonly diego_cell_count="${3:-"3"}"
 
 aviator -f "$basedir"/aviator.yml
 
@@ -30,7 +29,5 @@ fly -t "$target" \
   --var eirini-staging-repo-key="$(pass eirini/github/eirini-staging/ssh-key)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
-  --var diego-cell-count="$diego_cell_count" \
-  --var enable_opi_staging=false \
   --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

@@ -5,7 +5,6 @@ IFS=$'\n\t'
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
-readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
 readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
@@ -50,7 +49,6 @@ env:
 
     UAA_HOST: uaa.$node_ip.nip.io
     UAA_PORT: 2793
-    ENABLE_OPI_STAGING: $ENABLE_STAGING
 
 kube:
     external_ips: []

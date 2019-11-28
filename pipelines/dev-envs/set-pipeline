@@ -27,6 +27,5 @@ fly --target "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var gcs-json-key="$(pass eirini/gcs-json-key)" \
   --var worker_count="3" \
-  --var diego-cell-count=0 \
   --var storage_class="ibmc-block-gold" \
   --load-vars-from "$private_repo/concourse/common.yml"

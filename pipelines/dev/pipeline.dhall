@@ -83,7 +83,6 @@
               inputs.githubPrivateKey
         , clusterReadyEvent = clusterReadyEvent
         , clusterName = inputs.worldName
-        , enableOPIStaging = "true"
         , creds = creds
         , workerCount = workerCount
         , storageClass = inputs.storageClass

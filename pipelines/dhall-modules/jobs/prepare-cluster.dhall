@@ -25,7 +25,6 @@ let prepareClusterJob
               , CLUSTER_ADMIN_PASSWORD = prepReqs.clusterAdminPassword
               , UAA_ADMIN_CLIENT_SECRET = prepReqs.uaaAdminClientSecret
               , NATS_PASSWORD = prepReqs.natsPassword
-              , ENABLE_OPI_STAGING = reqs.enableOPIStaging
               }
 
         let putClusterState =

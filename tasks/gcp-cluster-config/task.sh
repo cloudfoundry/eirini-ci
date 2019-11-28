@@ -5,7 +5,6 @@ IFS=$'\n\t'
 
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 readonly BITS_SECRET="bits"
-readonly ENABLE_STAGING=${ENABLE_OPI_STAGING:-true}
 
 main() {
   set-kube-state
@@ -39,7 +38,6 @@ env:
     UAA_HOST: uaa.$cluster_domain
     UAA_PORT: 443
     UAA_PUBLIC_PORT: 443
-    ENABLE_OPI_STAGING: $ENABLE_STAGING
 
 kube:
     storage_class:
