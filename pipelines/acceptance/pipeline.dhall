@@ -115,18 +115,23 @@ let writeableStagingRepo =
       ../dhall-modules/resources/writeable-staging.dhall
         inputs.eiriniStagingPrivateKey
 
+let githubRelease =
+      ../dhall-modules/resources/eirini-release-github-release.dhall
+        inputs.githubAccessToken
+
 let publishReleaseJobs =
       ../dhall-modules/publish-release.dhall
         { clusterName = clusterName
         , ciResources = ciResources
         , clusterState = clusterState
         , githubAccessToken = inputs.githubAccessToken
-        , githubPrivateKey = inputs.githubPrivateKey
         , eiriniReleaseRepo = eiriniReleaseRepo
         , ghPagesRepo = ghPagesRepo
+        , githubRelease = githubRelease
         , writeableEiriniRepo = writeableEiriniRepo
         , writeableStagingRepo = writeableStagingRepo
-        , versionResource = ../dhall-modules/resources/version.dhall inputs.githubPrivateKey
+        , versionResource =
+            ../dhall-modules/resources/version.dhall inputs.githubPrivateKey
         }
 
 let jobs = deploySCFJobs # cleanupBlobstoreJob # publishReleaseJobs

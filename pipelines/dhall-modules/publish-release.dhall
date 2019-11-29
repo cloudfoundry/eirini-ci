@@ -4,28 +4,11 @@ let Prelude = ../dhall-modules/deps/prelude.dhall
 
 let JSON = Prelude.JSON
 
-let PublishReleaseRequirements =
-      ../dhall-modules/types/publish-release-requirements.dhall
+let PublishReleaseRequirements = ./types/publish-release-requirements.dhall
 
 let publishReleaseJobs =
         λ(reqs : PublishReleaseRequirements)
-      → let githubRelease =
-              Concourse.schemas.Resource::{
-              , name = "eirini-scf-release"
-              , type = Concourse.Types.ResourceType.InBuilt "github-release"
-              , icon = Some "rocket"
-              , source =
-                  Some
-                    ( toMap
-                        { owner = JSON.string "cloudfoundry-incubator"
-                        , repository = JSON.string "eirini-release"
-                        , access_token = JSON.string reqs.githubAccessToken
-                        , drafts = JSON.bool True
-                        }
-                    )
-              }
-
-        let githubAccessTask =
+      → let githubAccessTask =
                 λ(name : Text)
               → Concourse.helpers.taskStep
                   Concourse.schemas.TaskStep::{
@@ -47,7 +30,7 @@ let publishReleaseJobs =
         let putScfRelease =
               Concourse.helpers.putStep
                 Concourse.schemas.PutStep::{
-                , resource = githubRelease
+                , resource = reqs.githubRelease
                 , params =
                     Some
                       ( toMap
