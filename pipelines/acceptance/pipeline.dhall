@@ -21,6 +21,9 @@ let inputs =
       , clusterAdminPassword = "((cluster_admin_password))"
       , uaaAdminClientSecret = "((uaa_admin_client_secret))"
       , natsPassword = "((nats_password))"
+      , eiriniStagingPrivateKey = "((eirini-staging-repo-key))"
+      , githubAccessToken = "((github-access-token))"
+      , eiriniPrivateKey = "((eirini-repo-key))"
       }
 
 let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
@@ -82,6 +85,50 @@ let cleanupBlobstoreJob =
         iksCredsInputs
         clusterName
 
-let jobs = deploySCFJobs # cleanupBlobstoreJob
+let JSON = Prelude.JSON
 
-in ../dhall-modules/helpers/slack_on_fail.dhall jobs
+let ghPagesRepo =
+      Concourse.schemas.Resource::{
+      , name = "gh-pages-pr"
+      , type = Concourse.Types.ResourceType.InBuilt "git"
+      , icon = Some "git"
+      , source =
+          Some
+            ( toMap
+                { uri =
+                    JSON.string
+                      "git@github.com:cloudfoundry-incubator/eirini-release.git"
+                , branch = JSON.string "gh-pages-pr"
+                , private_key = JSON.string inputs.eiriniReleasePrivateKey
+                }
+            )
+      }
+
+let writeableEiriniRepo =
+      ../dhall-modules/resources/writeable-eirini.dhall
+        "eirini"
+        "master"
+        inputs.eiriniPrivateKey
+        False
+
+let writeableStagingRepo =
+      ../dhall-modules/resources/writeable-staging.dhall
+        inputs.eiriniStagingPrivateKey
+
+let publishReleaseJobs =
+      ../dhall-modules/publish-release.dhall
+        { clusterName = clusterName
+        , ciResources = ciResources
+        , clusterState = clusterState
+        , githubAccessToken = inputs.githubAccessToken
+        , githubPrivateKey = inputs.githubPrivateKey
+        , eiriniReleaseRepo = eiriniReleaseRepo
+        , ghPagesRepo = ghPagesRepo
+        , writeableEiriniRepo = writeableEiriniRepo
+        , writeableStagingRepo = writeableStagingRepo
+        , versionResource = ../dhall-modules/resources/version.dhall inputs.githubPrivateKey
+        }
+
+let jobs = deploySCFJobs # cleanupBlobstoreJob # publishReleaseJobs
+
+in  ../dhall-modules/helpers/slack_on_fail.dhall jobs
