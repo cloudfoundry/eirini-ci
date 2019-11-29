@@ -127,7 +127,6 @@ let setUpEnvironment
                 , grafanaAdminPassword = reqs.grafanaAdminPassword
                 , creds = reqs.creds
                 , upstreamEvent = clusterReadyEvent
-                , privateRepo = clusterState
                 }
 
         in    kubeClusterJobs

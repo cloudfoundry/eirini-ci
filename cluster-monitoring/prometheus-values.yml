@@ -1,0 +1,11 @@
+alertmanager:
+  persistentVolume:
+    enabled: false
+server:
+  persistentVolume:
+    enabled: false
+  global:
+    scrape_interval: 1s
+    scrape_timeout: 1s
+  extraArgs:
+    storage.tsdb.retention.size: 15GB

@@ -8,7 +8,6 @@ let IKSCreds = ../types/iks-creds.dhall
 
 let Requirements =
       { creds : ../types/creds.dhall
-      , privateRepo : Concourse.Types.Resource
       , ciResources : Concourse.Types.Resource
       , upstreamEvent : Concourse.Types.Resource
       , clusterName : Text
@@ -43,7 +42,7 @@ in    λ(reqs : Requirements)
 
             ${../tasks/functions/install-monitoring.sh as Text}
             install_monitoring \
-              "${reqs.privateRepo.name}" \
+              "${reqs.ciResources.name}" \
               "${reqs.grafanaAdminPassword}" \
               "https://grafana.$(cat ingress/endpoint)" \
               "${storageClassName}"
@@ -70,7 +69,7 @@ in    λ(reqs : Requirements)
                     , inputs =
                         Some
                           [ Concourse.schemas.TaskInput::{
-                            , name = reqs.privateRepo.name
+                            , name = reqs.ciResources.name
                             }
                           , Concourse.schemas.TaskInput::{ name = "kube" }
                           , Concourse.schemas.TaskInput::{ name = "ingress" }
@@ -100,8 +99,7 @@ in    λ(reqs : Requirements)
       in  Concourse.schemas.Job::{
           , name = "install-monitoring-${reqs.clusterName}"
           , plan =
-              [ ../helpers/get.dhall reqs.privateRepo
-              , ../helpers/get.dhall reqs.ciResources
+              [ ../helpers/get.dhall reqs.ciResources
               , triggerOnClusterReady
               , downloadKubeConfig
               , ingressEndpointTask

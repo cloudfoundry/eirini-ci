@@ -3,7 +3,7 @@
 set -euo pipefail
 
 install_monitoring() {
-  local config_dir="$1/postfacto-deployment/monitoring"
+  local config_dir="$1/cluster-monitoring"
   local admin_password="$2"
   local grafana_url="$3"
   local storage_class="$4"
