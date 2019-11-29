@@ -29,6 +29,13 @@ in    λ(reqs : Requirements)
               }
               reqs.creds
 
+      let exposeMonitoringFunction =
+            merge
+              { GKECreds = λ(_ : GKECreds) → "expose_monitoring_gke"
+              , IKSCreds = λ(_ : IKSCreds) → "expose_monitoring_iks"
+              }
+              reqs.creds
+
       let storageClassName =
             merge
               { GKECreds = λ(_ : GKECreds) → "standard"
@@ -46,6 +53,10 @@ in    λ(reqs : Requirements)
               "${reqs.grafanaAdminPassword}" \
               "https://grafana.$(cat ingress/endpoint)" \
               "${storageClassName}"
+
+            ${exposeMonitoringFunction} \
+              "${reqs.ciResources.name}" \
+              "$(cat ingress/endpoint)"
             ''
 
       let installTask =
