@@ -12,12 +12,12 @@ install_monitoring() {
 
   helm upgrade --install prometheus stable/prometheus \
     --namespace monitoring \
-    --values="$config_dir/prometheus-values.yaml" \
+    --values="$config_dir/prometheus-values.yml" \
     --wait
 
   helm upgrade --install grafana stable/grafana \
     --namespace monitoring \
-    --values="$config_dir/grafana-values.yaml" \
+    --values="$config_dir/grafana-values.yml" \
     --set adminPassword="$admin_password" \
     --set "grafana\.ini.server.root_url=$grafana_url" \
     --set "persistence.storageClassName=$storage_class" \
