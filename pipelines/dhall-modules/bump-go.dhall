@@ -1,2 +1,8 @@
   λ(reqs : ./types/bump-go-requirements.dhall)
-→ [ ./jobs/bump-go-packages.dhall reqs, ./jobs/merge-go-bump.dhall reqs ]
+→ let bumpGoJob = ./jobs/bump-go-packages.dhall reqs
+
+  let fastForwardJob = ./jobs/merge-go-bump.dhall reqs
+
+  in  [ ./helpers/group-job.dhall [ "bump-go" ] bumpGoJob
+      , ./helpers/group-job.dhall [ "fast-forward" ] fastForwardJob
+      ]

@@ -174,10 +174,17 @@ let bumpGo =
         , ciResources = ciResources
         }
 
-let jobs
-    : List Concourse.Types.Job
-    = Prelude.List.concat
-        Concourse.Types.Job
-        [ kubeClusterJobs, runTestJobs, tagImages, deployEirini, bumpGo ]
+let runCats = ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs
+
+let jobs =
+      Prelude.List.concat
+        Concourse.Types.GroupedJob
+        [ kubeClusterJobs
+        , bumpGo
+        , runTestJobs
+        , tagImages
+        , deployEirini
+        , [ runCats ]
+        ]
 
 in  jobs
