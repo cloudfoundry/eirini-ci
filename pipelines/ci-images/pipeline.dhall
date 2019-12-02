@@ -8,7 +8,7 @@ let dockerHubUser = "((docker_hub_user))"
 
 let dockerHubPassword = "((docker_hub_password))"
 
-let sendSlackNotification = ../dhall-modules/helpers/slack_on_fail.dhall
+let sendSlackNotification = ../dhall-modules/helpers/slack-on-fail-jobs.dhall
 
 let imageResource =
         λ(name : Text)
@@ -77,5 +77,10 @@ let buildImageWithGolang =
 
 let mapToJobs = Prelude.List.map Text Concourse.Types.Job
 
-in    mapToJobs buildImageJob [ "ibmcloud", "scf-builder", "buildah", "dhall" ]
-    # mapToJobs buildImageWithGolang [ "gcloud", "ci" ]
+let jobs =
+        mapToJobs
+          buildImageJob
+          [ "ibmcloud", "scf-builder", "buildah", "dhall" ]
+      # mapToJobs buildImageWithGolang [ "gcloud", "ci" ]
+
+in  sendSlackNotification jobs

@@ -42,4 +42,4 @@ let job =
           ]
       }
 
-in  ../dhall-modules/helpers/slack_on_fail.dhall [ job ]
+in  ../dhall-modules/helpers/slack-on-fail-jobs.dhall [ job ]
