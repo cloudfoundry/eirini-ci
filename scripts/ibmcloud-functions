@@ -57,7 +57,7 @@ create-cluster() {
   declare -r name=$1
   declare -r worker_count=$2
   local kube_version
-  kube_version=$(ibmcloud ks versions --show-version Kubernetes --json | jq -r '.kubernetes[] | "\(.major).\(.minor)"' |  sort --version-sort | tail -1)
+  kube_version=$(ibmcloud ks versions --show-version Kubernetes --json | jq -r '.kubernetes[] | "\(.major).\(.minor)"' | sort --version-sort | tail -1)
 
   ibmcloud ks cluster create classic \
     --name "$name" \
