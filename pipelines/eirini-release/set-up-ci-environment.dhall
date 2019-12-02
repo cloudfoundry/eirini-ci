@@ -7,7 +7,7 @@ let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 let ImageLocation = ../dhall-modules/types/image-location.dhall
 
 let setUpEnvironment
-    : EnvironmentRequirements → List Concourse.Types.Job
+    : EnvironmentRequirements → List Concourse.Types.GroupedJob
     =   λ(reqs : EnvironmentRequirements)
       → let clusterEventResource =
               ../dhall-modules/resources/cluster-event.dhall
@@ -118,7 +118,7 @@ let setUpEnvironment
                                        }
                     ]
 
-              else  [] : List Concourse.Types.Job
+              else  [] : List Concourse.Types.GroupedJob
 
         let installMonitoring =
               ../dhall-modules/jobs/install-monitoring.dhall

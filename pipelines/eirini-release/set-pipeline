@@ -12,7 +12,7 @@ readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 export worker_count
 
-dhall-fly <<<"$basedir/pipeline.dhall" >"$PIPELINE_YML"
+dhall-fly --pipeline-type grouped-jobs <<<"$basedir/pipeline.dhall" >"$PIPELINE_YML"
 
 fly -t "$target" \
   set-pipeline \

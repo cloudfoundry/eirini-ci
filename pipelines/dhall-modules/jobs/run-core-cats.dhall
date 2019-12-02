@@ -13,34 +13,31 @@ let taskFile = ../helpers/task-file.dhall
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let runCoreCats =
-        λ ( reqs
-          : Requirements
-          )
-      → let stepsForInRepo =
-              λ(ignored : {}) → [] : List Concourse.Types.Step
-        
+        λ(reqs : Requirements)
+      → let stepsForInRepo = λ(ignored : {}) → [] : List Concourse.Types.Step
+
         let upstreamJobs = [ "run-smoke-tests-${reqs.clusterName}" ]
-        
+
         let stepsForTaggedImages =
                 λ(tagReqs : TaggedImageRequirements)
               → [ ../helpers/get-trigger-passed.dhall
                     tagReqs.eiriniRepo
                     upstreamJobs
                 ]
-        
+
         let getImageLocationDependentSteps =
                 λ(imageLocation : ImageLocation)
               → merge
                   { InRepo = stepsForInRepo, FromTags = stepsForTaggedImages }
                   imageLocation
-        
+
         let triggerOnEiriniRelease =
               ../helpers/get-trigger-passed.dhall
                 reqs.eiriniReleaseRepo
                 upstreamJobs
-        
+
         let lockSteps = ./steps/lock-steps.dhall reqs.lockResource upstreamJobs
-        
+
         let getSteps =
                 getImageLocationDependentSteps reqs.imageLocation
               # lockSteps
@@ -49,11 +46,10 @@ let runCoreCats =
                 , ../helpers/get-named.dhall reqs.clusterState "state"
                 , ../helpers/get.dhall ../resources/cats.dhall
                 ]
-        
+
         let catsParams =
               toMap
-                { CLUSTER_NAME =
-                    reqs.clusterName
+                { CLUSTER_NAME = reqs.clusterName
                 , INCLUDE_APPS = "true"
                 , INCLUDE_BACKEND_COMPATIBILITY = "false"
                 , INCLUDE_CAPI_EXPERIMENTAL = "true"
@@ -88,36 +84,41 @@ let runCoreCats =
                 , USE_HTTP = "true"
                 , USE_LOG_CACHE = "false"
                 }
-        
+
         let downloadKubeconfigTask =
               ../tasks/download-kubeconfig.dhall
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
-        
+
         let checkLeftoverPodsTask =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
                 , task = "check leftover pods"
                 , config = taskFile reqs.ciResources "check-leftover-pods"
                 }
-        
-        in  Concourse.schemas.Job::{
-            , name = "run-core-cats-${reqs.clusterName}"
-            , serial_groups = Some [ reqs.clusterName ]
-            , public = Some True
-            , plan =
-                [ in_parallel getSteps
-                , downloadKubeconfigTask
-                , checkLeftoverPodsTask
-                , Concourse.helpers.taskStep
-                    Concourse.schemas.TaskStep::{
-                    , task = "run core cats"
-                    , config = taskFile reqs.ciResources "run-cats"
-                    , params = Some catsParams
-                    }
-                , checkLeftoverPodsTask
-                ]
-            }
+
+        let job =
+              Concourse.schemas.Job::{
+              , name = "run-core-cats-${reqs.clusterName}"
+              , serial_groups = Some [ reqs.clusterName ]
+              , public = Some True
+              , plan =
+                  [ in_parallel getSteps
+                  , downloadKubeconfigTask
+                  , checkLeftoverPodsTask
+                  , Concourse.helpers.taskStep
+                      Concourse.schemas.TaskStep::{
+                      , task = "run core cats"
+                      , config = taskFile reqs.ciResources "run-cats"
+                      , params = Some catsParams
+                      }
+                  , checkLeftoverPodsTask
+                  ]
+              }
+
+        in  ../helpers/group-job.dhall
+              [ "deploy-scf-${reqs.clusterName}", "run-cats" ]
+              job
 
 in  runCoreCats

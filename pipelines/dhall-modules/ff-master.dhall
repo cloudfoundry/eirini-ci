@@ -8,8 +8,11 @@ in    λ(reqs : ./types/ff-master-requirements.dhall)
               (λ(clusterName : Text) → "run-core-cats-${clusterName}")
               reqs.clusterNames
 
-      in  [ ./jobs/fast-forward-master-release.dhall
-              reqs.eiriniReleaseRepo
-              reqs.writeableReleaseRepoMaster
-              upstreamSteps
-          ]
+      let jobs =
+            [ ./jobs/fast-forward-master-release.dhall
+                reqs.eiriniReleaseRepo
+                reqs.writeableReleaseRepoMaster
+                upstreamSteps
+            ]
+
+      in  ./helpers/group-jobs.dhall [ "fast-forward" ] jobs

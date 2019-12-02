@@ -53,6 +53,7 @@ let commonDeploymentReqs =
       , uaaResource = uaaResource
       , grafanaAdminPassword = inputs.grafanaAdminPassword
       }
+
 let withOpiDeploymentReqs =
         commonDeploymentReqs
       ⫽ { clusterName = "with-opi", creds = iksCreds, isFreshini = False }
@@ -89,12 +90,12 @@ let helmLint =
 
 let jobs =
       Prelude.List.concat
-        Concourse.Types.Job
-        [ withOpiEnvironment
+        Concourse.Types.GroupedJob
+        [ [ helmLint ]
+        , withOpiEnvironment
         , gkeEnvironment
         , freshiniEnvironment
         , ffMasterModule
-        , [ helmLint]
         ]
 
-in  ../dhall-modules/helpers/slack_on_fail.dhall jobs
+in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs

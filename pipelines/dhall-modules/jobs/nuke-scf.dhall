@@ -41,14 +41,19 @@ in    λ(reqs : Requirements)
       let triggerOnEiriniRelease =
             ../helpers/get-trigger-passed.dhall reqs.eiriniReleaseRepo upstream
 
-      in  Concourse.schemas.Job::{
-          , name = "nuke-scf"
-          , plan =
-                [ ../helpers/get.dhall reqs.ciResources ]
-              # lockSteps
-              # [ triggerOnEiriniRelease
-                , downloadKubeConfig
-                , nuke
-                , waitForDeletion
-                ]
-          }
+      let job =
+            Concourse.schemas.Job::{
+            , name = "nuke-scf"
+            , plan =
+                  [ ../helpers/get.dhall reqs.ciResources ]
+                # lockSteps
+                # [ triggerOnEiriniRelease
+                  , downloadKubeConfig
+                  , nuke
+                  , waitForDeletion
+                  ]
+            }
+
+      in  ../helpers/group-job.dhall
+            [ "deploy-scf-${reqs.clusterName}", "nuke-${reqs.clusterName}" ]
+            job

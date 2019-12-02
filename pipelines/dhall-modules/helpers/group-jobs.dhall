@@ -5,7 +5,4 @@ let GroupedJob = (../deps/concourse.dhall).Types.GroupedJob
 let Prelude = ../deps/prelude.dhall
 
 in    λ(groups : List Text)
-    → Prelude.List.map
-        Job
-        GroupedJob
-        (λ(j : Job) → { job = j, groups = [ "all" ] # groups })
+    → Prelude.List.map Job GroupedJob (./group-job.dhall groups)

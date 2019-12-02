@@ -60,7 +60,7 @@ in    λ(reqs : Requirements)
               reqs.grafanaAdminPassword
               reqs.creds
 
-      in  Concourse.schemas.Job::{
+      let job = Concourse.schemas.Job::{
           , name = "install-monitoring-${reqs.clusterName}"
           , plan =
               [ ../helpers/get.dhall reqs.ciResources
@@ -71,3 +71,5 @@ in    λ(reqs : Requirements)
               , installMonitoringTask
               ]
           }
+
+      in ../helpers/group-job.dhall [ "cluster-${reqs.clusterName}" ] job
