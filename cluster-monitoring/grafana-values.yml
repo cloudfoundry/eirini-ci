@@ -9,3 +9,5 @@ datasources:
       url: http://prometheus-server.monitoring.svc.cluster.local
       access: proxy
       orgId: 1
+ingress:
+  enabled: true

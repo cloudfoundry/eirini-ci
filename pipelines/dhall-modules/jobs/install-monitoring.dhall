@@ -29,17 +29,17 @@ in    λ(reqs : Requirements)
               }
               reqs.creds
 
-      let exposeMonitoringFunction =
+      let providerValuesFile =
             merge
-              { GKECreds = λ(_ : GKECreds) → "expose_monitoring_gke"
-              , IKSCreds = λ(_ : IKSCreds) → "expose_monitoring_iks"
+              { GKECreds = λ(_ : GKECreds) → "gke-specific-grafana-values.yml"
+              , IKSCreds = λ(_ : IKSCreds) → "iks-specific-grafana-values.yml"
               }
               reqs.creds
 
-      let storageClassName =
+      let certsPreparationFunction =
             merge
-              { GKECreds = λ(_ : GKECreds) → "standard"
-              , IKSCreds = λ(_ : IKSCreds) → "ibmc-block-gold"
+              { GKECreds = λ(_ : GKECreds) → "gke_secret"
+              , IKSCreds = λ(_ : IKSCreds) → "iks_secret ${reqs.clusterName}"
               }
               reqs.creds
 
@@ -48,15 +48,16 @@ in    λ(reqs : Requirements)
             set -euo pipefail
 
             ${../tasks/functions/install-monitoring.sh as Text}
+
+            certs_secret=$(${certsPreparationFunction})
+
             install_monitoring \
               "${reqs.ciResources.name}" \
               "${reqs.grafanaAdminPassword}" \
               "https://grafana.$(cat ingress/endpoint)" \
-              "${storageClassName}"
-
-            ${exposeMonitoringFunction} \
-              "${reqs.ciResources.name}" \
-              "$(cat ingress/endpoint)"
+              "grafana.$(cat ingress/endpoint)" \
+              ${providerValuesFile} \
+              "$certs_secret"
             ''
 
       let installTask =
