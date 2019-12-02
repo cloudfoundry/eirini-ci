@@ -8,7 +8,6 @@ main() {
   export KUBECONFIG="$PWD/kube/config"
   wait_for_service_availability
   install_block_storage_prodivder
-  install_hostpath_provider
 }
 
 wait_for_service_availability() {
@@ -43,17 +42,6 @@ install_block_storage_prodivder() {
   helm repo add iks-charts https://icr.io/helm/iks-charts
   helm repo update
   helm upgrade --install ibmcloud-block-storage-plugin iks-charts/ibmcloud-block-storage-plugin
-}
-
-install_hostpath_provider() {
-  local HOSTPATH_PROVIDER_BASE_PATH="https://raw.githubusercontent.com/xor22h/hostpath-provisioner/master"
-  local HOSTPATH_PROVIDER_RBAC="$HOSTPATH_PROVIDER_BASE_PATH/manifests/rbac.yaml"
-  local HOSTPATH_PROVIDER_DEPLOYMENT="$HOSTPATH_PROVIDER_BASE_PATH/manifests/deployment.yaml"
-  local HOSTPATH_PROVIDER_STORAGECLASS="$HOSTPATH_PROVIDER_BASE_PATH/manifests/storageclass.yaml"
-
-  kubectl apply --filename "$HOSTPATH_PROVIDER_RBAC"
-  kubectl apply --filename "$HOSTPATH_PROVIDER_DEPLOYMENT"
-  kubectl apply --filename "$HOSTPATH_PROVIDER_STORAGECLASS"
 }
 
 main
