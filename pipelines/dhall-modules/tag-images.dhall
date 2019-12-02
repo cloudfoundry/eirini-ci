@@ -93,4 +93,5 @@ let tagImagesJob =
                 ]
             }
 
-in  λ(reqs : ./types/tag-images-requirements.dhall) → [ tagImagesJob reqs ]
+in    λ(reqs : ./types/tag-images-requirements.dhall)
+    → ./helpers/group-jobs.dhall [ "tag-images" ] [ tagImagesJob reqs ]

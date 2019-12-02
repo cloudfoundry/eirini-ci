@@ -135,28 +135,29 @@
           , deploymentVersion = deploymentVersion
           }
 
-  let deployEirini =
-        ../dhall-modules/deploy-eirini.dhall
-          { clusterName = inputs.worldName
-          , uaaResources = uaaResource
-          , ciResources = ciResources
-          , eiriniReleaseRepo = eiriniReleaseRepo
-          , smokeTestsResource = smokeTestsResource
-          , clusterReadyEvent = Some clusterReadyEvent
-          , uaaReadyEvent = uaaReadyEvent
-          , clusterState = clusterState
-          , creds = creds
-          , useCertManager = "false"
-          , imageLocation =
-              ImageLocation.FromTags
-                { eiriniRepo = eiriniRepo
-                , deploymentVersion = deploymentVersion
-                }
-          , skippedCats = None Text
-          , autoTriggerOnEiriniRelease = True
-          , lockResource = None Concourse.Types.Resource
-          }
+  let deploymentReqs =
+        { clusterName = inputs.worldName
+        , uaaResources = uaaResource
+        , ciResources = ciResources
+        , eiriniReleaseRepo = eiriniReleaseRepo
+        , smokeTestsResource = smokeTestsResource
+        , clusterReadyEvent = Some clusterReadyEvent
+        , uaaReadyEvent = uaaReadyEvent
+        , clusterState = clusterState
+        , creds = creds
+        , useCertManager = "false"
+        , imageLocation =
+            ImageLocation.FromTags
+              { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }
+        , skippedCats = None Text
+        , autoTriggerOnEiriniRelease = True
+        , lockResource = None Concourse.Types.Resource
+        }
+
+  let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
+
+  let runCats = ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs
 
   in  Prelude.List.concat
-        Concourse.Types.Job
-        [ kubeClusterJobs, runTestJobs, tagImages, deployEirini ]
+        Concourse.Types.GroupedJob
+        [ kubeClusterJobs, runTestJobs, tagImages, deployEirini, [ runCats ] ]
