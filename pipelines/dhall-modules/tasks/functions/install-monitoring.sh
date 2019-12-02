@@ -28,7 +28,7 @@ install_monitoring() {
     --set "ingress.hosts={${grafana_host}}" \
     --set "ingress.tls[0].hosts={${grafana_host}}" \
     --set "ingress.tls[0].secretName=${certs_secret_name}" \
-   --wait
+    --wait
 
 }
 
@@ -41,7 +41,7 @@ iks_secret() {
   local secret_name
 
   secret_name="$(ibmcloud ks cluster-get "$cluster_name" --json | jq '.ingressSecretName' -r)"
-  kubectl get secret "$secret_name" --namespace=default --export -o yaml | kubectl apply --namespace="$NAMESPACE" -f - > /dev/null 2>&2
+  kubectl get secret "$secret_name" --namespace=default --export -o yaml | kubectl apply --namespace="$NAMESPACE" -f - >/dev/null 2>&1
   echo "$secret_name"
 }
 

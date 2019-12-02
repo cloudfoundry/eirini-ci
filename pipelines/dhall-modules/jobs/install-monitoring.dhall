@@ -46,11 +46,9 @@ in    λ(reqs : Requirements)
       let script =
             ''
             set -euo pipefail
-
             ${../tasks/functions/install-monitoring.sh as Text}
 
-            certs_secret=$(${certsPreparationFunction})
-
+            certs_secret="$(${certsPreparationFunction})"
             install_monitoring \
               "${reqs.ciResources.name}" \
               "${reqs.grafanaAdminPassword}" \
