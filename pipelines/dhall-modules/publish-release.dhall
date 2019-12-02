@@ -96,6 +96,8 @@ let publishReleaseJobs =
                 "minor"
                 (AutoBumpVersion.AutoBumpOn publishReleaseJob.name)
 
-        in  [ bumpMinor, bumpMajor, publishReleaseJob ]
+        let jobs = [ bumpMinor, bumpMajor, publishReleaseJob ]
+
+        in  ./helpers/group-jobs.dhall [ "publish-release" ] jobs
 
 in  publishReleaseJobs

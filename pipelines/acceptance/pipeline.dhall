@@ -136,4 +136,4 @@ let publishReleaseJobs =
 
 let jobs = deploySCFJobs # cleanupBlobstoreJob # publishReleaseJobs
 
-in  ../dhall-modules/helpers/slack_on_fail.dhall jobs
+in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
