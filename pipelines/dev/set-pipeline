@@ -18,7 +18,7 @@ readonly eirini_branch=${4:-"master"}
 readonly eirini_release_branch=${5:-"develop"}
 readonly ci_branch=${6:-"master"}
 readonly worker_count=${7:-"3"}
-readonly storage_class=${8:-"hostpath"}
+readonly storage_class=${8:-"ibmc-block-gold"}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)

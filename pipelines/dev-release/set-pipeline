@@ -17,7 +17,7 @@ readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
 readonly eirini_release_branch=${4:-"develop"}
 readonly ci_branch=${5:-"master"}
 readonly worker_count=${6:-"3"}
-readonly storage_class=${7:-"hostpath"}
+readonly storage_class=${7:-"ibmc-block-gold"}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)

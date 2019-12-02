@@ -9,6 +9,5 @@ in  { ciResources : Concourse.Types.Resource
     , clusterName : Text
     , creds : Creds
     , workerCount : Natural
-    , storageClass : Text
     , clusterPreparation : ./cluster-prep.dhall
     }

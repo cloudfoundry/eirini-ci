@@ -15,7 +15,6 @@ let inputs =
       , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
-      , storageClass = "((storage_class))"
       }
 
 let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
@@ -72,7 +71,6 @@ let kubeClusterReqs =
       , clusterName = inputs.worldName
       , creds = creds
       , workerCount = env:worker_count ? 1
-      , storageClass = inputs.storageClass
       , clusterPreparation = ClusterPrep.NotRequired
       }
 

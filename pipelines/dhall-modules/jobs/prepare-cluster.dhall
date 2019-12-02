@@ -21,7 +21,7 @@ let prepareClusterJob
 
         let configParams =
               { CLUSTER_NAME = reqs.clusterName
-              , STORAGE_CLASS = reqs.storageClass
+              , STORAGE_CLASS = prepReqs.storageClass
               , CLUSTER_ADMIN_PASSWORD = prepReqs.clusterAdminPassword
               , UAA_ADMIN_CLIENT_SECRET = prepReqs.uaaAdminClientSecret
               , NATS_PASSWORD = prepReqs.natsPassword

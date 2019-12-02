@@ -85,12 +85,12 @@
         , clusterName = inputs.worldName
         , creds = creds
         , workerCount = workerCount
-        , storageClass = inputs.storageClass
         , clusterPreparation =
             ClusterPrep.Required
               { clusterAdminPassword = inputs.clusterAdminPassword
               , uaaAdminClientSecret = inputs.uaaAdminClientSecret
               , natsPassword = inputs.natsPassword
+              , storageClass = inputs.storageClass
               }
         }
 

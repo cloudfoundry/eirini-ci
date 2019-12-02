@@ -43,13 +43,13 @@ let setUpEnvironment
               , clusterReadyEvent = clusterReadyEvent
               , clusterName = reqs.clusterName
               , workerCount = 3
-              , storageClass = reqs.storageClass
               , creds = reqs.creds
               , clusterPreparation =
                   ClusterPrep.Required
                     { clusterAdminPassword = reqs.clusterAdminPassword
                     , uaaAdminClientSecret = reqs.uaaAdminClientSecret
                     , natsPassword = reqs.natsPassword
+                    , storageClass = reqs.storageClass
                     }
               }
 

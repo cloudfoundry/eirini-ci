@@ -19,7 +19,7 @@ let kubeCluster
                     → [ prepareClusterJobFn reqs prepReqs ]
                 }
                 reqs.clusterPreparation
-        
+
         in  [ deleteClusterJob reqs, createClusterJob reqs ] # prepareClusterJob
 
 in  kubeCluster

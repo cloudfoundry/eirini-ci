@@ -12,7 +12,6 @@ readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly working_branch=${3:-"master"}
 readonly ci_branch=${4:-"master"}
 export worker_count=${5:-"3"}
-readonly storage_class="hostpath"
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 PIPELINE_YML=$(mktemp)
@@ -37,5 +36,4 @@ fly --target "$target" \
   --var eirini-release-branch="develop" \
   --var eirini-branch="$working_branch" \
   --var worker_count="$worker_count" \
-  --var storage_class="$storage_class" \
   --load-vars-from "$private_repo/concourse/common.yml"
