@@ -8,4 +8,4 @@ in    λ(groups : List Text)
     → Prelude.List.map
         Job
         GroupedJob
-        (λ(j : Job) → { job = j, groups = groups })
+        (λ(j : Job) → { job = j, groups = [ "all" ] # groups })
