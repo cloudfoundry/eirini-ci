@@ -56,13 +56,17 @@ ibmcloud-login() {
 create-cluster() {
   declare -r name=$1
   declare -r worker_count=$2
-  ibmcloud ks cluster-create \
+  local kube_version
+  kube_version=$(ibmcloud ks versions --show-version Kubernetes --json | jq -r '.kubernetes[] | "\(.major).\(.minor)"' |  sort --version-sort | tail -1)
+
+  ibmcloud ks cluster create classic \
     --name "$name" \
     --zone lon06 \
     --machine-type b2c.4x16 \
     --workers "$worker_count" \
     --private-vlan 2447007 \
-    --public-vlan 2447005
+    --public-vlan 2447005 \
+    --kube-version "$kube_version"
 }
 
 # Delete the cluster with the name given as $1
