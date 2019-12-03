@@ -23,13 +23,13 @@ install_monitoring() {
     --namespace="$NAMESPACE" \
     --values="$config_dir/grafana-values.yml" \
     --values="$config_dir/$provider_specific_values" \
+    --set-file "dashboards.default.cluster-overview.json=$config_dir/cluster-overview.json" \
     --set adminPassword="$admin_password" \
     --set "grafana\.ini.server.root_url=$grafana_url" \
     --set "ingress.hosts={${grafana_host}}" \
     --set "ingress.tls[0].hosts={${grafana_host}}" \
     --set "ingress.tls[0].secretName=${certs_secret_name}" \
     --wait
-
 }
 
 gke_secret() {
