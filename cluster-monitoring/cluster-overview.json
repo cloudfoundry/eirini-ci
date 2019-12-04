@@ -178,20 +178,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "container_memory_usage_bytes{namespace=\"scf\", container_name!=\"\", container_name!=\"post-deployment-setup\", container_name!=\"loggregator-agent\"}",
+          "expr": "container_memory_usage_bytes{namespace=\"scf\", container!=\"\", container!=\"post-deployment-setup\", container!=\"loggregator-agent\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{container_name}}",
+          "legendFormat": "{{container}}",
           "refId": "A"
         },
         {
-          "expr": "container_memory_usage_bytes{namespace=\"uaa\", container_name!=\"\", container_name!=\"post-deployment-setup\", container_name!=\"loggregator-agent\"}",
+          "expr": "container_memory_usage_bytes{namespace=\"uaa\", container!=\"\", container!=\"post-deployment-setup\", container!=\"loggregator-agent\"}",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{container_name}}",
+          "legendFormat": "{{container}}",
           "refId": "B"
         }
       ],
@@ -273,9 +274,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(container_memory_usage_bytes{pod_name=~\"^eirini-.*$\"})",
+          "expr": "sum(container_memory_usage_bytes{pod=~\"^eirini-.*$\",namespace=\"scf\"}) by (pod)",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
+          "legendFormat": "{{pod}}",
           "refId": "A"
         }
       ],
@@ -357,19 +360,20 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "topk(5, rate(container_cpu_usage_seconds_total{namespace=\"scf\", container_name!=\"\", container_name!=\"loggregator-agent\", container_name!=\"post-deployment-setup\"}[5m]))",
+          "expr": "topk(5, rate(container_cpu_usage_seconds_total{namespace=\"scf\", container!=\"\", container!=\"loggregator-agent\", container!=\"post-deployment-setup\"}[5m]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{container_name}}",
+          "legendFormat": "{{container}}",
           "refId": "A"
         },
         {
-          "expr": "topk(5, rate(container_cpu_usage_seconds_total{namespace=\"uaa\", container_name!=\"\", container_name!=\"loggregator-agent\", container_name!=\"post-deployment-setup\"}[5m]))",
+          "expr": "topk(5, rate(container_cpu_usage_seconds_total{namespace=\"uaa\", container!=\"\", container!=\"loggregator-agent\", container!=\"post-deployment-setup\"}[5m]))",
           "format": "time_series",
+          "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{container_name}}",
+          "legendFormat": "{{container}}",
           "refId": "B"
         }
       ],
@@ -454,5 +458,5 @@
   "timezone": "",
   "title": "Cluster Overview",
   "uid": "MEW0CYRZz",
-  "version": 13
+  "version": 15
 }
