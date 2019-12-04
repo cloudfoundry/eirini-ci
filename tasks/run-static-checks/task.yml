@@ -5,7 +5,7 @@ image_resource:
   type: docker-image
   source:
     repository: golangci/golangci-lint
-    tag: latest
+    tag: v1.21
 
 inputs:
 - name: ci-resources
