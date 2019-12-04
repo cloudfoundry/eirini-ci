@@ -1,7 +1,5 @@
 let Concourse = ../deps/concourse.dhall
 
-let Prelude = ../deps/prelude.dhall
-
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
 let taskFile = ../helpers/task-file.dhall
@@ -23,13 +21,6 @@ let runTestsJob =
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{ resource = reqs.ciResources }
 
-        let unitTestImage =
-              Concourse.schemas.ImageResource::{
-              , type = "docker-image"
-              , source =
-                  Some (toMap { repository = Prelude.JSON.string "eirini/ci" })
-              }
-
         let unitTestInput =
               { name = "eirini-staging"
               , optional = None Bool
@@ -44,7 +35,7 @@ let runTestsJob =
                     , path = "scripts/test.sh"
                     , dir = Some "eirini-staging"
                     }
-                , image_resource = Some unitTestImage
+                , image_resource = ../helpers/image-resource.dhall "eirini/ci"
                 , inputs = Some [ unitTestInput ]
                 }
 
@@ -63,19 +54,6 @@ let runTestsJob =
                 , input_mapping = Some (toMap { eirini = "eirini-staging" })
                 }
 
-        let integrationTestImage =
-              Concourse.schemas.ImageResource::{
-              , type = "docker-image"
-              , source =
-                  Some
-                    ( toMap
-                        { repository =
-                            Prelude.JSON.string
-                              "eirinistaging/eirini-na-ci-test"
-                        }
-                    )
-              }
-
         let integrationTestRun =
               Concourse.schemas.TaskRunConfig::{
               , path = "ginkgo"
@@ -91,7 +69,9 @@ let runTestsJob =
                     Concourse.Types.TaskSpec.Config
                       Concourse.schemas.TaskConfig::{
                       , run = integrationTestRun
-                      , image_resource = Some integrationTestImage
+                      , image_resource =
+                          ../helpers/image-resource.dhall
+                            "eirinistaging/eirini-na-ci-test"
                       , inputs =
                           Some
                             [ { name = "eirini-staging"

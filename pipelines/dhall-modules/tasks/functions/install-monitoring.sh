@@ -7,10 +7,12 @@ readonly NAMESPACE="monitoring"
 install_monitoring() {
   local config_dir="$1/cluster-monitoring"
   local admin_password="$2"
-  local grafana_url="$3"
-  local grafana_host="$4"
-  local provider_specific_values="$5"
-  local certs_secret_name="$6"
+  local provider_specific_values="$3"
+
+  local root_url host secret_name
+  host="grafana.$(cat ingress/endpoint)"
+  root_url="https://$host"
+  secret_name="$(cat secret/name)"
 
   helm init --client-only
 
@@ -25,24 +27,11 @@ install_monitoring() {
     --values="$config_dir/$provider_specific_values" \
     --set-file "dashboards.default.cluster-overview.json=$config_dir/cluster-overview.json" \
     --set adminPassword="$admin_password" \
-    --set "grafana\.ini.server.root_url=$grafana_url" \
-    --set "ingress.hosts={${grafana_host}}" \
-    --set "ingress.tls[0].hosts={${grafana_host}}" \
-    --set "ingress.tls[0].secretName=${certs_secret_name}" \
+    --set "grafana\.ini.server.root_url=$root_url" \
+    --set "ingress.hosts={$host}" \
+    --set "ingress.tls[0].hosts={$host}" \
+    --set "ingress.tls[0].secretName=$secret_name" \
     --wait
-}
-
-gke_secret() {
-  echo "grafana-certs"
-}
-
-iks_secret() {
-  local cluster_name="$1"
-  local secret_name
-
-  secret_name="$(ibmcloud ks cluster-get "$cluster_name" --json | jq '.ingressSecretName' -r)"
-  kubectl get secret "$secret_name" --namespace=default --export -o yaml | kubectl apply --namespace="$NAMESPACE" -f - >/dev/null 2>&1
-  echo "$secret_name"
 }
 
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"

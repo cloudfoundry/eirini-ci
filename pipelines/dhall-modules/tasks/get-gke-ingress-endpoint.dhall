@@ -1,7 +1,5 @@
 let Concourse = ../deps/concourse.dhall
 
-let JSON = (../deps/prelude.dhall).JSON
-
 in    λ(clusterName : Text)
     → Concourse.helpers.taskStep
         Concourse.schemas.TaskStep::{
@@ -9,12 +7,7 @@ in    λ(clusterName : Text)
         , config =
             Concourse.Types.TaskSpec.Config
               Concourse.schemas.TaskConfig::{
-              , image_resource =
-                  Some
-                    Concourse.schemas.ImageResource::{
-                    , type = "docker-image"
-                    , source = Some (toMap { repository = JSON.string "bash" })
-                    }
+              , image_resource = ../helpers/image-resource.dhall "bash"
               , outputs =
                   Some [ Concourse.schemas.TaskOutput::{ name = "ingress" } ]
               , run =

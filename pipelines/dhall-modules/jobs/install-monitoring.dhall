@@ -1,7 +1,5 @@
 let Concourse = ../deps/concourse.dhall
 
-let JSON = (../deps/prelude.dhall).JSON
-
 let GKECreds = ../types/gke-creds.dhall
 
 let IKSCreds = ../types/iks-creds.dhall
@@ -29,17 +27,23 @@ in    λ(reqs : Requirements)
               }
               reqs.creds
 
+      let grafanaSecretSetupTask =
+            merge
+              { GKECreds =
+                  λ(_ : GKECreds) → ../tasks/set-up-gke-grafana-secret.dhall
+              , IKSCreds =
+                    λ(iksCreds : IKSCreds)
+                  → ../tasks/set-up-iks-grafana-secret.dhall
+                      reqs.clusterName
+                      iksCreds
+                      reqs.ciResources
+              }
+              reqs.creds
+
       let providerValuesFile =
             merge
               { GKECreds = λ(_ : GKECreds) → "gke-specific-grafana-values.yml"
               , IKSCreds = λ(_ : IKSCreds) → "iks-specific-grafana-values.yml"
-              }
-              reqs.creds
-
-      let certsPreparationFunction =
-            merge
-              { GKECreds = λ(_ : GKECreds) → "gke_secret"
-              , IKSCreds = λ(_ : IKSCreds) → "iks_secret ${reqs.clusterName}"
               }
               reqs.creds
 
@@ -48,14 +52,10 @@ in    λ(reqs : Requirements)
             set -euo pipefail
             ${../tasks/functions/install-monitoring.sh as Text}
 
-            certs_secret="$(${certsPreparationFunction})"
             install_monitoring \
               "${reqs.ciResources.name}" \
               "${reqs.grafanaAdminPassword}" \
-              "https://grafana.$(cat ingress/endpoint)" \
-              "grafana.$(cat ingress/endpoint)" \
-              ${providerValuesFile} \
-              "$certs_secret"
+              "${providerValuesFile}"
             ''
 
       let installTask =
@@ -66,16 +66,7 @@ in    λ(reqs : Requirements)
                   Concourse.Types.TaskSpec.Config
                     Concourse.schemas.TaskConfig::{
                     , image_resource =
-                        Some
-                          Concourse.schemas.ImageResource::{
-                          , type = "docker-image"
-                          , source =
-                              Some
-                                ( toMap
-                                    { repository = JSON.string "eirini/ibmcloud"
-                                    }
-                                )
-                          }
+                        ../helpers/image-resource.dhall "eirini/ibmcloud"
                     , inputs =
                         Some
                           [ Concourse.schemas.TaskInput::{
@@ -83,6 +74,7 @@ in    λ(reqs : Requirements)
                             }
                           , Concourse.schemas.TaskInput::{ name = "kube" }
                           , Concourse.schemas.TaskInput::{ name = "ingress" }
+                          , Concourse.schemas.TaskInput::{ name = "secret" }
                           ]
                     , run =
                         Concourse.schemas.TaskRunConfig::{
@@ -113,6 +105,7 @@ in    λ(reqs : Requirements)
               , triggerOnClusterReady
               , downloadKubeConfig
               , ingressEndpointTask
+              , grafanaSecretSetupTask
               , installTask
               ]
           }

@@ -1,15 +1,6 @@
 let Concourse = ../dhall-modules/deps/concourse.dhall
 
-let JSON = (../dhall-modules/deps/prelude.dhall).JSON
-
 let ciResources = ../dhall-modules/resources/ci-resources.dhall "master"
-
-let testImage =
-      Some
-        Concourse.schemas.ImageResource::{
-        , type = "docker-image"
-        , source = Some (toMap { repository = JSON.string "eirini/dhall" })
-        }
 
 let job =
       Concourse.schemas.Job::{
@@ -22,7 +13,9 @@ let job =
               , config =
                   Concourse.Types.TaskSpec.Config
                     Concourse.schemas.TaskConfig::{
-                    , image_resource = testImage
+                    , image_resource =
+                        ../dhall-modules/helpers/image-resource.dhall
+                          "eirini/dhall"
                     , inputs =
                         Some
                           [ { name = ciResources.name
