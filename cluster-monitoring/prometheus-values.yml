@@ -5,7 +5,6 @@ server:
   persistentVolume:
     enabled: false
   global:
-    scrape_interval: 1s
-    scrape_timeout: 1s
+    scrape_interval: 30s
   extraArgs:
     storage.tsdb.retention.size: 15GB
