@@ -74,7 +74,7 @@ let runCoreCats =
                 , INCLUDE_TASKS = "false"
                 , INCLUDE_V3 = "false"
                 , INCLUDE_ZIPKIN = "true"
-                , NO_OF_TEST_NODES = "16"
+                , NO_OF_TEST_NODES = "8"
                 , SKIPPED_TESTS =
                     Prelude.Optional.default
                       Text
