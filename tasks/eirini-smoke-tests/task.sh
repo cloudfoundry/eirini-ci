@@ -11,7 +11,7 @@ main() {
   sleep 10
 
   check-scf-readiness
-  curl "api.$CF_DOMAIN/v2/info" --fail
+  check_api_connection "$CF_DOMAIN"
 }
 
 check-scf-readiness() {
@@ -24,11 +24,23 @@ check-scf-readiness() {
         counter=$((counter + 1))
       else
         echo "SCF is ready"
-        exit 0
+        return
       fi
     fi
 
     if [[ $counter -gt 1080 ]]; then
+      echo "SCF is NOT ready" >&2
+      exit 1
+    fi
+    sleep 1
+  done
+}
+
+check_api_connection() {
+  local counter=0
+  while ! curl -k "https://api.$1/v2/info" --fail; do
+    echo "Unable to connect to cf api"
+    if [[ $counter -gt 300 ]]; then
       echo "SCF is NOT ready" >&2
       exit 1
     fi
