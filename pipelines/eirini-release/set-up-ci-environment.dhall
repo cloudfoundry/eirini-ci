@@ -42,7 +42,7 @@ let setUpEnvironment
               , clusterCreatedEvent = clusterCreatedEvent
               , clusterReadyEvent = clusterReadyEvent
               , clusterName = reqs.clusterName
-              , workerCount = 3
+              , workerCount = 4
               , creds = reqs.creds
               , clusterPreparation =
                   ClusterPrep.Required
