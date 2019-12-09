@@ -23,7 +23,7 @@ wait_for_service_availability() {
       return 0
     fi
 
-    if [[ $counter -gt 30 ]]; then
+    if [[ $counter -gt 60 ]]; then
       echo "Unavalable services" >&2
       echo "$services" >&2
       exit 1
@@ -39,6 +39,7 @@ any_unnavailable_services() {
 
 install_block_storage_prodivder() {
   helm init --client-only
+  helm init --upgrade --wait
   helm repo add iks-charts https://icr.io/helm/iks-charts
   helm repo update
   helm upgrade --install ibmcloud-block-storage-plugin iks-charts/ibmcloud-block-storage-plugin
