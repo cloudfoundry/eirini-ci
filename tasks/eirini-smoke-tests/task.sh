@@ -44,6 +44,7 @@ check_api_connection() {
       echo "SCF is NOT ready" >&2
       exit 1
     fi
+    counter=$((counter + 1))
     sleep 1
   done
 }
