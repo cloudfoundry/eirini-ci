@@ -17,5 +17,5 @@ is-labeled-container-ready() {
 }
 
 purge-helm-deployments() {
-  helm list --short | xargs -n 1 helm delete --purge
+  helm list --short | xargs --no-run-if-empty -n 1 helm delete --purge
 }
