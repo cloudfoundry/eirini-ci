@@ -19,6 +19,12 @@ let deleteClusterJob
                 }
                 reqs.creds
 
+        let downloadKubeConfigTask =
+              ../tasks/download-kubeconfig.dhall
+                reqs.ciResources
+                reqs.clusterName
+                reqs.creds
+
         let deleteCluster =
               Concourse.helpers.taskStep
                 (   Concourse.defaults.TaskStep
@@ -65,6 +71,7 @@ let deleteClusterJob
               , plan =
                   [ ../helpers/get-trigger.dhall deleteTimer
                   , ../helpers/get.dhall reqs.ciResources
+                  , downloadKubeConfigTask
                   , deleteCluster
                   , ../helpers/get.dhall reqs.clusterState
                   , deleteValuesFile

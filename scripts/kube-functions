@@ -15,3 +15,19 @@ is-labeled-container-ready() {
   declare -r label="${2:?Label not provided}"
   kubectl get pods --selector "$label" --namespace "$namespace" --output jsonpath='{.items[0].status.containerStatuses[0].ready}'
 }
+
+purge-helm-deployments() {
+  helm init --client-only
+  helm list --short | xargs -n 1 helm delete --purge
+
+  local counter=0
+  while [[ $(helm list --short | wc ) -gt 0 ]]; do
+    echo "Waiting for helm to purge releases"
+    if [[ $counter -gt 300 ]]; then
+      echo "SCF is NOT ready" >&2
+      exit 1
+    fi
+    counter=$((counter + 1))
+    sleep 1
+  done
+}

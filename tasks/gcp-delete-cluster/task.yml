@@ -8,6 +8,7 @@ image_resource:
 
 inputs:
   - name: ci-resources
+  - name: kube
 
 params:
   GCP_SERVICE_ACCOUNT_JSON:
