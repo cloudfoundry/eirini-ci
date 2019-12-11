@@ -10,7 +10,7 @@ let inputs =
       { githubPrivateKey = "((github-private-key))"
       , eiriniRepoKey = "((eirini-repo-key))"
       , eiriniCIBranch = "((ci-resources-branch))"
-      , worldName = "bump-go"
+      , worldName = "((world-name))"
       , eiriniBranch = "((eirini-branch))"
       , eiriniReleaseBranch = "((eirini-release-branch))"
       , dockerhubUser = "((dockerhub-user))"
@@ -168,7 +168,7 @@ let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
 let bumpGo =
       ../dhall-modules/bump-go.dhall
-        { clusterName = "bump-go"
+        { clusterName = inputs.worldName
         , eiriniMaster = eiriniMaster
         , testEiriniBranch = eiriniRepo
         , ciResources = ciResources
