@@ -100,3 +100,16 @@ export-kubeconfig() {
   export_command="$(ibmcloud ks cluster-config "$cluster_name" --export)"
   eval "${export_command}"
 }
+
+store-kubeconfig() {
+  kubectl config view --flatten > "$1"
+}
+
+cluster-exists() {
+  declare -r cluster_name=$1
+  if [[ "$(ibmcloud ks cluster get $cluster_name 2>&1)" =~ "The specified cluster could not be found" ]]; then
+    return 1
+  fi
+  return 0
+}
+

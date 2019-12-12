@@ -1,10 +1,9 @@
----
 platform: linux
 
 image_resource:
   type: docker-image
   source:
-    repository: eirini/gcloud
+    repository: google/cloud-sdk
 
 inputs:
   - name: ci-resources
@@ -12,7 +11,6 @@ inputs:
 params:
   GCP_SERVICE_ACCOUNT_JSON:
   CLUSTER_NAME:
-  WORKER_COUNT:
 
 run:
-  path: ci-resources/tasks/gcp-delete-cluster/task.sh
+  path: ci-resources/tasks/gcp-purge-cluster-deployments/task.sh

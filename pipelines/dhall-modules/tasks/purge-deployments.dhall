@@ -10,15 +10,16 @@ in    λ(ciResources : Concourse.Types.Resource)
       let taskName =
             merge
               { IKSCreds =
-                  λ(_ : ../types/iks-creds.dhall) → "download-kubeconfig"
+                  λ(_ : ../types/iks-creds.dhall) → "purge-cluster-deployments"
               , GKECreds =
-                  λ(_ : ../types/gke-creds.dhall) → "gcp-download-kubeconfig"
+                    λ(_ : ../types/gke-creds.dhall)
+                  → "gcp-purge-cluster-deployments"
               }
               creds
 
       in  Concourse.helpers.taskStep
             Concourse.schemas.TaskStep::{
-            , task = "download-kubeconfig"
+            , task = "purge-cluster-deployments"
             , config = taskFile ciResources taskName
             , params = Some (toMap { CLUSTER_NAME = clusterName } # cloudParams)
             }

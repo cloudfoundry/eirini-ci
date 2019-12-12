@@ -19,8 +19,8 @@ let deleteClusterJob
                 }
                 reqs.creds
 
-        let downloadKubeConfigTask =
-              ../tasks/download-kubeconfig.dhall
+        let purgeDeploymentsTask =
+              ../tasks/purge-deployments.dhall
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
@@ -71,7 +71,7 @@ let deleteClusterJob
               , plan =
                   [ ../helpers/get-trigger.dhall deleteTimer
                   , ../helpers/get.dhall reqs.ciResources
-                  , downloadKubeConfigTask
+                  , purgeDeploymentsTask
                   , deleteCluster
                   , ../helpers/get.dhall reqs.clusterState
                   , deleteValuesFile

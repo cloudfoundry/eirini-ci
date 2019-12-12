@@ -7,7 +7,7 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-  - name: ci-resources
+- name: ci-resources
 
 params:
   IBMCLOUD_ACCOUNT:
@@ -16,4 +16,4 @@ params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/delete-cluster/task.sh
+  path: ci-resources/tasks/purge-cluster-deployments/task.sh
