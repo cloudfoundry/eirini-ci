@@ -19,4 +19,3 @@ fi
 
 export-kubeconfig "$CLUSTER_NAME"
 purge-helm-deployments
-

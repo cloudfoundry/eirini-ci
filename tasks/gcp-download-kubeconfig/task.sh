@@ -9,6 +9,6 @@ export KUBECONFIG=kube/config
 source ci-resources/scripts/gcloud-functions
 
 pushd "kube"
-  gcloud-login
-  export-kubeconfig "$CLUSTER_NAME"
+gcloud-login
+export-kubeconfig "$CLUSTER_NAME"
 popd
