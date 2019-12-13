@@ -9,7 +9,6 @@ inputs:
   - name: ci-resources
 
 params:
-  GCP_REGION:
   GCP_ZONE:
   GCP_SERVICE_ACCOUNT_JSON:
   CLUSTER_NAME:
