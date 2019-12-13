@@ -15,7 +15,7 @@ let gkeSpecificSteps =
                 , config = taskFile reqs.ciResources "gcp-cluster-config"
                 , params = Some (toMap configParams)
                 }
-        
+
         let installHelmDeps =
               helpers.taskStep
                 schemas.TaskStep::{
@@ -28,12 +28,13 @@ let gkeSpecificSteps =
                               "kube/service-account.json"
                           , GCP_SERVICE_ACCOUNT_JSON =
                               gkeCreds.serviceAccountJSON
+                          , GCP_REGION = gkeCreds.region
                           , DNS_SERVICE_ACCOUNT = gkeCreds.dnsServiceAccountJSON
                           , CLUSTER_NAME = reqs.clusterName
                           }
                       )
                 }
-        
+
         in  [ createClusterConfig, installHelmDeps ]
 
 in  gkeSpecificSteps
