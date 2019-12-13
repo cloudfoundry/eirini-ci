@@ -8,5 +8,5 @@ export KUBECONFIG=kube/config
 # shellcheck disable=SC1091
 source ci-resources/scripts/gcloud-functions
 
-gcloud-login
+gcloud-login kube/service_account.json
 export-kubeconfig "$CLUSTER_NAME"
