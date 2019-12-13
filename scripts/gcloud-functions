@@ -79,7 +79,7 @@ export-kubeconfig() {
   gcloud container clusters get-credentials "$name" --zone "$GCP_ZONE"
 }
 
-get_static_ip() {
+get-static-ip() {
   declare -r name=$1
   gcloud compute addresses describe "$name" --region "$GCP_REGION" --format json | jq --raw-output ".address"
 }
