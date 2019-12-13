@@ -11,6 +11,8 @@ let iksCredsInputs =
 let gkeCredsInputs =
       { serviceAccountJSON = "((gcp-service-account-json))"
       , dnsServiceAccountJSON = "((gcp-dns-service-account-json))"
+      , region = "((gcp-region))"
+      , zone = "((gcp-zone))"
       }
 
 let inputs =

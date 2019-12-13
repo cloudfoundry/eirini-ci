@@ -23,12 +23,12 @@ cluster-state-is() {
 # Show details about the cluster
 cluster-state() {
   declare -r name=$1
-  gcloud container clusters describe "$name" --region=europe-west1 --format json
+  gcloud container clusters describe "$name" --region "$GCP_REGION" --format json
 }
 
 # Log in to the Google Cloud
 gcloud-login() {
-  echo "$SERVICE_ACCOUNT_JSON" >service-account.json
+  echo "$GCP_SERVICE_ACCOUNT_JSON" >service-account.json
   export GOOGLE_CLOUD_KEYFILE_JSON="$PWD/service-account.json"
   gcloud auth activate-service-account --key-file="$GOOGLE_CLOUD_KEYFILE_JSON"
   gcloud config set container/use_application_default_credentials true
@@ -56,10 +56,7 @@ delete-cluster() {
 # Exit nonzero unless the cluster $1 exists
 cluster-exists() {
   declare -r name="$1"
-  declare -r zone="europe-west1-b"
-  declare -r project="cff-eirini-peace-pods"
-
-  cluster_status="$(gcloud container clusters describe "$name" --zone "$zone" --project "$project" 2>&1)"
+  cluster_status="$(gcloud container clusters describe "$name" --zone "$GCP_ZONE" 2>&1)"
   if [[ "$cluster_status" =~ "Not found" ]]; then
     return 1
   fi
@@ -78,5 +75,10 @@ wait-for-deletion() {
 
 export-kubeconfig() {
   declare -r name=$1
-  gcloud container clusters get-credentials "$name" --region europe-west1
+  gcloud container clusters get-credentials "$name" --region "$GCP_REGION"
+}
+
+get_static_ip() {
+  declare -r name=$1
+  gcloud compute addresses describe "$name" --region "$GCP_REGION" --format json | jq --raw-output ".address"
 }

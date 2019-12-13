@@ -27,6 +27,8 @@ fly -t "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --var gcp-region="europe-west1" \
+  --var gcp-zone="europe-west1-b" \
   --var grafana-admin-password="$(pass eirini/ci-envs/grafana)" \
   --var storage_class="ibmc-block-gold" \
   --load-vars-from "$private_repo/concourse/common.yml" \

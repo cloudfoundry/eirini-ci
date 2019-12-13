@@ -13,6 +13,10 @@ in    λ(creds : ../types/creds.dhall)
                 }
         , GKECreds =
               λ(c : GKECreds)
-            → toMap { GCP_SERVICE_ACCOUNT_JSON = c.serviceAccountJSON }
+            → toMap
+                { GCP_REGION = c.region
+                , GCP_ZONE = c.zone
+                , GCP_SERVICE_ACCOUNT_JSON = c.serviceAccountJSON
+                }
         }
         creds

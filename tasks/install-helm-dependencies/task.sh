@@ -3,6 +3,9 @@
 set -xeuo pipefail
 IFS=$'\n\t'
 
+# shellcheck disable=SC1091
+source ci-resources/scripts/gcloud-functions
+
 export KUBECONFIG=kube/config
 
 main() {
@@ -33,8 +36,8 @@ init-helm() {
 
 install-nginx-chart() {
   local static_ip
-  gcloud_auth
-  static_ip="$(get_static_ip)"
+  gcloud-login
+  static_ip="$(get-static-ip "$CLUSTER_NAME")"
   helm upgrade nginx-ingress \
     --namespace nginx \
     --install \
@@ -55,15 +58,6 @@ install-cert-manager-chart() {
     --version v0.11.0 \
     jetstack/cert-manager \
     --wait
-}
-
-gcloud_auth() {
-  echo "$GCP_SERVICE_ACCOUNT_JSON" >service-account.json
-  gcloud auth activate-service-account --key-file="service-account.json" >/dev/null 2>&1
-}
-
-get_static_ip() {
-  gcloud compute addresses describe "$CLUSTER_NAME" --region=europe-west1 --format json | jq --raw-output ".address"
 }
 
 main

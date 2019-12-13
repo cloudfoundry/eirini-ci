@@ -13,6 +13,7 @@ outputs:
 
 params:
   GCP_SERVICE_ACCOUNT_JSON:
+  GCP_REGION:
   CLUSTER_NAME:
 
 run:

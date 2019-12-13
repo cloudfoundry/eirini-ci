@@ -1,1 +1,5 @@
-{ serviceAccountJSON : Text, dnsServiceAccountJSON : Text }
+{ serviceAccountJSON : Text
+, dnsServiceAccountJSON : Text
+, region : Text
+, zone : Text
+}
