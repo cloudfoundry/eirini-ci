@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-echo "$GCP_SERVICE_ACCOUNT_JSON" > "$PWD/service-account.json"
+echo "$GCP_SERVICE_ACCOUNT_JSON" >"$PWD/service-account.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
 
 terraform init -backend-config="prefix=terraform/state/$CLUSTER_NAME" ci-resources/gke-cluster

@@ -29,7 +29,7 @@ cluster-state() {
 # Log in to the Google Cloud
 gcloud-login() {
   declare -r service_account_json="/tmp/service-account.json"
-  echo "$GCP_SERVICE_ACCOUNT_JSON" > "$service_account_json"
+  echo "$GCP_SERVICE_ACCOUNT_JSON" >"$service_account_json"
   gcloud auth activate-service-account --key-file="$service_account_json"
   gcloud config set container/use_application_default_credentials true
 }
