@@ -9,11 +9,5 @@ inputs:
 - name: kube
 - name: ci-resources
 
-params:
-  IBMCLOUD_ACCOUNT:
-  IBMCLOUD_USER:
-  IBMCLOUD_PASSWORD:
-  CLUSTER_NAME:
-
 run:
   path: ci-resources/tasks/cleanup-blobstore/task.sh

@@ -114,6 +114,7 @@ let runCoreCats =
                       , params = Some catsParams
                       }
                   , checkLeftoverPodsTask
+                  , ../tasks/cleanup-blobstore.dhall reqs.ciResources
                   ]
               }
 

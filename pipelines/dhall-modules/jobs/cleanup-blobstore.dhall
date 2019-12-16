@@ -4,7 +4,7 @@ let Creds = ../types/creds.dhall
 
 let IKSCreds = ../types/iks-creds.dhall
 
-let taskFile = ../helpers/task-file.dhall
+let cleanupBlobstore = ../tasks/cleanup-blobstore.dhall
 
 in    λ(ciResources : Concourse.Types.Resource)
     → λ(timeTrigger : Concourse.Types.Resource)
@@ -21,20 +21,7 @@ in    λ(ciResources : Concourse.Types.Resource)
                       ciResources
                       clusterName
                       (Creds.IKSCreds iksCreds)
-                  , Concourse.helpers.taskStep
-                      Concourse.schemas.TaskStep::{
-                      , task = "cleanup-blobstore"
-                      , config = taskFile ciResources "cleanup-blobstore"
-                      , params =
-                          Some
-                            ( toMap
-                                { CLUSTER_NAME = clusterName
-                                , IBMCLOUD_USER = iksCreds.user
-                                , IBMCLOUD_PASSWORD = iksCreds.password
-                                , IBMCLOUD_ACCOUNT = iksCreds.account
-                                }
-                            )
-                      }
+                  , cleanupBlobstore ciResources
                   ]
               }
             ]
