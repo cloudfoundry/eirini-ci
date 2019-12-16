@@ -18,4 +18,8 @@ if ! cluster-exists "$CLUSTER_NAME"; then
 fi
 
 export-kubeconfig "$CLUSTER_NAME"
+
+save-service-account-json "$PWD/service-account.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
+
 purge-helm-deployments

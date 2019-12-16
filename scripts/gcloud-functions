@@ -26,12 +26,16 @@ cluster-state() {
   gcloud container clusters describe "$name" --zone "$GCP_ZONE" --format json
 }
 
+save-service-account-json() {
+  declare -r service_account_json="$1"
+  echo "$GCP_SERVICE_ACCOUNT_JSON" >"$service_account_json"
+}
+
 # Log in to the Google Cloud
 gcloud-login() {
-  declare -r service_account_json="${1:-"$PWD/service-account.json"}"
-  echo "$GCP_SERVICE_ACCOUNT_JSON" >"$service_account_json"
-  export GOOGLE_CLOUD_KEYFILE_JSON="$service_account_json"
-  gcloud auth activate-service-account --key-file="$GOOGLE_CLOUD_KEYFILE_JSON"
+  declare -r service_account_json="/tmp/service-account.json"
+  save-service-account-json "$service_account_json"
+  gcloud auth activate-service-account --key-file="$service_account_json"
   gcloud config set container/use_application_default_credentials true
 }
 
