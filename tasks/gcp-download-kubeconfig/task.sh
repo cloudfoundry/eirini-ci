@@ -11,4 +11,4 @@ source ci-resources/scripts/gcloud-functions
 gcloud-login
 export-kubeconfig "$CLUSTER_NAME"
 
-save-service-account-json "kube/service-account.json"
+echo "$GCP_SERVICE_ACCOUNT_JSON" > "kube/service-account.json"

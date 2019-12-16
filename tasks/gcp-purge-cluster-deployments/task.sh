@@ -19,7 +19,7 @@ fi
 
 export-kubeconfig "$CLUSTER_NAME"
 
-save-service-account-json "$PWD/service-account.json"
+echo "$GCP_SERVICE_ACCOUNT_JSON" > "$PWD/service-account.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
 
 purge-helm-deployments
