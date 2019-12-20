@@ -142,6 +142,7 @@ let runTestJobs =
         , dockerRoutePodInformer = docker.routePodInformer
         , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
         , dockerMetricsCollector = docker.metricsCollector
+        , dockerEventReporter = docker.eventReporter
         , creds = creds
         , upstream = { name = "prepare-cluster", event = clusterReadyEvent }
         , eiriniUpstreams = Some [ "bump-go-packages" ]
