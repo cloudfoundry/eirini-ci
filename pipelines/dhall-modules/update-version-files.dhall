@@ -21,6 +21,7 @@
                 , { docker = reqs.dockerMetricsCollector
                   , name = "metrics-collector"
                   }
+                , { docker = reqs.dockerEventReporter, name = "event-reporter" }
                 ]
             , upstreamJob = "create-go-docker-images"
             }

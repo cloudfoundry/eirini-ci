@@ -92,6 +92,7 @@ let updateVersionReqs =
       , dockerRoutePodInformer = docker.routePodInformer
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
       , dockerMetricsCollector = docker.metricsCollector
+      , dockerEventReporter = docker.eventReporter
       }
 
 let runStagingTestReqs =
