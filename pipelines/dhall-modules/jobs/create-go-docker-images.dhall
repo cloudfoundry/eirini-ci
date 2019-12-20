@@ -51,6 +51,7 @@ let createGoDockerImages =
                     , putDocker reqs.dockerRouteCollector "route-collector"
                     , putDocker reqs.dockerRoutePodInformer "route-pod-informer"
                     , putDocker reqs.dockerMetricsCollector "metrics-collector"
+                    , putDocker reqs.dockerEventReporter "event-reporter"
                     , putDocker
                         reqs.dockerRouteStatefulsetInformer
                         "route-statefulset-informer"

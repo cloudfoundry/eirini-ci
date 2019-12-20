@@ -14,6 +14,7 @@ in  { ciResources : Concourse.Types.Resource
     , dockerRoutePodInformer : Concourse.Types.Resource
     , dockerRouteStatefulsetInformer : Concourse.Types.Resource
     , dockerMetricsCollector : Concourse.Types.Resource
+    , dockerEventReporter : Concourse.Types.Resource
     , clusterName : Text
     , creds : ./creds.dhall
     , upstream : { event : Concourse.Types.Resource, name : Text }

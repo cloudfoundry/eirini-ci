@@ -1,7 +1,7 @@
   λ(username : Text)
 → λ(password : Text)
 → let dockerResource = ../helpers/docker-resource.dhall
-  
+
   let eiriniDockerResource =
           λ(name : Text)
         → dockerResource
@@ -10,7 +10,7 @@
             (None Text)
             username
             password
-  
+
   let stagingDockerResource =
           λ(name : Text)
         → dockerResource
@@ -19,7 +19,7 @@
             (None Text)
             username
             password
-  
+
   in  { opi = eiriniDockerResource "opi"
       , bitsWaiter = eiriniDockerResource "bits-waiter"
       , rootfsPatcher = eiriniDockerResource "rootfs-patcher"
@@ -29,6 +29,7 @@
       , routeStatefulsetInformer =
           eiriniDockerResource "route-statefulset-informer"
       , metricsCollector = eiriniDockerResource "metrics-collector"
+      , eventReporter = eiriniDockerResource "event-reporter"
       , stagingDownloader = stagingDockerResource "downloader"
       , stagingExecutor = stagingDockerResource "executor"
       , stagingUploader = stagingDockerResource "uploader"

@@ -124,6 +124,7 @@ let runTestJobs =
         , dockerRoutePodInformer = docker.routePodInformer
         , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
         , dockerMetricsCollector = docker.metricsCollector
+        , dockerEventReporter = docker.eventReporter
         , creds = creds
         , upstream = { name = "create-cluster", event = clusterCreatedEvent }
         , eiriniUpstreams = None (List Text)
