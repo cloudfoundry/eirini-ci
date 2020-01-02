@@ -22,4 +22,6 @@ export-kubeconfig "$CLUSTER_NAME"
 echo "$GCP_SERVICE_ACCOUNT_JSON" >"$PWD/service-account.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
 
+kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
+helm init --service-account tiller --upgrade --wait
 purge-helm-deployments

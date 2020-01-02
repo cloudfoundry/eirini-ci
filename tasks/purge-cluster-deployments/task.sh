@@ -18,4 +18,7 @@ if ! cluster-exists "$CLUSTER_NAME"; then
 fi
 
 export-kubeconfig "$CLUSTER_NAME"
+
+kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
+helm init --service-account tiller --upgrade --wait
 purge-helm-deployments
