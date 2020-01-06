@@ -1,14 +1,14 @@
-let Concourse = ../deps/concourse.dhall
-
-let in_parallel = Concourse.helpers.inParallelStepSimple
-
 let Prelude = ../deps/prelude.dhall
+
+let Concourse = ../deps/concourse.dhall
 
 let RunTestRequirements = ../types/run-test-requirements.dhall
 
 let getTriggerPassed = ../helpers/get-trigger-passed.dhall
 
 let get = ../helpers/get.dhall
+
+let in_parallel = ../helpers/in_parallel_with_limit.dhall 5
 
 let putDocker =
         λ(resource : Concourse.Types.Resource)

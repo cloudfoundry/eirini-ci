@@ -2,6 +2,8 @@ let Concourse = ./deps/concourse.dhall
 
 let in_parallel = Concourse.helpers.inParallelStepSimple
 
+let in_parallel_with_limit = ./helpers/in_parallel_with_limit.dhall 5
+
 let Prelude = ./deps/prelude.dhall
 
 let tagImagesJob =
@@ -79,7 +81,7 @@ let tagImagesJob =
                         "create-fluentd-docker-image"
                     , putDeploymentVersion
                     ]
-                , in_parallel
+                , in_parallel_with_limit
                     [ putImageWithTag reqs.dockerOPI
                     , putImageWithTag reqs.dockerRootfsPatcher
                     , putImageWithTag reqs.dockerBitsWaiter
