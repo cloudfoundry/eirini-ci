@@ -120,6 +120,7 @@ let deploymentReqs =
             { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }
       , skippedCats = None Text
       , autoTriggerOnEiriniRelease = False
+      , triggerDeployScfAfterUaa = False
       , lockResource = None Concourse.Types.Resource
       }
 

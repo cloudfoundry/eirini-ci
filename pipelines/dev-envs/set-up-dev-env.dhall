@@ -1,6 +1,6 @@
 let Concourse = ../dhall-modules/deps/concourse.dhall
 
-let EnvironmentRequirements = ./environment-reqs.dhall
+let EnvironmentRequirements = ../eirini-release/environment-reqs.dhall
 
 let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 
@@ -42,7 +42,7 @@ let setUpEnvironment
               , clusterCreatedEvent = clusterCreatedEvent
               , clusterReadyEvent = clusterReadyEvent
               , clusterName = reqs.clusterName
-              , workerCount = 4
+              , workerCount = 3
               , creds = reqs.creds
               , clusterPreparation =
                   ClusterPrep.Required
@@ -62,11 +62,6 @@ let setUpEnvironment
                 }
                 reqs.creds
 
-        let lockResource =
-              ../dhall-modules/resources/lock.dhall
-                reqs.clusterName
-                reqs.stateGitHubPrivateKey
-
         let deploymentReqs =
               { clusterName = reqs.clusterName
               , uaaResources = reqs.uaaResource
@@ -80,61 +75,15 @@ let setUpEnvironment
               , useCertManager = useCertManager
               , imageLocation = ImageLocation.InRepo {=}
               , skippedCats = None Text
-              , autoTriggerOnEiriniRelease = True
-              , triggerDeployScfAfterUaa = False
-              , lockResource = Some lockResource
+              , autoTriggerOnEiriniRelease = False
+              , triggerDeployScfAfterUaa = True
+              , lockResource = None Concourse.Types.Resource
               }
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-        let runCatsJob =
-              [ ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs ]
-
-        let locksUpstream =
-                    if reqs.isFreshini
-
-              then  [ "nuke-scf" ]
-
-              else  [ "run-core-cats-${reqs.clusterName}" ]
-
-        let lockJobs =
-              ../dhall-modules/locks.dhall
-                { upstream = locksUpstream
-                , lockResource = lockResource
-                , ciResources = reqs.ciResources
-                , eiriniReleaseRepo = reqs.eiriniReleaseRepo
-                }
-
-        let nukeScfJobs =
-                    if reqs.isFreshini
-
-              then  [ ../dhall-modules/jobs/nuke-scf.dhall
-                        deploymentReqs.{ ciResources
-                                       , eiriniReleaseRepo
-                                       , lockResource
-                                       , clusterName
-                                       , creds
-                                       }
-                    ]
-
-              else  [] : List Concourse.Types.GroupedJob
-
-        let installMonitoring =
-              ../dhall-modules/jobs/install-monitoring.dhall
-                { ciResources = reqs.ciResources
-                , clusterName = reqs.clusterName
-                , grafanaAdminPassword = reqs.grafanaAdminPassword
-                , creds = reqs.creds
-                , upstreamEvent = clusterReadyEvent
-                }
-
-        in    kubeClusterJobs
-            # deploySCFJobs
-            # runCatsJob
-            # lockJobs
-            # nukeScfJobs
-            # [ installMonitoring ]
+        in  kubeClusterJobs # deploySCFJobs
 
 in  setUpEnvironment

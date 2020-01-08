@@ -73,6 +73,7 @@ let deploymentReqs =
       , imageLocation = ImageLocation.InRepo {=}
       , skippedCats = None Text
       , autoTriggerOnEiriniRelease = True
+      , triggerDeployScfAfterUaa = False
       , lockResource = None Concourse.Types.Resource
       }
 

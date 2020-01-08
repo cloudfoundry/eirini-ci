@@ -11,10 +11,17 @@ let ImageLocation = ../types/image-location.dhall
 let DeployTaggedRequirements = ../types/deploy-tagged-requirements.dhall
 
 in    λ(reqs : ../types/deployment-requirements.dhall)
-    → let getUAAReadyEvent =
-            ../helpers/get-passed.dhall
-              reqs.uaaReadyEvent
-              [ "deploy-scf-uaa-${reqs.clusterName}" ]
+    → let getUAAReadyEvent
+          : Concourse.Types.Step
+          =       if reqs.triggerDeployScfAfterUaa
+
+            then  ../helpers/get-trigger-passed.dhall
+                    reqs.uaaReadyEvent
+                    [ "deploy-scf-uaa-${reqs.clusterName}" ]
+
+            else  ../helpers/get-passed.dhall
+                    reqs.uaaReadyEvent
+                    [ "deploy-scf-uaa-${reqs.clusterName}" ]
 
       let deploySCFTaskFile
           : Concourse.Types.TaskSpec
