@@ -18,7 +18,7 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
                         }
                     )
               }
-      
+
       let waitForUAA =
             Concourse.helpers.taskStep
               Concourse.schemas.TaskStep::{
@@ -26,6 +26,13 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
               , config = taskFile reqs.ciResources "waiting-for-uaa"
               , params = Some (toMap { CLUSTER_NAME = reqs.clusterName })
               }
+
+      let getUaaResorcesStep =
+                  if reqs.triggerDeployUaaWhenChanged
+
+            then  ../helpers/get-trigger.dhall reqs.uaaResources
+
+            else  ../helpers/get.dhall reqs.uaaResources
 
       in  Concourse.schemas.Job::{
           , name = "deploy-scf-uaa-${reqs.clusterName}"
@@ -43,7 +50,7 @@ in    λ(reqs : ../types/deployment-requirements.dhall)
                       ]
                   )
                   ([] : List Concourse.Types.Step)
-              # [ ../helpers/get-trigger.dhall reqs.uaaResources
+              # [ getUaaResorcesStep
                 , ../helpers/get.dhall reqs.ciResources
                 , Concourse.helpers.getStep
                     Concourse.schemas.GetStep::{

@@ -82,6 +82,7 @@ let setUpEnvironment
               , skippedCats = None Text
               , autoTriggerOnEiriniRelease = True
               , triggerDeployScfAfterUaa = False
+              , triggerDeployUaaWhenChanged = True
               , lockResource = Some lockResource
               }
 

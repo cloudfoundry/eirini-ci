@@ -121,6 +121,7 @@ let deploymentReqs =
       , skippedCats = None Text
       , autoTriggerOnEiriniRelease = False
       , triggerDeployScfAfterUaa = False
+      , triggerDeployUaaWhenChanged = True
       , lockResource = None Concourse.Types.Resource
       }
 

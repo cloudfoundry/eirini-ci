@@ -53,15 +53,6 @@ let setUpEnvironment
                     }
               }
 
-        let useCertManager =
-              merge
-                { IKSCreds =
-                    λ(_ : ../dhall-modules/types/iks-creds.dhall) → "false"
-                , GKECreds =
-                    λ(_ : ../dhall-modules/types/gke-creds.dhall) → "true"
-                }
-                reqs.creds
-
         let deploymentReqs =
               { clusterName = reqs.clusterName
               , uaaResources = reqs.uaaResource
@@ -72,11 +63,12 @@ let setUpEnvironment
               , uaaReadyEvent = uaaReadyEvent
               , clusterState = clusterState
               , creds = reqs.creds
-              , useCertManager = useCertManager
+              , useCertManager = "false"
               , imageLocation = ImageLocation.InRepo {=}
               , skippedCats = None Text
               , autoTriggerOnEiriniRelease = False
               , triggerDeployScfAfterUaa = True
+              , triggerDeployUaaWhenChanged = False
               , lockResource = None Concourse.Types.Resource
               }
 

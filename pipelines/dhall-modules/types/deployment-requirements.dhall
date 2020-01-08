@@ -16,5 +16,6 @@ in  { clusterName : Text
     , skippedCats : Optional Text
     , autoTriggerOnEiriniRelease : Bool
     , triggerDeployScfAfterUaa : Bool
+    , triggerDeployUaaWhenChanged : Bool
     , lockResource : Optional Concourse.Types.Resource
     }
