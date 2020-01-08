@@ -18,10 +18,9 @@ let inputs =
 
 let iksCreds = (../dhall-modules/types/creds.dhall).IKSCreds iksCredsInputs
 
-let eiriniReleaseRepo =
-      ../dhall-modules/resources/eirini-release.dhall "develop"
+let eiriniReleaseRepo = ../dhall-modules/resources/eirini-release.dhall "master"
 
-let uaaResource = ../dhall-modules/resources/uaa.dhall "develop"
+let uaaResource = ../dhall-modules/resources/uaa.dhall "master"
 
 let ciResources = ../dhall-modules/resources/ci-resources.dhall "master"
 
