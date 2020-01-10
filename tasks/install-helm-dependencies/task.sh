@@ -9,7 +9,6 @@ source ci-resources/scripts/gcloud-functions
 export KUBECONFIG=kube/config
 
 main() {
-  init-helm
   install-nginx-chart
   install-cert-manager-chart
   create-dns-editor-secret
@@ -27,11 +26,6 @@ create-issuer() {
 cert-status() {
   local cert_name=${1:?No cert name}
   kubectl get certificate -n cert-manager "$cert_name" -o jsonpath='{.status.conditions[?(@.type == "Ready")].status}'
-}
-
-init-helm() {
-  kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
-  helm init --service-account tiller --upgrade --wait
 }
 
 install-nginx-chart() {

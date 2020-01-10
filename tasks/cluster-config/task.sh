@@ -9,15 +9,9 @@ readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 
 main() {
   export KUBECONFIG="$PWD/kube/config"
-  init-helm
   set-kube-state
   set-external-ips
   copy-output
-}
-
-init-helm() {
-  kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
-  helm init --service-account tiller --upgrade
 }
 
 set-kube-state() {

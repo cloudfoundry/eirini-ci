@@ -64,6 +64,7 @@ let prepareClusterJob
                     , getCreatedEvent
                     , ../helpers/get.dhall reqs.clusterState
                     , downloadKubeConfig
+                    , ../tasks/configure-kubernetes.dhall reqs.ciResources
                     ]
                   # cloudSpecificSteps
                   # [ ../helpers/emit-event.dhall reqs.clusterReadyEvent
