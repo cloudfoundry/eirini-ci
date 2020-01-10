@@ -9,6 +9,7 @@ source ci-resources/scripts/gcloud-functions
 export KUBECONFIG=kube/config
 
 main() {
+  helm init --client-only
   install-nginx-chart
   install-cert-manager-chart
   create-dns-editor-secret
