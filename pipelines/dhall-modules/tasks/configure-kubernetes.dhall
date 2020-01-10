@@ -12,6 +12,8 @@ in    λ(ciResources : Concourse.Types.Resource)
             , config =
                 Concourse.Types.TaskSpec.Config
                   Concourse.schemas.TaskConfig::{
+                  , image_resource =
+                      ../helpers/image-resource.dhall "eirini/ibmcloud"
                   , inputs =
                       Some
                         [ Concourse.schemas.TaskInput::{
