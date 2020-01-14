@@ -78,13 +78,13 @@ let buildImageWithGolang =
 let getCFLinuxImage =
       ../dhall-modules/helpers/get-trigger.dhall
         ( ../dhall-modules/helpers/docker-resource-no-creds.dhall
-            "cloudfoundry"
             "cflinuxfs3"
+            "cloudfoundry/cflinuxfs3"
             (None Text)
         )
 
 let buildStagingIntegrationImage =
-      let j = buildImageJob "staging-image"
+      let j = buildImageJob "staging-integration"
 
       in  j ⫽ { plan = [ getCFLinuxImage ] # j.plan }
 
