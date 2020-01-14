@@ -72,7 +72,7 @@ let runTestsJob =
                       , run = integrationTestRun
                       , image_resource =
                           ../helpers/image-resource.dhall
-                            "eirinistaging/eirini-na-ci-test"
+                            "eirini/staging-integration"
                       , inputs = eiriniStagingInput
                       }
                 }
