@@ -21,11 +21,13 @@ let runTestsJob =
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{ resource = reqs.ciResources }
 
-        let unitTestInput =
-              { name = "eirini-staging"
-              , optional = None Bool
-              , path = None Text
-              }
+        let eiriniStagingInput =
+              Some
+                [ { name = "eirini-staging"
+                  , optional = None Bool
+                  , path = None Text
+                  }
+                ]
 
         let unitTestsConfig =
               Concourse.Types.TaskSpec.Config
@@ -36,7 +38,7 @@ let runTestsJob =
                     , dir = Some "eirini-staging"
                     }
                 , image_resource = ../helpers/image-resource.dhall "eirini/ci"
-                , inputs = Some [ unitTestInput ]
+                , inputs = eiriniStagingInput
                 }
 
         let runUnitTests =
@@ -56,9 +58,8 @@ let runTestsJob =
 
         let integrationTestRun =
               Concourse.schemas.TaskRunConfig::{
-              , path = "ginkgo"
+              , path = "scripts/integration-test.sh"
               , dir = Some "eirini-staging"
-              , args = Some [ "-mod=vendor", "-r", "integration" ]
               }
 
         let runIntegrationTests =
@@ -72,13 +73,7 @@ let runTestsJob =
                       , image_resource =
                           ../helpers/image-resource.dhall
                             "eirinistaging/eirini-na-ci-test"
-                      , inputs =
-                          Some
-                            [ { name = "eirini-staging"
-                              , optional = None Bool
-                              , path = None Text
-                              }
-                            ]
+                      , inputs = eiriniStagingInput
                       }
                 }
 
