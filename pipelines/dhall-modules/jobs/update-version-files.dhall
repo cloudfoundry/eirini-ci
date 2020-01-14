@@ -36,6 +36,7 @@ in    λ(writeableEiriniReleaseRepo : Concourse.Types.Resource)
 
       in  Concourse.schemas.Job::{
           , name = "update-${reqs.componentName}-version-files"
+          , serial = Some True
           , plan =
               [ in_parallel
                   (   [ ../helpers/get.dhall writeableEiriniReleaseRepo
