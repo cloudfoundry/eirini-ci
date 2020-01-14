@@ -75,6 +75,19 @@ let buildImageWithGolang =
         λ(name : Text)
       → let j = buildImageJob name in j ⫽ { plan = [ getGolangImage ] # j.plan }
 
+let getCFLinuxImage =
+      ../dhall-modules/helpers/get-trigger.dhall
+        ( ../dhall-modules/helpers/docker-resource-no-creds.dhall
+            "cloudfoundry"
+            "cflinuxfs3"
+            (None Text)
+        )
+
+let buildStagingIntegrationImage =
+      let j = buildImageJob "staging-image"
+
+      in  j ⫽ { plan = [ getCFLinuxImage ] # j.plan }
+
 let mapToJobs = Prelude.List.map Text Concourse.Types.Job
 
 let jobs =
@@ -82,5 +95,6 @@ let jobs =
           buildImageJob
           [ "ibmcloud", "scf-builder", "buildah", "dhall" ]
       # mapToJobs buildImageWithGolang [ "gcloud", "ci" ]
+      # [ buildStagingIntegrationImage ]
 
 in  sendSlackNotification jobs
