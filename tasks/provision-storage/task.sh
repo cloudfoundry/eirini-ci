@@ -52,7 +52,7 @@ ibmcloud_failed_discovery_check_workaround() {
 }
 
 delete_pod() {
-  local namespace pod_name deployment_name
+  local namespace deployment_name
 
   namespace="$1"
   deployment_name="$2"
