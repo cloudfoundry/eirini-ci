@@ -30,6 +30,13 @@ let iksSpecificSteps =
                 reqs.clusterName
                 iksCreds
 
-        in  [ getIKSIngressEndpoint, createClusterConfig, provisionStorage ]
+        let hardenClusterSecurity =
+              ../../tasks/harden-cluster-security.dhall reqs.ciResources
+
+        in  [ getIKSIngressEndpoint
+            , createClusterConfig
+            , provisionStorage
+            , hardenClusterSecurity
+            ]
 
 in  iksSpecificSteps

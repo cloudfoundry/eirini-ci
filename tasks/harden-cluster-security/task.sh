@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
 export KUBECONFIG="$PWD/kube/config"
 
 readonly jq_cmd='.subjects |= map(select(.name != "system:serviceaccounts" and .name != "system:authenticated" ))'
