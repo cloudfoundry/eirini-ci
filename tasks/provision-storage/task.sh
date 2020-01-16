@@ -52,12 +52,12 @@ ibmcloud_failed_discovery_check_workaround() {
 }
 
 delete_pod() {
-  local namespace
-  local pod_name
+  local namespace pod_name deployment_name
 
   namespace="$1"
-  pod_name=$(kubectl -n kube-system get pods | grep "$2" | awk '{ print $1 }')
-  kubectl -n "$namespace" delete pod "$pod_name"
+  deployment_name="$2"
+  kubectl -n "$namespace" get pods | grep "$deployment_name" | awk '{ print $1 }' | xargs kubectl -n "$namespace" delete pod
+  kubectl -n "$namespace" rollout status deployment "$deployment_name"
 }
 
 main
