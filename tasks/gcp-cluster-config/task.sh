@@ -64,6 +64,9 @@ eirini:
 
   secrets:
     BLOBSTORE_PASSWORD: $BITS_SECRET
+sizing:
+  router:
+    count: 2
 
 EOF
   popd

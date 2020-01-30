@@ -69,6 +69,9 @@ eirini:
 
   kube:
     external_ips: []
+sizing:
+  router:
+    count: 2
 EOF
   popd
 }
