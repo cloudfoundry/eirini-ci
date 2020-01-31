@@ -130,12 +130,17 @@ let publishReleaseJobs =
         , eiriniReleaseRepo = eiriniReleaseRepo
         , ghPagesRepo = ghPagesRepo
         , githubRelease = githubRelease
-        , writeableEiriniRepo = writeableEiriniRepo
-        , writeableStagingRepo = writeableStagingRepo
+        , writeableEiriniRepo = writeableEiriniRepo , writeableStagingRepo = writeableStagingRepo
         , versionResource =
             ../dhall-modules/resources/version.dhall inputs.githubPrivateKey
         }
 
-let jobs = deploySCFJobs # cleanupBlobstoreJob # publishReleaseJobs
+let theEggPolice = ../dhall-modules/the-egg-police.dhall eiriniReleaseRepo inputs.githubPrivateKey
+
+let jobs =
+        deploySCFJobs
+      # cleanupBlobstoreJob
+      # publishReleaseJobs
+      # theEggPolice
 
 in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
