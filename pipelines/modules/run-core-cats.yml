@@ -50,8 +50,8 @@ jobs:
   - task: download-kubeconfig
     params: (( grab cloud-specific.download-kubeconfig.params ))
     file: (( grab cloud-specific.download-kubeconfig.file ))
-  - task: check-leftover-pods
-    file: ci-resources/tasks/check-leftover-pods/task.yml
+  - task: check-leftovers
+    file: ci-resources/tasks/check-leftovers/task.yml
   - task: cleanup-blobstore
     file: ci-resources/tasks/cleanup-blobstore/task.yml
     params:

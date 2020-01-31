@@ -95,7 +95,7 @@ let runCoreCats =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
                 , task = "check leftover pods"
-                , config = taskFile reqs.ciResources "check-leftover-pods"
+                , config = taskFile reqs.ciResources "check-leftovers"
                 }
 
         let job =

@@ -11,4 +11,4 @@ inputs:
 - name: ci-resources
 
 run:
-  path: ci-resources/tasks/check-leftover-pods/task.sh
+  path: ci-resources/tasks/check-leftovers/task.sh
