@@ -6,10 +6,11 @@ export KUBECONFIG="$PWD/kube/config"
 readonly NAMESPACE="eirini"
 
 check-leftovers() {
-  local resource leftovers
+  local resource filter leftovers
   resource="$1"
+  filter="$2"
 
-  leftovers=$(kubectl -n $NAMESPACE get "$resource" --no-headers=true | grep --invert-match Terminating)
+  leftovers=$(kubectl -n $NAMESPACE get "$resource" --no-headers=true | grep --invert-match Terminating | grep --extended-regexp "$filter")
   if [ "$leftovers" != "" ]; then
     echo "There are leftover $resource in the eirini namespace:"
     echo "$leftovers"
@@ -18,5 +19,5 @@ check-leftovers() {
 }
 
 check-leftovers "pods"
-check-leftovers "secrets"
+check-leftovers "secrets" ".+-registry-credentials"
 check-leftovers "poddisruptionbudgets"
