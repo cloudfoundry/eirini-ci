@@ -104,8 +104,11 @@ let setUpEnvironment
               ../dhall-modules/locks.dhall
                 { upstream = locksUpstream
                 , lockResource = lockResource
-                , ciResources = reqs.ciResources
                 , eiriniReleaseRepo = reqs.eiriniReleaseRepo
+                , acquireLockGetTrigger =
+                    ../dhall-modules/helpers/get-trigger-passed.dhall
+                      reqs.eiriniReleaseRepo
+                      [ "helm-lint" ]
                 }
 
         let nukeScfJobs =
