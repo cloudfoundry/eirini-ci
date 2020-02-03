@@ -50,7 +50,7 @@ let theEggPolice =
                                 , ''
                                   set -euo pipefail
 
-                                  curl https://retro.acceptance.eu-gb.containers.appdomain.cloud
+                                  curl --fail https://retro.acceptance.eu-gb.containers.appdomain.cloud
                                   ''
                                 ]
                           }
