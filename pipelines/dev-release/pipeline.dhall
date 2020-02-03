@@ -1,92 +1,104 @@
-let Concourse = ../dhall-modules/deps/concourse.dhall
+let clusterEventResource = ../dhall-modules/resources/cluster-event.dhall
+
+let iksCreds =
+      { account = "((ibmcloud-account))"
+      , password = "((ibmcloud-password))"
+      , user = "((ibmcloud-user))"
+      }
+
+let inputs =
+      { githubPrivateKey = "((github-private-key))"
+      , eiriniCIBranch = "((ci-resources-branch))"
+      , worldName = "((world-name))"
+      , eiriniReleaseBranch = "((eirini-release-branch))"
+      , gcsJSONKey = "((gcs-json-key))"
+      , storageClass = "((storage_class))"
+      , clusterAdminPassword = "((cluster_admin_password))"
+      , uaaAdminClientSecret = "((uaa_admin_client_secret))"
+      , natsPassword = "((nats_password))"
+      }
+
+let creds = (../dhall-modules/types/creds.dhall).IKSCreds iksCreds
 
 let Prelude = ../dhall-modules/deps/prelude.dhall
 
-let JSON = (../dhall-modules/deps/prelude.dhall).JSON
+let Concourse = ../dhall-modules/deps/concourse.dhall
 
-let inputs = { githubPrivateKey = "((github-private-key))" }
+let clusterState =
+      ../dhall-modules/resources/cluster-state.dhall inputs.githubPrivateKey
 
-let every30seconds =
-        Concourse.defaults.Resource
-      ⫽ { name = "every-30-seconds"
-        , type = Concourse.Types.ResourceType.InBuilt "time"
-        , icon = Some "timer"
-        , source = Some (toMap { interval = Prelude.JSON.string "30s" })
-        }
+let ciResources =
+      ../dhall-modules/resources/ci-resources.dhall inputs.eiriniCIBranch
 
-let lock =
-      ../dhall-modules/resources/lock.dhall
-        "the-egg-police"
-        inputs.githubPrivateKey
+let clusterReadyEvent =
+      clusterEventResource inputs.worldName "ready" inputs.githubPrivateKey
 
-let lockJob =
-      Concourse.schemas.Job::{
-      , name = lock.name
-      , serial = Some True
-      , plan =
-          [ ../dhall-modules/helpers/get-trigger.dhall every30seconds
-          , Concourse.helpers.putStep
-              Concourse.schemas.PutStep::{
-              , resource = lock
-              , params = Some (toMap { acquire = JSON.bool True })
-              }
-          ]
-      }
-
-let upstream = [ "the-egg-police 🚓" ]
+let uaaReadyEvent =
+      clusterEventResource inputs.worldName "uaa-ready" inputs.githubPrivateKey
 
 let eiriniReleaseRepo =
-      ../dhall-modules/resources/eirini-release.dhall "develop"
+      ../dhall-modules/resources/eirini-release.dhall inputs.eiriniReleaseBranch
 
-let unlockJob =
-      ../dhall-modules/jobs/unlock.dhall eiriniReleaseRepo upstream lock
+let uaaResource =
+      ../dhall-modules/resources/uaa.dhall inputs.eiriniReleaseBranch
 
-let releaseLocks = ../dhall-modules/jobs/release-lock.dhall lock
+let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
 
-let lockJobs = [ lockJob, unlockJob, releaseLocks ]
+let ImageLocation = ../dhall-modules/types/image-location.dhall
 
-let curlEggTask =
-      Concourse.helpers.taskStep
-        Concourse.schemas.TaskStep::{
-        , task = "curl-egg"
-        , config =
-            Concourse.Types.TaskSpec.Config
-              Concourse.schemas.TaskConfig::{
-              , image_resource =
-                  ../dhall-modules/helpers/image-resource.dhall
-                    "eirini/ibmcloud"
-              , run =
-                  Concourse.schemas.TaskRunConfig::{
-                  , path = "bash"
-                  , args =
-                      Some
-                        [ "-c"
-                        , ''
-                          set -euo pipefail
+let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 
-                          curl https://retro.acceptance.eu-gb.containers.appdomain.cloud
-                          ''
-                        ]
-                  }
-              }
-        }
+let workerCount = 3
 
-let theEggPolice =
-      Concourse.schemas.Job::{
-      , name = "the-egg-police 🚓"
-      , serial = Some True
-      , plan =
-          [ ../dhall-modules/helpers/get-trigger-passed.dhall lock [ lock.name ]
-          , ../dhall-modules/helpers/get.dhall eiriniReleaseRepo
-          , curlEggTask
-          ]
+let kubeClusterReqs =
+      { ciResources = ciResources
+      , clusterState = clusterState
+      , clusterCreatedEvent =
+          clusterEventResource
+            inputs.worldName
+            "created"
+            inputs.githubPrivateKey
+      , clusterReadyEvent = clusterReadyEvent
+      , clusterName = inputs.worldName
+      , creds = creds
+      , workerCount = workerCount
+      , clusterPreparation =
+          ClusterPrep.Required
+            { clusterAdminPassword = inputs.clusterAdminPassword
+            , uaaAdminClientSecret = inputs.uaaAdminClientSecret
+            , natsPassword = inputs.natsPassword
+            , storageClass = inputs.storageClass
+            }
       }
+
+let deploymentReqs =
+      { clusterName = inputs.worldName
+      , uaaResources = uaaResource
+      , ciResources = ciResources
+      , eiriniReleaseRepo = eiriniReleaseRepo
+      , smokeTestsResource = smokeTestsResource
+      , clusterReadyEvent = Some clusterReadyEvent
+      , uaaReadyEvent = uaaReadyEvent
+      , clusterState = clusterState
+      , creds = creds
+      , useCertManager = "false"
+      , imageLocation = ImageLocation.InRepo {=}
+      , skippedCats = None Text
+      , autoTriggerOnEiriniRelease = False
+      , triggerDeployScfAfterUaa = False
+      , triggerDeployUaaWhenChanged = True
+      , lockResource = None Concourse.Types.Resource
+      }
+
+let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
+
+let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
+
+let runCats = ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs
 
 let jobs =
       Prelude.List.concat
         Concourse.Types.GroupedJob
-        [ [ ../dhall-modules/helpers/group-job.dhall [ "egg" ] theEggPolice ]
-        , ../dhall-modules/helpers/group-jobs.dhall [ "locky-unlocky" ] lockJobs
-        ]
+        [ kubeClusterJobs, deployEirini, [ runCats ] ]
 
 in  jobs
