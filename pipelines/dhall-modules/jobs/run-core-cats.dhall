@@ -72,13 +72,13 @@ let runCoreCats =
                 , INCLUDE_SSH = "false"
                 , INCLUDE_SSO = "true"
                 , INCLUDE_TASKS = "false"
-                , INCLUDE_V3 = "false"
+                , INCLUDE_V3 = "true"
                 , INCLUDE_ZIPKIN = "true"
                 , NO_OF_TEST_NODES = "8"
                 , SKIPPED_TESTS =
                     Prelude.Optional.default
                       Text
-                      "uses the buildpack cache after first staging|reverse log proxy streams logs"
+                      "uses the buildpack cache after first staging|reverse log proxy streams logs|v3 buildpack app lifecycle|buildpack With a single buildpack app|deployment|droplet features|Healthcheck when the healthcheck is set to process|Healthcheck when the healthcheck is set to port|Healthcheck when the healthcheck is set to http|package features|process|service instances"
                       reqs.skippedCats
                 , SKIP_SSL_VALIDATION = "true"
                 , USE_HTTP = "true"
