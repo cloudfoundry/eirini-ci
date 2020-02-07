@@ -19,7 +19,7 @@ check-scf-readiness() {
   local pods
   while true; do
     if pods=$(kubectl get pods --namespace scf); then
-      if echo "$pods" | grep -E "api-*|eirini-*|^router-*|bits-*|log-api-*" | grep -E "[01]/2|0/1"; then
+      if echo "$pods" | grep -E "api-*|eirini-*|^router-*|bits-*|log-api-*" | grep -E "[01]/2|0/1|[012]/3"; then
         echo "----"
         counter=$((counter + 1))
       else
