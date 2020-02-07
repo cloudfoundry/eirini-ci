@@ -45,6 +45,9 @@ let setUpEnvironment
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
-        in  kubeClusterJobs
+        let deployCf4K8sJob =
+              ../dhall-modules/jobs/deploy-cf-for-k8s.dhall clusterReqs
+
+        in  kubeClusterJobs # [ deployCf4K8sJob ]
 
 in  setUpEnvironment
