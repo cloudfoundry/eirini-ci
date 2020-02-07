@@ -68,17 +68,24 @@ let gkeDeploymentReqs =
         commonDeploymentReqs
       ⫽ { clusterName = "gkerini", creds = gkeCreds, isFreshini = False }
 
-let clusterNames =
-      [ gkeDeploymentReqs.clusterName
-      , freshiniDeploymentReqs.clusterName
-      , withOpiDeploymentReqs.clusterName
-      ]
+let cf4k8sDeploymentReqs =
+        commonDeploymentReqs
+      ⫽ { clusterName = "cf4k8s", creds = gkeCreds, isFreshini = False }
 
 let withOpiEnvironment = ./set-up-ci-environment.dhall withOpiDeploymentReqs
 
 let freshiniEnvironment = ./set-up-ci-environment.dhall freshiniDeploymentReqs
 
 let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
+
+let cf4k8sEnvironment =
+      ./set-up-cf-for-k8s-environment.dhall cf4k8sDeploymentReqs
+
+let clusterNames =
+      [ gkeDeploymentReqs.clusterName
+      , freshiniDeploymentReqs.clusterName
+      , withOpiDeploymentReqs.clusterName
+      ]
 
 let ffMasterModule =
       ../dhall-modules/ff-master.dhall
@@ -97,6 +104,7 @@ let jobs =
         , withOpiEnvironment
         , gkeEnvironment
         , freshiniEnvironment
+        , cf4k8sEnvironment
         , ffMasterModule
         ]
 
