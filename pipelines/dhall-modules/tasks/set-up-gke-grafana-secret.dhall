@@ -10,9 +10,7 @@ in  Concourse.helpers.taskStep
             , outputs =
                 Some [ Concourse.schemas.TaskOutput::{ name = "secret" } ]
             , run =
-                Concourse.schemas.TaskRunConfig::{
-                , path = "bash"
-                , args = Some [ "-c", "echo grafana-certs > secret/name" ]
-                }
+                ../helpers/bash-script-task.dhall
+                  "echo grafana-certs > secret/name"
             }
       }

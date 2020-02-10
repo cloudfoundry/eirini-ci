@@ -2,6 +2,14 @@ let Concourse = ../dhall-modules/deps/concourse.dhall
 
 let ciResources = ../dhall-modules/resources/ci-resources.dhall "master"
 
+let script =
+      ''
+      set -euo pipefail
+
+      find "${ciResources.name}" -name pipeline.dhall -type f | xargs -n 1 -t dhall type --quiet --file
+      echo "✅ Pipeline is fine ✅"
+      ''
+
 let job =
       Concourse.schemas.Job::{
       , name = "check-dhall"
@@ -24,19 +32,7 @@ let job =
                             }
                           ]
                     , run =
-                        Concourse.schemas.TaskRunConfig::{
-                        , path = "bash"
-                        , args =
-                            Some
-                              [ "-c"
-                              , ''
-                                set -euo pipefail
-
-                                find "${ciResources.name}" -name pipeline.dhall -type f | xargs -n 1 -t dhall type --quiet --file
-                                echo "✅ Pipeline is fine ✅"
-                                ''
-                              ]
-                        }
+                        ../dhall-modules/helpers/bash-script-task.dhall script
                     }
               }
           ]

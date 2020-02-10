@@ -37,6 +37,17 @@ in    λ(writeableEiriniReleaseRepo : Types.Resource)
       let updateDigestLines =
             `List`.map ImageReq Text toUpdateDigestLine reqs.images
 
+      let script =
+            ''
+            set -euo pipefail
+
+            ${./functions/update-digest.sh as Text}
+
+            ${`Text`.concatSep "\n" updateDigestLines}
+
+            commit-changes "${reqs.componentName}" "./${codeRepoInput.name}"
+            ''
+
       in  helpers.taskStep
             schemas.TaskStep::{
             , task = "update-version-files"
@@ -52,22 +63,6 @@ in    λ(writeableEiriniReleaseRepo : Types.Resource)
                           , name = "eirini-release-updated"
                           }
                         ]
-                  , run =
-                      schemas.TaskRunConfig::{
-                      , path = "bash"
-                      , args =
-                          Some
-                            [ "-c"
-                            , ''
-                              set -euo pipefail
-
-                              ${./functions/update-digest.sh as Text}
-
-                              ${`Text`.concatSep "\n" updateDigestLines}
-
-                              commit-changes "${reqs.componentName}" "./${codeRepoInput.name}"
-                              ''
-                            ]
-                      }
+                  , run = ../helpers/bash-script-task.dhall script
                   }
             }

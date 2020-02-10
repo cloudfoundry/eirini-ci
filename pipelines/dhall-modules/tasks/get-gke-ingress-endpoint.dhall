@@ -11,13 +11,7 @@ in    λ(clusterName : Text)
               , outputs =
                   Some [ Concourse.schemas.TaskOutput::{ name = "ingress" } ]
               , run =
-                  Concourse.schemas.TaskRunConfig::{
-                  , path = "bash"
-                  , args =
-                      Some
-                        [ "-c"
-                        , "echo ${clusterName}.ci-envs.eirini.cf-app.com > ingress/endpoint"
-                        ]
-                  }
+                  ../helpers/bash-script-task.dhall
+                    "echo ${clusterName}.ci-envs.eirini.cf-app.com > ingress/endpoint"
               }
         }

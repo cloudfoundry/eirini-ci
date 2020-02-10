@@ -32,10 +32,6 @@ in    λ(clusterName : Text)
                         ]
                   , outputs =
                       Some [ Concourse.schemas.TaskOutput::{ name = "secret" } ]
-                  , run =
-                      Concourse.schemas.TaskRunConfig::{
-                      , path = "bash"
-                      , args = Some [ "-c", script ]
-                      }
+                  , run = ../helpers/bash-script-task.dhall script
                   }
             }

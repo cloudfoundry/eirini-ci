@@ -21,10 +21,6 @@ in    λ(ciResources : Concourse.Types.Resource)
                           }
                         , Concourse.schemas.TaskInput::{ name = "kube" }
                         ]
-                  , run =
-                      Concourse.schemas.TaskRunConfig::{
-                      , path = "bash"
-                      , args = Some [ "-c", script ]
-                      }
+                  , run = ../helpers/bash-script-task.dhall script
                   }
             }

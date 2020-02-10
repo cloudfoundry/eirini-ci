@@ -44,10 +44,6 @@ in    λ(ciResources : Concourse.Types.Resource)
                         , Concourse.schemas.TaskInput::{ name = "ingress" }
                         , Concourse.schemas.TaskInput::{ name = "secret" }
                         ]
-                  , run =
-                      Concourse.schemas.TaskRunConfig::{
-                      , path = "bash"
-                      , args = Some [ "-c", script ]
-                      }
+                  , run = ../helpers/bash-script-task.dhall script
                   }
             }

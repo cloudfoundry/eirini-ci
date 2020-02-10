@@ -30,12 +30,7 @@ let task =
                             , name = "values-file"
                             }
                           ]
-                    , run =
-                        Concourse.schemas.TaskRunConfig::{
-                        , path = "bash"
-                        , args = Some [ "-c", script ]
-                        }
-                    }
+                  , run = ../helpers/bash-script-task.dhall script
               }
 
 in  task

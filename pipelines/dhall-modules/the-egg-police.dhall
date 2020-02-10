@@ -42,18 +42,12 @@ let theEggPolice =
                           ../dhall-modules/helpers/image-resource.dhall
                             "eirini/ibmcloud"
                       , run =
-                          Concourse.schemas.TaskRunConfig::{
-                          , path = "bash"
-                          , args =
-                              Some
-                                [ "-c"
-                                , ''
-                                  set -euo pipefail
+                          ../dhall-modules/helpers/bash-script-task.dhall
+                            ''
+                            set -euo pipefail
 
-                                  curl --fail https://retro.acceptance.eu-gb.containers.appdomain.cloud
-                                  ''
-                                ]
-                          }
+                            curl --fail https://retro.acceptance.eu-gb.containers.appdomain.cloud
+                            ''
                       }
                 }
 
