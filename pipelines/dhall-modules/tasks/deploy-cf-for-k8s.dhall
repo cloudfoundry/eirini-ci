@@ -2,14 +2,15 @@ let Concourse = ../deps/concourse.dhall
 
 let task =
         λ(cfForK8s : Concourse.Types.Resource)
+      → λ(ciResources : Concourse.Types.Resource)
       → λ(clusterConfig : Concourse.Types.Resource)
+      → λ(clusterName : Text)
       → let script =
               ''
               set -euo pipefail
+              ${./functions/deploy-cf-for-k8s.sh as Text}
 
-              export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
-              export KUBECONFIG="$PWD/kube/config"
-              ${cfForK8s.name}/bin/install-cf.sh ./${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml
+              deploy-cf ${clusterName}
               ''
 
         in  Concourse.helpers.taskStep
@@ -25,6 +26,9 @@ let task =
                         Some
                           [ Concourse.schemas.TaskInput::{
                             , name = cfForK8s.name
+                            }
+                          , Concourse.schemas.TaskInput::{
+                            , name = ciResources.name
                             }
                           , Concourse.schemas.TaskInput::{
                             , name = clusterConfig.name

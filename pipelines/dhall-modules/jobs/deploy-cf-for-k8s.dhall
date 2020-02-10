@@ -14,11 +14,15 @@ let deployCf4K8sJob
                 reqs.creds
 
         let deployCf4K8sTask =
-              ../tasks/deploy-cf-for-k8s.dhall cf4k8sRepo reqs.clusterState
+              ../tasks/deploy-cf-for-k8s.dhall
+                cf4k8sRepo
+                reqs.ciResources
+                reqs.clusterState
+                reqs.clusterName
 
         let deployCf4K8sJob =
               Concourse.schemas.Job::{
-              , name = "deploy-cf-for-k8s"
+              , name = "deploy-cf-for-k8s-${reqs.clusterName}"
               , serial_groups = Some [ reqs.clusterName ]
               , public = Some True
               , plan =
