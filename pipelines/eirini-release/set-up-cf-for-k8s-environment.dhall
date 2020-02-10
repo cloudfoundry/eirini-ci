@@ -14,12 +14,6 @@ let setUpEnvironment
               ../dhall-modules/resources/cluster-state.dhall
                 reqs.stateGitHubPrivateKey
 
-        let clusterReadyEvent =
-              clusterEventResource
-                reqs.clusterName
-                "ready"
-                reqs.stateGitHubPrivateKey
-
         let clusterCreatedEvent =
               clusterEventResource
                 reqs.clusterName
@@ -30,24 +24,17 @@ let setUpEnvironment
               { ciResources = reqs.ciResources
               , clusterState = clusterState
               , clusterCreatedEvent = clusterCreatedEvent
-              , clusterReadyEvent = clusterReadyEvent
+              , clusterReadyEvent = clusterCreatedEvent
               , clusterName = reqs.clusterName
               , workerCount = 3
               , creds = reqs.creds
-              , clusterPreparation =
-                  ClusterPrep.Required
-                    { clusterAdminPassword = reqs.clusterAdminPassword
-                    , uaaAdminClientSecret = reqs.uaaAdminClientSecret
-                    , natsPassword = reqs.natsPassword
-                    , storageClass = reqs.storageClass
-                    }
+              , clusterPreparation = ClusterPrep.NotRequired
               }
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
-        let deployCf4K8sJob =
-              ../dhall-modules/jobs/deploy-cf-for-k8s.dhall clusterReqs
+        let cf4K8sJobs = ../dhall-modules/cf-for-k8s.dhall clusterReqs
 
-        in  kubeClusterJobs # [ deployCf4K8sJob ]
+        in  kubeClusterJobs # cf4K8sJobs
 
 in  setUpEnvironment

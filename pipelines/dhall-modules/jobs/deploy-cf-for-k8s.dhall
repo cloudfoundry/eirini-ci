@@ -27,7 +27,7 @@ let deployCf4K8sJob
                   , ../helpers/get.dhall reqs.clusterState
                   , ../helpers/get-trigger-passed.dhall
                       reqs.clusterReadyEvent
-                      [ "prepare-cluster-${reqs.clusterName}" ]
+                      [ "create-cluster-${reqs.clusterName}" ]
                   , downloadKubeConfig
                   , deployCf4K8sTask
                   ]
