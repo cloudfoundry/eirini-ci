@@ -13,13 +13,8 @@ let deployCf4K8sJob
                 reqs.clusterName
                 reqs.creds
 
-        let generateValuesTask = ../tasks/generate-cf-for-k8s-values.dhall
-
-        let deployCf4K8sTask = downloadKubeConfig
-
-        let runCf4K8sSmokeTestsTasks = downloadKubeConfig
-
-        let deleteCf4K8sTask = downloadKubeConfig
+        let deployCf4K8sTask =
+              ../tasks/deploy-cf-for-k8s.dhall cf4k8sRepo reqs.clusterState
 
         let deployCf4K8sJob =
               Concourse.schemas.Job::{
@@ -29,14 +24,12 @@ let deployCf4K8sJob
               , plan =
                   [ ../helpers/get-trigger.dhall cf4k8sRepo
                   , ../helpers/get.dhall reqs.ciResources
+                  , ../helpers/get.dhall reqs.clusterState
                   , ../helpers/get-trigger-passed.dhall
                       reqs.clusterReadyEvent
                       [ "prepare-cluster-${reqs.clusterName}" ]
                   , downloadKubeConfig
-                  , generateValuesTask cf4k8sRepo reqs.clusterName
                   , deployCf4K8sTask
-                  , runCf4K8sSmokeTestsTasks
-                  , deleteCf4K8sTask
                   ]
               }
 
