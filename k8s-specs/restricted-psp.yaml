@@ -53,7 +53,7 @@ spec:
       min: 1
     rule: MustRunAs
   runAsUser:
-    rule: RunAsAny
+    rule: MustRunAsNonRoot
   seLinux:
     rule: RunAsAny
   supplementalGroups:
