@@ -38,7 +38,7 @@ let deployCf4K8sJob
               }
 
         in  ../helpers/group-job.dhall
-              [ "deploy-cf-for-k8s-${reqs.clusterName}" ]
+              [ "cf-for-k8s-${reqs.clusterName}" ]
               deployCf4K8sJob
 
 in  deployCf4K8sJob
