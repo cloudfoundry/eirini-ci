@@ -80,18 +80,26 @@ jobs:
           set -euo pipefail
 
           unzip postfacto/package.zip -d postfacto/
-          cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/config.js
-          mysql_password="$(cat mysql-password/password)"
-          redis_password="$(cat redis-password/password)"
+          cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/
+          mysql_password="$( cat mysql-password/password )"
+          redis_password="$( cat redis-password/password )"
           scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
           cf_domain="$(goml get -f "$scf_values" -p "env.DOMAIN")"
           cf_admin_password="$(goml get -f "$scf_values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
           cf api "api.$cf_domain" --skip-ssl-validation
           cf auth admin "$cf_admin_password"
           cf target -o postfacto -s postfacto
+
+          ingress_endpoint="$(goml get -f "$scf_values" -p "eirini.opi.ingress_endpoint")"
           cf push -f eirini-private-config/postfacto-deployment/api/manifest.yml \
             -p postfacto/package/assets \
-            --var redis-password=${redis_password} --var mysql-password=${mysql_password}
+            --var api-app-name=postfacto-api \
+            --var pcf-url=${ingress_endpoint} \
+            --var domain=${ingress_endpoint} \
+            --var namespace=postfacto-dbs \
+            --var redis-password=${redis_password} \
+            --var mysql-password=${mysql_password}
+
       inputs:
       - name: postfacto
       - name: eirini-private-config
