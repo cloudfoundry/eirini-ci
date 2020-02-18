@@ -12,7 +12,8 @@ let task =
               SMOKE_TEST_PASSWORD=$(goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml --prop cf_admin_password)
               SMOKE_TEST_APPS_DOMAIN=$(goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml --prop app_domains.0)
               export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_USERNAME SMOKE_TEST_API_ENDPOINT
-              ${cfForK8s.name}/bin/run-smoke-tests.sh
+              cd ${cfForK8s.name}/tests/smoke
+              ginkgo -r
               ''
 
         in  Concourse.helpers.taskStep
