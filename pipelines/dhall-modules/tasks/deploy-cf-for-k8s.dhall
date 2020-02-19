@@ -1,8 +1,7 @@
 let Concourse = ../deps/concourse.dhall
 
 let task =
-        λ(cfForK8s : Concourse.Types.Resource)
-      → λ(ciResources : Concourse.Types.Resource)
+        λ(ciResources : Concourse.Types.Resource)
       → λ(clusterConfig : Concourse.Types.Resource)
       → λ(clusterName : Text)
       → let script =
@@ -24,9 +23,7 @@ let task =
                           "relintdockerhubpushbot/cf-for-k8s-ci"
                     , inputs =
                         Some
-                          [ Concourse.schemas.TaskInput::{
-                            , name = cfForK8s.name
-                            }
+                          [ Concourse.schemas.TaskInput::{ name = "cf-for-k8s" }
                           , Concourse.schemas.TaskInput::{
                             , name = ciResources.name
                             }
