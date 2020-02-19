@@ -7,8 +7,8 @@ let task =
               ''
               set -euo pipefail
 
-              rm -rf ${cf4k8s.name}/build/eirini/eirini
-              cp -r ${eiriniRelease.name}/helm/eirini  ${cf4k8s.name}/build/eirini/
+              rm -rf ${cf4k8s.name}/build/eirini/_vendir/eirini
+              cp -r ${eiriniRelease.name}/helm/eirini  ${cf4k8s.name}/build/eirini/_vendir/
 
               ./${cf4k8s.name}/build/eirini/build.sh
 
@@ -39,8 +39,6 @@ let task =
                             }
                           ]
                     }
-              , output_mapping =
-                  Some (toMap { patched-cf-for-k8s = "cf-for-k8s" })
               }
 
 in  task

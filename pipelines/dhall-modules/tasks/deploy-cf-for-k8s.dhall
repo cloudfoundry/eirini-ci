@@ -23,7 +23,7 @@ let task =
                           "relintdockerhubpushbot/cf-for-k8s-ci"
                     , inputs =
                         Some
-                          [ Concourse.schemas.TaskInput::{ name = "cf-for-k8s" }
+                          [ Concourse.schemas.TaskInput::{ name = "patched-cf-for-k8s" }
                           , Concourse.schemas.TaskInput::{
                             , name = ciResources.name
                             }
