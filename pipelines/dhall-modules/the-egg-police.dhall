@@ -27,8 +27,8 @@ let theEggPolice =
                 { upstream = upstream
                 , lockResource = lock
                 , eiriniReleaseRepo = eiriniRelease
-                , acquireLockGetTrigger =
-                    ./helpers/get-trigger.dhall every30seconds
+                , acquireLockGetTriggers =
+                    [ ./helpers/get-trigger.dhall every30seconds ]
                 }
 
         let curlEggTask =
