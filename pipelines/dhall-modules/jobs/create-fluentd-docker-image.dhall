@@ -15,20 +15,6 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               gitRepo
               [ "run-fluentd-unit-tests" ]
 
-      let baseImage =
-            ../helpers/docker-resource-no-creds.dhall
-              "fluentd-image"
-              "fluent/fluentd-kubernetes-daemonset"
-              (Some "v1-debian-elasticsearch")
-
-      let triggerOnBaseImage =
-            Concourse.helpers.getStep
-              Concourse.schemas.GetStep::{
-              , resource = baseImage
-              , trigger = Some True
-              , params = Some (toMap { skip_download = Prelude.JSON.bool True })
-              }
-
       let putDocker =
             Concourse.helpers.putStep
               Concourse.schemas.PutStep::{
@@ -49,7 +35,6 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               [ in_parallel
                   [ ../helpers/get.dhall reqs.ciResources
                   , triggerOnFluentdRepo
-                  , triggerOnBaseImage
                   ]
               , ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
               , putDocker
