@@ -7,16 +7,14 @@ let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 let deployCf4K8sJob
     : CF4K8SDeploymentReqs → Concourse.Types.GroupedJob
     =   λ(reqs : CF4K8SDeploymentReqs)
-      → let cf4k8sRepo = ../resources/cf-for-k8s.dhall "master"
-
-        let downloadKubeConfig =
+      → let downloadKubeConfig =
               ../tasks/download-kubeconfig.dhall
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
 
         let patchEiriniRelease =
-              ../tasks/patch-eirini-release.dhall cf4k8sRepo reqs.eiriniRelease
+              ../tasks/patch-eirini-release.dhall reqs.cf4k8s reqs.eiriniRelease
 
         let deployCf4K8sTask =
               ../tasks/deploy-cf-for-k8s.dhall
@@ -28,6 +26,21 @@ let deployCf4K8sJob
               Concourse.helpers.getStep
                 Concourse.schemas.GetStep::{
                 , resource = reqs.eiriniRelease
+                , trigger = Some True
+                , passed =
+                    Prelude.Optional.map
+                      Concourse.Types.Resource
+                      (List Text)
+                      (   λ(r : Concourse.Types.Resource)
+                        → [ "lock-${reqs.clusterName}" ]
+                      )
+                      reqs.lockResource
+                }
+
+        let getCf4k8s =
+              Concourse.helpers.getStep
+                Concourse.schemas.GetStep::{
+                , resource = reqs.cf4k8s
                 , trigger = Some True
                 , passed =
                     Prelude.Optional.map
@@ -52,7 +65,7 @@ let deployCf4K8sJob
               , plan =
                     lockSteps
                   # [ getEiriniRelease
-                    , ../helpers/get.dhall cf4k8sRepo
+                    , getCf4k8s
                     , ../helpers/get.dhall reqs.ciResources
                     , ../helpers/get.dhall reqs.clusterState
                     , ../helpers/get-trigger-passed.dhall

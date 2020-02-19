@@ -4,7 +4,7 @@ let Requirements =
       { upstream : List Text
       , lockResource : Concourse.Types.Resource
       , eiriniReleaseRepo : Concourse.Types.Resource
-      , acquireLockGetTrigger : Concourse.Types.Step
+      , acquireLockGetTriggers : List Concourse.Types.Step
       }
 
 in    λ(reqs : Requirements)
@@ -12,7 +12,7 @@ in    λ(reqs : Requirements)
             [ ./jobs/acquire-lock.dhall
                 reqs.eiriniReleaseRepo
                 reqs.lockResource
-                reqs.acquireLockGetTrigger
+                reqs.acquireLockGetTriggers
             , ./jobs/unlock.dhall
                 reqs.eiriniReleaseRepo
                 reqs.upstream

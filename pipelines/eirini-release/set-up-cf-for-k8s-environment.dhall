@@ -25,6 +25,8 @@ let setUpEnvironment
                 reqs.clusterName
                 reqs.stateGitHubPrivateKey
 
+        let cf4k8sRepo = ../dhall-modules/resources/cf-for-k8s.dhall "master"
+
         let clusterReqs =
               { ciResources = reqs.ciResources
               , clusterState = clusterState
@@ -44,6 +46,7 @@ let setUpEnvironment
               , clusterReadyEvent = clusterCreatedEvent
               , creds = reqs.creds
               , lockResource = Some lockResource
+              , cf4k8s = cf4k8sRepo
               }
 
         let locksUpstream = [ "smoke-tests-${reqs.clusterName}" ]
@@ -53,10 +56,12 @@ let setUpEnvironment
                 { upstream = locksUpstream
                 , lockResource = lockResource
                 , eiriniReleaseRepo = reqs.eiriniReleaseRepo
-                , acquireLockGetTrigger =
-                    ../dhall-modules/helpers/get-trigger-passed.dhall
-                      reqs.eiriniReleaseRepo
-                      [ "helm-lint" ]
+                , acquireLockGetTriggers =
+                    [ ../dhall-modules/helpers/get-trigger-passed.dhall
+                        reqs.eiriniReleaseRepo
+                        [ "helm-lint" ]
+                    , ../dhall-modules/helpers/get-trigger.dhall cf4k8sRepo
+                    ]
                 }
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
