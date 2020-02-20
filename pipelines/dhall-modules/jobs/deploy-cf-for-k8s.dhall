@@ -13,6 +13,8 @@ let deployCf4K8sJob
                 reqs.clusterName
                 reqs.creds
 
+        let deleteCf4K8s = ../tasks/delete-cf-for-k8s.dhall
+
         let patchEiriniRelease =
               ../tasks/patch-eirini-release.dhall reqs.cf4k8s reqs.eiriniRelease
 
@@ -72,6 +74,7 @@ let deployCf4K8sJob
                         reqs.clusterReadyEvent
                         [ "create-cluster-${reqs.clusterName}" ]
                     , downloadKubeConfig
+                    , deleteCf4K8s
                     , patchEiriniRelease
                     , deployCf4K8sTask
                     ]
