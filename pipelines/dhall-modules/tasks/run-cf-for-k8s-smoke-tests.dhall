@@ -14,7 +14,7 @@ let task =
 
               export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_USERNAME SMOKE_TEST_API_ENDPOINT
               cd ${cfForK8s.name}/tests/smoke
-              ginkgo -r
+              ginkgo -v -r
               ''
 
         in  Concourse.helpers.taskStep
