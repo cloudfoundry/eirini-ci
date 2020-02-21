@@ -1,36 +1,42 @@
 let Concourse = ../deps/concourse.dhall
 
 let task =
-        λ(cfForK8s : Concourse.Types.Resource)
+        λ(ciResources : Concourse.Types.Resource)
       → λ(clusterName : Text)
+      → λ(creds : ../types/creds.dhall)
       → let script =
               ''
-              set -euo pipefail
+               set -euo pipefail
+               ${./functions/generate-cf-for-k8s-loadbalancer-values.sh as Text}
 
-              "${cfForK8s.name}"/hack/generate-values.sh "${clusterName}".ci-envs.eirini.cf-app.com > values-file/values.yml
+               generate-values ${clusterName}
               ''
+
+        let cloudParams = ../helpers/get-creds.dhall creds
 
         in  Concourse.helpers.taskStep
               Concourse.schemas.TaskStep::{
-              , task = "generate values"
+              , task = "generate loadbalancer values"
               , config =
                   Concourse.Types.TaskSpec.Config
                     Concourse.schemas.TaskConfig::{
                     , image_resource =
-                        ../helpers/image-resource.dhall "eirini/ibmcloud"
+                        ../helpers/image-resource.dhall "eirini/gcloud"
                     , inputs =
                         Some
                           [ Concourse.schemas.TaskInput::{
-                            , name = cfForK8s.name
+                            , name = ciResources.name
                             }
                           ]
                     , outputs =
                         Some
                           [ Concourse.schemas.TaskOutput::{
-                            , name = "values-file"
+                            , name = "loadbalancer-values-file"
                             }
                           ]
-                  , run = ../helpers/bash-script-task.dhall script
+                    , run = ../helpers/bash-script-task.dhall script
+                    }
+              , params = Some cloudParams
               }
 
 in  task

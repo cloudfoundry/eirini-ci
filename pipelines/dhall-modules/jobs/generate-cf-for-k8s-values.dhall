@@ -4,25 +4,39 @@ let Prelude = ../deps/prelude.dhall
 
 let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 
-let deployCf4K8sJob
+let generateValues
     : CF4K8SDeploymentReqs → Concourse.Types.GroupedJob
     =   λ(reqs : CF4K8SDeploymentReqs)
-      → let downloadKubeConfig =
-              ../tasks/download-kubeconfig.dhall
+      → let generateDefaultValues =
+              ../tasks/generate-default-cf-for-k8s-values.dhall
+                reqs.cf4k8s
+                reqs.clusterName
+
+        let generateLoadBalancerValues =
+              ../tasks/generate-cf-for-k8s-loadbalancer-values.dhall
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
 
-        let deleteCf4K8s = ../tasks/delete-cf-for-k8s.dhall
-
-        let patchEiriniRelease =
-              ../tasks/patch-eirini-release.dhall reqs.cf4k8s reqs.eiriniRelease
-
-        let deployCf4K8sTask =
-              ../tasks/deploy-cf-for-k8s.dhall
-                reqs.ciResources
+        let aggregateValuesFiles =
+              ../tasks/aggregate-cf-for-k8s-values.dhall
                 reqs.clusterState
                 reqs.clusterName
+
+        let putClusterState =
+              Concourse.helpers.putStep
+                (   Concourse.defaults.PutStep
+                  ⫽ { resource = reqs.clusterState
+                    , params =
+                        Some
+                          ( toMap
+                              { repository =
+                                  Prelude.JSON.string "state-modified"
+                              , merge = Prelude.JSON.bool True
+                              }
+                          )
+                    }
+                )
 
         let getEiriniRelease =
               Concourse.helpers.getStep
@@ -34,7 +48,7 @@ let deployCf4K8sJob
                       Concourse.Types.Resource
                       (List Text)
                       (   λ(r : Concourse.Types.Resource)
-                        → [ "generate-cf-for-k8s-values" ]
+                        → [ "lock-${reqs.clusterName}" ]
                       )
                       reqs.lockResource
                 }
@@ -49,7 +63,7 @@ let deployCf4K8sJob
                       Concourse.Types.Resource
                       (List Text)
                       (   λ(r : Concourse.Types.Resource)
-                        → [ "generate-cf-for-k8s-values" ]
+                        → [ "lock-${reqs.clusterName}" ]
                       )
                       reqs.lockResource
                 }
@@ -57,31 +71,31 @@ let deployCf4K8sJob
         let lockSteps =
               ./steps/lock-steps.dhall
                 reqs.lockResource
-                [ "generate-cf-for-k8s-values" ]
+                [ "lock-${reqs.clusterName}" ]
 
-        let deployCf4K8sJob =
+        let generateValuesJob =
               Concourse.schemas.Job::{
-              , name = "deploy-cf-for-k8s-${reqs.clusterName}"
+              , name = "generate-cf-for-k8s-values"
               , serial_groups = Some [ reqs.clusterName ]
               , public = Some True
               , plan =
                     lockSteps
-                  # [ getEiriniRelease
-                    , getCf4k8s
-                    , ../helpers/get.dhall reqs.ciResources
+                  # [ getCf4k8s
+                    , getEiriniRelease
                     , ../helpers/get.dhall reqs.clusterState
+                    , ../helpers/get.dhall reqs.ciResources
                     , ../helpers/get-trigger-passed.dhall
                         reqs.clusterReadyEvent
-                        [ "generate-cf-for-k8s-values" ]
-                    , downloadKubeConfig
-                    , deleteCf4K8s
-                    , patchEiriniRelease
-                    , deployCf4K8sTask
+                        [ "create-cluster-${reqs.clusterName}" ]
+                    , generateDefaultValues
+                    , generateLoadBalancerValues
+                    , aggregateValuesFiles
+                    , putClusterState
                     ]
               }
 
         in  ../helpers/group-job.dhall
               [ "cf-for-k8s-${reqs.clusterName}" ]
-              deployCf4K8sJob
+              generateValuesJob
 
-in  deployCf4K8sJob
+in  generateValues
