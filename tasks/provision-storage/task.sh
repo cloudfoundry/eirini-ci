@@ -24,7 +24,7 @@ wait_for_service_availability() {
       return 0
     fi
 
-    if [[ $counter -gt 60 ]]; then
+    if [[ $counter -gt 1800 ]]; then
       echo "Unavalable services" >&2
       echo "$services" >&2
       exit 1
