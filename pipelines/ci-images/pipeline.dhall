@@ -97,4 +97,4 @@ let jobs =
       # mapToJobs buildImageWithGolang [ "gcloud", "ci" ]
       # [ buildStagingIntegrationImage ]
 
-in  sendSlackNotification jobs
+in  Concourse.render.pipeline sendSlackNotification jobs

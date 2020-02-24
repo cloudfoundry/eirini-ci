@@ -15,8 +15,12 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
 
+dhall-to-json <<< "$script_dir/pipeline.dhall" \
+  | jq '.resources = (.resources|unique)' \
+  | jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' > "$PIPELINE_YML"
+
 fly -t "${target}" \
   set-pipeline \
   -p check-dhall \
-  -c <(dhall-fly <<<"$script_dir/pipeline.dhall") \
+  -c <(dhall-to-json <<<"$script_dir/pipeline.dhall") \
   --load-vars-from "$private_repo/concourse/common.yml"

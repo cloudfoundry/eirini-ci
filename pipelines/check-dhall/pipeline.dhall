@@ -38,4 +38,6 @@ let job =
           ]
       }
 
-in  ../dhall-modules/helpers/slack-on-fail-jobs.dhall [ job ]
+let jobs = [ ../dhall-modules/helpers/slack-on-fail-job.dhall job ]
+
+in  Concourse.render.pipeline jobs

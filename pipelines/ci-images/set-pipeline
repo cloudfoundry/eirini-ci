@@ -15,10 +15,16 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
 
+PIPELINE_YML=$(mktemp)
+dhall-to-json <<< "$script_dir/pipeline.dhall" \
+  | jq '.resources = (.resources|unique)' \
+  | jq '.resource_types = (.resource_types|unique)' \
+  | jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' > "$PIPELINE_YML"
+
 fly -t "${target}" \
   set-pipeline \
   -p ci-images \
-  -c <(dhall-fly <<<"$script_dir/pipeline.dhall") \
+  -c "$PIPELINE_YML" \
   -v docker_hub_user=eiriniuser \
   -v docker_hub_password="$(pass eirini/docker-hub)" \
   --load-vars-from "$private_repo/concourse/common.yml"

@@ -141,4 +141,5 @@ let jobs =
         Concourse.Types.GroupedJob
         [ kubeClusterJobs, runTestJobs, updateVersionJobs, runStagingTestJobs ]
 
-in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
+let pipeline =  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
+in Concourse.render.groupedJobs pipeline

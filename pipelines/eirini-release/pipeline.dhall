@@ -108,4 +108,5 @@ let jobs =
         , ffMasterModule
         ]
 
-in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
+let pipeline =  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
+in Concourse.render.groupedJobs pipeline

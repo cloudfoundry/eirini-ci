@@ -191,4 +191,4 @@ let jobs =
         , [ runCats ]
         ]
 
-in  jobs
+in  Concourse.render.pipeline jobs
