@@ -51,6 +51,7 @@ let lisbonEnv = ./set-up-dev-env.dhall lisbonReqs
 
 let tarnovoEnv = ./set-up-dev-env.dhall tarnovoReqs
 
-in  Prelude.List.concat
+let jobs =  Prelude.List.concat
       Concourse.Types.GroupedJob
       [ kyotoEnv, lisbonEnv, tarnovoEnv ]
+in Concourse.render.groupedJobs jobs

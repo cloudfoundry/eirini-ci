@@ -14,13 +14,13 @@ fi
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
+PIPELINE_YML=$(mktemp)
 
 dhall-to-json <<< "$script_dir/pipeline.dhall" \
-  | jq '.resources = (.resources|unique)' \
-  | jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' > "$PIPELINE_YML"
+  | jq '.resources = (.resources|unique)' > "$PIPELINE_YML"
 
 fly -t "${target}" \
   set-pipeline \
   -p check-dhall \
-  -c <(dhall-to-json <<<"$script_dir/pipeline.dhall") \
+  -c "$PIPELINE_YML" \
   --load-vars-from "$private_repo/concourse/common.yml"

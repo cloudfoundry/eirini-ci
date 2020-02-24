@@ -191,4 +191,4 @@ let jobs =
         , [ runCats ]
         ]
 
-in  Concourse.render.pipeline jobs
+in  Concourse.render.groupedJobs jobs
