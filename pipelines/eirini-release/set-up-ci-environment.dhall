@@ -51,6 +51,7 @@ let setUpEnvironment
                     , natsPassword = reqs.natsPassword
                     , storageClass = reqs.storageClass
                     }
+              , enableDeleteTimer = True
               }
 
         let useCertManager =

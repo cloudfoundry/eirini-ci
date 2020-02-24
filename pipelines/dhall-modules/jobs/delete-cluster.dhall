@@ -66,17 +66,24 @@ let deleteClusterJob
                     }
                 )
 
+        let deleteTimer =
+                    if reqs.enableDeleteTimer
+
+              then  [ ../helpers/get-trigger.dhall deleteTimer ]
+
+              else  [] : List Concourse.Types.Step
+
         in    Concourse.defaults.Job
             ⫽ { name = "delete-cluster-${reqs.clusterName}"
               , plan =
-                  [ ../helpers/get-trigger.dhall deleteTimer
-                  , ../helpers/get.dhall reqs.ciResources
-                  , purgeDeploymentsTask
-                  , deleteCluster
-                  , ../helpers/get.dhall reqs.clusterState
-                  , deleteValuesFile
-                  , putClusterState
-                  ]
+                    deleteTimer
+                  # [ ../helpers/get.dhall reqs.ciResources
+                    , purgeDeploymentsTask
+                    , deleteCluster
+                    , ../helpers/get.dhall reqs.clusterState
+                    , deleteValuesFile
+                    , putClusterState
+                    ]
               }
 
 in  deleteClusterJob

@@ -36,6 +36,7 @@ let setUpEnvironment
               , workerCount = 3
               , creds = reqs.creds
               , clusterPreparation = ClusterPrep.NotRequired
+              , enableDeleteTimer = True
               }
 
         let deploymentReqs =

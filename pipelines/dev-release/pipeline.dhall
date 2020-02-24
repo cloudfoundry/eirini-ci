@@ -69,6 +69,7 @@ let kubeClusterReqs =
             , natsPassword = inputs.natsPassword
             , storageClass = inputs.storageClass
             }
+      , enableDeleteTimer = False
       }
 
 let deploymentReqs =

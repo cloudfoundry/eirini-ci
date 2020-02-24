@@ -10,4 +10,5 @@ in  { ciResources : Concourse.Types.Resource
     , creds : Creds
     , workerCount : Natural
     , clusterPreparation : ./cluster-prep.dhall
+    , enableDeleteTimer : Bool
     }
