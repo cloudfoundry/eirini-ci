@@ -1,7 +1,5 @@
 let Concourse = ../deps/concourse.dhall
 
-let Prelude = ../deps/prelude.dhall
-
 let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 
 let deployCf4K8sJob
@@ -29,14 +27,7 @@ let deployCf4K8sJob
                 Concourse.schemas.GetStep::{
                 , resource = reqs.eiriniRelease
                 , trigger = Some True
-                , passed =
-                    Prelude.Optional.map
-                      Concourse.Types.Resource
-                      (List Text)
-                      (   λ(r : Concourse.Types.Resource)
-                        → [ "generate-cf-for-k8s-values" ]
-                      )
-                      reqs.lockResource
+                , passed = Some [ "generate-cf-for-k8s-values" ]
                 }
 
         let getCf4k8s =
@@ -44,20 +35,26 @@ let deployCf4K8sJob
                 Concourse.schemas.GetStep::{
                 , resource = reqs.cf4k8s
                 , trigger = Some True
-                , passed =
-                    Prelude.Optional.map
-                      Concourse.Types.Resource
-                      (List Text)
-                      (   λ(r : Concourse.Types.Resource)
-                        → [ "generate-cf-for-k8s-values" ]
-                      )
-                      reqs.lockResource
+                , passed = Some [ "generate-cf-for-k8s-values" ]
                 }
 
         let lockSteps =
               ./steps/lock-steps.dhall
                 reqs.lockResource
                 [ "generate-cf-for-k8s-values" ]
+
+        let clusterReadyEvent =
+              Optional/fold
+                Concourse.Types.Resource
+                reqs.clusterReadyEvent
+                (List Concourse.Types.Step)
+                (   λ(resource : Concourse.Types.Resource)
+                  → [ ../helpers/get-trigger-passed.dhall
+                        resource
+                        [ "generate-cf-for-k8s-values" ]
+                    ]
+                )
+                ([] : List Concourse.Types.Step)
 
         let deployCf4K8sJob =
               Concourse.schemas.Job::{
@@ -70,10 +67,9 @@ let deployCf4K8sJob
                     , getCf4k8s
                     , ../helpers/get.dhall reqs.ciResources
                     , ../helpers/get.dhall reqs.clusterState
-                    , ../helpers/get-trigger-passed.dhall
-                        reqs.clusterReadyEvent
-                        [ "generate-cf-for-k8s-values" ]
-                    , downloadKubeConfig
+                    ]
+                  # clusterReadyEvent
+                  # [ downloadKubeConfig
                     , deleteCf4K8s
                     , patchEiriniRelease
                     , deployCf4K8sTask

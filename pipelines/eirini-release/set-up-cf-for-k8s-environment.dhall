@@ -43,7 +43,7 @@ let setUpEnvironment
               , ciResources = reqs.ciResources
               , clusterState = clusterState
               , eiriniRelease = reqs.eiriniReleaseRepo
-              , clusterReadyEvent = clusterCreatedEvent
+              , clusterReadyEvent = Some clusterCreatedEvent
               , creds = reqs.creds
               , lockResource = Some lockResource
               , cf4k8s = cf4k8sRepo

@@ -26,6 +26,7 @@ aggregate-files() {
   local env_dir
   env_dir="cluster-state/$1"
 
+  mkdir -p "$env_dir"
   cp default-values-file/values.yml "$env_dir"/default-values.yml
   cp loadbalancer-values-file/values.yml "$env_dir"/loadbalancer-values.yml
 }

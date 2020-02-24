@@ -29,5 +29,9 @@ fly -t "$target" \
   --var eirini-staging-repo-key="$(pass eirini/github/eirini-staging/ssh-key)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
+  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --var gcp-region="europe-west1" \
+  --var gcp-zone="europe-west1-b" \
   --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

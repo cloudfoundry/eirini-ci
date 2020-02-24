@@ -7,9 +7,9 @@ let task =
               ''
               set -euo pipefail
 
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml --prop system_domain > ${outputDirName}/smoke-test-api-endpoint
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml --prop cf_admin_password > ${outputDirName}/smoke-test-password
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/scf-config-values.yaml --prop app_domains.0 > ${outputDirName}/smoke-test-apps-domain
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop system_domain > ${outputDirName}/smoke-test-api-endpoint
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop cf_admin_password > ${outputDirName}/smoke-test-password
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop app_domains.0 > ${outputDirName}/smoke-test-apps-domain
               ''
 
         in  Concourse.helpers.taskStep

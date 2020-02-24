@@ -73,6 +73,19 @@ let generateValues
                 reqs.lockResource
                 [ "lock-${reqs.clusterName}" ]
 
+        let clusterReadyEvent =
+              Optional/fold
+                Concourse.Types.Resource
+                reqs.clusterReadyEvent
+                (List Concourse.Types.Step)
+                (   λ(resource : Concourse.Types.Resource)
+                  → [ ../helpers/get-trigger-passed.dhall
+                        resource
+                        [ "create-cluster-${reqs.clusterName}" ]
+                    ]
+                )
+                ([] : List Concourse.Types.Step)
+
         let generateValuesJob =
               Concourse.schemas.Job::{
               , name = "generate-cf-for-k8s-values"
@@ -84,10 +97,9 @@ let generateValues
                     , getEiriniRelease
                     , ../helpers/get.dhall reqs.clusterState
                     , ../helpers/get.dhall reqs.ciResources
-                    , ../helpers/get-trigger-passed.dhall
-                        reqs.clusterReadyEvent
-                        [ "create-cluster-${reqs.clusterName}" ]
-                    , generateDefaultValues
+                    ]
+                  # clusterReadyEvent
+                  # [ generateDefaultValues
                     , generateLoadBalancerValues
                     , aggregateValuesFiles
                     , putClusterState
