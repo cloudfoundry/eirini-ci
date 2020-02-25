@@ -92,6 +92,7 @@
               , natsPassword = inputs.natsPassword
               , storageClass = inputs.storageClass
               }
+        , enableDeleteTimer = False
         }
 
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
