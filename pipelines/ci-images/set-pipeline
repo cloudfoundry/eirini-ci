@@ -19,7 +19,7 @@ PIPELINE_YML=$(mktemp)
 dhall-to-json <<< "$script_dir/pipeline.dhall" \
   | jq '.resources = (.resources|unique)' \
   | jq '.resource_types = (.resource_types|unique)' \
-  | jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' > "$PIPELINE_YML"
+   > "$PIPELINE_YML"
 
 fly -t "${target}" \
   set-pipeline \

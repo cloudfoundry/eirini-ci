@@ -8,8 +8,6 @@ let dockerHubUser = "((docker_hub_user))"
 
 let dockerHubPassword = "((docker_hub_password))"
 
-let sendSlackNotification = ../dhall-modules/helpers/slack-on-fail-jobs.dhall
-
 let imageResource =
         λ(name : Text)
       → ../dhall-modules/helpers/docker-resource.dhall
@@ -97,4 +95,6 @@ let jobs =
       # mapToJobs buildImageWithGolang [ "gcloud", "ci" ]
       # [ buildStagingIntegrationImage ]
 
-in  Concourse.render.groupedJobs sendSlackNotification jobs
+let slackedJobs = ../dhall-modules/helpers/slack-on-fail-jobs.dhall jobs
+
+in  Concourse.render.pipeline slackedJobs
