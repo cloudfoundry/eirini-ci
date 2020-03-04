@@ -16,8 +16,8 @@ private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
 PIPELINE_YML=$(mktemp)
 
-dhall-to-json <<< "$script_dir/pipeline.dhall" \
-  | jq '.resources = (.resources|unique)' > "$PIPELINE_YML"
+dhall-to-json <<<"$script_dir/pipeline.dhall" |
+  jq '.resources = (.resources|unique)' >"$PIPELINE_YML"
 
 fly -t "${target}" \
   set-pipeline \

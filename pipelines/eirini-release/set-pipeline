@@ -12,10 +12,10 @@ readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
 export worker_count
 
-dhall-to-json <<< "$basedir/pipeline.dhall" \
-  | jq '.resources = (.resources|unique)' \
-  | jq '.resource_types = (.resource_types|unique)' \
-  | jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' > "$PIPELINE_YML"
+dhall-to-json <<<"$basedir/pipeline.dhall" |
+  jq '.resources = (.resources|unique)' |
+  jq '.resource_types = (.resource_types|unique)' |
+  jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' >"$PIPELINE_YML"
 
 fly -t "$target" \
   set-pipeline \
