@@ -30,6 +30,7 @@
           eiriniDockerResource "route-statefulset-informer"
       , metricsCollector = eiriniDockerResource "metrics-collector"
       , eventReporter = eiriniDockerResource "event-reporter"
+      , stagingReporter = eiriniDockerResource "staging-reporter"
       , stagingDownloader = stagingDockerResource "downloader"
       , stagingExecutor = stagingDockerResource "executor"
       , stagingUploader = stagingDockerResource "uploader"

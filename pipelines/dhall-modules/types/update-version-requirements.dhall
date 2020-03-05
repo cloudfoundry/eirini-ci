@@ -18,4 +18,5 @@ in  { writeableEiriniReleaseRepo : Concourse.Types.Resource
     , dockerSecretSmuggler : Concourse.Types.Resource
     , dockerMetricsCollector : Concourse.Types.Resource
     , dockerEventReporter : Concourse.Types.Resource
+    , dockerStagingReporter : Concourse.Types.Resource
     }

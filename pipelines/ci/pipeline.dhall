@@ -94,6 +94,7 @@ let updateVersionReqs =
       , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
       , dockerMetricsCollector = docker.metricsCollector
       , dockerEventReporter = docker.eventReporter
+      , dockerStagingReporter = docker.stagingReporter
       }
 
 let runStagingTestReqs =
@@ -127,6 +128,7 @@ let runTestJobs =
         , dockerRouteStatefulsetInformer = docker.routeStatefulsetInformer
         , dockerMetricsCollector = docker.metricsCollector
         , dockerEventReporter = docker.eventReporter
+        , dockerStagingReporter = docker.stagingReporter
         , creds = creds
         , upstream = { name = "create-cluster", event = clusterCreatedEvent }
         , eiriniUpstreams = None (List Text)

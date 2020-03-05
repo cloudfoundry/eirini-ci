@@ -22,6 +22,7 @@
                   , name = "metrics-collector"
                   }
                 , { docker = reqs.dockerEventReporter, name = "event-reporter" }
+                , { docker = reqs.dockerStagingReporter, name = "staging-reporter" }
                 ]
             , upstreamJob = "create-go-docker-images"
             }
