@@ -1,15 +1,16 @@
 let Concourse = ../deps/concourse.dhall
 
 let task =
-        λ(clusterConfig : Concourse.Types.Resource)
+        λ(clusterName : Text)
+      → λ(clusterConfig : Concourse.Types.Resource)
       → λ(outputDirName : Text)
       → let script =
               ''
               set -euo pipefail
 
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop system_domain > ${outputDirName}/smoke-test-api-endpoint
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop cf_admin_password > ${outputDirName}/smoke-test-password
-              goml get --file ${clusterConfig.name}/environments/kube-clusters/cf4k8s/default-values.yml --prop app_domains.0 > ${outputDirName}/smoke-test-apps-domain
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/${clusterName}/default-values.yml --prop system_domain > ${outputDirName}/smoke-test-api-endpoint
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/${clusterName}/default-values.yml --prop cf_admin_password > ${outputDirName}/smoke-test-password
+              goml get --file ${clusterConfig.name}/environments/kube-clusters/${clusterName}/default-values.yml --prop app_domains.0 > ${outputDirName}/smoke-test-apps-domain
               ''
 
         in  Concourse.helpers.taskStep

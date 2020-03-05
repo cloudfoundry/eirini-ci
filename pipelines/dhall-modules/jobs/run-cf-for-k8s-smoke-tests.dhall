@@ -9,6 +9,7 @@ let deployCf4K8sJob
 
         let prepareSmokeTestsTask =
               ../tasks/prepare-cf-for-k8s-smoke-tests.dhall
+                reqs.clusterName
                 reqs.clusterState
                 varsDir
 
