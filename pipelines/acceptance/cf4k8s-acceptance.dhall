@@ -20,7 +20,7 @@ let cf4k8sDeploymentReqs =
       , clusterReadyEvent = None Concourse.Types.Resource
       , creds = gkeCreds
       , lockResource = None Concourse.Types.Resource
-      , cf4k8s = ../dhall-modules/resources/cf-for-k8s.dhall "master"
+      , cf4k8s = ../dhall-modules/resources/cf-for-k8s.dhall
       }
 
 in  ../dhall-modules/cf-for-k8s.dhall cf4k8sDeploymentReqs
