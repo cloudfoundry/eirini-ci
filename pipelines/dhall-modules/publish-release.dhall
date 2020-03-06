@@ -67,7 +67,7 @@ let publishReleaseJobs =
                     , ./helpers/get-named.dhall reqs.clusterState "state"
                     , ./helpers/get-passed.dhall
                         reqs.eiriniReleaseRepo
-                        [ "run-smoke-tests-acceptance", "the-egg-police 🚓" ]
+                        [ "run-smoke-tests-acceptance", "the-egg-police 🚓", "smoke-tests-cf4k8s4a8e" ]
                     , ./helpers/get.dhall reqs.versionResource
                     , boringTask "create-release"
                     , boringTask "update-helm-repo"

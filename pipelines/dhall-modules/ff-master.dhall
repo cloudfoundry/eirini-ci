@@ -12,7 +12,7 @@ in    λ(reqs : ./types/ff-master-requirements.dhall)
             [ ./jobs/fast-forward-master-release.dhall
                 reqs.eiriniReleaseRepo
                 reqs.writeableReleaseRepoMaster
-                upstreamSteps
+                (upstreamSteps # [ "smoke-tests-cf4k8s" ])
             ]
 
       in  ./helpers/group-jobs.dhall [ "fast-forward" ] jobs
