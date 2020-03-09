@@ -48,6 +48,7 @@ install_block_storage_prodivder() {
 
 ibmcloud_failed_discovery_check_workaround() {
   delete_pod "kube-system" "vpn"
+  kubectl -n kube-system scale deployment metrics-server --replicas 2
   delete_pod "kube-system" "metrics-server"
 }
 
