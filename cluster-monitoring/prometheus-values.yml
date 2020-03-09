@@ -13,3 +13,6 @@ podSecurityPolicy:
 nodeExporter:
   podSecurityPolicy:
     enabled: true
+kube-state-metrics:
+  podSecurityPolicy:
+    enabled: true
