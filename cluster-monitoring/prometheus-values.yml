@@ -8,3 +8,8 @@ server:
     scrape_interval: 30s
   extraArgs:
     storage.tsdb.retention.size: 15GB
+podSecurityPolicy:
+  enabled: true
+nodeExporter:
+  podSecurityPolicy:
+    enabled: true
