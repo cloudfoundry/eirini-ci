@@ -9,7 +9,7 @@ bump-version() {
   local cluster_name master_api_version
   cluster_name="$1"
 
-  master_api_version="$(ibmcloud ks cluster get --cluster ${cluster_name} --json | jq --raw-output '.masterKubeVersion' | cut -d _ -f 1)"
+  master_api_version="$(ibmcloud ks cluster get --cluster "${cluster_name}" --json | jq --raw-output '.masterKubeVersion' | cut -d _ -f 1)"
   if ! is-latest "${master_api_version}"; then
     echo "Updating Kube master..."
     update-master "$cluster_name"
@@ -24,9 +24,8 @@ wait-until-deployed() {
   cluster_name="$1"
 
   local counter=0
-  local master_state
   while true; do
-    current_master_kube_version="$(ibmcloud ks cluster get --cluster ${cluster_name} --json | jq --raw-output '.masterKubeVersion')"
+    current_master_kube_version="$(ibmcloud ks cluster get --cluster "${cluster_name}" --json | jq --raw-output '.masterKubeVersion')"
     if [ "$current_master_kube_version" != "$(get-latest-k8s-version)" ]; then
       echo "----"
       counter=$((counter + 1))
@@ -62,18 +61,18 @@ update-master() {
 }
 
 get-latest-k8s-version() {
-  ibmcloud ks versions --json \
-    | jq --raw-output '.kubernetes[-1] | "\(.major).\(.minor).\(.patch)"'
+  ibmcloud ks versions --json |
+    jq --raw-output '.kubernetes[-1] | "\(.major).\(.minor).\(.patch)"'
 }
 
 update-workers() {
   local cluster_name
   cluster_name="$1"
 
-  outdated_workers="$(ibmcloud ks workers --cluster ${cluster_name} -s --json | jq --raw-output '.[] | select(.kubeVersion != .targetVersion) | .id')"
+  outdated_workers="$(ibmcloud ks workers --cluster "${cluster_name}" -s --json | jq --raw-output '.[] | select(.kubeVersion != .targetVersion) | .id')"
 
   IFS=$'\n'
-  for worker in $(echo "$outdated_workers"); do
+  for worker in $outdated_workers; do
     update-worker "$cluster_name" "$worker"
   done
 }
