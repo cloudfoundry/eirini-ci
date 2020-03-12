@@ -72,6 +72,14 @@ let cf4k8sDeploymentReqs =
         commonDeploymentReqs
       ⫽ { clusterName = "cf4k8s", creds = gkeCreds, isFreshini = False }
 
+let kubecfDeploymentReqs =
+        commonDeploymentReqs
+      ⫽ { clusterName = "cf3"
+        , creds = iksCreds
+        , isFreshini = False
+        , ciResources = ciResources
+        }
+
 let withOpiEnvironment = ./set-up-ci-environment.dhall withOpiDeploymentReqs
 
 let freshiniEnvironment = ./set-up-ci-environment.dhall freshiniDeploymentReqs
@@ -80,6 +88,8 @@ let gkeEnvironment = ./set-up-ci-environment.dhall gkeDeploymentReqs
 
 let cf4k8sEnvironment =
       ./set-up-cf-for-k8s-environment.dhall cf4k8sDeploymentReqs
+
+let kubecfEnvironment = ./set-up-kubecf-environment.dhall kubecfDeploymentReqs
 
 let clusterNames =
       [ gkeDeploymentReqs.clusterName
@@ -105,8 +115,10 @@ let jobs =
         , gkeEnvironment
         , freshiniEnvironment
         , cf4k8sEnvironment
+        , kubecfEnvironment
         , ffMasterModule
         ]
 
-let pipeline =  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
-in Concourse.render.groupedJobs pipeline
+let pipeline = ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs
+
+in  Concourse.render.groupedJobs pipeline

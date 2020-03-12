@@ -3,8 +3,8 @@ let Concourse = ../deps/concourse.dhall
 let taskFile
     : Concourse.Types.Resource → Text → Concourse.Types.TaskSpec
     =   λ(ciResources : Concourse.Types.Resource)
-      → λ(taskName : Text)
+      → λ(taskPath : Text)
       → Concourse.Types.TaskSpec.File
-          "${ciResources.name}/tasks/${taskName}/task.yml"
+          "${ciResources.name}/tasks/${taskPath}/task.yml"
 
 in  taskFile
