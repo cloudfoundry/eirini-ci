@@ -10,9 +10,8 @@ let task =
               SMOKE_TEST_API_ENDPOINT=api.$(cat ${varsDir}/smoke-test-api-endpoint)
               SMOKE_TEST_PASSWORD=$(cat ${varsDir}/smoke-test-password)
               SMOKE_TEST_APPS_DOMAIN=$(cat ${varsDir}/smoke-test-apps-domain)
-              SMOKE_TEST_USERNAME=admin
 
-              export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_USERNAME SMOKE_TEST_API_ENDPOINT
+              export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_API_ENDPOINT
               cd ${cfForK8s.name}/tests/smoke
               ginkgo -v -r
               ''
@@ -34,6 +33,15 @@ let task =
                           , Concourse.schemas.TaskInput::{ name = varsDir }
                           ]
                     , run = ../helpers/bash-script-task.dhall script
+                    , params =
+                        Some
+                          [ { mapKey = "SMOKE_TEST_USERNAME"
+                            , mapValue = Some "admin"
+                            }
+                          , { mapKey = "SMOKE_TEST_SKIP_SSL"
+                            , mapValue = Some "true"
+                            }
+                          ]
                     }
               }
 
