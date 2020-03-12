@@ -141,7 +141,17 @@ let theEggPolice =
         eiriniReleaseRepo
         inputs.githubPrivateKey
 
+let updateClusterK8sVersionJob =
+      ../dhall-modules/jobs/bump-iks-cluster-k8s-version.dhall
+        clusterName
+        iksCreds
+        ciResources
+
 let jobs =
-      deploySCFJobs # cleanupBlobstoreJob # publishReleaseJobs # theEggPolice
+        deploySCFJobs
+      # cleanupBlobstoreJob
+      # publishReleaseJobs
+      # theEggPolice
+      # updateClusterK8sVersionJob
 
 in  ../dhall-modules/helpers/slack-on-fail-grouped-jobs.dhall jobs

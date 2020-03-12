@@ -4,21 +4,17 @@ let Prelude = ../deps/prelude.dhall
 
 let clusterEventResource
     : Text → Text → Text → Concourse.Types.Resource
-    =   λ ( clusterName
-          : Text
-          )
+    =   λ(clusterName : Text)
       → λ(event : Text)
       → λ(privateKey : Text)
       →   Concourse.defaults.Resource
-        ⫽ { name =
-              "cluster-${clusterName}-staging-event-${event}"
+        ⫽ { name = "cluster-${clusterName}-staging-event-${event}"
           , type = Concourse.Types.ResourceType.InBuilt "semver"
           , icon = Some "check-decagram"
           , source =
               Some
                 ( toMap
-                    { driver =
-                        Prelude.JSON.string "git"
+                    { driver = Prelude.JSON.string "git"
                     , uri =
                         Prelude.JSON.string
                           "git@github.com:cloudfoundry/eirini-private-config.git"
