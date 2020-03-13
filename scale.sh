@@ -2,7 +2,7 @@
 
 # 100 times push something different, curl it. After everything log it, run `cf app <>`
 domain="scaletest.ci-envs.eirini.cf-app.com"
-cd $1
+cd $1 || exit 1
 
 for i in {1..100}
 do
