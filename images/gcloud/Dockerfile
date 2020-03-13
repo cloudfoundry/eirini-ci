@@ -1,6 +1,6 @@
 FROM google/cloud-sdk
 
-ARG TERRAFORM_VERSION=0.12.17
+ARG TERRAFORM_VERSION=0.12.23
 
 RUN apt-get update && \
     apt-get install --yes \
