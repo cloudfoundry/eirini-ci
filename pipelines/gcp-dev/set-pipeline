@@ -41,7 +41,7 @@ fly --target "$target" \
   --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
-   --var eirini-release-branch="$eirini_release_branch" \
+  --var eirini-release-branch="$eirini_release_branch" \
   --var worker_count="$worker_count" \
   --var storage_class=standard \
   --load-vars-from "$private_repo/concourse/common.yml"
