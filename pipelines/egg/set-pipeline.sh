@@ -14,4 +14,5 @@ fly -t "$target" \
   --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
+  --var mysql-password="$(pass show eirini/mysql-admin-password)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)"
