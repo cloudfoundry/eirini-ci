@@ -4,6 +4,8 @@ set -xeuo pipefail
 
 readonly ENV_DIR="state/environments/kube-clusters/$CLUSTER_NAME"
 
+export KUBECONFIG=kube/config
+
 main() {
   install-operator
   install-kubecf

@@ -2,6 +2,8 @@
 
 set -xeuo pipefail
 
+export KUBECONFIG=kube/config
+
 helm delete --purge kubecf
 kubectl delete namespace kubecf
 
