@@ -69,7 +69,7 @@ set-external-ips() {
   for ip in $node_ips; do
     goml set -f "$CLUSTER_DIR/values.yaml" -p eirini.kube.external_ips.+ -v "$ip"
     goml set -f "$CLUSTER_DIR/values.yaml" -p bits.kube.external_ips.+ -v "$ip"
-    goml set -f "$CLUSTER_DIR/values.yaml" -p services.router.external_ips.+ -v "$ip"
+    goml set -f "$CLUSTER_DIR/values.yaml" -p services.router.externalIPs.+ -v "$ip"
   done
   popd
 }
