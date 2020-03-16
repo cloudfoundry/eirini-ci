@@ -14,4 +14,4 @@ helm_delete_if_exists() {
 helm_delete_if_exists kubecf
 
 helm_delete_if_exists cf-operator
-kubectl get customresourcedefinitions,validatingwebhookconfigurations,mutatingwebhookconfigurations --output name | xargs kubectl delete
+kubectl delete customresourcedefinitions,validatingwebhookconfigurations,mutatingwebhookconfigurations --all
