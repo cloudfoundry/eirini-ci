@@ -4,7 +4,7 @@ set -xeuo pipefail
 
 readonly ENV_DIR="state/environments/kube-clusters/$CLUSTER_NAME"
 
-main(){
+main() {
   install-operator
   install-kubecf
   create-registry-secret
@@ -12,13 +12,13 @@ main(){
   copy-secret "kubecf.var-eirini-tls-client-cert"
 }
 
-install-operator(){
+install-operator() {
   helm upgrade --install cf-operator "$CF_OPERATOR_CHART_URL" \
     --namespace cf-operator \
     --set "global.operator.watchNamespace=kubecf"
 }
 
-install-kubecf(){
+install-kubecf() {
   local cluster_secret bits_tls_key bits_tls_crt
   cluster_secret=$(kubectl -n default get secrets | grep "$(kubectl config current-context | cut -d / -f 1)" | awk '{print $1}')
   bits_tls_key="$(kubectl get secret "$cluster_secret" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
