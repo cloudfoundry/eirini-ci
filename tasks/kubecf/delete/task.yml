@@ -9,7 +9,6 @@ image_resource:
 inputs:
 - name: kube
 - name: ci-resources
-- name: state
 
 run:
   path: ci-resources/tasks/kubecf/delete/task.sh
