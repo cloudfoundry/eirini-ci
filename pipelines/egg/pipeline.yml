@@ -20,7 +20,52 @@ resources:
   source:
     branch: master
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
+- name: jefe
+  icon: git
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/herrjulz/jefe
 jobs:
+- name: deploy-jefe🌵
+  serial: true
+  plan:
+  - in_parallel:
+    - get: jefe
+      trigger: true
+    - get: eirini-private-config
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      run:
+        path: bash
+        args:
+        - -c
+        - |
+          #!/bin/bash
+          set -euo pipefail
+
+          scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
+          cf_admin_password="$(goml get -f "$scf_values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+          cf_domain="$(goml get -f "$scf_values" -p "env.DOMAIN")"
+          cf api "api.$cf_domain" --skip-ssl-validation
+          cf auth admin "$cf_admin_password"
+          cf target -o jefe -s jefe
+
+          set -x
+          ./eirini-private-config/jefe/deploy.sh $PWD/jefe
+      params:
+        JEFE_GITHUB_CLIENT_ID: ((jefe-client-id))
+        JEFE_GITHUB_SECRET: ((jefe-client-secret))
+        JEFE_DSN: jefeuser:((jefe-dbuser-pass))@tcp(sl-eu-gb-p05.dblayer.com:19522)
+        JEFE_O_AUTH_ORG: eirini-forks
+      inputs:
+      - name: jefe
+      - name: eirini-private-config
 - name: deploy-postfacto
   serial: true
   plan:
