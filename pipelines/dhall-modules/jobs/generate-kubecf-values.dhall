@@ -91,9 +91,14 @@ in    λ(reqs : KubeCFDeploymentRequirements)
                   lockSteps
                 # [ ../helpers/get.dhall reqs.ciResources
                   , ../helpers/get.dhall reqs.clusterState
-                  , ../helpers/get-trigger-passed.dhall reqs.eiriniRelease [ "lock-${reqs.clusterName}" ]
-                  , ../helpers/get-trigger-passed.dhall reqs.kubecfRepo [ "lock-${reqs.clusterName}" ]
+                  , ../helpers/get-trigger-passed.dhall
+                      reqs.eiriniRelease
+                      [ "lock-${reqs.clusterName}" ]
+                  , ../helpers/get-trigger-passed.dhall
+                      reqs.kubecfRepo
+                      [ "lock-${reqs.clusterName}" ]
                   , downloadKubeConfig
+                  , ../tasks/configure-kubernetes.dhall reqs.ciResources
                   ]
                 # clusterReadyEvent
                 # iksSpecificSteps
