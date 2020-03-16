@@ -9,8 +9,6 @@ readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 main() {
   export KUBECONFIG="$PWD/kube/config"
   generate-kubecf-values
-  generate-eirini-values
-  generate-bits-values
 
   set-external-ips
   copy-output
