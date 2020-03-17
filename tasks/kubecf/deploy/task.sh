@@ -65,11 +65,11 @@ wait-secret() {
 
   while true; do
     if secrets=$(kubectl get secrets --namespace kubecf); then
-      if echo "$secrets" | grep -v "$secret_name"; then
+      if echo "$secrets" | grep "$secret_name"; then
+        return
+      else
         echo "Secret $secret_name not found"
         counter=$((counter + 1))
-      else
-        return
       fi
     fi
 
