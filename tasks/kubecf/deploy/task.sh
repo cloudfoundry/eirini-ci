@@ -32,7 +32,7 @@ install-kubecf() {
 
   helm upgrade --install kubecf kubecf/helm \
     --namespace kubecf \
-    --values "$ENV_DIR/values.yml" \
+    --values "$ENV_DIR/values.yaml" \
     --set "bits.secrets.BITS_TLS_KEY=${bits_tls_key}" \
     --set "bits.secrets.BITS_TLS_CRT=${bits_tls_crt}"
 }
