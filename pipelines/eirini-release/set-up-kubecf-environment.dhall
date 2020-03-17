@@ -30,9 +30,9 @@ let setUpEnvironment
         let kubecfRepo =
               ../dhall-modules/helpers/git-resource.dhall
                 "kubecf"
-                "https://github.com/herrjulz/kubecf"
+                "https://github.com/herrjulz/kubecf-eirini"
                 (None Text)
-                "native-eirini"
+                "master"
 
         let lockJobs =
               ../dhall-modules/locks.dhall
