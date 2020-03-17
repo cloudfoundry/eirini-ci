@@ -7,6 +7,9 @@ readonly ENV_DIR="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
 export KUBECONFIG=kube/config
 
 main() {
+  helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
+  helm repo update
+
   install-operator
   install-kubecf
   create-registry-secret
@@ -25,8 +28,6 @@ install-kubecf() {
   cluster_secret=$(kubectl -n default get secrets | grep "$(kubectl config current-context | cut -d / -f 1)" | awk '{print $1}')
   bits_tls_key="$(kubectl get secret "$cluster_secret" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
   bits_tls_crt="$(kubectl get secret "$cluster_secret" --namespace default -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-
-  helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
 
   helm upgrade --install kubecf kubecf/helm \
     --namespace kubecf \
