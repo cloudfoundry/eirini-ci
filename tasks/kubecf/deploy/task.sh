@@ -16,6 +16,8 @@ main() {
   create-registry-secret
   copy-secret "kubecf.var-cc-bridge-cc-uploader"
   copy-secret "kubecf.var-eirini-tls-client-cert"
+
+  wait-for-kubecf
 }
 
 install-operator() {
@@ -84,6 +86,15 @@ wait-secret() {
 copy-secret() {
   wait-secret "$1"
   kubectl get secret --namespace kubecf "$1" --export -o yaml | kubectl apply -n eirini -f -
+}
+
+wait-for-kubecf() {
+  kubectl wait \
+    --namespace=kubecf \
+    --for=condition=Ready \
+    --all \
+    --timeout=2400s \
+    pod
 }
 
 main
