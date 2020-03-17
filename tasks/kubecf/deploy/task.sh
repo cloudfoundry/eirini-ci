@@ -59,7 +59,7 @@ create-registry-secret() {
 }
 
 wait-secret() {
-  local counter, secrets, secret_name
+  local counter secrets secret_name
   counter=0
   secret_name=$1
 
