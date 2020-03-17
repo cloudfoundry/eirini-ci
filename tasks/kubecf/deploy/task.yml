@@ -9,7 +9,7 @@ image_resource:
 inputs:
 - name: kube
 - name: ci-resources
-- name: state
+- name: cluster-state
 - name: kubecf
 - name: eirini-release
 

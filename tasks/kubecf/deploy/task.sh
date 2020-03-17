@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-readonly ENV_DIR="state/environments/kube-clusters/$CLUSTER_NAME"
+readonly ENV_DIR="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
 
 export KUBECONFIG=kube/config
 
