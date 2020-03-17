@@ -6,6 +6,12 @@ let IKSCreds = ../types/iks-creds.dhall
 
 let GKECreds = ../types/gke-creds.dhall
 
+let Prelude = ../deps/prelude.dhall
+
+let helpers = (../deps/concourse.dhall).helpers
+
+let defaults = (../deps/concourse.dhall).defaults
+
 in    λ(reqs : KubeCFDeploymentRequirements)
     → let generateValuesStep =
             Concourse.helpers.taskStep
@@ -82,6 +88,20 @@ in    λ(reqs : KubeCFDeploymentRequirements)
               )
               ([] : List Concourse.Types.Step)
 
+      let putClusterState =
+            helpers.putStep
+              (   defaults.PutStep
+                ⫽ { resource = reqs.clusterState
+                  , params =
+                      Some
+                        ( toMap
+                            { repository = Prelude.JSON.string "state-modified"
+                            , merge = Prelude.JSON.bool True
+                            }
+                        )
+                  }
+              )
+
       let generateKubecfJob =
             Concourse.schemas.Job::{
             , name = "generate-kubecf-${reqs.clusterName}"
@@ -102,7 +122,7 @@ in    λ(reqs : KubeCFDeploymentRequirements)
                   ]
                 # clusterReadyEvent
                 # iksSpecificSteps
-                # [ generateValuesStep ]
+                # [ generateValuesStep, putClusterState ]
             }
 
       in  ../helpers/group-job.dhall
