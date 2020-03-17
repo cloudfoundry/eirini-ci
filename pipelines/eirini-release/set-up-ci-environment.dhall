@@ -87,12 +87,23 @@ let setUpEnvironment
               , lockResource = Some lockResource
               }
 
+        let catsReqs =
+              { clusterName = reqs.clusterName
+              , eiriniReleaseRepo = reqs.eiriniReleaseRepo
+              , lockResource = Some lockResource
+              , imageLocation = ImageLocation.InRepo {=}
+              , clusterState = clusterState
+              , smokeTestsResource = smokeTestsResource
+              , ciResources = reqs.ciResources
+              , upstreamJob = "run-smoke-tests-${reqs.clusterName}"
+              , skippedCats = None Text
+              }
+
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-        let runCatsJob =
-              [ ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs ]
+        let runCatsJob = [ ../dhall-modules/jobs/run-core-cats.dhall catsReqs ]
 
         let locksUpstream =
                     if reqs.isFreshini

@@ -125,6 +125,4 @@ in    λ(reqs : KubeCFDeploymentRequirements)
                 # [ generateValuesStep, putClusterState ]
             }
 
-      in  ../helpers/group-job.dhall
-            [ "kubecf-${reqs.clusterName}" ]
-            generateKubecfJob
+      in  generateKubecfJob

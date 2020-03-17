@@ -70,6 +70,4 @@ in    λ(reqs : KubeCFDeploymentRequirements)
                 # [ downloadKubeConfig, deleteKubecf, deployKubecf ]
             }
 
-      in  ../helpers/group-job.dhall
-            [ "kubecf-${reqs.clusterName}" ]
-            deployKubecfJob
+      in  deployKubecfJob

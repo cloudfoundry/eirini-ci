@@ -1,6 +1,6 @@
 let Concourse = ../deps/concourse.dhall
 
-let Requirements = ../types/deployment-requirements.dhall
+let Requirements = ../types/tests-requirements.dhall
 
 let TaggedImageRequirements = ../types/deploy-tagged-requirements.dhall
 
@@ -16,7 +16,7 @@ let runCoreCats =
         λ(reqs : Requirements)
       → let stepsForInRepo = λ(ignored : {}) → [] : List Concourse.Types.Step
 
-        let upstreamJobs = [ "run-smoke-tests-${reqs.clusterName}" ]
+        let upstreamJobs = [ reqs.upstreamJob ]
 
         let stepsForTaggedImages =
                 λ(tagReqs : TaggedImageRequirements)
@@ -85,12 +85,6 @@ let runCoreCats =
                 , USE_LOG_CACHE = "false"
                 }
 
-        let downloadKubeconfigTask =
-              ../tasks/download-kubeconfig.dhall
-                reqs.ciResources
-                reqs.clusterName
-                reqs.creds
-
         let checkLeftoverPodsTask =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -105,7 +99,6 @@ let runCoreCats =
               , public = Some True
               , plan =
                   [ in_parallel getSteps
-                  , downloadKubeconfigTask
                   , checkLeftoverPodsTask
                   , Concourse.helpers.taskStep
                       Concourse.schemas.TaskStep::{

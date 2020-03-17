@@ -4,6 +4,8 @@ let EnvironmentRequirements = ./environment-reqs.dhall
 
 let ClusterPrep = ../dhall-modules/types/cluster-prep.dhall
 
+let ImageLocation = ../dhall-modules/types/image-location.dhall
+
 let setUpEnvironment
     : EnvironmentRequirements → List Concourse.Types.GroupedJob
     =   λ(reqs : EnvironmentRequirements)
@@ -61,11 +63,15 @@ let setUpEnvironment
 
         let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall clusterReqs
 
+        let smokeTestsResource = ../dhall-modules/resources/smoke-tests.dhall
+
         let deploymentReqs =
               { clusterName = reqs.clusterName
               , ciResources = reqs.ciResources
               , clusterState = clusterState
               , eiriniRelease = reqs.eiriniReleaseRepo
+              , smokeTestsResource = smokeTestsResource
+              , imageLocation = ImageLocation.InRepo {=}
               , clusterReadyEvent = Some clusterCreatedEvent
               , creds = reqs.creds
               , lockResource = Some lockResource
@@ -77,6 +83,20 @@ let setUpEnvironment
 
         let deployKubecfJobs = ../dhall-modules/kubecf.dhall deploymentReqs
 
-        in  kubeClusterJobs # deployKubecfJobs # lockJobs
+        let catsReqs =
+              { clusterName = reqs.clusterName
+              , eiriniReleaseRepo = reqs.eiriniReleaseRepo
+              , lockResource = Some lockResource
+              , imageLocation = ImageLocation.InRepo {=}
+              , clusterState = clusterState
+              , smokeTestsResource = smokeTestsResource
+              , ciResources = reqs.ciResources
+              , upstreamJob = "run-smoke-tests-${reqs.clusterName}"
+              , skippedCats = None Text
+              }
+
+        let runCatsJob = [ ../dhall-modules/jobs/run-core-cats.dhall catsReqs ]
+
+        in  kubeClusterJobs # deployKubecfJobs # runCatsJob # lockJobs
 
 in  setUpEnvironment
