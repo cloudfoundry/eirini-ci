@@ -77,7 +77,7 @@ helm-install() {
   helm upgrade --install "scf" \
     "eirini-release/helm/cf" \
     --namespace "scf" \
-    --values "$ENVIRONMENT"/scf-config-values.yaml \
+    --values "$ENVIRONMENT"/values.yaml \
     --values eirini-release/sizing.yaml \
     --set "secrets.UAA_CA_CERT=${CA_CERT}" \
     "${cert_args[@]}" \

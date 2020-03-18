@@ -17,7 +17,7 @@ set-kube-state() {
 
   pushd cluster-state
   mkdir --parent "$CLUSTER_DIR"
-  cat >"$CLUSTER_DIR"/scf-config-values.yaml <<EOF
+  cat >"$CLUSTER_DIR"/values.yaml <<EOF
 bits:
   env:
     DOMAIN: $cluster_domain
@@ -76,7 +76,7 @@ copy-output() {
   pushd cluster-state || exit
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
-    git add "$CLUSTER_DIR/scf-config-values.yaml"
+    git add "$CLUSTER_DIR/values.yaml"
     git config --global user.email "eirini@cloudfoundry.org"
     git config --global user.name "Come-On Eirini"
     git commit --all --message "update/add scf values file"

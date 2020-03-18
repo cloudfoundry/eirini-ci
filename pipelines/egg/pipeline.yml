@@ -49,9 +49,9 @@ jobs:
           #!/bin/bash
           set -euo pipefail
 
-          scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
-          cf_admin_password="$(goml get -f "$scf_values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
-          cf_domain="$(goml get -f "$scf_values" -p "env.DOMAIN")"
+          values=eirini-private-config/environments/kube-clusters/acceptance/values.yaml
+          cf_admin_password="$(goml get -f "$values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+          cf_domain="$(goml get -f "$values" -p "env.DOMAIN")"
           cf api "api.$cf_domain" --skip-ssl-validation
           cf auth admin "$cf_admin_password"
           cf target -o jefe -s jefe
@@ -123,14 +123,14 @@ jobs:
           unzip postfacto/package.zip -d postfacto/
           cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/
           redis_password="$( cat redis-password/password )"
-          scf_values=eirini-private-config/environments/kube-clusters/acceptance/scf-config-values.yaml
-          cf_domain="$(goml get -f "$scf_values" -p "env.DOMAIN")"
-          cf_admin_password="$(goml get -f "$scf_values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+          values=eirini-private-config/environments/kube-clusters/acceptance/values.yaml
+          cf_domain="$(goml get -f "$values" -p "env.DOMAIN")"
+          cf_admin_password="$(goml get -f "$values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
           cf api "api.$cf_domain" --skip-ssl-validation
           cf auth admin "$cf_admin_password"
           cf target -o postfacto -s postfacto
 
-          domain="$(goml get -f "$scf_values" -p "eirini.opi.ingress_endpoint")"
+          domain="$(goml get -f "$values" -p "eirini.opi.ingress_endpoint")"
 
           cf rename postfacto-api postfacto-api-old
 

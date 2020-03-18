@@ -3,7 +3,7 @@
 set -xeuo pipefail
 IFS=$'\n\t'
 
-readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/scf-config-values.yaml"
+readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/values.yaml"
 
 main() {
   set_up_gopath
