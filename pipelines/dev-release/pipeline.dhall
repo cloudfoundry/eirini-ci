@@ -105,6 +105,7 @@ let catsReqs =
       , ciResources = ciResources
       , upstreamJob = "run-smoke-tests-${inputs.worldName}"
       , skippedCats = None Text
+      , creds = creds
       }
 
 let runCats = ../dhall-modules/jobs/run-core-cats.dhall catsReqs

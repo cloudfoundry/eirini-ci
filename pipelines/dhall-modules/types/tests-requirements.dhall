@@ -2,6 +2,8 @@ let Concourse = ../deps/concourse.dhall
 
 let ImageLocation = ./image-location.dhall
 
+let Creds = ./creds.dhall
+
 in  { clusterName : Text
     , eiriniReleaseRepo : Concourse.Types.Resource
     , lockResource : Optional Concourse.Types.Resource
@@ -11,4 +13,5 @@ in  { clusterName : Text
     , ciResources : Concourse.Types.Resource
     , upstreamJob : Text
     , skippedCats : Optional Text
+    , creds : Creds
     }

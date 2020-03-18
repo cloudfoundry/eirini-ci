@@ -9,6 +9,7 @@
         , ciResources = reqs.ciResources
         , upstreamJob = "deploy-scf-eirini-${reqs.clusterName}"
         , skippedCats = None Text
+        , creds = reqs.creds
         }
 
   let jobs =

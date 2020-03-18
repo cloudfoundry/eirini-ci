@@ -93,6 +93,7 @@ let setUpEnvironment
               , ciResources = reqs.ciResources
               , upstreamJob = "run-smoke-tests-${reqs.clusterName}"
               , skippedCats = None Text
+              , creds = reqs.creds
               }
 
         let runCatsJob = [ ../dhall-modules/jobs/run-core-cats.dhall catsReqs ]

@@ -85,6 +85,12 @@ let runCoreCats =
                 , USE_LOG_CACHE = "false"
                 }
 
+        let downloadKubeconfigTask =
+              ../tasks/download-kubeconfig.dhall
+                reqs.ciResources
+                reqs.clusterName
+                reqs.creds
+
         let checkLeftoverPodsTask =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -99,6 +105,7 @@ let runCoreCats =
               , public = Some True
               , plan =
                   [ in_parallel getSteps
+                  , downloadKubeconfigTask
                   , checkLeftoverPodsTask
                   , Concourse.helpers.taskStep
                       Concourse.schemas.TaskStep::{

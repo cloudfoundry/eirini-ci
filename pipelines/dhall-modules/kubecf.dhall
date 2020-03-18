@@ -15,6 +15,7 @@ let kubeCluster
               , ciResources = reqs.ciResources
               , upstreamJob = "deploy-kubecf-${reqs.clusterName}"
               , skippedCats = None Text
+              , creds = reqs.creds
               }
 
         let jobs =
