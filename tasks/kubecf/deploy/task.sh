@@ -21,7 +21,6 @@ main() {
 }
 
 install-operator() {
-  kubectl delete --ignore-not-found=true psp ibm-privileged-psp
   # add privileged psp for cf-operator
   kubectl apply -f ci-resources/k8s-specs/cf-operator.yml
 
