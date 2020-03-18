@@ -27,7 +27,7 @@ let setUpEnvironment
                 reqs.clusterName
                 reqs.stateGitHubPrivateKey
 
-        let locksUpstream = [ "deploy-kubecf-${reqs.clusterName}" ]
+        let locksUpstream = [ "run-core-cats-${reqs.clusterName}" ]
 
         let kubecfRepo =
               ../dhall-modules/helpers/git-resource.dhall
