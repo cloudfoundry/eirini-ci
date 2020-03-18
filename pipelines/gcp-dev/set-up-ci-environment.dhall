@@ -77,8 +77,19 @@ let setUpEnvironment
 
         let deploySCFJobs = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-        let runCatsJob =
-              [ ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs ]
+        let catsReqs =
+              { clusterName = reqs.clusterName
+              , eiriniReleaseRepo = reqs.eiriniReleaseRepo
+              , lockResource = None Concourse.Types.Resource
+              , imageLocation = ImageLocation.InRepo {=}
+              , clusterState = clusterState
+              , smokeTestsResource = smokeTestsResource
+              , ciResources = reqs.ciResources
+              , upstreamJob = "run-smoke-tests-${reqs.clusterName}"
+              , skippedCats = None Text
+              }
+
+        let runCatsJob = [ ../dhall-modules/jobs/run-core-cats.dhall catsReqs ]
 
         in  kubeClusterJobs # deploySCFJobs # runCatsJob
 

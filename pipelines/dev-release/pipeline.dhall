@@ -95,7 +95,19 @@ let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs
 
 let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-let runCats = ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs
+let catsReqs =
+      { clusterName = inputs.worldName
+      , eiriniReleaseRepo = eiriniReleaseRepo
+      , lockResource = None Concourse.Types.Resource
+      , imageLocation = ImageLocation.InRepo {=}
+      , clusterState = clusterState
+      , smokeTestsResource = smokeTestsResource
+      , ciResources = ciResources
+      , upstreamJob = "run-smoke-tests-${inputs.worldName}"
+      , skippedCats = None Text
+      }
+
+let runCats = ../dhall-modules/jobs/run-core-cats.dhall catsReqs
 
 let jobs =
       Prelude.List.concat

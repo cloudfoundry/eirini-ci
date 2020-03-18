@@ -161,7 +161,21 @@
 
   let deployEirini = ../dhall-modules/deploy-eirini.dhall deploymentReqs
 
-  let runCats = ../dhall-modules/jobs/run-core-cats.dhall deploymentReqs
+  let catsReqs =
+        { clusterName = inputs.worldName
+        , eiriniReleaseRepo = eiriniReleaseRepo
+        , lockResource = None Concourse.Types.Resource
+        , imageLocation =
+            ImageLocation.FromTags
+              { eiriniRepo = eiriniRepo, deploymentVersion = deploymentVersion }
+        , clusterState = clusterState
+        , smokeTestsResource = smokeTestsResource
+        , ciResources = ciResources
+        , upstreamJob = "run-smoke-tests-${inputs.worldName}"
+        , skippedCats = None Text
+        }
+
+  let runCats = ../dhall-modules/jobs/run-core-cats.dhall catsReqs
 
   in  Prelude.List.concat
         Concourse.Types.GroupedJob
