@@ -25,7 +25,7 @@ let setUpEnvironment
                 reqs.clusterName
                 reqs.stateGitHubPrivateKey
 
-        let cf4k8sRepo = ../dhall-modules/resources/cf-for-k8s.dhall
+        let cf4k8sRepo = ../dhall-modules/resources/cf-for-k8s.dhall "master"
 
         let clusterReqs =
               { ciResources = reqs.ciResources
