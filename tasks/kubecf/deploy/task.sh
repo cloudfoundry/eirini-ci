@@ -28,9 +28,12 @@ install-operator() {
     --namespace cf-operator \
     --set "global.operator.watchNamespace=kubecf"
 
-  local operator_pod
-  operator_pod="$(kubectl get pods --namespace=cf-operator --selector=name=cf-operator --output name)"
-  kubectl wait --namespace=cf-operator --for=condition=Ready "$operator_pod"
+  kubectl wait \
+    --namespace=cf-operator \
+    --for=condition=Ready \
+    --selector=name=cf-operator \
+    --timeout=60s \
+    pod
 }
 
 install-kubecf() {
