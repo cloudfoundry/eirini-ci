@@ -26,14 +26,8 @@ install-operator() {
 
   helm upgrade --install cf-operator "$CF_OPERATOR_CHART_URL" \
     --namespace cf-operator \
-    --set "global.operator.watchNamespace=kubecf"
-
-  kubectl wait \
-    --namespace=cf-operator \
-    --for=condition=Ready \
-    --selector=name=cf-operator \
-    --timeout=60s \
-    pod
+    --set "global.operator.watchNamespace=kubecf" \
+    --wait
 }
 
 install-kubecf() {
