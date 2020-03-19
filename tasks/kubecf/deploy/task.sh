@@ -34,6 +34,9 @@ install-operator() {
 }
 
 install-kubecf() {
+  # add privileged psp for kubecf
+  kubectl apply -f ci-resources/k8s-specs/kubecf.yml
+
   local cluster_secret bits_tls_key bits_tls_crt
   cluster_secret=$(kubectl -n default get secrets | grep "$(kubectl config current-context | cut -d / -f 1)" | awk '{print $1}')
   bits_tls_key="$(kubectl get secret "$cluster_secret" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"

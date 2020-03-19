@@ -39,18 +39,16 @@ kind: PodSecurityPolicy
 metadata:
   name: aaa-cf-operator-psp
   annotations:
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
-    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
 spec:
-  privileged: true
+  privileged: false
   allowPrivilegeEscalation: false
   volumes:
-    - '*'
-  allowedCapabilities:
     - '*'
   hostNetwork: false
   hostIPC: false
   hostPID: false
+  readOnlyRootFilesystem: false
   runAsUser:
     rule: 'RunAsAny'
   seLinux:
@@ -60,7 +58,6 @@ spec:
     rule: 'RunAsAny'
   fsGroup:
     rule: 'RunAsAny'
-  readOnlyRootFilesystem: false
 ---
 
 # cf-operator-quarks-job
