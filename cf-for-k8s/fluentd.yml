@@ -1,0 +1,72 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind": "DaemonSet", "metadata":{"name": "fluentd"}})
+---
+spec:
+  template:
+    spec:
+      containers:
+      #@overlay/match by=overlay.subset({"name": "fluentd"})
+      - image: eirini/patched-fluentd
+
+#@overlay/match by=overlay.subset({"kind": "ConfigMap", "metadata":{"name": "fluentd-config"}})
+---
+data:
+  fluentd.conf: |
+    # Inputs
+    <match kubernetes.var.log.containers.fluentd**>
+      @type null
+    </match>
+
+    <source>
+      @type tail
+      @id in_tail_container_logs
+      path /var/log/containers/*.log
+      pos_file /var/log/fluentd-containers.log.pos
+      tag kubernetes.*
+      <parse>
+        @type multi_format
+        <pattern>
+          format json
+          time_key time
+          time_format %Y-%m-%dT%H:%M:%S.%NZ
+        </pattern>
+        <pattern>
+          format /^(?<time>.+) (?<stream>stdout|stderr) [^ ]* (?<log>.*)$/
+          time_format %Y-%m-%dT%H:%M:%S.%N%:z
+        </pattern>
+      </parse>
+      read_from_head true
+    </source>
+
+    # Filters
+    <filter kubernetes.**>
+      @type kubernetes_metadata
+    </filter>
+
+    <filter **>
+      @type grep
+      <regexp>
+        key $.kubernetes.labels.cloudfoundry_org/app_guid
+        pattern /.+/
+      </regexp>
+    </filter>
+
+    <match **>
+     @type syslog_rfc5424
+     host log-cache-syslog
+     port 8082
+     transport tls
+     trusted_ca_path /ca/tls.crt
+     <format>
+       @type syslog_rfc5424
+       proc_id_field kubernetes.pod_id
+       app_name_field kubernetes.labels.cloudfoundry_org/app_guid
+     </format>
+
+     <buffer>
+       @type memory
+       flush_interval 10s
+     </buffer>
+    </match>
