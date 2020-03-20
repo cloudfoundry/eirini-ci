@@ -15,7 +15,7 @@ get-cf-credentials() {
   fi
 }
 
-get-credentials-kubecf() {
+get-kubecf-credentials() {
   goml get -f "$CONFIG_FILE" -p system_domain >cf-credentials/cf-domain
   kubectl get secret \
     --namespace kubecf kubecf.var-cf-admin-password \
@@ -23,7 +23,7 @@ get-credentials-kubecf() {
     base64 --decode >cf-credentials/cf-admin-password
 }
 
-get-credentials-scf() {
+get-scf-credentials() {
   goml get -f "$CONFIG_FILE" -p env.DOMAIN >cf-credentials/cf-domain
   goml get -f "$CONFIG_FILE" -p secrets.CLUSTER_ADMIN_PASSWORD >cf-credentials/cf-admin-password
 }
