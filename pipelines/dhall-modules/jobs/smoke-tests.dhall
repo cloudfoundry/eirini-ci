@@ -34,6 +34,15 @@ let runSmokeTests =
 
         let lockSteps = ./steps/lock-steps.dhall reqs.lockResource upstreamJobs
 
+        let downloadKubeconfig =
+              ../tasks/download-kubeconfig.dhall
+                reqs.ciResources
+                reqs.clusterName
+                reqs.creds
+
+        let getCfCredentials =
+              ../tasks/get-cf-credentials.dhall reqs.clusterName
+
         in  Concourse.schemas.Job::{
             , name = "run-smoke-tests-${reqs.clusterName}"
             , serial_groups = Some [ reqs.clusterName ]
@@ -45,6 +54,8 @@ let runSmokeTests =
                   , ../helpers/get.dhall reqs.ciResources
                   , ../helpers/get-named.dhall reqs.clusterState "state"
                   , ../helpers/get.dhall reqs.smokeTestsResource
+                  , downloadKubeconfig
+                  , getCfCredentials
                   , Concourse.helpers.taskStep
                       Concourse.schemas.TaskStep::{
                       , task = "run smoke tests"

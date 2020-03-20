@@ -3,8 +3,6 @@
 set -xeuo pipefail
 IFS=$'\n\t'
 
-readonly CONFIG_FILE="state/environments/kube-clusters/$CLUSTER_NAME/values.yaml"
-
 main() {
   set_up_gopath
   configure_tests
@@ -19,9 +17,9 @@ set_up_gopath() {
 
 configure_tests() {
   local cf_domain
-  cf_domain="$(goml get -f "$CONFIG_FILE" -p "env.DOMAIN")"
+  cf_domain="$(cat cf-credentials/cf-domain)"
   local cf_admin_password
-  cf_admin_password="$(goml get -f "$CONFIG_FILE" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+  cf_admin_password="$(cat cf-credentials/cf-admin-password)"
 
   cat >config.json <<EOF
     {

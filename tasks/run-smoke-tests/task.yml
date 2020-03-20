@@ -6,9 +6,8 @@ image_resource:
     repository: eirini/ci
 
 inputs:
-- name: ci-resources
 - name: cf-smoke-tests
-- name: state
+- name: cf-credentials
 
 params:
   IBMCLOUD_ACCOUNT:
