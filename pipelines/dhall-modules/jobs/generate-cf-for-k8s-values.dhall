@@ -11,6 +11,7 @@ let generateValues
               ../tasks/generate-default-cf-for-k8s-values.dhall
                 reqs.cf4k8s
                 reqs.clusterName
+                reqs.creds
 
         let generateLoadBalancerValues =
               ../tasks/generate-cf-for-k8s-loadbalancer-values.dhall
@@ -86,6 +87,12 @@ let generateValues
                 )
                 ([] : List Concourse.Types.Step)
 
+        let downloadKubeConfig =
+              ../tasks/download-kubeconfig.dhall
+                reqs.ciResources
+                reqs.clusterName
+                reqs.creds
+
         let generateValuesJob =
               Concourse.schemas.Job::{
               , name = "generate-cf-for-k8s-values"
@@ -99,7 +106,8 @@ let generateValues
                     , ../helpers/get.dhall reqs.ciResources
                     ]
                   # clusterReadyEvent
-                  # [ generateDefaultValues
+                  # [ downloadKubeConfig
+                    , generateDefaultValues
                     , generateLoadBalancerValues
                     , aggregateValuesFiles
                     , putClusterState
