@@ -4,7 +4,8 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: eirini/ibmcloud:helm3
+    repository: "eirini/ibmcloud"
+    tag: "helm3"
 
 inputs:
 - name: kube
