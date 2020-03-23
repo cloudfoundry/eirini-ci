@@ -78,7 +78,7 @@ let setUpEnvironment
               , kubecfRepo = kubecfRepo
               , storageClass = reqs.storageClass
               , cfOperatorChartUrl =
-                  "https://s3.amazonaws.com/cf-operators/release/helm-charts/cf-operator-v2.0.0-0.g0142d1e9.tgz"
+                  "https://s3.amazonaws.com/cf-operators/release/helm-charts/cf-operator-3.3.0%2B0.gf32b521e.tgz"
               }
 
         let deployKubecfJobs = ../dhall-modules/kubecf.dhall deploymentReqs
