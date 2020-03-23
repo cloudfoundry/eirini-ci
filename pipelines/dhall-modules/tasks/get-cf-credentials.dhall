@@ -23,7 +23,9 @@ in    λ(clusterName : Text)
                     , Concourse.schemas.TaskInput::{ name = "state" }
                     ]
               , outputs =
-                  Some [ Concourse.schemas.TaskOutput::{ name = "cf-creds" } ]
+                  Some
+                    [ Concourse.schemas.TaskOutput::{ name = "cf-credentials" }
+                    ]
               , run = ../helpers/bash-script-task.dhall script
               }
         }
