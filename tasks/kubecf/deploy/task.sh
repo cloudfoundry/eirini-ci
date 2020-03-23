@@ -7,7 +7,6 @@ readonly ENV_DIR="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
 export KUBECONFIG=kube/config
 
 main() {
-  helm init --client-only
   helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
   helm repo update
 
