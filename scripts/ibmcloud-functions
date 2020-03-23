@@ -23,7 +23,7 @@ cluster-state-is() {
 # Show details about the cluster
 cluster-state() {
   declare -r name=$1
-  ibmcloud ks cluster-get "$name" --json
+  ibmcloud ks cluster get "$name" --json
 }
 
 # Exit non-zero unless the cluster $1 has non empty ingressHostname
@@ -74,7 +74,7 @@ delete-cluster() {
   declare -r name=$1
 
   if cluster-exists "$name"; then
-    ibmcloud ks cluster-rm --cluster "$name" -f --force-delete-storage
+    ibmcloud ks cluster rm --cluster "$name" -f --force-delete-storage
   fi
 }
 
