@@ -21,6 +21,5 @@ export-kubeconfig "$CLUSTER_NAME"
 
 kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
 helm init --service-account tiller --upgrade --wait
-kubectl delete ns cf-system || true
-kubectl delete ns cf-workloads || true
+kubectl delete ns -l kapp.k14s.io/app
 purge-helm-deployments
