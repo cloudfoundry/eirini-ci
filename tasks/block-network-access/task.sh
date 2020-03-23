@@ -8,7 +8,7 @@ source ci-resources/scripts/ibmcloud-functions
 
 ibmcloud-login
 
-readonly CALICOCNF="$(ibmcloud ks cluster-config "$CLUSTER_NAME" --network -s | grep calicoctl)"
+readonly CALICOCNF="$(ibmcloud ks cluster config --cluster "$CLUSTER_NAME" --network -s | grep calicoctl)"
 
 calicoctl apply --config "$CALICOCNF" -f - <<EOF
 apiVersion: projectcalico.org/v3
