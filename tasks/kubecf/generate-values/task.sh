@@ -56,8 +56,9 @@ sizing:
     instances: 0
 
 features:
-  eirini_native:
+  eirini:
     enabled: true
+    use_helm_release: true
 EOF
   popd
 }
