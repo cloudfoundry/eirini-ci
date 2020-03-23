@@ -8,4 +8,4 @@ source ci-resources/scripts/ibmcloud-functions
 
 ibmcloud-login
 
-ibmcloud ks cluster get "$CLUSTER_NAME" --json | jq --raw-output '.ingressHostname' >ingress/endpoint
+ibmcloud ks cluster get -cluster "$CLUSTER_NAME" --json | jq --raw-output '.ingressHostname' >ingress/endpoint

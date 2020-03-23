@@ -23,7 +23,7 @@ cluster-state-is() {
 # Show details about the cluster
 cluster-state() {
   declare -r name=$1
-  ibmcloud ks cluster get "$name" --json
+  ibmcloud ks cluster get --cluster "$name" --json
 }
 
 # Exit non-zero unless the cluster $1 has non empty ingressHostname
@@ -105,7 +105,7 @@ store-kubeconfig() {
 
 cluster-exists() {
   declare -r cluster_name=$1
-  if [[ "$(ibmcloud ks cluster get "$cluster_name" 2>&1)" =~ "The specified cluster could not be found" ]]; then
+  if [[ "$(ibmcloud ks cluster get --cluster "$cluster_name" 2>&1)" =~ "The specified cluster could not be found" ]]; then
     return 1
   fi
   return 0
