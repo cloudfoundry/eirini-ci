@@ -11,7 +11,7 @@ let task =
               echo $GCP_SERVICE_ACCOUNT > account.json
               export GCP_SERVICE_ACCOUNT_JSON=$PWD/account.json
 
-              "${cfForK8s.name}"/hack/generate-values.sh "${clusterName}".ci-envs.eirini.cf-app.com > default-values-file/values.yml
+              "${cfForK8s.name}"/hack/generate-values.sh -d "${clusterName}".ci-envs.eirini.cf-app.com -g $PWD/account.json > default-values-file/values.yml
               ''
 
         let IKSCreds = ../types/iks-creds.dhall
