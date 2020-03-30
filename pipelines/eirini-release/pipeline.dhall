@@ -95,7 +95,6 @@ let clusterNames =
       [ gkeDeploymentReqs.clusterName
       , freshiniDeploymentReqs.clusterName
       , withOpiDeploymentReqs.clusterName
-      , kubecfDeploymentReqs.clusterName
       ]
 
 let ffMasterModule =
