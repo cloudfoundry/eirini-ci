@@ -50,8 +50,6 @@ services:
   router:
     externalIPs: []
 sizing:
-  diego_api:
-    instances: 0
   diego_cell:
     instances: 0
 
