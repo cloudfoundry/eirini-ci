@@ -45,13 +45,17 @@ let lisbonReqs = commonDeploymentReqs ⫽ { clusterName = "lisbon" }
 
 let tarnovoReqs = commonDeploymentReqs ⫽ { clusterName = "veliko-tarnovo" }
 
+let barcelonaReqs = commonDeploymentReqs ⫽ { clusterName = "barcelona" }
+
 let kyotoEnv = ./set-up-dev-env.dhall kyotoReqs
 
 let lisbonEnv = ./set-up-dev-env.dhall lisbonReqs
 
 let tarnovoEnv = ./set-up-dev-env.dhall tarnovoReqs
 
+let barcelonaEnv = ./set-up-dev-env.dhall barcelonaReqs
+
 let jobs =  Prelude.List.concat
       Concourse.Types.GroupedJob
-      [ kyotoEnv, lisbonEnv, tarnovoEnv ]
+      [ kyotoEnv, lisbonEnv, tarnovoEnv, barcelonaEnv ]
 in Concourse.render.groupedJobs jobs
