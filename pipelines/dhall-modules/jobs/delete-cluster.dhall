@@ -30,14 +30,15 @@ let deleteClusterJob
                 (   Concourse.defaults.TaskStep
                   ⫽ { task = "delete-kubernetes-cluster"
                     , config = taskFile reqs.ciResources taskName
-                    , params =
-                        Some
-                          (   toMap
-                                { CLUSTER_NAME = reqs.clusterName
-                                , WORKER_COUNT = Natural/show reqs.workerCount
-                                }
-                            # ../helpers/get-creds.dhall reqs.creds
-                          )
+                    , params = Some
+                        (   toMap
+                              { CLUSTER_NAME = reqs.clusterName
+                              , WORKER_COUNT = Natural/show reqs.workerCount
+                              , IS_CF4K8S_DEPLOYMENT =
+                                  if reqs.isCf4k8s then "true" else "false"
+                              }
+                          # ../helpers/get-creds.dhall reqs.creds
+                        )
                     }
                 )
 
@@ -55,14 +56,12 @@ let deleteClusterJob
               Concourse.helpers.putStep
                 (   Concourse.defaults.PutStep
                   ⫽ { resource = reqs.clusterState
-                    , params =
-                        Some
-                          ( toMap
-                              { merge = Prelude.JSON.bool True
-                              , repository =
-                                  Prelude.JSON.string "state-modified"
-                              }
-                          )
+                    , params = Some
+                        ( toMap
+                            { merge = Prelude.JSON.bool True
+                            , repository = Prelude.JSON.string "state-modified"
+                            }
+                        )
                     }
                 )
 

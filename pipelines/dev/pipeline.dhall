@@ -93,6 +93,7 @@
               , storageClass = inputs.storageClass
               }
         , enableDeleteTimer = False
+        , isCf4k8s = False
         }
 
   let kubeClusterJobs = ../dhall-modules/kube-cluster.dhall kubeClusterReqs

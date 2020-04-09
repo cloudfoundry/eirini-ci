@@ -73,6 +73,7 @@ let kubeClusterReqs =
       , workerCount = env:worker_count ? 1
       , clusterPreparation = ClusterPrep.NotRequired
       , enableDeleteTimer = True
+      , isCf4k8s = False
       }
 
 let updateVersionReqs =

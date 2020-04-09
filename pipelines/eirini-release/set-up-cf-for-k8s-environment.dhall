@@ -37,6 +37,7 @@ let setUpEnvironment
               , creds = reqs.creds
               , clusterPreparation = ClusterPrep.NotRequired
               , enableDeleteTimer = True
+              , isCf4k8s = True
               }
 
         let deploymentReqs =

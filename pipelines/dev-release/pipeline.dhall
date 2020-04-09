@@ -70,6 +70,7 @@ let kubeClusterReqs =
             , storageClass = inputs.storageClass
             }
       , enableDeleteTimer = False
+      , isCf4k8s = False
       }
 
 let deploymentReqs =

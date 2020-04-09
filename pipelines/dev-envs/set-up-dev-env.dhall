@@ -52,6 +52,7 @@ let setUpEnvironment
                     , storageClass = reqs.storageClass
                     }
               , enableDeleteTimer = True
+              , isCf4k8s = False
               }
 
         let deploymentReqs =
