@@ -26,6 +26,12 @@ resources:
   source:
     branch: master
     uri: https://github.com/herrjulz/jefe
+- name: eirinidotcf
+  icon: git
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/eirini-forks/eirinidotcf
 jobs:
 - name: deploy-jefe🌵
   serial: true
@@ -157,3 +163,15 @@ jobs:
       - name: eirini-private-config
       - name: ci-resources
       - name: redis-password
+- name: deploy-eirinidotcf
+  serial: true
+  plan:
+  - in_parallel:
+    - get: ci-resources
+    - get: eirinidotcf
+      trigger: true
+    - get: eirini-private-config
+  - task: deploy-db
+    file: ci-resources/tasks/deploy-eirinidotcf-db/task.yml
+  - task: deploy-web
+    file: ci-resources/tasks/deploy-eirinidotcf/task.yml
