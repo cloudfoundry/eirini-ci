@@ -10,6 +10,8 @@ RUN apt-get update && \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
+RUN curl -L https://k14s.io/install.sh | bash
+
 # helm
 RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && tar xfz helm-v2.16.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
 
