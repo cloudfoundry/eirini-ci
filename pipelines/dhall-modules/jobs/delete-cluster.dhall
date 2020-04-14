@@ -24,6 +24,7 @@ let deleteClusterJob
                 reqs.ciResources
                 reqs.clusterName
                 reqs.creds
+                reqs.isCf4k8s
 
         let deleteCluster =
               Concourse.helpers.taskStep
@@ -34,8 +35,6 @@ let deleteClusterJob
                         (   toMap
                               { CLUSTER_NAME = reqs.clusterName
                               , WORKER_COUNT = Natural/show reqs.workerCount
-                              , IS_CF4K8S_DEPLOYMENT =
-                                  if reqs.isCf4k8s then "true" else "false"
                               }
                           # ../helpers/get-creds.dhall reqs.creds
                         )
@@ -72,18 +71,11 @@ let deleteClusterJob
 
               else  [] : List Concourse.Types.Step
 
-        let downloadKubeConfig =
-              ../tasks/download-kubeconfig.dhall
-                reqs.ciResources
-                reqs.clusterName
-                reqs.creds
-
         in    Concourse.defaults.Job
             ⫽ { name = "delete-cluster-${reqs.clusterName}"
               , plan =
                     deleteTimer
                   # [ ../helpers/get.dhall reqs.ciResources
-                    , downloadKubeConfig
                     , purgeDeploymentsTask
                     , deleteCluster
                     , ../helpers/get.dhall reqs.clusterState

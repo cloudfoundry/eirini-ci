@@ -25,3 +25,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
 kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
 helm init --service-account tiller --upgrade --wait
 purge-helm-deployments
+
+if $IS_CF4K8S_DEPLOYMENT; then
+  kapp delete -a cf --yes
+fi

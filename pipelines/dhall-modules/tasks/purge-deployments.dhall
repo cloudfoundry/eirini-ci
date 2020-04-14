@@ -5,6 +5,7 @@ let taskFile = ../helpers/task-file.dhall
 in    λ(ciResources : Concourse.Types.Resource)
     → λ(clusterName : Text)
     → λ(creds : ../types/creds.dhall)
+    → λ(isCf4k8s : Bool)
     → let cloudParams = ../helpers/get-creds.dhall creds
 
       let taskName =
@@ -21,5 +22,12 @@ in    λ(ciResources : Concourse.Types.Resource)
             Concourse.schemas.TaskStep::{
             , task = "purge-cluster-deployments"
             , config = taskFile ciResources taskName
-            , params = Some (toMap { CLUSTER_NAME = clusterName } # cloudParams)
+            , params = Some
+                (   toMap
+                      { CLUSTER_NAME = clusterName
+                      , IS_CF4K8S_DEPLOYMENT =
+                          if isCf4k8s then "true" else "false"
+                      }
+                  # cloudParams
+                )
             }

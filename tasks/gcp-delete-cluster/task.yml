@@ -13,7 +13,6 @@ params:
   GCP_SERVICE_ACCOUNT_JSON:
   CLUSTER_NAME:
   WORKER_COUNT:
-  IS_CF4K8S_DEPLOYMENT:
 
 run:
   path: ci-resources/tasks/gcp-delete-cluster/task.sh

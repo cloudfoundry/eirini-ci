@@ -12,6 +12,7 @@ params:
   GCP_ZONE:
   GCP_SERVICE_ACCOUNT_JSON:
   CLUSTER_NAME:
+  IS_CF4K8S_DEPLOYMENT:
 
 run:
   path: ci-resources/tasks/gcp-purge-cluster-deployments/task.sh
