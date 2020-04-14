@@ -16,6 +16,7 @@ RUN  apt-get update \
        lsb-release \
        unzip \
        vim \
+       yarnpkg \
   && rm -rf /var/lib/apt/lists/*
 
 # CF CLI
