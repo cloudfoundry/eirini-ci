@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+# shellcheck disable=SC1091
 source ci-resources/scripts/ibmcloud-functions
 ibmcloud-login
 export-kubeconfig "$CLUSTER_NAME"
