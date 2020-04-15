@@ -10,9 +10,13 @@ cf api "api.$cf_domain" --skip-ssl-validation
 cf auth admin "$cf_admin_password"
 cf target -o eirinidotcf -s eirinidotcf
 
-export MYSQL_ROOT_PASSWORD="$(< db-conf/mysql-root-password)"
-export MYSQL_PORT="$(< db-conf/mysql-port)"
-export MYSQL_IP_ADDRESS="$(< db-conf/mysql-ip-address)"
+export MYSQL_ROOT_PASSWORD
+export MYSQL_PORT
+export MYSQL_IP_ADDRESS
+
+MYSQL_ROOT_PASSWORD="$(< db-conf/mysql-root-password)"
+MYSQL_PORT="$(< db-conf/mysql-port)"
+MYSQL_IP_ADDRESS="$(< db-conf/mysql-ip-address)"
 
 ups="$(cat <<EOF
 {
