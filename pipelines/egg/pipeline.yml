@@ -173,5 +173,10 @@ jobs:
     - get: eirini-private-config
   - task: deploy-db
     file: ci-resources/tasks/deploy-eirinidotcf-db/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
   - task: deploy-web
     file: ci-resources/tasks/deploy-eirinidotcf/task.yml
