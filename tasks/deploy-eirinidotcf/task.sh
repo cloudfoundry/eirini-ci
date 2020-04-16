@@ -14,9 +14,9 @@ export MYSQL_ROOT_PASSWORD
 export MYSQL_PORT
 export MYSQL_IP_ADDRESS
 
-MYSQL_ROOT_PASSWORD="$(< db-conf/mysql-root-password)"
-MYSQL_PORT="$(< db-conf/mysql-port)"
-MYSQL_IP_ADDRESS="$(< db-conf/mysql-ip-address)"
+MYSQL_ROOT_PASSWORD="$(<db-conf/mysql-root-password)"
+MYSQL_PORT="$(<db-conf/mysql-port)"
+MYSQL_IP_ADDRESS="$(<db-conf/mysql-ip-address)"
 
 ups="$(
   cat <<EOF
