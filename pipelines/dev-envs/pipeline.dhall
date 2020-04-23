@@ -10,6 +10,7 @@ let iksCredsInputs =
 
 let inputs =
       { githubPrivateKey = "((github-private-key))"
+      , githubAccessToken = "((github-access-token))"
       , storageClass = "((storage_class))"
       , clusterAdminPassword = "((cluster_admin_password))"
       , uaaAdminClientSecret = "((uaa_admin_client_secret))"
@@ -30,6 +31,7 @@ let commonDeploymentReqs =
       , ciResources = ciResources
       , eiriniReleaseRepo = eiriniReleaseRepo
       , stateGitHubPrivateKey = inputs.githubPrivateKey
+      , githubAccessToken = inputs.githubAccessToken
       , clusterAdminPassword = inputs.clusterAdminPassword
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword
@@ -55,7 +57,9 @@ let tarnovoEnv = ./set-up-dev-env.dhall tarnovoReqs
 
 let barcelonaEnv = ./set-up-dev-env.dhall barcelonaReqs
 
-let jobs =  Prelude.List.concat
-      Concourse.Types.GroupedJob
-      [ kyotoEnv, lisbonEnv, tarnovoEnv, barcelonaEnv ]
-in Concourse.render.groupedJobs jobs
+let jobs =
+      Prelude.List.concat
+        Concourse.Types.GroupedJob
+        [ kyotoEnv, lisbonEnv, tarnovoEnv, barcelonaEnv ]
+
+in  Concourse.render.groupedJobs jobs
