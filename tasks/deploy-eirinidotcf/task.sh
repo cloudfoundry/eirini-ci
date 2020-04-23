@@ -51,7 +51,7 @@ yarnpkg install
 yarnpkg run build
 cf push eirinidotcf-web
 
-if ! cf domains | grep eirini.cf > /dev/null 2>&1; then
+if ! cf domains | grep eirini.cf >/dev/null 2>&1; then
   cf create-domain eirinidotcf eirini.cf
 fi
 cf map-route eirinidotcf-web eirini.cf
