@@ -11,7 +11,10 @@ let task =
               echo $GCP_SERVICE_ACCOUNT > account.json
               export GCP_SERVICE_ACCOUNT_JSON=$PWD/account.json
 
-              "${cfForK8s.name}"/hack/generate-values.sh -d "${clusterName}".ci-envs.eirini.cf-app.com -g $PWD/account.json > default-values-file/values.yml
+              tar xzvf ${cfForK8s.name}/source.tar.gz -C .
+              sha="$(<${cfForK8s.name}/commit_sha)"
+              src_folder="cloudfoundry-cf-for-k8s-''${sha:0:7}"
+              "$src_folder"/hack/generate-values.sh -d "${clusterName}".ci-envs.eirini.cf-app.com -g $PWD/account.json > default-values-file/values.yml
               ''
 
         let IKSCreds = ../types/iks-creds.dhall
@@ -42,19 +45,15 @@ let task =
                     , image_resource =
                         ../helpers/image-resource.dhall
                           "relintdockerhubpushbot/cf-for-k8s-ci"
-                    , inputs =
-                        Some
-                          [ Concourse.schemas.TaskInput::{
-                            , name = cfForK8s.name
-                            }
-                          , Concourse.schemas.TaskInput::{ name = "kube" }
-                          ]
-                    , outputs =
-                        Some
-                          [ Concourse.schemas.TaskOutput::{
-                            , name = "default-values-file"
-                            }
-                          ]
+                    , inputs = Some
+                      [ Concourse.schemas.TaskInput::{ name = cfForK8s.name }
+                      , Concourse.schemas.TaskInput::{ name = "kube" }
+                      ]
+                    , outputs = Some
+                      [ Concourse.schemas.TaskOutput::{
+                        , name = "default-values-file"
+                        }
+                      ]
                     , run = ../helpers/bash-script-task.dhall script
                     }
               , params = Some cloudParams

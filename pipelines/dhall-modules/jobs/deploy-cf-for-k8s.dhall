@@ -1,5 +1,7 @@
 let Concourse = ../deps/concourse.dhall
 
+let JSON = (../deps/prelude.dhall).JSON
+
 let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 
 let deployCf4K8sJob
@@ -36,6 +38,11 @@ let deployCf4K8sJob
                 , resource = reqs.cf4k8s
                 , trigger = Some True
                 , passed = Some [ "generate-cf-for-k8s-values" ]
+                , params = Some
+                    ( toMap
+                        { include_source_tarball = JSON.bool True
+                        }
+                    )
                 }
 
         let lockSteps =

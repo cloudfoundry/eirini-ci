@@ -1,11 +1,23 @@
 let Concourse = ../deps/concourse.dhall
 
+let JSON = (../deps/prelude.dhall).JSON
+
 let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 
 let deployCf4K8sJob
     : CF4K8SDeploymentReqs → Concourse.Types.GroupedJob
     =   λ(reqs : CF4K8SDeploymentReqs)
       → let varsDir = "smoke-tests-env-vars"
+
+        let getCf4k8s =
+              Concourse.helpers.getStep
+                Concourse.schemas.GetStep::{
+                , resource = reqs.cf4k8s
+                , trigger = Some True
+                , passed = Some [ "deploy-cf-for-k8s-${reqs.clusterName}" ]
+                , params = Some
+                    (toMap { include_source_tarball = JSON.bool True })
+                }
 
         let prepareSmokeTestsTask =
               ../tasks/prepare-cf-for-k8s-smoke-tests.dhall
@@ -27,9 +39,7 @@ let deployCf4K8sJob
               , serial_groups = Some [ reqs.clusterName ]
               , public = Some True
               , plan =
-                    [ ../helpers/get-trigger-passed.dhall
-                        reqs.cf4k8s
-                        [ "deploy-cf-for-k8s-${reqs.clusterName}" ]
+                    [ getCf4k8s
                     , ../helpers/get.dhall reqs.clusterState
                     , ../helpers/get-trigger-passed.dhall
                         reqs.eiriniRelease

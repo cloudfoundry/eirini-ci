@@ -1,6 +1,9 @@
 let Concourse = ../dhall-modules/deps/concourse.dhall
 
-let inputs = { githubPrivateKey = "((github-private-key))" }
+let inputs =
+      { githubPrivateKey = "((github-private-key))"
+      , githubAccessToken = "((github-access-token))"
+      }
 
 let gkeCredsInputs =
       { serviceAccountJSON = "((gcp-service-account-json))"
@@ -20,7 +23,9 @@ let cf4k8sDeploymentReqs =
       , clusterReadyEvent = None Concourse.Types.Resource
       , creds = gkeCreds
       , lockResource = None Concourse.Types.Resource
-      , cf4k8s = ../dhall-modules/resources/cf-for-k8s.dhall "master"
+      , cf4k8s =
+          ../dhall-modules/resources/cf-for-k8s-github-release.dhall
+            inputs.githubAccessToken
       }
 
 in  ../dhall-modules/cf-for-k8s.dhall cf4k8sDeploymentReqs

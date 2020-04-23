@@ -2,6 +2,8 @@ let Concourse = ../deps/concourse.dhall
 
 let Prelude = ../deps/prelude.dhall
 
+let JSON = (../deps/prelude.dhall).JSON
+
 let CF4K8SDeploymentReqs = ../types/cf4k8s-deployment-requirements.dhall
 
 let generateValues
@@ -28,14 +30,12 @@ let generateValues
               Concourse.helpers.putStep
                 (   Concourse.defaults.PutStep
                   ⫽ { resource = reqs.clusterState
-                    , params =
-                        Some
-                          ( toMap
-                              { repository =
-                                  Prelude.JSON.string "state-modified"
-                              , merge = Prelude.JSON.bool True
-                              }
-                          )
+                    , params = Some
+                        ( toMap
+                            { repository = Prelude.JSON.string "state-modified"
+                            , merge = Prelude.JSON.bool True
+                            }
+                        )
                     }
                 )
 
@@ -67,6 +67,8 @@ let generateValues
                         → [ "lock-${reqs.clusterName}" ]
                       )
                       reqs.lockResource
+                , params = Some
+                    (toMap { include_source_tarball = JSON.bool True })
                 }
 
         let lockSteps =

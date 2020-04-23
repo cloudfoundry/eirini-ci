@@ -17,6 +17,7 @@ let gkeCredsInputs =
 
 let inputs =
       { githubPrivateKey = "((github-private-key))"
+      , githubAccessToken = "((github-access-token))"
       , eiriniReleasePrivateKey = "((eirini-release-repo-key))"
       , dockerhubUser = "((dockerhub-user))"
       , dockerhubPassword = "((dockerhub-password))"
@@ -49,6 +50,7 @@ let commonDeploymentReqs =
       , ciResources = ciResources
       , eiriniReleaseRepo = eiriniReleaseRepo
       , stateGitHubPrivateKey = inputs.githubPrivateKey
+      , githubAccessToken = inputs.githubAccessToken
       , clusterAdminPassword = inputs.clusterAdminPassword
       , uaaAdminClientSecret = inputs.uaaAdminClientSecret
       , natsPassword = inputs.natsPassword

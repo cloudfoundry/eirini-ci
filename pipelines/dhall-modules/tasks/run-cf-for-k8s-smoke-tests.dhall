@@ -12,7 +12,11 @@ let task =
               SMOKE_TEST_APPS_DOMAIN=$(cat ${varsDir}/smoke-test-apps-domain)
 
               export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_API_ENDPOINT
-              cd ${cfForK8s.name}/tests/smoke
+
+              tar xzvf ${cfForK8s.name}/source.tar.gz -C .
+              sha="$(<${cfForK8s.name}/commit_sha)"
+              src_folder="cloudfoundry-cf-for-k8s-''${sha:0:7}"
+              cd $src_folder/tests/smoke
               ginkgo -v -r
               ''
 
@@ -25,23 +29,19 @@ let task =
                     , image_resource =
                         ../helpers/image-resource.dhall
                           "relintdockerhubpushbot/cf-test-runner"
-                    , inputs =
-                        Some
-                          [ Concourse.schemas.TaskInput::{
-                            , name = cfForK8s.name
-                            }
-                          , Concourse.schemas.TaskInput::{ name = varsDir }
-                          ]
+                    , inputs = Some
+                      [ Concourse.schemas.TaskInput::{ name = cfForK8s.name }
+                      , Concourse.schemas.TaskInput::{ name = varsDir }
+                      ]
                     , run = ../helpers/bash-script-task.dhall script
-                    , params =
-                        Some
-                          [ { mapKey = "SMOKE_TEST_USERNAME"
-                            , mapValue = Some "admin"
-                            }
-                          , { mapKey = "SMOKE_TEST_SKIP_SSL"
-                            , mapValue = Some "true"
-                            }
-                          ]
+                    , params = Some
+                      [ { mapKey = "SMOKE_TEST_USERNAME"
+                        , mapValue = Some "admin"
+                        }
+                      , { mapKey = "SMOKE_TEST_SKIP_SSL"
+                        , mapValue = Some "true"
+                        }
+                      ]
                     }
               }
 

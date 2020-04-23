@@ -7,6 +7,7 @@ in  { clusterName : Text
     , storageClass : Text
     , creds : Creds
     , stateGitHubPrivateKey : Text
+    , githubAccessToken : Text
     , clusterAdminPassword : Text
     , uaaAdminClientSecret : Text
     , natsPassword : Text
