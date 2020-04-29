@@ -19,24 +19,24 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
             Concourse.helpers.putStep
               Concourse.schemas.PutStep::{
               , resource = reqs.dockerFluentd
-              , params =
-                  Some
-                    ( toMap
-                        { build = Prelude.JSON.string "${gitRepo.name}/fluentd"
-                        , build_args_file =
-                            Prelude.JSON.string "docker-build-args/args.json"
-                        }
-                    )
+              , params = Some
+                  ( toMap
+                      { build = Prelude.JSON.string "${gitRepo.name}/fluentd"
+                      , dockerfile =
+                          Prelude.JSON.string
+                            "${gitRepo.name}/docker/loggregator-fluentd/Dockerfile"
+                      , build_args_file =
+                          Prelude.JSON.string "docker-build-args/args.json"
+                      }
+                  )
               }
 
       in  Concourse.schemas.Job::{
           , name = "create-fluentd-docker-image"
           , plan =
-              [ in_parallel
-                  [ ../helpers/get.dhall reqs.ciResources
-                  , triggerOnFluentdRepo
-                  ]
-              , ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
-              , putDocker
-              ]
+            [ in_parallel
+                [ ../helpers/get.dhall reqs.ciResources, triggerOnFluentdRepo ]
+            , ../tasks/make-docker-build-args.dhall reqs.ciResources gitRepo
+            , putDocker
+            ]
           }
