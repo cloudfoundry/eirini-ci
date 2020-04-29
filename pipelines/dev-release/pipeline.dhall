@@ -116,4 +116,4 @@ let jobs =
         Concourse.Types.GroupedJob
         [ kubeClusterJobs, deployEirini, [ runCats ] ]
 
-in  jobs
+in  Concourse.render.groupedJobs jobs
