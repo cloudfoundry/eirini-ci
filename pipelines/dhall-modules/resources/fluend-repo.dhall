@@ -9,17 +9,19 @@ let eirini
         ⫽ { name = "eirini-fluentd"
           , type = Concourse.Types.ResourceType.InBuilt "git"
           , icon = Some "git"
-          , source =
-              Some
-                ( toMap
-                    { uri =
-                        Prelude.JSON.string
-                          "https://github.com/cloudfoundry-incubator/eirini.git"
-                    , branch = Prelude.JSON.string branch
-                    , paths =
-                        Prelude.JSON.array [ Prelude.JSON.string "fluentd/" ]
-                    }
-                )
+          , source = Some
+              ( toMap
+                  { uri =
+                      Prelude.JSON.string
+                        "https://github.com/cloudfoundry-incubator/eirini.git"
+                  , branch = Prelude.JSON.string branch
+                  , paths =
+                      Prelude.JSON.array
+                        [ Prelude.JSON.string "fluentd/"
+                        , Prelude.JSON.string "docker/loggregator-fluentd/"
+                        ]
+                  }
+              )
           }
 
 in  eirini
