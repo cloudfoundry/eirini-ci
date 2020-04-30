@@ -21,7 +21,7 @@ in    λ(reqs : ../types/run-test-requirements.dhall)
               , resource = reqs.dockerFluentd
               , params = Some
                   ( toMap
-                      { build = Prelude.JSON.string "${gitRepo.name}/fluentd"
+                      { build = Prelude.JSON.string "${gitRepo.name}"
                       , dockerfile =
                           Prelude.JSON.string
                             "${gitRepo.name}/docker/loggregator-fluentd/Dockerfile"
