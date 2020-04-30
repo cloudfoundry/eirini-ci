@@ -6,7 +6,15 @@ let script =
       ''
       set -euo pipefail
 
-      find "${ciResources.name}" -name pipeline.dhall -type f | xargs -n 1 -t dhall type --quiet --file
+      for p in $(find "${ciResources.name}" -name pipeline.dhall -type f)
+      do
+        pipelie_dir="$(dirname $p)"
+        echo -n "Checking $pipelie_dir... "
+        pushd $pipelie_dir > /dev/null
+        dhall-to-json <<<$(<pipeline.dhall) > /dev/null
+        popd > /dev/null
+        echo "OK"
+      done
       echo "✅ Pipeline is fine ✅"
       ''
 
