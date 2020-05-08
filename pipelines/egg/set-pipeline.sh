@@ -18,4 +18,5 @@ fly -t "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var jefe-client-id="$(pass eirini/jefe/client-id)" \
   --var jefe-client-secret="$(pass eirini/jefe/client-secret)" \
-  --var jefe-dbuser-pass="$(pass eirini/jefe/dbuser-pass)"
+  --var jefe-dbuser-pass="$(pass eirini/jefe/dbuser-pass)" \
+  --var jefe-admin-pass="$(pass eirini/jefe/admin-pass)"

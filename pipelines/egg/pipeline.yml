@@ -69,6 +69,7 @@ jobs:
         JEFE_GITHUB_SECRET: ((jefe-client-secret))
         JEFE_DSN: jefeuser:((jefe-dbuser-pass))@tcp(sl-eu-gb-p05.dblayer.com:19522)
         JEFE_O_AUTH_ORG: eirini-forks
+        JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
       inputs:
       - name: jefe
       - name: eirini-private-config
