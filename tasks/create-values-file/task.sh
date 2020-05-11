@@ -10,7 +10,6 @@ readonly STORAGE_CLASS=${STORAGE_CLASS:-hostpath}
 main() {
   export KUBECONFIG="$PWD/kube/config"
   set-kube-state
-  set-external-ips
   copy-output
 }
 
