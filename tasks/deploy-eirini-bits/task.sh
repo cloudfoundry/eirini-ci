@@ -3,7 +3,7 @@
 set -eo pipefail
 IFS=$'\n\t'
 
-readonly ENVIRONMENT="state/environments/kube-clusters/$CLUSTER_NAME"
+readonly ENVIRONMENT="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
 export SECRET=""
 export CA_CERT=""
 export BITS_TLS_CRT=""
@@ -51,13 +51,13 @@ helm-install() {
     "--set" "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
   )
 
-  helm install "eirini-release/helm/eirini" "eirini" \
+  helm install "eirini-release/helm/eirini" \
     --namespace "cf" \
     --values "$ENVIRONMENT"/eirini.yaml \
     "${cert_args[@]}" \
     "${override_image_args[@]}"
 
-  helm install "eirini-release/helm/bits" "bits" \
+  helm install "eirini-release/helm/bits" \
     --namespace "cf" \
     --values "$ENVIRONMENT"/bits.yaml \
     "${cert_args[@]}" \
