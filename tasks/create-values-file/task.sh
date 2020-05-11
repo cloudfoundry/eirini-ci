@@ -51,7 +51,7 @@ copy-output() {
     git add "$CLUSTER_DIR/values.yaml"
     git config --global user.email "eirini@cloudfoundry.org"
     git config --global user.name "Come-On Eirini"
-    git commit --all --message "update/add scf values file"
+    git commit --all --message "update/add Eirini/Bits values file"
   else
     echo "Repo is clean"
   fi
