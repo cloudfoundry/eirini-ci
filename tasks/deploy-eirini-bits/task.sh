@@ -53,13 +53,13 @@ helm-install() {
 
   helm install "eirini-release/helm/eirini" \
     --namespace "cf" \
-    --values "$ENVIRONMENT"/eirini.yaml \
+    --values "$ENVIRONMENT"/values.yaml \
     "${cert_args[@]}" \
     "${override_image_args[@]}"
 
   helm install "eirini-release/helm/bits" \
     --namespace "cf" \
-    --values "$ENVIRONMENT"/bits.yaml \
+    --values "$ENVIRONMENT"/values.yaml \
     "${cert_args[@]}" \
     "${override_image_args[@]}"
 }
