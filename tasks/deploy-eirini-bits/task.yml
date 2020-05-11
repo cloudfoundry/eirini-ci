@@ -10,10 +10,10 @@ inputs:
 - name: kube
 - name: ci-resources
 - name: eirini-release
-- name: state
+- name: cluster-state
 
 params:
   CLUSTER_NAME:
 
 run:
-  path: ci-resources/tasks/deploy-scf/task.sh
+  path: ci-resources/tasks/deploy-eirini-bits/task.sh
