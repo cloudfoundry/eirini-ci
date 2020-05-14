@@ -1,0 +1,42 @@
+groups:
+- name: all
+  jobs:
+  - delete-cluster-ci
+  - create-cluster-ci
+  - prepare-cluster-ci
+  - deploy-eirini-bits
+  - run-tests
+  - create-go-docker-images
+  - create-secret-smuggler-docker-image
+  - run-fluentd-unit-tests
+  - create-fluentd-docker-image
+  - staging-test
+  - create-staging-docker-images
+  - update-eirini-version-files
+  - update-fluentd-version-files
+  - update-secret-smuggler-version-files
+  - update-staging-version-files
+
+- name: cluster-ci
+  jobs:
+  - delete-cluster-ci
+  - create-cluster-ci
+  - prepare-cluster-ci
+
+- name: test-and-build
+  jobs:
+  - run-tests
+  - create-go-docker-images
+  - create-secret-smuggler-docker-image
+  - run-fluentd-unit-tests
+  - create-fluentd-docker-image
+  - staging-test
+  - create-staging-docker-images
+  - deploy-eirini-bits
+
+- name: update-version-files
+  jobs:
+  - update-eirini-version-files
+  - update-fluentd-version-files
+  - update-secret-smuggler-version-files
+  - update-staging-version-files

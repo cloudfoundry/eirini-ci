@@ -1,0 +1,9 @@
+resources:
+- name: delete-timer
+  type: time
+  icon: bomb
+  source:
+    days:
+    - Saturday
+    start: 12:00 AM
+    stop: 1:00 AM

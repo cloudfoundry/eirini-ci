@@ -1,0 +1,59 @@
+jobs:
+- name: update-staging-version-files
+  serial: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: eirini-release
+      - get: eirini-staging
+        passed:
+        - create-staging-docker-images
+        trigger: true
+      - get: docker-staging-downloader
+        params:
+          skip_download: true
+        passed:
+        - create-staging-docker-images
+        trigger: true
+      - get: docker-staging-executor
+        params:
+          skip_download: true
+        passed:
+        - create-staging-docker-images
+        trigger: true
+      - get: docker-staging-uploader
+        params:
+          skip_download: true
+        passed:
+        - create-staging-docker-images
+        trigger: true
+  - task: update-version-files
+    config:
+      image_resource:
+        source:
+          repository: eirini/ci
+        type: docker-image
+      inputs:
+      - name: eirini-staging
+      - name: eirini-release
+      - name: docker-staging-downloader
+      - name: docker-staging-executor
+      - name: docker-staging-uploader
+      outputs:
+      - name: eirini-release-updated
+      platform: linux
+      params:
+          IMAGES: "staging-downloader staging-uploader staging-executor"
+          COMPONENT_NAME: "staging"
+          COMPONENT_REPO: "eirini-staging"
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/update-version-files.sh" ))
+
+  - put: eirini-release
+    params:
+      repository: eirini-release-updated
+  on_failure: (( grab slack-notification.on_failure ))

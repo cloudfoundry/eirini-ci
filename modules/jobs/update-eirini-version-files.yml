@@ -1,0 +1,101 @@
+jobs:
+- name: update-eirini-version-files
+  plan:
+  - in_parallel:
+      steps:
+      - get: eirini-release
+      - get: eirini
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-opi
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-bits-waiter
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-rootfs-patcher
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-route-collector
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-route-pod-informer
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-route-statefulset-informer
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-metrics-collector
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-event-reporter
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+      - get: docker-staging-reporter
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/ci
+        type: docker-image
+      inputs:
+      - name: eirini
+      - name: eirini-release
+      - name: docker-opi
+      - name: docker-bits-waiter
+      - name: docker-rootfs-patcher
+      - name: docker-route-collector
+      - name: docker-route-pod-informer
+      - name: docker-route-statefulset-informer
+      - name: docker-metrics-collector
+      - name: docker-event-reporter
+      - name: docker-staging-reporter
+      outputs:
+      - name: eirini-release-updated
+      platform: linux
+      params:
+        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter"
+        COMPONENT_NAME: "eirini"
+        COMPONENT_REPO: "eirini"
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/update-version-files.sh" ))
+        path: /usr/bin/env
+    task: update-version-files
+  - put: eirini-release
+    params:
+      repository: eirini-release-updated
+  serial: true
+  on_failure: (( grab slack-notification.on_failure ))

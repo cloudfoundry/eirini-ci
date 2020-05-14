@@ -1,0 +1,32 @@
+jobs:
+- name: delete-cluster-ci
+  plan:
+  - get: delete-timer
+    trigger: true
+  - get: ci-resources
+  - get: cluster-state
+  - file: ci-resources/tasks/purge-cluster-deployments/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      IS_CF4K8S_DEPLOYMENT: "false"
+    task: purge-cluster-deployments
+  - file: ci-resources/tasks/delete-cluster/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      WORKER_COUNT: ((worker_count))
+    task: delete-kubernetes-cluster
+  - file: ci-resources/tasks/clean-up-cluster-config/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+    task: delete-values-file
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified
+  on_failure: (( grab slack-notification.on_failure ))

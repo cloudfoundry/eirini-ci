@@ -1,0 +1,64 @@
+jobs:
+- name: create-go-docker-images
+  plan:
+  - in_parallel:
+      limit: 5
+      steps:
+      - get: eirini
+        passed:
+        - run-tests
+        trigger: true
+      - get: ci-resources
+  - file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      repository: eirini
+    task: make-docker-build-args
+  - in_parallel:
+      limit: 5
+      steps:
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/opi/Dockerfile
+        put: docker-opi
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/bits-waiter/Dockerfile
+        put: docker-bits-waiter
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/rootfs-patcher/Dockerfile
+        put: docker-rootfs-patcher
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-collector/Dockerfile
+        put: docker-route-collector
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-pod-informer/Dockerfile
+        put: docker-route-pod-informer
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/metrics-collector/Dockerfile
+        put: docker-metrics-collector
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/event-reporter/Dockerfile
+        put: docker-event-reporter
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/staging-reporter/Dockerfile
+        put: docker-staging-reporter
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-statefulset-informer/Dockerfile
+        put: docker-route-statefulset-informer
+  on_failure: (( grab slack-notification.on_failure ))

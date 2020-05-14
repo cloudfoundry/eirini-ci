@@ -1,0 +1,8 @@
+resources:
+- name: cluster-state
+  type: git
+  icon: folder
+  source:
+    branch: master
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config.git

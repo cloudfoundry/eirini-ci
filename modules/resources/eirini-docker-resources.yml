@@ -1,0 +1,112 @@
+resources:
+- name: docker-bits-waiter
+  icon: docker
+  type: docker-image
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/bits-waiter
+    username: ((dockerhub-user))
+
+- name: docker-event-reporter
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/event-reporter
+    username: ((dockerhub-user))
+
+- name: docker-fluentd
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/loggregator-fluentd
+    username: ((dockerhub-user))
+
+- name: docker-metrics-collector
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/metrics-collector
+    username: ((dockerhub-user))
+
+- name: docker-opi
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/opi
+    username: ((dockerhub-user))
+
+- name: docker-rootfs-patcher
+  icon: docker
+  type: docker-image
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/rootfs-patcher
+    username: ((dockerhub-user))
+
+- name: docker-route-collector
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/route-collector
+    username: ((dockerhub-user))
+
+- name: docker-route-pod-informer
+  icon: docker
+  type: docker-image
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/route-pod-informer
+    username: ((dockerhub-user))
+
+- name: docker-route-statefulset-informer
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/route-statefulset-informer
+    username: ((dockerhub-user))
+
+- name: docker-secret-smuggler
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/secret-smuggler
+    username: ((dockerhub-user))
+
+- name: docker-staging-downloader
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/recipe-downloader
+    username: ((dockerhub-user))
+
+- name: docker-staging-executor
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/recipe-executor
+    username: ((dockerhub-user))
+
+- name: docker-staging-reporter
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/staging-reporter
+    username: ((dockerhub-user))
+
+- name: docker-staging-uploader
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/recipe-uploader
+    username: ((dockerhub-user))

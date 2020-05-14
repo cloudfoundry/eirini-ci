@@ -1,0 +1,8 @@
+resources:
+- name: ci-resources
+  type: git
+  icon: git
+  source:
+    branch: ((ci-resources-branch))
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+

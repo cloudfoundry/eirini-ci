@@ -1,0 +1,32 @@
+jobs:
+- name: create-staging-docker-images
+  plan:
+  - in_parallel:
+      steps:
+      - get: eirini-staging
+        passed:
+        - staging-test
+        trigger: true
+      - get: ci-resources
+  - file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      repository: eirini-staging
+    task: make-docker-build-args
+  - in_parallel:
+      steps:
+      - put: docker-staging-downloader
+        params:
+          build: eirini-staging
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini-staging/image/downloader/Dockerfile
+      - put: docker-staging-executor
+        params:
+          build: eirini-staging
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini-staging/image/executor/Dockerfile
+      - put: docker-staging-uploader
+        params:
+          build: eirini-staging
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini-staging/image/uploader/Dockerfile
+  on_failure: (( grab slack-notification.on_failure ))

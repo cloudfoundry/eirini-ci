@@ -1,0 +1,20 @@
+jobs:
+- name: create-fluentd-docker-image
+  plan:
+  - in_parallel:
+      steps:
+      - get: ci-resources
+      - get: eirini-fluentd
+        passed:
+        - run-fluentd-unit-tests
+        trigger: true
+  - file: ci-resources/tasks/make-docker-build-args/task.yml
+    input_mapping:
+      repository: eirini-fluentd
+    task: make-docker-build-args
+  - params:
+      build: eirini-fluentd
+      build_args_file: docker-build-args/args.json
+      dockerfile: eirini-fluentd/docker/loggregator-fluentd/Dockerfile
+    put: docker-fluentd
+  on_failure: (( grab slack-notification.on_failure  ))

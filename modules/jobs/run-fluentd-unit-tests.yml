@@ -1,0 +1,13 @@
+jobs:
+- name: run-fluentd-unit-tests
+  plan:
+  - in_parallel:
+      steps:
+      - get: ci-resources
+      - get: eirini-fluentd
+        trigger: true
+  - file: ci-resources/tasks/run-fluentd-tests/task.yml
+    input_mapping:
+      eirini: eirini-fluentd
+    task: run-unit-tests
+  on_failure: (( grab slack-notification.on_failure ))

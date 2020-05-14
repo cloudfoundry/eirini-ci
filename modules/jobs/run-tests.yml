@@ -1,0 +1,36 @@
+jobs:
+- name: run-tests
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: cluster-ci-staging-event-created
+        passed:
+        - create-cluster-ci
+        trigger: true
+      - get: eirini
+        trigger: true
+      - get: sample-configs
+        trigger: true
+      - get: golang-lint
+        params:
+          skip_download: true
+        trigger: true
+      - get: ci-resources
+  - in_parallel:
+      steps:
+      - file: ci-resources/tasks/run-unit-tests/task.yml
+        task: run-unit-tests
+      - file: ci-resources/tasks/run-static-checks/task.yml
+        task: run-static-checks
+      - do:
+        - file: ci-resources/tasks/download-kubeconfig/task.yml
+          params:
+              CLUSTER_NAME: ((world-name))
+              IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+              IBMCLOUD_PASSWORD: ((ibmcloud-password))
+              IBMCLOUD_USER: ((ibmcloud-user))
+          task: download-kubeconfig
+        - file: ci-resources/tasks/run-integration-tests/task.yml
+          task: run-integration-tests
+  on_failure: (( grab slack-notification.on_failure ))

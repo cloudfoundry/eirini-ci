@@ -1,0 +1,37 @@
+resources:
+- name: eirini
+  type: git
+  icon: git
+  source:
+    branch: ((eirini-branch))
+    ignore_paths:
+    - docker/opi/init/
+    - docker/registry/certs/smuggler/
+    - fluentd/
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+
+- type: git
+  icon: git
+  name: eirini-fluentd
+  source:
+    branch: ((eirini-branch))
+    paths:
+    - fluentd/
+    - docker/loggregator-fluentd/
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+
+- name: eirini-secret-smuggler
+  icon: git
+  type: git
+  source:
+    branch: ((eirini-branch))
+    paths:
+    - docker/registry/certs/smuggler/
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
+
+- name: eirini-staging
+  type: git
+  icon: git
+  source:
+    branch: master
+    uri: https://github.com/cloudfoundry-incubator/eirini-staging.git

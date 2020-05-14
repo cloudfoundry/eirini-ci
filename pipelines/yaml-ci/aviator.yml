@@ -1,0 +1,43 @@
+spruce:
+- step: "merge resources with groups"
+  base: groups.yml
+  merge:
+  - with:
+      files:
+      - ../../modules/resources/slack.yml
+      - ../../modules/resources/ci-resources.yml
+      - ../../modules/resources/cluster-ci-staging-event-created.yml
+      - ../../modules/resources/cluster-state.yml
+      - ../../modules/resources/delete-timer.yml
+      - ../../modules/resources/eirini-docker-resources.yml
+      - ../../modules/resources/eirini-resources.yml
+      - ../../modules/resources/eirini-release.yml
+      - ../../modules/resources/sample-configs.yml
+      - ../../modules/resources/golang-lint.yml
+      - ../../modules/resources/resource-types.yml
+  to: {{groups-and-resources}}
+
+- step: "merge groups and resources with jobs"
+  base: {{groups-and-resources}}
+  prune:
+  - slack-notification
+  merge:
+  - with:
+      files:
+      - ../../modules/jobs/delete-cluster-ci.yml
+      - ../../modules/jobs/create-cluster-ci.yml
+      - ../../modules/jobs/run-tests.yml
+      - ../../modules/jobs/create-go-docker-images.yml
+      - ../../modules/jobs/create-secret-smuggler-docker-image.yml
+      - ../../modules/jobs/run-fluentd-unit-tests.yml
+      - ../../modules/jobs/create-fluentd-docker-image.yml
+      - ../../modules/jobs/staging-test.yml
+      - ../../modules/jobs/update-staging-version-files.yml
+      - ../../modules/jobs/update-eirini-version-files.yml
+      - ../../modules/jobs/update-fluentd-version-files.yml
+      - ../../modules/jobs/update-secret-smuggler-version-files.yml
+      - ../../modules/jobs/create-staging-docker-images.yml
+      - ../../modules/jobs/prepare-cluster-ci.yml
+      - ../../modules/jobs/deploy-eirini-bits.yml
+      - ../../modules/jobs/slack-notification.yml
+  to: $PIPELINE_YML

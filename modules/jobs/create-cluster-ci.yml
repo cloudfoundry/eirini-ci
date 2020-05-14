@@ -1,0 +1,20 @@
+jobs:
+- name: create-cluster-ci
+  plan:
+  - get: ci-resources
+  - get: cluster-state
+    passed:
+    - delete-cluster-ci
+    trigger: true
+  - file: ci-resources/tasks/create-cluster/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+      WORKER_COUNT: ((worker_count))
+    task: create-kubernetes-cluster
+  - params:
+      bump: major
+    put: cluster-ci-staging-event-created
+  on_failure: (( grab slack-notification.on_failure ))

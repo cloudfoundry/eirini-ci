@@ -1,0 +1,6 @@
+resource_types:
+- name: slack-notification
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+  type: docker-image
