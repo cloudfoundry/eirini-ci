@@ -103,6 +103,14 @@ resources:
     repository: eirini/staging-reporter
     username: ((dockerhub-user))
 
+- name: docker-task-reporter
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/task-reporter
+    username: ((dockerhub-user))
+
 - name: docker-staging-uploader
   type: docker-image
   icon: docker

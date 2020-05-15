@@ -62,6 +62,12 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
+      - get: docker-task-reporter
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
   - config:
       container_limits: {}
       image_resource:
@@ -80,11 +86,12 @@ jobs:
       - name: docker-metrics-collector
       - name: docker-event-reporter
       - name: docker-staging-reporter
+      - name: docker-task-reporter
       outputs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter"
+        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

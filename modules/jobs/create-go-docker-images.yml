@@ -56,6 +56,11 @@ jobs:
           build_args_file: docker-build-args/args.json
           dockerfile: eirini/docker/staging-reporter/Dockerfile
         put: docker-staging-reporter
+      - put: docker-task-reporter
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/task-reporter/Dockerfile
       - params:
           build: eirini
           build_args_file: docker-build-args/args.json
