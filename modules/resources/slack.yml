@@ -3,4 +3,4 @@ resources:
   type: slack-notification
   icon: slack
   source:
-    url: https://hooks.slack.com/services/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
+    url: ((slack_webhook))

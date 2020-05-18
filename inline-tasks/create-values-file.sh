@@ -34,7 +34,8 @@ secrets:
 
 opi:
   use_registry_ingress: true
-  ingress_endpoint: $ingress_endpoint tls:
+  ingress_endpoint: $ingress_endpoint
+  tls:
     opiCapiClient:
       secretName: "cf-secrets"
     opiServer:
@@ -56,6 +57,9 @@ opi:
       server:
         secretName: "cf-secrets"
 
+  rootfsPatcher:
+    enable: false
+
   metrics:
     tls:
       client:
@@ -64,11 +68,10 @@ opi:
         secretName: "cf-secrets"
   routing:
     nats:
+      serviceName: nats-client
       secretName: "cf-secrets"
-
   secretSmuggler:
-    scfSecretName: "cf-secrets"
-
+    enable: false
   staging:
     tls:
       client:

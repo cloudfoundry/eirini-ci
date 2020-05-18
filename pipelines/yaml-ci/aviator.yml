@@ -6,12 +6,13 @@ spruce:
       files:
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
-      - ../../modules/resources/cluster-ci-staging-event-created.yml
+      - ../../modules/resources/cluster-ci-event-created.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/delete-timer.yml
       - ../../modules/resources/eirini-docker-resources.yml
       - ../../modules/resources/eirini-resources.yml
       - ../../modules/resources/eirini-release.yml
+      - ../../modules/resources/eirini-release-master.yml
       - ../../modules/resources/sample-configs.yml
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/resource-types.yml
@@ -38,6 +39,7 @@ spruce:
       - ../../modules/jobs/update-secret-smuggler-version-files.yml
       - ../../modules/jobs/create-staging-docker-images.yml
       - ../../modules/jobs/prepare-cluster-ci.yml
-      - ../../modules/jobs/deploy-eirini-bits.yml
+      - ../../modules/jobs/verify-helm-deployment.yml
+      - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML

@@ -50,8 +50,7 @@ commit-message() {
   echo -e "$commit_msg\n"
 }
 
-IFS=$' '
-for image in "$IMAGES"; do
+for image in $IMAGES; do
   update-digest "docker-${image}" "$image"
 done
 

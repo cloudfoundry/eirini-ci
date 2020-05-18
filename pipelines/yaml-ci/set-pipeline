@@ -37,6 +37,7 @@ fly --target "$target" \
   --var eirini-release-branch="develop" \
   --var eirini-branch="$working_branch" \
   --var worker_count="$worker_count" \
+  --var nats-password="$(pass eirini/ci/nats-password)" \
   --load-vars-from "$private_repo/concourse/common.yml"
 
 #rm $PIPELINE_YML

@@ -1,5 +1,6 @@
 slack-notification:
   on_failure:
+    put: slack
     params:
       attachments: |2
           [{
@@ -18,4 +19,3 @@ slack-notification:
 
         Job is *$BUILD_JOB_NAME*
         Build name is *$BUILD_NAME*
-    put: slack

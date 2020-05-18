@@ -2,11 +2,11 @@ jobs:
 - name: prepare-cluster-ci
   plan:
   - get: ci-resources
-  - get: cluster-state
+  - get: cluster-ci-staging-event-created
+    trigger: true
     passed:
     - create-cluster-ci
-    trigger: true
-
+  - get: cluster-state
   - task: get-kubeconfig
     file: ci-resources/tasks/download-kubeconfig/task.yml
     params:
@@ -41,13 +41,30 @@ jobs:
     file: ci-resources/tasks/get-iks-ingress-endpoint/task.yml
 
   - task: create-values-file
-    file: ci-resources/tasks/create-values-file/task.yml
-    params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
-
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+        - name: kube
+        - name: ingress
+        - name: ci-resources
+        - name: cluster-state
+      outputs:
+        - name: state-modified
+      params:
+        CLUSTER_NAME: ((world-name))
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        IBMCLOUD_USER: ((ibmcloud-user))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/create-values-file.sh"))
   - params:
       merge: true
       repository: state-modified

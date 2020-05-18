@@ -68,7 +68,8 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
-  - config:
+  - task: update-version-files
+    config:
       container_limits: {}
       image_resource:
         source:
@@ -100,7 +101,6 @@ jobs:
         - -c
         - (( file "../../inline-tasks/update-version-files.sh" ))
         path: /usr/bin/env
-    task: update-version-files
   - put: eirini-release
     params:
       repository: eirini-release-updated

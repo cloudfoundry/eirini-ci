@@ -4,24 +4,32 @@ set -eo pipefail
 IFS=$'\n\t'
 
 readonly ENVIRONMENT="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
-export SECRET=""
-export CA_CERT=""
-export BITS_TLS_CRT=""
-export BITS_TLS_KEY=""
 
 main() {
   export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
   export KUBECONFIG="$PWD/kube/config"
-  export-certs
+
   helm init --upgrade --wait
-  helm repo add bits https://cloudfoundry-incubator.github.io/bits-service-release/helm
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+
   helm-install
+  install-nats
+  create-test-secret
 }
 
-export-certs() {
-  secret_name="$(kubectl get secrets -o name | grep "$CLUSTER_NAME")"
-  BITS_TLS_CRT="$(kubectl get "$secret_name" --namespace default -o jsonpath="{.data['tls\.crt']}" | base64 --decode -)"
-  BITS_TLS_KEY="$(kubectl get "$secret_name" --namespace default -o jsonpath="{.data['tls\.key']}" | base64 --decode -)"
+install-nats() {
+  helm upgrade nats \
+    --install bitnami/nats \
+    --namespace cf \
+    --set auth.user="nats" \
+    --set auth.password="$NATS_PASSWORD"
+}
+
+create-test-secret() {
+  local nats_password_b64
+  nats_password_b64="$(echo -n $NATS_PASSWORD | base64)"
+  goml set -f "$ENVIRONMENT/eirini-secret.yml" -p data.nats-password -v "$nats_password_b64"
+  kubectl apply -n cf -f $ENVIRONMENT/eirini-secret.yml
 }
 
 helm-install() {
@@ -44,21 +52,9 @@ helm-install() {
     )
   fi
 
-  cert_args=(
-    "--set" "bits.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
-    "--set" "bits.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
-    "--set" "eirini.secrets.BITS_TLS_CRT=${BITS_TLS_CRT}"
-    "--set" "eirini.secrets.BITS_TLS_KEY=${BITS_TLS_KEY}"
-  )
-
-  helm update --install "eirini" "eirini-release/helm/eirini" \
-    --namespace "cf" \
-    --values "$ENVIRONMENT"/values.yaml \
-    "${cert_args[@]}" \
-    "${override_image_args[@]}"
-
-  helm update --install bits/bits \
-    --namespace "cf" \
+  helm upgrade --install eirini \
+    eirini-release/helm/eirini \
+    --namespace cf \
     --values "$ENVIRONMENT"/values.yaml \
     "${cert_args[@]}" \
     "${override_image_args[@]}"

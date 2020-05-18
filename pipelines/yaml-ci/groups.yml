@@ -4,7 +4,7 @@ groups:
   - delete-cluster-ci
   - create-cluster-ci
   - prepare-cluster-ci
-  - deploy-eirini-bits
+  - verify-helm-deployment
   - run-tests
   - create-go-docker-images
   - create-secret-smuggler-docker-image
@@ -16,6 +16,7 @@ groups:
   - update-fluentd-version-files
   - update-secret-smuggler-version-files
   - update-staging-version-files
+  - fast-forward-release
 
 - name: cluster-ci
   jobs:
@@ -32,7 +33,7 @@ groups:
   - create-fluentd-docker-image
   - staging-test
   - create-staging-docker-images
-  - deploy-eirini-bits
+  - verify-helm-deployment
 
 - name: update-version-files
   jobs:

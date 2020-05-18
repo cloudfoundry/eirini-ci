@@ -1,0 +1,11 @@
+jobs:
+- name: fast-forward-release
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - verify-helm-deployment
+  - get: eirini-release-master
+  - put: eirini-release-master
+    params:
+      repository: eirini-release
