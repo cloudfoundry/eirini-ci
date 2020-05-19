@@ -9,7 +9,7 @@ jobs:
         - run-fluentd-unit-tests
   - task: make-docker-build-args
     input_mapping:
-        repository: eirini-fluentd
+      repository: eirini-fluentd
     config:
        platform: linux
        image_resource:
@@ -17,7 +17,7 @@ jobs:
          source:
            repository: eirini/ci
        inputs:
-       - name: respository
+       - name: repository
        outputs:
        - name:  docker-build-args
        run:

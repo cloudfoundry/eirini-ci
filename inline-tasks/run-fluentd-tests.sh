@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
 
-cd eirini/fluentd
+cd eirini-fluentd/fluentd
 bundle
 rspec
