@@ -24,9 +24,25 @@ jobs:
             dir: eirini-staging
             path: scripts/test.sh
         task: run-unit-tests
-      - file: ci-resources/tasks/run-static-checks/task.yml
+      - task: lint
         input_mapping:
           eirini: eirini-staging
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: golangci/golangci-lint
+              tag: latest
+          inputs:
+          - name: ci-resources
+          - name: eirini
+          run:
+            path: /usr/bin/env
+            args:
+            - bash
+            - -c
+            - (( file "../../inline-tasks/run-static-checks.sh" ))
         task: lint
       - config:
           image_resource:

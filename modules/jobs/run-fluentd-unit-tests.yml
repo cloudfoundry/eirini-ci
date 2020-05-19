@@ -3,11 +3,22 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: ci-resources
       - get: eirini-fluentd
         trigger: true
-  - file: ci-resources/tasks/run-fluentd-tests/task.yml
-    input_mapping:
-      eirini: eirini-fluentd
-    task: run-unit-tests
+  - task: run-unit-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: ruby
+          tag: 2.4
+      inputs:
+      - name: eirini-fluentd
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-fluentd-tests.sh" ))
   on_failure: (( grab slack-notification.on_failure ))

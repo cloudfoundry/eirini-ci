@@ -3,18 +3,32 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: ci-resources
       - get: eirini-fluentd
+        trigger: true
         passed:
         - run-fluentd-unit-tests
-        trigger: true
-  - file: ci-resources/tasks/make-docker-build-args/task.yml
+  - task: make-docker-build-args
     input_mapping:
-      repository: eirini-fluentd
-    task: make-docker-build-args
-  - params:
+        repository: eirini-fluentd
+    config:
+       platform: linux
+       image_resource:
+         type: docker-image
+         source:
+           repository: eirini/ci
+       inputs:
+       - name: respository
+       outputs:
+       - name:  docker-build-args
+       run:
+         path: /usr/bin/env
+         args:
+         - bash
+         - -c
+         - (( file "../../inline-tasks/make-docker-build-args.sh" ))
+  - put: docker-fluentd
+    params:
       build: eirini-fluentd
       build_args_file: docker-build-args/args.json
       dockerfile: eirini-fluentd/docker/loggregator-fluentd/Dockerfile
-    put: docker-fluentd
   on_failure: (( grab slack-notification.on_failure  ))

@@ -5,26 +5,68 @@ jobs:
     trigger: true
   - get: ci-resources
   - get: cluster-state
-  - file: ci-resources/tasks/purge-cluster-deployments/task.yml
-    params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IS_CF4K8S_DEPLOYMENT: "false"
-    task: purge-cluster-deployments
-  - file: ci-resources/tasks/delete-cluster/task.yml
-    params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      WORKER_COUNT: ((worker_count))
-    task: delete-kubernetes-cluster
-  - file: ci-resources/tasks/clean-up-cluster-config/task.yml
-    params:
-      CLUSTER_NAME: ((world-name))
-    task: delete-values-file
+  - task: purge-cluster-deployments
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      params:
+        CLUSTER_NAME: ((world-name))
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        IS_CF4K8S_DEPLOYMENT: "false"
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/purge-cluster-deployments.sh" ))
+  - task: delete-kubernetes-cluster
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+        - name: ci-resources
+      params:
+        CLUSTER_NAME: ((world-name))
+        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+        IBMCLOUD_PASSWORD: ((ibmcloud-password))
+        IBMCLOUD_USER: ((ibmcloud-user))
+        WORKER_COUNT: ((worker_count))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/delete-cluster.sh" ))
+  - task: delete-values-file
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+        - name: ci-resources
+        - name: cluster-state
+      outputs:
+        - name: state-modified
+      params:
+        CLUSTER_NAME: ((world-name))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/clean-up-cluster-config.sh" ))
   - put: cluster-state
     params:
       merge: true

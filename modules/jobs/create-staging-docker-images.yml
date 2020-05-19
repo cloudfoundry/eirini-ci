@@ -7,11 +7,25 @@ jobs:
         passed:
         - staging-test
         trigger: true
-      - get: ci-resources
-  - file: ci-resources/tasks/make-docker-build-args/task.yml
+  - task: make-docker-build-args
     input_mapping:
-      repository: eirini-staging
-    task: make-docker-build-args
+        repository: eirini-staging
+    config:
+       platform: linux
+       image_resource:
+         type: docker-image
+         source:
+           repository: eirini/ci
+       inputs:
+       - name: repository
+       outputs:
+       - name:  docker-build-args
+       run:
+         path: /usr/bin/env
+         args:
+         - bash
+         - -c
+         - (( file "../../inline-tasks/make-docker-build-args.sh" ))
   - in_parallel:
       steps:
       - put: docker-staging-downloader
