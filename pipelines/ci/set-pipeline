@@ -10,16 +10,15 @@ readonly world_name=ci
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly working_branch=${3:-"master"}
-readonly ci_branch=${4:-"master"}
+readonly ci_branch=${4:-"wip-yaml-ci-pipeline"}
 export worker_count=${5:-"3"}
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
-PIPELINE_YML=$(mktemp)
+export PIPELINE_YML=$(mktemp)
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+export PROJECT_ROOT
 
-dhall-to-json <<<"$basedir/pipeline.dhall" |
-  jq '.resources = (.resources|unique)' |
-  jq '.resource_types = (.resource_types|unique)' |
-  jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' >"$PIPELINE_YML"
+aviator
 
 fly --target "$target" \
   set-pipeline \
@@ -38,4 +37,7 @@ fly --target "$target" \
   --var eirini-release-branch="develop" \
   --var eirini-branch="$working_branch" \
   --var worker_count="$worker_count" \
+  --var nats-password="$(pass eirini/ci/nats-password)" \
   --load-vars-from "$private_repo/concourse/common.yml"
+
+#rm $PIPELINE_YML
