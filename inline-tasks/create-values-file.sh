@@ -82,6 +82,8 @@ opi:
         secretName: "cf-secrets"
       stagingReporter:
         secretName: "cf-secrets"
+      taskReporter:
+        secretName: "cf-secrets"
 EOF
   popd
 }
