@@ -26,10 +26,36 @@ install-nats() {
 }
 
 create-test-secret() {
-  local nats_password_b64
+  local nats_password_b64 cert key secrets_file
   nats_password_b64="$(echo -n "$NATS_PASSWORD" | base64)"
-  goml set -f "$ENVIRONMENT/eirini-secret.yml" -p data.nats-password -v "$nats_password_b64"
-  kubectl apply -n cf -f "$ENVIRONMENT"/eirini-secret.yml
+
+  openssl req -nodes -new -x509 -keyout test.key -out test.cert -subj "/CN=test"
+  cert=$(cat test.cert | base64 -w0)
+  key=$(cat test.key | base64 -w0)
+  rm test.*
+
+  secrets_file=$(mktemp)
+  cat <<EOF >"$secrets_file"
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cf-secrets
+type: Opaque
+data:
+  cc-server-crt: "$cert"
+  cc-server-crt-key: "$key"
+  doppler-cert: "$cert"
+  doppler-cert-key: "$key"
+  eirini-client-crt: "$cert"
+  eirini-client-crt-key: "$key"
+  internal-ca-cert: "$cert"
+  loggregator-agent-cert: "$cert"
+  loggregator-agent-cert-key: "$key"
+  nats-password: ""
+EOF
+
+  goml set -f "$secrets_file" -p data.nats-password -v "$nats_password_b64"
+  kubectl apply -n cf -f "$secrets_file"
 }
 
 helm-install() {
