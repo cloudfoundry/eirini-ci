@@ -14,7 +14,7 @@ jobs:
         source:
           repository: eirini/ibmcloud
       inputs:
-      - name:  ci-resrouces
+      - name:  ci-resources
       params:
         CLUSTER_NAME: ((world-name))
         IBMCLOUD_ACCOUNT: ((ibmcloud-account))
