@@ -10,6 +10,10 @@ jobs:
     trigger: true
   - get: cluster-state
   - get: ci-resources
+  - get: cluster-((world-name))-staging-event-ready
+    trigger: true
+    passed:
+    - prepare-cluster-((world-name))
   - file: ci-resources/tasks/gcp-download-kubeconfig/task.yml
     params:
       CLUSTER_NAME: cf4k8s4a8e

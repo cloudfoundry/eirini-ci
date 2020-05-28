@@ -1,0 +1,11 @@
+resources:
+- name: cluster-((world-name))-staging-event-created
+  type: semver
+  icon: check-decagram
+  source:
+    branch: events
+    driver: git
+    file: ((world-name))-event-created
+    initial_version: 0.1.0
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config.git

@@ -1,0 +1,54 @@
+jobs:
+- name: prepare-cluster-((world-name))
+  plan:
+  - in_parallel:
+    - get: ci-resources
+    - get: cluster-((world-name))-staging-event-created
+      trigger: true
+      passed: [create-cluster-((world-name))]
+    - get: cluster-state
+  - task: download-kubeconfig
+    file: ci-resources/tasks/gcp-download-kubeconfig/task.yml
+    params:
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      CLUSTER_NAME: ((world-name))
+      GCP_REGION: ((gcp-region))
+      GCP_ZONE: ((gcp-zone))
+  - task: create-cluster-config
+    params:
+      CLUSTER_NAME: ((world-name))
+      CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
+      UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
+      NATS_PASSWORD: ((nats_password))
+    file: ci-resources/tasks/gcp-cluster-config/task.yml
+  - put: cluster-state
+    params:
+      repository: state-modified
+      merge: true
+  - task: init-helm
+    config:
+      image_resource:
+        source:
+          repository: eirini/ibmcloud
+        type: docker-image
+      inputs:
+      - name: kube
+      - name: ci-resources
+      platform: linux
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/init-helm.sh" ))
+  - task: install-helm-dependencies
+    params:
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+      DNS_SERVICE_ACCOUNT: ((gcp-dns-service-account-json))
+      CLUSTER_NAME: ((world-name))
+      GCP_REGION: ((gcp-region))
+    file: ci-resources/tasks/install-helm-dependencies/task.yml
+  - put: cluster-((world-name))-staging-event-ready
+    params:
+      bump: major

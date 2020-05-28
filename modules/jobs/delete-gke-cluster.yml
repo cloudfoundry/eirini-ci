@@ -1,0 +1,19 @@
+jobs:
+- name: delete-cluster-((world-name))
+  plan:
+  - get: ci-resources
+  - task: delete-kubernetes-cluster
+    file: ci-resources/tasks/gcp-delete-cluster/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      WORKER_COUNT: ((worker_count))
+  - get: cluster-state
+  - task: delete-values-file
+    file: ci-resources/tasks/clean-up-cluster-config/task.yml
+    params:
+      CLUSTER_NAME: ((world-name))
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified

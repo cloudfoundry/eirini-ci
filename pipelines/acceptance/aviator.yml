@@ -46,4 +46,7 @@ spruce:
       - ../../modules/jobs/deploy-cf-for-k8s.yml
       - ../../modules/jobs/smoke-tests-cf-for-k8s.yml
       - ../../modules/jobs/bump-cluster-k8s-version.yml
+  modify:
+    delete:
+    - jobs.name:generate-cf-for-k8s-values.plan.get:cluster-((world-name))-staging-event-ready
   to: $PIPELINE_YML

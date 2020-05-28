@@ -1,0 +1,32 @@
+spruce:
+- step: "merge resources with groups"
+  base: groups.yml
+  merge:
+  - with:
+      files:
+      - ../../modules/resources/slack.yml
+      - ../../modules/resources/cf-for-k8s-github-release.yml
+      - ../../modules/resources/ci-resources.yml
+      - ../../modules/resources/cluster-state.yml
+      - ../../modules/resources/eirini-release-https.yml
+      - ../../modules/resources/cluster-event-created.yml
+      - ../../modules/resources/cluster-event-ready.yml
+      - ../../modules/resources/slack-resource-type.yml
+  to: {{groups-and-resources}}
+
+- step: "merge groups and resources with jobs"
+  base: {{groups-and-resources}}
+  prune:
+  - slack-notification
+  merge:
+  - with:
+      files:
+      - ../../modules/jobs/slack-notification.yml
+      - ../../modules/jobs/delete-gke-cluster.yml
+      - ../../modules/jobs/create-gke-cluster.yml
+      - ../../modules/jobs/prepare-gke-cluster.yml
+      - ../../modules/jobs/generate-cf-for-k8s-values.yml
+      - ../../modules/jobs/deploy-cf-for-k8s.yml
+      - ../../modules/jobs/smoke-tests-cf-for-k8s.yml
+
+  to: $PIPELINE_YML
