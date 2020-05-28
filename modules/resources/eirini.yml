@@ -1,0 +1,8 @@
+resources:
+- name: eirini
+  type: git
+  icon: git
+  source:
+    branch: master
+    private_key: ((eirini-repo-key))
+    uri: git@github.com:cloudfoundry-incubator/eirini.git

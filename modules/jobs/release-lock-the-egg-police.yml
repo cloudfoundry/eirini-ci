@@ -1,0 +1,8 @@
+jobs:
+- name: release-lock-the-egg-police
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: lock-the-egg-police
+  - params:
+      release: lock-the-egg-police
+    put: lock-the-egg-police

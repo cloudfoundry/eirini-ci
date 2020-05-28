@@ -1,0 +1,7 @@
+resources:
+- name: cf-smoke-tests
+  type: git
+  icon: git
+  source:
+    branch: master
+    uri: https://github.com/cloudfoundry/cf-smoke-tests.git

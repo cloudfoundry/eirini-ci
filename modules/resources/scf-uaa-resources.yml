@@ -1,0 +1,9 @@
+resources:
+- name: scf-uaa-resources
+  type: git
+  icon: git
+  source:
+    branch: master
+    paths:
+    - helm/uaa
+    uri: https://github.com/cloudfoundry-incubator/eirini-release.git

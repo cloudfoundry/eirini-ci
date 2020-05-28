@@ -1,0 +1,89 @@
+jobs:
+- name: generate-cf-for-k8s-values
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: cf-for-k8s-github-release
+    params:
+      include_source_tarball: true
+    trigger: true
+  - get: eirini-release
+    trigger: true
+  - get: cluster-state
+  - get: ci-resources
+  - file: ci-resources/tasks/gcp-download-kubeconfig/task.yml
+    params:
+      CLUSTER_NAME: cf4k8s4a8e
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    task: download-kubeconfig
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
+        type: docker-image
+      inputs:
+      - name: cf-for-k8s-github-release
+      - name: kube
+      outputs:
+      - name: default-values-file
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/generate-default-cf4k8s-values.sh" ))
+        path: /usr/bin/env
+    params:
+      GCP_SERVICE_ACCOUNT: ((gcp-service-account-json))
+    task: generate default values
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/gcloud
+        type: docker-image
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: loadbalancer-values-file
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/generate-loadbalancer-cf4k8s-values.sh" ))
+        path: /usr/bin/env
+    params:
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    task: generate loadbalancer values
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/ci
+        type: docker-image
+      inputs:
+      - name: cluster-state
+      - name: default-values-file
+      - name: loadbalancer-values-file
+      outputs:
+      - name: state-modified
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/aggregate-cf4k8s-values.sh" ))
+        path: /usr/bin/env
+    task: aggregate cf4k8s values
+  - params:
+      merge: true
+      repository: state-modified
+    put: cluster-state
+  public: true
+  serial_groups:
+  - cf4k8s4a8e

@@ -1,0 +1,56 @@
+jobs:
+- name: smoke-tests-cf4k8s4a8e
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: cf-for-k8s-github-release
+    params:
+      include_source_tarball: true
+    passed:
+    - deploy-cf-for-k8s-cf4k8s4a8e
+    trigger: true
+  - get: cluster-state
+  - get: eirini-release
+    passed:
+    - deploy-cf-for-k8s-cf4k8s4a8e
+    trigger: true
+  - task: get-smoke-tests-variables
+    config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/ci
+        type: docker-image
+      inputs:
+      - name: cluster-state
+      outputs:
+      - name: smoke-tests-env-vars
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/get-smoke-tests-variables.sh" ))
+        path: /usr/bin/env
+  - task: run smoke tests
+    config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: relintdockerhubpushbot/cf-test-runner
+        type: docker-image
+      inputs:
+      - name: cf-for-k8s-github-release
+      - name: smoke-tests-env-vars
+      params:
+        SMOKE_TEST_SKIP_SSL: "true"
+        SMOKE_TEST_USERNAME: admin
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-smoke-tests.sh" ))
+        path: /usr/bin/env
+  public: true
+  serial_groups:
+  - cf4k8s4a8e

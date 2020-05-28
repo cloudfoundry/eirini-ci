@@ -1,0 +1,95 @@
+jobs:
+- name: deploy-cf-for-k8s-cf4k8s4a8e
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini-release
+    passed:
+    - generate-cf-for-k8s-values
+    trigger: true
+  - get: cf-for-k8s-github-release
+    params:
+      include_source_tarball: true
+    passed:
+    - generate-cf-for-k8s-values
+    trigger: true
+  - get: ci-resources
+  - get: cluster-state
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: cf4k8s4a8e
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
+        type: docker-image
+      inputs:
+      - name: kube
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/delete-cf-for-k8s.sh" ))
+        path: /usr/bin/env
+    task: delete-cf
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
+        type: docker-image
+      inputs:
+      - name: cf-for-k8s-github-release
+      - name: eirini-release
+      outputs:
+      - name: patched-cf-for-k8s
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/patch-eirini-release-cf-for-k8s.sh" ))
+        path: /usr/bin/env
+    task: patch-eirini-release
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
+        type: docker-image
+      inputs:
+      - name: patched-cf-for-k8s
+      - name: ci-resources
+      - name: cluster-state
+      - name: kube
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/deploy-cf-for-k8s.sh" ))
+        path: /usr/bin/env
+    task: deploy CF for K8s
+  public: true
+  serial_groups:
+  - cf4k8s4a8e

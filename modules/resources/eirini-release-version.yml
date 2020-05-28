@@ -1,0 +1,11 @@
+resources:
+- name: eirini-release-version
+  icon: counter
+  type: semver
+  source:
+    branch: master
+    driver: git
+    file: release-version
+    initial_version: 0.1.0
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config.git

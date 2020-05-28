@@ -7,25 +7,23 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export PROJECT_ROOT PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly world_name=acceptance
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 
-dhall-to-json <<<"$basedir/pipeline.dhall" |
-  jq '.resources = (.resources|unique)' |
-  jq '.resource_types = (.resource_types|unique)' |
-  jq '.groups = (.groups | group_by(.name) | map({name: .[0].name, jobs: (map(.jobs) | flatten) }))' >"$PIPELINE_YML"
+pushd "$basedir"
+{
+  aviator
+}
+popd
 
 fly -t "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
-  --pipeline "$world_name" \
+  --pipeline "acceptance" \
   --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var ci-resources-branch="master" \
-  --var dockerhub-user=eiriniuser \
-  --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var eirini-release-branch="master" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
@@ -33,8 +31,6 @@ fly -t "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
-  --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

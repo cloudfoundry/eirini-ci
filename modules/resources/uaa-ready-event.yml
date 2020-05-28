@@ -1,0 +1,11 @@
+resources:
+- name: cluster-acceptance-staging-event-uaa-ready
+  icon: check-decagram
+  type: semver
+  source:
+    branch: events
+    driver: git
+    file: acceptance-event-uaa-ready
+    initial_version: 0.1.0
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config.git

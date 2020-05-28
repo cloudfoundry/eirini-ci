@@ -1,8 +1,8 @@
 resources:
-- name: eirini-release
+- name: gh-pages-pr
   type: git
   icon: git
   source:
-    branch: ((eirini-release-branch))
+    branch: gh-pages-pr
     private_key: ((eirini-release-repo-key))
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git

@@ -1,0 +1,47 @@
+jobs:
+- name: run-smoke-tests-acceptance
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini-release
+    passed:
+    - deploy-scf-eirini-acceptance
+    trigger: true
+  - get: ci-resources
+  - get: state
+    resource: cluster-state
+  - get: cf-smoke-tests
+  - file: ci-resources/tasks/download-kubeconfig/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+    task: download-kubeconfig
+  - config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/ibmcloud
+        type: docker-image
+      inputs:
+      - name: kube
+      - name: state
+      outputs:
+      - name: cf-credentials
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/get-scf-credentials.sh" ))
+        path: /usr/bin/env
+    params:
+      CLUSTER_NAME: acceptance
+    task: get-cf-credentials
+  - file: ci-resources/tasks/run-smoke-tests/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+    task: run smoke tests
+  public: true
+  serial_groups:
+  - acceptance

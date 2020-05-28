@@ -1,0 +1,16 @@
+jobs:
+- name: cleanup-blobstore
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: ci-resources
+  - get: sunday-morning
+    trigger: true
+  - file: ci-resources/tasks/download-kubeconfig/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+    task: download-kubeconfig
+  - file: ci-resources/tasks/cleanup-blobstore/task.yml
+    task: cleanup-blobstore

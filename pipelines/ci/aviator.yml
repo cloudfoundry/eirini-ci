@@ -15,7 +15,7 @@ spruce:
       - ../../modules/resources/eirini-release-master.yml
       - ../../modules/resources/sample-configs.yml
       - ../../modules/resources/golang-lint.yml
-      - ../../modules/resources/resource-types.yml
+      - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"

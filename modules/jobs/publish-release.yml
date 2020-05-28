@@ -1,0 +1,68 @@
+jobs:
+- name: publish-release
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: ci-resources
+  - get: gh-pages-pr
+  - task: check-for-pending-release
+    file: ci-resources/tasks/check-for-pending-release/task.yml
+    params:
+      GITHUB_TOKEN: ((github-access-token))
+  - get: state
+    resource: cluster-state
+  - get: eirini-release
+    passed:
+    - run-smoke-tests-acceptance
+    - "the-egg-police \U0001F693"
+    - smoke-tests-cf4k8s4a8e
+  - get: eirini-release-version
+  - file: ci-resources/tasks/create-release/task.yml
+    task: create-release
+  - file: ci-resources/tasks/update-helm-repo/task.yml
+    task: update-helm-repo
+  - params:
+      globs:
+      - release-output/eirini*.tgz
+      name: eirini-release-version/version
+      tag: eirini-release-version/version
+      tag_prefix: v
+    put: eirini-scf-release
+  - params:
+      repository: gh-pages-updated
+    put: gh-pages-pr
+  - file: ci-resources/tasks/create-github-pr/task.yml
+    params:
+      GITHUB_TOKEN: ((github-access-token))
+    task: create-github-pr
+  - get: eirini
+  - file: ci-resources/tasks/checkout-sha-by-image/task.yml
+    input_mapping:
+      repository: eirini
+    output_mapping:
+      repository-modified: eirini-modified
+    params:
+      IMAGE_NAME: docker.io/eirini/opi
+      VERSION_FILE: opi
+    privileged: true
+    task: checkout-eirini-sha
+  - params:
+      only_tag: true
+      repository: eirini-modified
+      tag: eirini-release-version/version
+    put: eirini
+  - get: staging
+  - file: ci-resources/tasks/checkout-sha-by-image/task.yml
+    input_mapping:
+      repository: staging
+    output_mapping:
+      repository-modified: staging-modified
+    params:
+      IMAGE_NAME: docker.io/eirini/recipe-downloader
+      VERSION_FILE: staging-downloader
+    privileged: true
+    task: checkout-staging-sha
+  - params:
+      only_tag: true
+      repository: staging-modified
+      tag: eirini-release-version/version
+    put: staging

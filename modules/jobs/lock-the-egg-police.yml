@@ -1,0 +1,10 @@
+jobs:
+- name: lock-the-egg-police
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: every-30-seconds
+    trigger: true
+  - params:
+      acquire: true
+    put: lock-the-egg-police
+  serial: true

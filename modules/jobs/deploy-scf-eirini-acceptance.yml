@@ -1,0 +1,42 @@
+jobs:
+- name: deploy-scf-eirini-acceptance
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini-release
+    trigger: true
+  - get: ci-resources
+  - get: state
+    resource: cluster-state
+  - get: cluster-acceptance-staging-event-uaa-ready
+    passed:
+    - deploy-scf-uaa-acceptance
+  - task: download-kubeconfig
+    file: ci-resources/tasks/download-kubeconfig/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+  - task: deploy-scf
+    file: ci-resources/tasks/deploy-scf/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      USE_CERT_MANAGER: "false"
+  - task: smoke-eirini
+    file: ci-resources/tasks/eirini-smoke-tests/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+  - task: block-network-access
+    file: ci-resources/tasks/block-network-access/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+  - task: recheck-eirini
+    file: ci-resources/tasks/eirini-smoke-tests/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+  public: true
+  serial_groups:
+  - acceptance

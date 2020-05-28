@@ -1,0 +1,33 @@
+jobs:
+- name: deploy-scf-uaa-acceptance
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: scf-uaa-resources
+    trigger: true
+  - get: ci-resources
+  - get: state
+    resource: cluster-state
+  - task: download-kubeconfig
+    file: ci-resources/tasks/download-kubeconfig/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
+      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+      IBMCLOUD_USER: ((ibmcloud-user))
+  - file: ci-resources/tasks/deploy-uaa/task.yml
+    input_mapping:
+      eirini-release: scf-uaa-resources
+    params:
+      CLUSTER_NAME: acceptance
+      USE_CERT_MANAGER: "false"
+    task: deploy-uaa
+  - file: ci-resources/tasks/waiting-for-uaa/task.yml
+    params:
+      CLUSTER_NAME: acceptance
+    task: wait-for-uaa
+  - params:
+      bump: major
+    put: cluster-acceptance-staging-event-uaa-ready
+  public: true
+  serial_groups:
+  - acceptance

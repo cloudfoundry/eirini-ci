@@ -1,0 +1,47 @@
+groups:
+- jobs:
+  - generate-cf-for-k8s-values
+  - deploy-cf-for-k8s-cf4k8s4a8e
+  - smoke-tests-cf4k8s4a8e
+  - deploy-scf-uaa-acceptance
+  - deploy-scf-eirini-acceptance
+  - run-smoke-tests-acceptance
+  - cleanup-blobstore
+  - bump-minor-version
+  - bump-major-version
+  - publish-release
+  - lock-the-egg-police
+  - unlock-the-egg-police
+  - release-lock-the-egg-police
+  - "the-egg-police \U0001F693"
+  - bump-cluster-k8s-version
+  name: all
+- jobs:
+  - bump-cluster-k8s-version
+  name: bump-cluster-k8s-version
+- jobs:
+  - generate-cf-for-k8s-values
+  - deploy-cf-for-k8s-cf4k8s4a8e
+  - smoke-tests-cf4k8s4a8e
+  name: cf-for-k8s-cf4k8s4a8e
+- jobs:
+  - cleanup-blobstore
+  name: cleanup-blobstore
+- jobs:
+  - deploy-scf-uaa-acceptance
+  - deploy-scf-eirini-acceptance
+  - run-smoke-tests-acceptance
+  name: deploy-acceptance
+- jobs:
+  - "the-egg-police \U0001F693"
+  name: egg
+- jobs:
+  - lock-the-egg-police
+  - unlock-the-egg-police
+  - release-lock-the-egg-police
+  name: lock-the-egg-police
+- jobs:
+  - bump-minor-version
+  - bump-major-version
+  - publish-release
+  name: publish-release
