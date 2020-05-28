@@ -17,10 +17,11 @@ readonly ci_branch=${4:-"master"}
 export worker_count=${5:-"3"}
 
 basedir="$(cd "$(dirname "$0")" && pwd)"
-(
-  cd "$basedir"
+pushd "$basedir"
+{
   aviator
-)
+}
+popd
 
 fly --target "$target" \
   set-pipeline \
