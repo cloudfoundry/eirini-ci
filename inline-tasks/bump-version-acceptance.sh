@@ -86,6 +86,7 @@ update-worker() {
   ibmcloud ks worker update -f --cluster "$cluster_name" --worker "$worker"
 }
 
+# shellcheck source=scripts/ibmcloud-functions
 source ci-resources/scripts/ibmcloud-functions
 
 ibmcloud-login

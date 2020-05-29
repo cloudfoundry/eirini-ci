@@ -10,5 +10,5 @@ export SMOKE_TEST_APPS_DOMAIN SMOKE_TEST_PASSWORD SMOKE_TEST_API_ENDPOINT
 tar xzvf cf-for-k8s-github-release/source.tar.gz -C .
 sha="$(<cf-for-k8s-github-release/commit_sha)"
 src_folder="cloudfoundry-cf-for-k8s-${sha:0:7}"
-cd $src_folder/tests/smoke
+cd "$src_folder/tests/smoke"
 ginkgo -v -r
