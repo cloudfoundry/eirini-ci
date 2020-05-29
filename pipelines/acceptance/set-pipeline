@@ -9,6 +9,7 @@ export PROJECT_ROOT PIPELINE_YML
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly target="${1:-eirini}"
 readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
+readonly world_name=cf4k8s4a8e
 
 pushd "$basedir"
 {
@@ -33,4 +34,5 @@ fly -t "$target" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
+  --var world-name="$world_name" \
   --load-vars-from "$private_repo/concourse/common.yml"

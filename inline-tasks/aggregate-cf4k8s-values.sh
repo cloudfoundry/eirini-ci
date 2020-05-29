@@ -31,7 +31,7 @@ aggregate-files() {
   cp loadbalancer-values-file/values.yml "$env_dir"/loadbalancer-values.yml
 }
 
-readonly CLUSTER_DIR="environments/kube-clusters/cf4k8s4a8e"
+readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 
 aggregate-files "$CLUSTER_DIR"
 update-cluster-state-repo "$CLUSTER_DIR"

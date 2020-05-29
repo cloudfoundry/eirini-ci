@@ -1,5 +1,5 @@
 jobs:
-- name: deploy-cf-for-k8s-cf4k8s4a8e
+- name: deploy-cf-for-k8s-((world-name))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: eirini-release
@@ -16,7 +16,7 @@ jobs:
   - get: cluster-state
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: cf4k8s4a8e
+      CLUSTER_NAME: ((world-name))
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
@@ -82,6 +82,8 @@ jobs:
       - name: ci-resources
       - name: cluster-state
       - name: kube
+      params:
+        CLUSTER_NAME: ((world-name))
       platform: linux
       run:
         args:
@@ -92,4 +94,4 @@ jobs:
     task: deploy CF for K8s
   public: true
   serial_groups:
-  - cf4k8s4a8e
+  - ((world-name))

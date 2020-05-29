@@ -8,4 +8,4 @@ export GCP_SERVICE_ACCOUNT_JSON="$PWD/account.json"
 tar xzvf cf-for-k8s-github-release/source.tar.gz -C .
 sha="$(<cf-for-k8s-github-release/commit_sha)"
 src_folder="cloudfoundry-cf-for-k8s-${sha:0:7}"
-"$src_folder"/hack/generate-values.sh -d "cf4k8s4a8e".ci-envs.eirini.cf-app.com -g "$PWD/account.json" >default-values-file/values.yml
+"$src_folder"/hack/generate-values.sh -d "$CLUSTER_NAME".ci-envs.eirini.cf-app.com -g "$PWD/account.json" >default-values-file/values.yml

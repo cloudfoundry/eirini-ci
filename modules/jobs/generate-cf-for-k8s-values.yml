@@ -16,7 +16,7 @@ jobs:
     - prepare-cluster-((world-name))
   - file: ci-resources/tasks/gcp-download-kubeconfig/task.yml
     params:
-      CLUSTER_NAME: cf4k8s4a8e
+      CLUSTER_NAME: ((world-name))
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
@@ -40,6 +40,7 @@ jobs:
         - (( file "../../inline-tasks/generate-default-cf4k8s-values.sh" ))
         path: /usr/bin/env
     params:
+      CLUSTER_NAME: ((world-name))
       GCP_SERVICE_ACCOUNT: ((gcp-service-account-json))
     task: generate default values
   - config:
@@ -60,6 +61,7 @@ jobs:
         - (( file "../../inline-tasks/generate-loadbalancer-cf4k8s-values.sh" ))
         path: /usr/bin/env
     params:
+      CLUSTER_NAME: ((world-name))
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
@@ -83,6 +85,8 @@ jobs:
         - -c
         - (( file "../../inline-tasks/aggregate-cf4k8s-values.sh" ))
         path: /usr/bin/env
+    params:
+      CLUSTER_NAME: ((world-name))
     task: aggregate cf4k8s values
   - params:
       merge: true
@@ -90,4 +94,4 @@ jobs:
     put: cluster-state
   public: true
   serial_groups:
-  - cf4k8s4a8e
+  - ((world-name))

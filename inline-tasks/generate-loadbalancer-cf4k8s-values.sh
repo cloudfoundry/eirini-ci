@@ -26,4 +26,4 @@ loadBalancerIP: $(cat loadbalancer-address)
 EOF
 }
 
-generate-values cf4k8s4a8e
+generate-values $CLUSTER_NAME

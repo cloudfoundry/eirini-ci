@@ -12,4 +12,4 @@ deploy-cf() {
   ) -y
 }
 
-deploy-cf cf4k8s4a8e
+deploy-cf "$CLUSTER_NAME"
