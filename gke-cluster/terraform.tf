@@ -38,8 +38,8 @@ variable "project-id" {
 }
 
 provider "google" {
-  project     = "${var.project-id}"
-  region      = "${var.region}"
+  project     = "var.project-id"
+  region      = "var.region"
 }
 
 terraform {
@@ -52,8 +52,8 @@ terraform {
 }
 
 resource "google_service_account" "eirini" {
-  account_id   = "${var.name}"
-  display_name = "${var.name}"
+  account_id   = "var.name"
+  display_name = "var.name"
 }
 
 resource "google_service_account_key" "eirini" {
@@ -83,19 +83,19 @@ resource "google_project_iam_binding" "erini_dns" {
 }
 
 resource "local_file" "private_service_account_key" {
-  sensitive_content     = "${google_service_account_key.eirini.private_key}"
+  sensitive_content     = "google_service_account_key.eirini.private_key"
   filename = "sa-private-key.json"
 }
 
 resource "google_compute_network" "network" {
-  name = "${var.name}"
+  name = "var.name"
 }
 
 resource "google_container_cluster" "cluster" {
-  name     = "${var.name}"
-  location = "${var.zone}"
+  name     = "var.name"
+  location = "var.zone"
 
-  network = "${google_compute_network.network.name}"
+  network = "google_compute_network.network.name"
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -111,9 +111,9 @@ resource "google_container_cluster" "cluster" {
 }
 
 resource "google_container_node_pool" "node_pool" {
-  name       = "${var.name}"
-  location   = "${var.zone}"
-  cluster    = "${google_container_cluster.cluster.name}"
+  name       = "var.name"
+  location   = "var.zone"
+  cluster    = "google_container_cluster.cluster.name"
   management {
     auto_repair = true
     auto_upgrade = true
@@ -127,7 +127,7 @@ resource "google_container_node_pool" "node_pool" {
   node_config {
     disk_size_gb = 200
     disk_type = "pd-ssd"
-    machine_type = "${var.node-machine-type}"
+    machine_type = "var.node-machine-type"
     image_type = "COS_CONTAINERD"
 
     metadata = {
@@ -142,46 +142,46 @@ resource "google_container_node_pool" "node_pool" {
 }
 
 resource "google_compute_address" "ingress_address" {
-  name = "${var.name}"
-  region = "${var.region}"
+  name = "var.name"
+  region = "var.region"
 }
 
 output "static_ip" {
-  value = "${google_compute_address.ingress_address.address}"
+  value = "google_compute_address.ingress_address.address"
 }
 
 resource "google_dns_record_set" "gorouter_root" {
   name = "${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone-name}"
+  managed_zone = "var.dns-zone-name"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress_address.address}"]
+  rrdatas = ["google_compute_address.ingress_address.address"]
 }
 
 resource "google_dns_record_set" "gorouter_wildcard" {
   name = "*.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone-name}"
+  managed_zone = "var.dns-zone-name"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress_address.address}"]
+  rrdatas = ["google_compute_address.ingress_address.address"]
 }
 
 resource "google_dns_record_set" "uaa_root" {
   name = "uaa.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone-name}"
+  managed_zone = "var.dns-zone-name"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress_address.address}"]
+  rrdatas = ["google_compute_address.ingress_address.address"]
 }
 
 resource "google_dns_record_set" "uaa_wildcard" {
   name = "*.uaa.${var.name}.${var.dns-name}"
-  managed_zone = "${var.dns-zone-name}"
+  managed_zone = "var.dns-zone-name"
   type = "A"
   ttl  = 300
 
-  rrdatas = ["${google_compute_address.ingress_address.address}"]
+  rrdatas = ["google_compute_address.ingress_address.address"]
 }
