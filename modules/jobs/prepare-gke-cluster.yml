@@ -43,11 +43,7 @@ jobs:
         - (( file "../../inline-tasks/init-helm.sh" ))
   - task: install-helm-dependencies
     params:
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
       DNS_SERVICE_ACCOUNT: ((gcp-dns-service-account-json))
-      CLUSTER_NAME: ((world-name))
-      GCP_REGION: ((gcp-region))
     file: ci-resources/tasks/install-helm-dependencies/task.yml
   - put: cluster-((world-name))-staging-event-ready
     params:
