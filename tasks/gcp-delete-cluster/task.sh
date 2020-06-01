@@ -5,6 +5,9 @@ set -euo pipefail
 echo "$GCP_SERVICE_ACCOUNT_JSON" >"$PWD/service-account.json"
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/service-account.json"
 
+# shellcheck disable=SC1091
+source ci-resources/scripts/gcloud-functions
+
 pushd ci-resources/gke-cluster || exit 1
 {
   terraform init -backend-config="prefix=terraform/state/$CLUSTER_NAME"
@@ -14,6 +17,7 @@ pushd ci-resources/gke-cluster || exit 1
   # See https://github.com/terraform-providers/terraform-provider-google/issues/5948
   cluster_network="$(terraform show -json | jq -r '.values.root_module.resources[] | select(.name == "network") | .values.name')"
   if [[ -n "$cluster_network" ]]; then
+    gcloud-login
     firewall_rules=$(gcloud compute firewall-rules list --filter=network="$cluster_network" --format="value(name)")
     for rule_name in $firewall_rules; do
       gcloud compute firewall-rules delete "$rule_name"
