@@ -11,6 +11,11 @@ source ci-resources/scripts/gcloud-functions
 pushd ci-resources/gke-cluster || exit 1
 {
   terraform init -backend-config="prefix=terraform/state/$CLUSTER_NAME"
+  cluster_values="$(terraform show -json | jq -r '.values ')"
+  if [ "$cluster_values" == "null" ]; then
+    echo "Cluster $CLUSTER_NAME does not exist"
+    exit 0
+  fi
 
   # Firewall rules are created when a LoadBalancer Service is created in GCP,
   # and since terraform doesn't know about them, they have to be manually deleted.
