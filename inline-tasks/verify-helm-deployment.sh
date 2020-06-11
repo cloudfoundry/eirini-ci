@@ -4,8 +4,12 @@ set -euo pipefail
 
 export KUBECONFIG="$PWD/kube/config"
 
-kubectl wait pods \
-  --for=condition=Ready \
-  --all \
-  --timeout=120s \
-  --namespace cf
+deployments="$(kubectl get deployments \
+  --namespace cf \
+  --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')"
+
+for dep in $deployments; do
+  kubectl rollout status deployment "$dep" \
+    --namespace cf \
+    --timeout=30s
+done
