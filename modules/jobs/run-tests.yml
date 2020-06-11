@@ -10,6 +10,7 @@ jobs:
         trigger: true
       - get: eirini
         trigger: true
+      - get: eirini-release
       - get: sample-configs
         trigger: true
       - get: golang-lint
@@ -46,7 +47,22 @@ jobs:
                 - bash
                 - -c
                 - (( file "../../inline-tasks/download-kubeconfig.sh" ))
-
+        - task: apply-lrp-crd
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: eirini/ci
+            inputs:
+            - name:  eirini-release
+            - name:  kube
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/apply-lrp-crd.sh" ))
         - task: run-integration-tests
           config:
             platform: linux
