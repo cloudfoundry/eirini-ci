@@ -80,4 +80,9 @@ jobs:
           build_args_file: docker-build-args/args.json
           dockerfile: eirini/docker/route-statefulset-informer/Dockerfile
         put: docker-route-statefulset-informer
+      - put: docker-lrp-controller
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/lrp-controller/Dockerfile
   on_failure: (( grab slack-notification.on_failure ))

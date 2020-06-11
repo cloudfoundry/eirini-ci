@@ -68,6 +68,12 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
+      - get: docker-lrp-controller
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
   - task: update-version-files
     config:
       container_limits: {}
@@ -88,11 +94,12 @@ jobs:
       - name: docker-event-reporter
       - name: docker-staging-reporter
       - name: docker-task-reporter
+      - name: docker-lrp-controller
       outputs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter"
+        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter lrp-controller"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:
