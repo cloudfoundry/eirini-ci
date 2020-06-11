@@ -84,6 +84,9 @@ opi:
         secretName: "cf-secrets"
       taskReporter:
         secretName: "cf-secrets"
+  lrpController:
+    tls:
+      secretName: "cf-secrets"
 EOF
   popd
 }
