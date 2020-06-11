@@ -6,7 +6,7 @@ export KUBECONFIG="$PWD/kube/config"
 
 deployments="$(kubectl get deployments \
   --namespace cf \
-  --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')"
+  --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{ end }}')"
 
 for dep in $deployments; do
   kubectl rollout status deployment "$dep" \
