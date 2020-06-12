@@ -14,8 +14,21 @@ eirini_values_merged=./"$src_folder"/build/eirini/eirini-values-merged.yml
 cat >>"$eirini_custom_values" <<EOF
 ---
 opi:
+  serviceName: eirini
   lrpController:
-    enable: false
+    tls:
+      secretName: "eirini-internal-tls-certs"
+      keyPath: "tls.key"
+      caPath: "tls.ca"
+      certPath: "tls.crt"
+  tasks:
+    tls:
+      taskReporter:
+          secretName: "eirini-internal-tls-certs"
+          keyPath: "tls.key"
+          caPath: "tls.ca"
+          certPath: "tls.crt"
+
 EOF
 
 yq -s '.[0] * .[1]' "$eirini_values" "$eirini_custom_values" -y >"$eirini_values_merged"
