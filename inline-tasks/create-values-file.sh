@@ -82,6 +82,8 @@ opi:
         secretName: "cf-secrets"
       stagingReporter:
         secretName: "cf-secrets"
+  tasks:
+    tls:
       taskReporter:
         secretName: "cf-secrets"
   lrpController:
