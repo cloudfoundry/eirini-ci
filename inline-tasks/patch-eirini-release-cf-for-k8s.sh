@@ -11,6 +11,15 @@ eirini_values=./"$src_folder"/build/eirini/eirini-values.yml
 eirini_custom_values=./"$src_folder"/build/eirini/eirini-custom-values.yml
 eirini_values_merged=./"$src_folder"/build/eirini/eirini-values-merged.yml
 
+cat >"./"$src_folder"/build/eirini/add-namespaces-overlay.yml" <<EOF
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"Namespace", "metadata":{"name":"cf-workloads"}})
+#@overlay/remove
+---
+
+EOF
+
 cat >>"$eirini_custom_values" <<EOF
 ---
 opi:
