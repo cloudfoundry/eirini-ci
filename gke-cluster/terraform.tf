@@ -96,6 +96,7 @@ resource "google_container_cluster" "cluster" {
   location = var.zone
 
   network = google_compute_network.network.name
+  min_master_version = 1.16
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
