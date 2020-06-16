@@ -7,11 +7,12 @@ sha="$(<cf-for-k8s-github-release/commit_sha)"
 src_folder="cloudfoundry-cf-for-k8s-${sha:0:7}"
 rm -rf "$src_folder/build/eirini/_vendir/eirini"
 
-eirini_values=./"$src_folder"/build/eirini/eirini-values.yml
-eirini_custom_values=./"$src_folder"/build/eirini/eirini-custom-values.yml
-eirini_values_merged=./"$src_folder"/build/eirini/eirini-values-merged.yml
+build_path="./$src_folder/build/eirini/"
+eirini_values="$build_path/eirini-values.yml"
+eirini_custom_values="$build_path/eirini-custom-values.yml"
+eirini_values_merged="$build_path/eirini-values-merged.yml"
 
-cat >"./"$src_folder"/build/eirini/add-namespaces-overlay.yml" <<EOF
+cat >"$build_path/add-namespaces-overlay.yml" <<EOF
 #@ load("@ytt:overlay", "overlay")
 
 #@overlay/match by=overlay.subset({"kind":"Namespace", "metadata":{"name":"cf-workloads"}})
