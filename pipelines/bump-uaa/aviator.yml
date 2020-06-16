@@ -1,8 +1,0 @@
-spruce:
-- base: $PROJECT_ROOT/pipelines/bump-uaa/pipeline.yml
-  merge:
-  - with:
-      files:
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-  to: $PIPELINE_YML
-
