@@ -41,10 +41,6 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/init-helm.sh" ))
-  - task: install-helm-dependencies
-    params:
-      DNS_SERVICE_ACCOUNT: ((gcp-dns-service-account-json))
-    file: ci-resources/tasks/install-helm-dependencies/task.yml
   - put: cluster-((world-name))-staging-event-ready
     params:
       bump: major
