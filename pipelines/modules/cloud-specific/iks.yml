@@ -1,9 +1,0 @@
-cloud-specific:
-  use-cert-manager: false
-  download-kubeconfig:
-    params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      CLUSTER_NAME: (( grab meta.cluster-name ))
-    file: ci-resources/tasks/download-kubeconfig/task.yml

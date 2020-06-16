@@ -1,8 +1,0 @@
-jobs:
-- name: (( concat "run-smoke-tests-" meta.cluster-name ))
-  plan:
-  - (( prepend ))
-  - get: eirini-release
-    passed:
-    - (( concat "deploy-scf-eirini-" meta.cluster-name ))
-    trigger: true

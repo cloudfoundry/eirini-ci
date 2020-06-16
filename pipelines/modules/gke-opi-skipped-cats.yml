@@ -1,4 +1,0 @@
-skipped_cats:
-  "uses the buildpack cache after first staging\
-  |reverse log proxy streams logs\
-  |forwards app messages to registered syslog drains"
