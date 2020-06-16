@@ -81,5 +81,21 @@ jobs:
               - bash
               - -c
               - (( file "../../inline-tasks/run-integration-tests.sh" ))
+        - task: delete-lrp-crd
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: eirini/ibmcloud
+            inputs:
+            - name:  eirini-release
+            - name:  kube
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/delete-lrp-crd.sh" ))
 
   on_failure: (( grab slack-notification.on_failure ))
