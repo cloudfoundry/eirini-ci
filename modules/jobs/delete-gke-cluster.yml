@@ -3,16 +3,48 @@ jobs:
   plan:
   - get: ci-resources
   - task: delete-kubernetes-cluster
-    file: ci-resources/tasks/gcp-delete-cluster/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+      inputs:
+        - name: ci-resources
+      params:
+        GCP_SERVICE_ACCOUNT_JSON:
+        CLUSTER_NAME:
+        WORKER_COUNT:
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-delete-cluster.sh" ))
     params:
       CLUSTER_NAME: ((world-name))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       WORKER_COUNT: ((worker_count))
   - get: cluster-state
   - task: delete-values-file
-    file: ci-resources/tasks/clean-up-cluster-config/task.yml
-    params:
-      CLUSTER_NAME: ((world-name))
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+        - name: cluster-state
+      outputs:
+        - name: state-modified
+      params:
+        CLUSTER_NAME: ((world-name))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/clean-up-cluster-config.sh" ))
   - put: cluster-state
     params:
       merge: true

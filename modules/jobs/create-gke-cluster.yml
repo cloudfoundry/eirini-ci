@@ -6,11 +6,24 @@ jobs:
     trigger: true
     passed: [delete-cluster-((world-name))]
   - task: create-kubernetes-cluster
-    file: ci-resources/tasks/gcp-create-cluster/task.yml
-    params:
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      CLUSTER_NAME: ((world-name))
-      WORKER_COUNT: ((worker_count))
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+      inputs:
+        - name: ci-resources
+      params:
+        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+        CLUSTER_NAME: ((world-name))
+        WORKER_COUNT: ((worker_count))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-create-cluster.sh" ))
   - put: cluster-((world-name))-staging-event-created
     params:
       bump: major
