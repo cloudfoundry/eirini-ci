@@ -6,8 +6,8 @@ image_resource:
     repository: eirini/ibmcloud
 
 inputs:
-- name:  eirini-release
-- name:  kube
+- name: eirini-release
+- name: kube
 
 run:
-  file: ci-resources/tasks/apply-lrp-crd/task.sh
+  path: ci-resources/tasks/apply-lrp-crd/task.sh
