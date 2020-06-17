@@ -2,6 +2,7 @@ let Concourse = ../deps/concourse.dhall
 
 in  { ciResources : Concourse.Types.Resource
     , eiriniRepo : Concourse.Types.Resource
+    , eiriniReleaseRepo : Concourse.Types.Resource
     , secretSmugglerRepo : ./eirini-or-repo.dhall
     , fluentdRepo : ./eirini-or-repo.dhall
     , sampleConfigs : Concourse.Types.Resource

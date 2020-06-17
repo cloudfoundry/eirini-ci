@@ -41,6 +41,13 @@ let runTestsJob =
                 , trigger = Some reqs.enableNonCodeAutoTriggers
                 }
 
+        let getEiriniRelease =
+              Concourse.helpers.getStep
+                Concourse.schemas.GetStep::{
+                , resource = reqs.eiriniReleaseRepo
+                , trigger = Some reqs.enableNonCodeAutoTriggers
+                }
+
         let runUnitTests =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -90,6 +97,7 @@ let runTestsJob =
                     [ getClusterReady
                     , triggerOnEirini
                     , getSampleConfigs
+                    , getEiriniRelease
                     , triggerOnGolangLint
                     , get reqs.ciResources
                     ]
@@ -97,7 +105,11 @@ let runTestsJob =
                     [ runUnitTests
                     , runStaticChecks
                     , do
-                        [ applyLrpCrd, downloadKubeconfig, runIntegrationTests, deleteLrpCrd]
+                        [ downloadKubeconfig
+                        , applyLrpCrd
+                        , runIntegrationTests
+                        , deleteLrpCrd
+                        ]
                     ]
                 ]
               }

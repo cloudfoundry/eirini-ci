@@ -133,6 +133,7 @@ let runTestJobs =
       ../dhall-modules/test-and-build-docker-images.dhall
         { ciResources = ciResources
         , eiriniRepo = eiriniRepo
+        , eiriniReleaseRepo = eiriniReleaseRepo
         , secretSmugglerRepo = EiriniOrRepo.UseEirini
         , fluentdRepo = EiriniOrRepo.UseEirini
         , sampleConfigs = sampleConfigs
