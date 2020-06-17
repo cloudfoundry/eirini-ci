@@ -61,6 +61,13 @@ let runTestsJob =
                 reqs.clusterName
                 reqs.creds
 
+        let applyLrpCrd =
+              Concourse.helpers.taskStep
+                Concourse.schemas.TaskStep::{
+                , task = "apply-lrp-crd"
+                , config = taskFile reqs.ciResources "apply-lrp-crd"
+                }
+
         let runIntegrationTests =
               Concourse.helpers.taskStep
                 Concourse.schemas.TaskStep::{
@@ -68,23 +75,31 @@ let runTestsJob =
                 , config = taskFile reqs.ciResources "run-integration-tests"
                 }
 
+        let deleteLrpCrd =
+              Concourse.helpers.taskStep
+                Concourse.schemas.TaskStep::{
+                , task = "delete-lrp-crd"
+                , config = taskFile reqs.ciResources "delete-lrp-crd"
+                }
+
         in    Concourse.defaults.Job
             ⫽ { name = "run-tests"
               , public = Some True
               , plan =
-                  [ in_parallel
-                      [ getClusterReady
-                      , triggerOnEirini
-                      , getSampleConfigs
-                      , triggerOnGolangLint
-                      , get reqs.ciResources
-                      ]
-                  , in_parallel
-                      [ runUnitTests
-                      , runStaticChecks
-                      , do [ downloadKubeconfig, runIntegrationTests ]
-                      ]
-                  ]
+                [ in_parallel
+                    [ getClusterReady
+                    , triggerOnEirini
+                    , getSampleConfigs
+                    , triggerOnGolangLint
+                    , get reqs.ciResources
+                    ]
+                , in_parallel
+                    [ runUnitTests
+                    , runStaticChecks
+                    , do
+                        [ applyLrpCrd, downloadKubeconfig, runIntegrationTests, deleteLrpCrd]
+                    ]
+                ]
               }
 
 in  runTestsJob
