@@ -126,3 +126,11 @@ resources:
     password: ((dockerhub-password))
     repository: eirini/lrp-controller
     username: ((dockerhub-user))
+
+- name: docker-config-updater
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/config-updater
+    username: ((dockerhub-user))
