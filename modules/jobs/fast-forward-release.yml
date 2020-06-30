@@ -4,7 +4,7 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - verify-helm-deployment
+    - run-integration-tests
   - get: eirini-release-master
   - put: eirini-release-master
     params:
