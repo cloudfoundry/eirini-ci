@@ -1,2 +1,4 @@
 spruced.yml
 /pipelines/scf/final-pipeline.yml
+.terraform
+*.tfstate
