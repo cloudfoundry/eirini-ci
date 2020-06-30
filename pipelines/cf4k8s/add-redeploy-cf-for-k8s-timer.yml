@@ -1,0 +1,35 @@
+jobs:
+- name: generate-cf-for-k8s-values
+  plan:
+  - get: cf-for-k8s-github-release
+    trigger: false
+  - get: eirini-release
+    trigger: false
+- name: deploy-cf-for-k8s-((world-name))
+  plan:
+  - get: eirini-release
+    trigger: false
+  - get: cf-for-k8s-github-release
+    trigger: false
+  - get: cluster-state
+    passed:
+    - generate-cf-for-k8s-values
+    trigger: true
+  - (( prepend ))
+  - get: delete-timer
+    trigger: true
+- name: smoke-tests-((world-name))
+  plan:
+  - get: cf-for-k8s-github-release
+    trigger: false
+  - get: cluster-state
+    passed:
+    - deploy-cf-for-k8s-((world-name))
+    trigger: true
+  - get: eirini-release
+    trigger: false
+  - (( prepend ))
+  - get: delete-timer
+    passed:
+    - deploy-cf-for-k8s-((world-name))
+    trigger: true

@@ -12,8 +12,8 @@ jobs:
     passed:
     - generate-cf-for-k8s-values
     trigger: true
-  - get: ci-resources
   - get: cluster-state
+  - get: ci-resources
   - task: download-kubeconfig
     params:
       CLUSTER_NAME: ((world-name))

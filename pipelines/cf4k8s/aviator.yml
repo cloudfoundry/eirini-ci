@@ -7,6 +7,7 @@ spruce:
       - ../../modules/resources/slack.yml
       - ../../modules/resources/cf-for-k8s-github-release.yml
       - ../../modules/resources/ci-resources.yml
+      - ../../modules/resources/delete-timer.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini-release-https.yml
       - ../../modules/resources/cluster-event-created.yml
@@ -28,5 +29,6 @@ spruce:
       - ../../modules/jobs/generate-cf-for-k8s-values.yml
       - ../../modules/jobs/deploy-cf-for-k8s.yml
       - ../../modules/jobs/smoke-tests-cf-for-k8s.yml
+      - ./add-redeploy-cf-for-k8s-timer.yml
 
   to: $PIPELINE_YML
