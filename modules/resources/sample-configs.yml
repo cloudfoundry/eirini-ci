@@ -1,9 +1,0 @@
-resources:
-- name: sample-configs
-  type: git
-  icon: git
-  source:
-    branch: ((ci-resources-branch))
-    paths:
-    - sample-configs
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci

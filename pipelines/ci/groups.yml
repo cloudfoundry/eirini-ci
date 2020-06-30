@@ -6,6 +6,7 @@ groups:
   - prepare-cluster-ci
   - verify-helm-deployment
   - run-tests
+  - run-integration-tests
   - create-go-docker-images
   - create-secret-smuggler-docker-image
   - run-fluentd-unit-tests
@@ -34,6 +35,7 @@ groups:
   - staging-test
   - create-staging-docker-images
   - verify-helm-deployment
+  - run-integration-tests
 
 - name: update-version-files
   jobs:

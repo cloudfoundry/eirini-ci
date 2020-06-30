@@ -13,7 +13,6 @@ spruce:
       - ../../modules/resources/eirini-resources.yml
       - ../../modules/resources/eirini-release.yml
       - ../../modules/resources/eirini-release-master.yml
-      - ../../modules/resources/sample-configs.yml
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}

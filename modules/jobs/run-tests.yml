@@ -11,8 +11,6 @@ jobs:
       - get: eirini
         trigger: true
       - get: eirini-release
-      - get: sample-configs
-        trigger: true
       - get: golang-lint
         params:
           skip_download: true
