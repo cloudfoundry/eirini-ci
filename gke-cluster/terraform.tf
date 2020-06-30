@@ -109,6 +109,12 @@ resource "google_container_cluster" "cluster" {
       start_time = "03:00"
     }
   }
+
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block  = ""
+    services_ipv4_cidr_block = ""
+  }
+
 }
 
 resource "google_container_node_pool" "node_pool" {
