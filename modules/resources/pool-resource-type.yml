@@ -1,0 +1,7 @@
+resource_types:
+- name: pool
+  type: registry-image
+  source:
+    repository: concourse/pool-resource
+    tag: 1.1.3
+
