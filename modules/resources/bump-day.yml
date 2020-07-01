@@ -1,0 +1,9 @@
+resources:
+- name: bump-day
+  type: time
+  icon: timetable
+  source:
+    days:
+    - Wednesday
+    start: 12:00 AM
+    stop: 11:59 PM

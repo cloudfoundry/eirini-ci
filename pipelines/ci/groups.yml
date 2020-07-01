@@ -18,6 +18,7 @@ groups:
   - update-secret-smuggler-version-files
   - update-staging-version-files
   - fast-forward-release
+  - bump-go-modules
 
 - name: cluster-ci
   jobs:
@@ -36,6 +37,7 @@ groups:
   - create-staging-docker-images
   - verify-helm-deployment
   - run-integration-tests
+  - bump-go-modules
 
 - name: update-version-files
   jobs:

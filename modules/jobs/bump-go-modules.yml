@@ -1,0 +1,69 @@
+jobs:
+- name: bump-go-modules
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: bump-day
+        trigger: true
+      - get: eirini
+  - do:
+    - task: bump-go-modules
+      input_mapping:
+        repository: eirini
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirini/ci
+        inputs:
+        - name: repository
+        outputs:
+        - name: repository-updated
+        run:
+          path: /usr/bin/env
+          args:
+          - bash
+          - -c
+          - (( file "../../inline-tasks/bump-go-packages.sh" ))
+    - task: run-unit-tests
+      input_mapping:
+        eirini: repository-updated
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirini/ci
+        inputs:
+        - name: eirini
+        run:
+          path: /usr/bin/env
+          args:
+          - bash
+          - -c
+          - (( file "../../inline-tasks/run-unit-tests.sh" ))
+    - task: run-static-checks
+      input_mapping:
+        eirini: repository-updated
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: golangci/golangci-lint
+            tag: latest
+        inputs:
+        - name: eirini
+        run:
+          path: /usr/bin/env
+          args:
+          - bash
+          - -c
+          - (( file "../../inline-tasks/run-static-checks.sh" ))
+    - put: eirini-master
+      params:
+        repository: repository-updated
+
+  on_failure: (( grab slack-notification.on_failure ))
