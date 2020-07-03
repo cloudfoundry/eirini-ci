@@ -1,0 +1,8 @@
+groups:
+- name: ci-images
+  jobs:
+  - update-ci-image
+  - update-ibmcloud-image
+  - update-gcloud-image
+  - update-buildah-image
+  - update-staging-integration-image

@@ -1,0 +1,6 @@
+resources:
+- name: golang-image
+  icon: docker
+  source:
+    repository: golang
+  type: docker-image

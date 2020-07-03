@@ -1,0 +1,25 @@
+spruce:
+- step: "merge resources with groups"
+  base: groups.yml
+  merge:
+  - with:
+      files:
+      - ../../modules/resources/slack.yml
+      - ../../modules/resources/ci-images-docker-resources.yml
+      - ../../modules/resources/slack-resource-type.yml
+      - ../../modules/resources/golang-image.yml
+      - ../../modules/resources/docker-image-sources.yml
+      - ../../modules/resources/cflinuxfs3-image.yml
+  to: {{groups-and-resources}}
+
+- step: "merge groups and resources with jobs"
+  base: {{groups-and-resources}}
+  prune:
+  - slack-notification
+  merge:
+  - with:
+      files:
+      - ../../modules/jobs/slack-notification.yml
+      - ../../modules/jobs/update-ci-images.yml
+
+  to: $PIPELINE_YML

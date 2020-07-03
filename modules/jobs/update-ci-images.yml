@@ -1,0 +1,63 @@
+jobs:
+- name: update-ci-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: golang-image
+    trigger: true
+  - get: ci-image-source
+    trigger: true
+  - put: ci-image
+    get_params:
+      skip_download: true
+    params:
+      build: ci-image-source/images/ci
+
+- name: update-ibmcloud-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: ibmcloud-image-source
+    trigger: true
+  - put: ibmcloud-image
+    get_params:
+      skip_download: true
+    params:
+      build: ibmcloud-image-source/images/ibmcloud
+
+
+- name: update-gcloud-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: golang-image
+    trigger: true
+  - get: gcloud-image-source
+    trigger: true
+  - put: gcloud-image
+    get_params:
+      skip_download: true
+    params:
+      build: gcloud-image-source/images/gcloud
+
+
+- name: update-buildah-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: buildah-image-source
+    trigger: true
+  - put: buildah-image
+    get_params:
+      skip_download: true
+    params:
+      build: buildah-image-source/images/buildah
+
+- name: update-staging-integration-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: cflinuxfs3
+    trigger: true
+  - get: staging-integration-image-source
+    trigger: true
+  - put: staging-integration-image
+    get_params:
+      skip_download: true
+    params:
+      build: staging-integration-image-source/images/staging-integration

@@ -1,0 +1,6 @@
+resources:
+- name: cflinuxfs3
+  icon: docker
+  source:
+    repository: cloudfoundry/cflinuxfs3
+  type: docker-image

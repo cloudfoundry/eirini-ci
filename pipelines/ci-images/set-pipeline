@@ -2,29 +2,24 @@
 
 set -euo pipefail
 
-if [ "${1:-x}" == "help" ]; then
-  cat <<EOF
-  Usage:
-
-        $ ./set-pipeline <CONCOURSE_TARGET> <PRIVATE_REPO>
-EOF
-  exit 0
-fi
-
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
 
 PIPELINE_YML=$(mktemp)
-dhall-to-json <<<"$script_dir/pipeline.dhall" |
-  jq '.resources = (.resources|unique)' |
-  jq '.resource_types = (.resource_types|unique)' \
-    >"$PIPELINE_YML"
+export PIPELINE_YML
+
+pushd "$script_dir"
+{
+  aviator
+}
+popd
 
 fly -t "${target}" \
   set-pipeline \
   -p ci-images \
   -c "$PIPELINE_YML" \
-  -v docker_hub_user=eiriniuser \
-  -v docker_hub_password="$(pass eirini/docker-hub)" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var ci-resources-branch="master" \
   --load-vars-from "$private_repo/concourse/common.yml"
