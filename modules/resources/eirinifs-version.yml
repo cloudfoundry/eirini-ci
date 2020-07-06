@@ -1,0 +1,9 @@
+resources:
+- name: eirinifs-version
+  type: semver
+  source:
+    driver: git
+    uri: git@github.com:cloudfoundry/eirini-private-config.git
+    branch: eirinifs-release-version
+    file: version
+    private_key: ((github-private-key))

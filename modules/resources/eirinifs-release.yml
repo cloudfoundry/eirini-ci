@@ -1,0 +1,8 @@
+resources:
+- name: eirinifs-release
+  check_every: 2h
+  type: github-release
+  source:
+    owner: cloudfoundry-incubator
+    repository: eirinifs
+    access_token: ((github-access-token))

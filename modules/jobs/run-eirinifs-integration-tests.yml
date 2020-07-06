@@ -1,0 +1,23 @@
+jobs:
+- name: run-tests
+  plan:
+  - get: cflinuxfs3-release
+    passed: [ bump-cflinuxfs3 ]
+  - get: eirinifs
+    trigger: true
+  - task: run-integration-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: eirinifs
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-eirinifs-integration-tests.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

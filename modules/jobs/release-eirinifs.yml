@@ -1,0 +1,64 @@
+jobs:
+- name: update-eirinifs
+  plan:
+  - in_parallel:
+    - get: cflinuxfs3-release
+      passed: [ run-tests ]
+    - get: eirinifs
+      trigger: true
+      passed: [ run-tests ]
+    - get: eirinifs-version
+      params:
+        bump: major
+  - put: eirinifs-version
+    params:
+      file: eirinifs-version/version
+  - put: eirinifs-image
+    params:
+      build: eirinifs
+      dockerfile: eirinifs/image/Dockerfile
+    get_params:
+      rootfs: true
+  - task: create-release-artefacts
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: debian
+      inputs:
+      - name: eirinifs-image
+      outputs:
+      - name: eirinifs-artefacts
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/create-eirinifs-release-artefacts.sh" ))
+  - task: create-release-notes
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/fsbuilder
+      inputs:
+      - name: eirinifs
+      - name: cflinuxfs3-release
+      outputs:
+      - name: release-notes
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/create-eirinifs-release-notes.sh" ))
+  - put: eirinifs-release
+    params:
+      name: eirinifs-version/version
+      body: release-notes/notes
+      tag: eirinifs-version/version
+      tag_prefix: v
+      globs:
+      - eirinifs-artefacts/eirinifs.tar
+      - eirinifs-artefacts/eirinifs.tar.sha256
+  on_failure: (( grab slack-notification.on_failure ))
