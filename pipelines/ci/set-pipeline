@@ -37,6 +37,8 @@ fly --target "$target" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+  --var eirinifs-private-key="$(pass eirini/github/eirinifs/ssh-key)" \
+  --var eirinifs-branch="master" \
   --var eirini-release-branch="develop" \
   --var eirini-branch="$working_branch" \
   --var worker_count="$worker_count" \

@@ -1,0 +1,34 @@
+jobs:
+- name: bump-go-modules-eirinifs
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: bump-day
+        trigger: true
+      - get: eirinifs
+  - do:
+    - task: bump-go-modules
+      input_mapping:
+        repository: eirinifs
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirini/ci
+        inputs:
+        - name: repository
+        outputs:
+        - name: repository-updated
+        run:
+          path: /usr/bin/env
+          args:
+          - bash
+          - -c
+          - (( file "../../inline-tasks/bump-go-packages.sh" ))
+    - put: eirinifs
+      params:
+        repository: repository-updated
+
+  on_failure: (( grab slack-notification.on_failure ))

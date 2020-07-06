@@ -1,5 +1,5 @@
 jobs:
-- name: bump-go-modules
+- name: bump-go-modules-eirini
   public: true
   plan:
   - in_parallel:
