@@ -17,11 +17,11 @@ add-eirinifs-information() {
   commits="$(git log HEAD..."$tag" --format="%H %B%n")"
 
   if [[ -n "$commits" ]]; then
-      commits="$(echo "$commits" | grep -v "Signed")"
-      echo "This release includes the following commits:" >> "$RELEASE_NOTES"
+    commits="$(echo "$commits" | grep -v "Signed")"
+    echo "This release includes the following commits:" >>"$RELEASE_NOTES"
 
-      # shellcheck disable=SC2001
-      echo "$commits" | sed -e 's/^/  /' >> "$RELEASE_NOTES"
+    # shellcheck disable=SC2001
+    echo "$commits" | sed -e 's/^/  /' >>"$RELEASE_NOTES"
   fi
   popd || exit 1
 }
@@ -33,7 +33,7 @@ add-cflinuxfs3-information() {
     echo ""
     echo "This release includes the following cflinuxfs3 image:"
     echo "  Tag: $tag"
-  } >> "$RELEASE_NOTES"
+  } >>"$RELEASE_NOTES"
 }
 
 main
