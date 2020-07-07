@@ -41,7 +41,7 @@ get_image_config() {
 }
 
 image_sha=$(cat "eirini-release/helm/eirini/versions/$VERSION_FILE")
-repo_sha=$(get_image_config "$IMAGE_NAME" "$image_sha" | jq -r '.Labels["org.opencontainers.image.revision"]')
+repo_sha=$(get_image_config "$IMAGE_NAME" "$image_sha" | jq -r '.config.Labels["org.opencontainers.image.revision"]')
 
 git -C repository checkout "$repo_sha"
 git clone repository repository-modified
