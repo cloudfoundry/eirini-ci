@@ -14,7 +14,9 @@ get_token() {
 get_image_config() {
   local image=$1
   local digest=$2
-  local token=$(get_token $image)
+  local token
+
+  token=$(get_token "$image")
 
   curl \
     --silent \
