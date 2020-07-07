@@ -11,16 +11,31 @@ get_token() {
     jq -r '.token'
 }
 
+get_digest() {
+  local image=$1
+  local tag=$2
+  local token=$3
+
+  curl \
+    --silent \
+    --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+    --header "Authorization: Bearer $token" \
+    "https://registry-1.docker.io/v2/$image/manifests/$tag" |
+    jq -r '.config.digest'
+}
+
 get_image_config() {
   local image=$1
-  local digest=$2
-  local token
+  local tag=$2
+  local token digest
 
-  token=$(get_token "$image")
+  token="$(get_token $image)"
+  digest=$(get_digest $image $tag $token)
 
   curl \
     --silent \
     --location \
+    --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
     --header "Authorization: Bearer $token" \
     "https://registry-1.docker.io/v2/$image/blobs/$digest"
 }
