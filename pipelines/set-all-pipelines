@@ -7,10 +7,6 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export PROJECT_ROOT
 
 readonly main_pipelines=(acceptance ci check-shell ci-images dev-envs egg)
-tty=$(tty)
 for pipeline in ${main_pipelines[@]}; do
   $PROJECT_ROOT/pipelines/$pipeline/set-pipeline
-  if [ "$?" -ne 0 ]; then
-    exit 1
-  fi
 done
