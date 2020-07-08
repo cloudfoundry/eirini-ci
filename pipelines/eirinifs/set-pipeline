@@ -31,7 +31,7 @@ fly --target "$target" \
   --var eirinifs-branch="master" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-release-branch="develop" \
-  --load-vars-from "$private_repo/concourse/common.yml"
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
 
 fly --target "$target" \
   expose-pipeline \

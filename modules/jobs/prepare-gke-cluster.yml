@@ -43,9 +43,9 @@ jobs:
        - name: state-modified
      params:
        CLUSTER_NAME: ((world-name))
-       CLUSTER_ADMIN_PASSWORD: ((cluster_admin_password))
-       UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
-       NATS_PASSWORD: ((nats_password))
+       CLUSTER_ADMIN_PASSWORD: ((cluster-admin-password))
+       UAA_ADMIN_CLIENT_SECRET: ((uaa-admin-client-secret))
+       NATS_PASSWORD: ((nats-password))
      run:
         path: /usr/bin/env
         args:

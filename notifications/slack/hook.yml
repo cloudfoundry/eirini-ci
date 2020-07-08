@@ -10,7 +10,7 @@ resources:
   icon: slack
   type: slack-notification
   source:
-    url: ((slack_webhook))
+    url: ((slack-webhook))
 
 hooks:
   failure:

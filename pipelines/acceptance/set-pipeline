@@ -35,4 +35,4 @@ fly -t "$target" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
   --var world-name="$world_name" \
-  --load-vars-from "$private_repo/concourse/common.yml"
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"

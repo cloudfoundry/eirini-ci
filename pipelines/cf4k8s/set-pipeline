@@ -39,4 +39,7 @@ fly -t "$target" \
   --var gcp-zone="europe-west1-b" \
   --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var worker_count="$worker_count" \
-  --load-vars-from "$private_repo/concourse/common.yml"
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
+  --var nats-password="$(pass eirini/ci/nats-password)" \
+  --var cluster-admin-password="$(pass eirini/ci/cluster-admin-password)" \
+  --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)"

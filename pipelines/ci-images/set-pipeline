@@ -22,4 +22,4 @@ fly -t "${target}" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var ci-resources-branch="master" \
-  --load-vars-from "$private_repo/concourse/common.yml"
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
