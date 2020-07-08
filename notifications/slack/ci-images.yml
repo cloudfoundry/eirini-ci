@@ -1,6 +1,0 @@
-jobs:
-- ((merge))
-- name: update-eirini-ibmcloud-image
-  .: (( inject hooks.failure ))
-- name: update-eirini-ci-image
-  .: (( inject hooks.failure ))

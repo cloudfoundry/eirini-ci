@@ -1,0 +1,8 @@
+jobs:
+- name: check-shell
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: ci-resources
+    trigger: true
+  - task: run-shellcheck
+    file: ci-resources/tasks/check-shell/task.yml

@@ -1,0 +1,8 @@
+jobs:
+- name: format-shell
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: ci-resources
+    trigger: true
+  - task: run-shfmt
+    file: ci-resources/tasks/format-shell/task.yml

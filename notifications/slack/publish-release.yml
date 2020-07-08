@@ -1,4 +1,0 @@
-jobs:
-- ((merge))
-- name: publish-release
-  .: (( inject hooks.failure ))

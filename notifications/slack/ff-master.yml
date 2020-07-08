@@ -1,4 +1,0 @@
-jobs:
-- ((merge))
-- name: fast-forward-master-release
-  .: (( inject hooks.failure ))

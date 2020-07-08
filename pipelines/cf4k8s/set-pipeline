@@ -3,8 +3,7 @@
 set -euo pipefail
 
 PIPELINE_YML=$(mktemp)
-PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-export PROJECT_ROOT PIPELINE_YML
+export PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 

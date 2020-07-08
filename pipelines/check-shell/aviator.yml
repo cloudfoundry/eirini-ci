@@ -1,10 +1,23 @@
 spruce:
-- base: $PROJECT_ROOT/pipelines/check-shell/check-shell.yml
-  prune:
-  - cats_conf
+- step: "merge resources with groups"
+  base: groups.yml
   merge:
   - with:
       files:
-      - $PROJECT_ROOT/notifications/slack/hook.yml
-      - $PROJECT_ROOT/notifications/slack/check-shell.yml
+      - ../../modules/resources/slack.yml
+      - ../../modules/resources/ci-resources.yml
+      - ../../modules/resources/slack-resource-type.yml
+  to: {{groups-and-resources}}
+
+- step: "merge groups and resources with jobs"
+  base: {{groups-and-resources}}
+  prune:
+  - slack-notification
+  merge:
+  - with:
+      files:
+      - ../../modules/jobs/slack-notification.yml
+      - ../../modules/jobs/check-shell.yml
+      - ../../modules/jobs/format-shell.yml
+
   to: $PIPELINE_YML

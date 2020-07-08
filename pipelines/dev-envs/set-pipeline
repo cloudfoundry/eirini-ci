@@ -4,7 +4,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-export PROJECT_ROOT
 
 readonly target="${1:-eirini}"
 readonly worker_count=${2:-"3"}

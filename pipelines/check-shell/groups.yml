@@ -1,0 +1,5 @@
+groups:
+- name: ci-check-shell
+  jobs:
+  - check-shell
+  - format-shell
