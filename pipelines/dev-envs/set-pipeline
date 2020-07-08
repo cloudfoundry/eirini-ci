@@ -8,7 +8,6 @@ export PROJECT_ROOT
 
 readonly target="${1:-eirini}"
 readonly worker_count=${2:-"3"}
-readonly private_repo="${3:-$PROJECT_ROOT/../eirini-private-config}"
 readonly dev_cluster_names=("okinawa" "lisbon" "barcelona" "velikotarnovo")
 pushd "$PROJECT_ROOT/pipelines/cf4k8s" || exit 1
 {

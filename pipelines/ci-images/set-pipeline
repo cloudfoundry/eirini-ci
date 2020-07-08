@@ -3,7 +3,6 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-private_repo=$(cd "$script_dir/../../../eirini-private-config" && pwd)
 target="${1:-eirini}"
 
 PIPELINE_YML=$(mktemp)

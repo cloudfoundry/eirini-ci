@@ -8,7 +8,6 @@ export PROJECT_ROOT PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly target="${1:-eirini}"
-readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly world_name=cf4k8s4a8e
 
 pushd "$basedir"

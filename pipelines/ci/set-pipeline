@@ -11,7 +11,6 @@ export PIPELINE_YML
 
 readonly world_name=ci
 readonly target="${1:-eirini}"
-readonly private_repo="${2:-$PROJECT_ROOT/../eirini-private-config}"
 readonly working_branch=${3:-"master"}
 readonly ci_branch=${4:-"master"}
 export worker_count=${5:-"3"}
