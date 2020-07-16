@@ -110,6 +110,16 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
+  network_policy {
+     enabled = true
+  }
+
+  addons_config {
+    network_policy_config  {
+      disabled = false
+    }
+  }
+
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = ""
     services_ipv4_cidr_block = ""
