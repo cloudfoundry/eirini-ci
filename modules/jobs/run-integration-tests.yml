@@ -51,6 +51,8 @@ jobs:
             - name:  kube
             outputs:
             - name:  output
+            params:
+                EIRINIUSER_PASSWORD: ((dockerhub-password))
             run:
               path: /usr/bin/env
               args:
