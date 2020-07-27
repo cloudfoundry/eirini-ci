@@ -86,7 +86,7 @@ opi:
     tls:
       taskReporter:
         secretName: "cf-secrets"
-  lrpController:
+  eiriniController:
     tls:
       secretName: "cf-secrets"
 EOF

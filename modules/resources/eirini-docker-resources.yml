@@ -119,10 +119,10 @@ resources:
     repository: eirini/recipe-uploader
     username: ((dockerhub-user))
 
-- name: docker-lrp-controller
+- name: docker-eirini-controller
   type: docker-image
   icon: docker
   source:
     password: ((dockerhub-password))
-    repository: eirini/lrp-controller
+    repository: eirini/eirini-controller
     username: ((dockerhub-user))
