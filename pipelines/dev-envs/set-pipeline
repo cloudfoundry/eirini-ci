@@ -11,7 +11,7 @@ readonly dev_cluster_names=("okinawa" "lisbon" "barcelona" "velikotarnovo")
 pushd "$PROJECT_ROOT/pipelines/cf4k8s" || exit 1
 {
   for name in "${dev_cluster_names[@]}"; do
-    ./set-pipeline "$name" true
+    ./set-pipeline "$name" true "$worker_count" "$target"
   done
 }
 popd || exit 1
