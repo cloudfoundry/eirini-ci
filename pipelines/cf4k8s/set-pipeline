@@ -8,8 +8,9 @@ export PIPELINE_YML
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 
 readonly world_name="${1:?}"
-readonly worker_count=${2:-"3"}
-readonly target="${3:-eirini}"
+readonly enable_redeploy="${2:-false}"
+readonly worker_count=${3:-"3"}
+readonly target="${4:-eirini}"
 
 pushd "$basedir"
 {
@@ -21,23 +22,24 @@ fly -t "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
   --pipeline "$world_name" \
-  --var world-name="$world_name" \
-  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
-  --var ibmcloud-user=eirini@cloudfoundry.org \
-  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var ci-resources-branch="master" \
+  --var cluster-admin-password="$(pass eirini/ci/cluster-admin-password)" \
   --var eirini-release-branch="master" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
   --var eirini-staging-repo-key="$(pass eirini/github/eirini-staging/ssh-key)" \
-  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
-  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
-  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --var gcp-region="europe-west1" \
-  --var gcp-zone="europe-west1-b" \
   --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
-  --var worker_count="$worker_count" \
-  --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
+  --var gcp-region="europe-west1" \
+  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-zone="europe-west1-b" \
+  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
+  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
+  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
+  --var ibmcloud-user=eirini@cloudfoundry.org \
   --var nats-password="$(pass eirini/ci/nats-password)" \
-  --var cluster-admin-password="$(pass eirini/ci/cluster-admin-password)" \
-  --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)"
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
+  --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
+  --var worker_count="$worker_count" \
+  --var world-name="$world_name" \
+  --yaml-var enable-redeploy="$enable_redeploy"

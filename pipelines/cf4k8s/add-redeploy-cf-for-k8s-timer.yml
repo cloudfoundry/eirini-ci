@@ -1,4 +1,9 @@
 jobs:
+- name: delete-cluster-((world-name))
+  plan:
+  - (( prepend ))
+  - get: delete-timer
+    trigger: ((enable-redeploy))
 - name: generate-cf-for-k8s-values
   plan:
   - get: cf-for-k8s-github-release
@@ -16,8 +21,8 @@ jobs:
     - generate-cf-for-k8s-values
     trigger: true
   - (( prepend ))
-  - get: delete-timer
-    trigger: true
+  - get: redeploy-timer
+    trigger: ((enable-redeploy))
 - name: smoke-tests-((world-name))
   plan:
   - get: cf-for-k8s-github-release
@@ -29,7 +34,7 @@ jobs:
   - get: eirini-release
     trigger: false
   - (( prepend ))
-  - get: delete-timer
+  - get: redeploy-timer
     passed:
     - deploy-cf-for-k8s-((world-name))
-    trigger: true
+    trigger: ((enable-redeploy))
