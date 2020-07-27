@@ -7,13 +7,12 @@ spruce:
       - ../../modules/resources/slack.yml
       - ../../modules/resources/cf-for-k8s-github-release.yml
       - ../../modules/resources/ci-resources.yml
-      - ../../modules/resources/delete-timer.yml
-      - ../../modules/resources/redeploy-timer.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini-release-https.yml
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/resources/cluster-event-ready.yml
       - ../../modules/resources/slack-resource-type.yml
+      (( timer-resources ))
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"
@@ -30,6 +29,7 @@ spruce:
       - ../../modules/jobs/generate-cf-for-k8s-values.yml
       - ../../modules/jobs/deploy-cf-for-k8s.yml
       - ../../modules/jobs/smoke-tests-cf-for-k8s.yml
-      - ./add-redeploy-cf-for-k8s-timer.yml
+      - ./remove-deploy-triggers.yml
+      (( redeploy-trigger ))
 
   to: $PIPELINE_YML
