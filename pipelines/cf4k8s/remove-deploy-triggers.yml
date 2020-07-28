@@ -8,6 +8,8 @@ jobs:
 - name: deploy-cf-for-k8s-((world-name))
   plan:
   - get: eirini-release
+    passed:
+    - (( replace ))
     trigger: false
   - get: cf-for-k8s-github-release
     trigger: false
