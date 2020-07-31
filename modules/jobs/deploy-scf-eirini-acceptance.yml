@@ -11,30 +11,104 @@ jobs:
     passed:
     - deploy-scf-uaa-acceptance
   - task: download-kubeconfig
-    file: ci-resources/tasks/download-kubeconfig/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: acceptance
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       IBMCLOUD_USER: ((ibmcloud-user))
   - task: deploy-scf
-    file: ci-resources/tasks/deploy-scf/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: kube
+      - name: ci-resources
+      - name: eirini-release
+      - name: state
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/deploy-scf.sh" ))
     params:
       CLUSTER_NAME: acceptance
       USE_CERT_MANAGER: "false"
   - task: smoke-eirini
-    file: ci-resources/tasks/eirini-smoke-tests/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+        - name: kube
+        - name: ci-resources
+        - name: state
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/eirini-smoke-tests.sh" ))
     params:
       CLUSTER_NAME: acceptance
   - task: block-network-access
-    file: ci-resources/tasks/block-network-access/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+        - name: ci-resources
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/block-network-access.sh" ))
     params:
       CLUSTER_NAME: acceptance
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       IBMCLOUD_USER: ((ibmcloud-user))
   - task: recheck-eirini
-    file: ci-resources/tasks/eirini-smoke-tests/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+        - name: kube
+        - name: ci-resources
+        - name: state
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/eirini-smoke-tests.sh" ))
     params:
       CLUSTER_NAME: acceptance
   public: true

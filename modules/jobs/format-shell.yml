@@ -5,4 +5,17 @@ jobs:
   - get: ci-resources
     trigger: true
   - task: run-shfmt
-    file: ci-resources/tasks/format-shell/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: ci-resources
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/format-shell.sh" ))

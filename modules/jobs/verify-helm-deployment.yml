@@ -10,7 +10,22 @@ jobs:
   - get: eirini-release
     trigger: true
   - task: get-kubeconfig
-    file: ci-resources/tasks/download-kubeconfig/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: ((world-name))
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))

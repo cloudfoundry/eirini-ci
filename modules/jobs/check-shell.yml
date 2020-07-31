@@ -5,4 +5,18 @@ jobs:
   - get: ci-resources
     trigger: true
   - task: run-shellcheck
-    file: ci-resources/tasks/check-shell/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: koalaman/shellcheck-alpine
+          tag: stable
+      inputs:
+      - name: ci-resources
+      run:
+        path: /usr/bin/env
+        args:
+        - sh
+        - -c
+        - (( file "../../inline-tasks/check-shell.sh" ))

@@ -8,7 +8,22 @@ jobs:
     - create-cluster-ci
   - get: cluster-state
   - task: get-kubeconfig
-    file: ci-resources/tasks/download-kubeconfig/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: ((world-name))
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
@@ -38,7 +53,22 @@ jobs:
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       IBMCLOUD_USER: ((ibmcloud-user))
-    file: ci-resources/tasks/get-iks-ingress-endpoint/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: ingress
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/get-iks-ingress-endpoint.sh" ))
 
   - task: create-values-file
     config:

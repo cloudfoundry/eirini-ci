@@ -5,7 +5,21 @@ jobs:
   - get: ci-resources
   - get: gh-pages-pr
   - task: check-for-pending-release
-    file: ci-resources/tasks/check-for-pending-release/task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      - name: gh-pages-pr
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/check-for-pending-release.sh" ))
     params:
       GITHUB_TOKEN: ((github-access-token))
   - get: state
@@ -16,10 +30,46 @@ jobs:
     - "the-egg-police \U0001F693"
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
-  - file: ci-resources/tasks/create-release/task.yml
-    task: create-release
-  - file: ci-resources/tasks/update-helm-repo/task.yml
-    task: update-helm-repo
+  - task: create-release
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      - name: state
+      - name: eirini-release
+      - name: eirini-release-version
+      outputs:
+      - name: release-output
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/create-release.sh" ))
+  - task: update-helm-repo
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      - name: release-output
+      - name: eirini-release-version
+      - name: gh-pages-pr
+      outputs:
+      - name: gh-pages-updated
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/update-helm-repo.sh" ))
   - params:
       globs:
       - release-output/eirini*.tgz
@@ -30,12 +80,43 @@ jobs:
   - params:
       repository: gh-pages-updated
     put: gh-pages-pr
-  - file: ci-resources/tasks/create-github-pr/task.yml
+  - task: create-github-pr
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/create-github-pr.sh" ))
     params:
       GITHUB_TOKEN: ((github-access-token))
-    task: create-github-pr
   - get: eirini
-  - file: ci-resources/tasks/checkout-sha-by-image/task.yml
+  - task: checkout-eirini-sha
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: eirini-release
+      - name: repository
+      - name: ci-resources
+      outputs:
+      - name: repository-modified
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/checkout-sha-by-image.sh" ))
     input_mapping:
       repository: eirini
     output_mapping:
@@ -44,14 +125,31 @@ jobs:
       IMAGE_NAME: eirini/opi
       VERSION_FILE: opi
     privileged: true
-    task: checkout-eirini-sha
   - params:
       only_tag: true
       repository: eirini-modified
       tag: eirini-release-version/version
     put: eirini
   - get: staging
-  - file: ci-resources/tasks/checkout-sha-by-image/task.yml
+  - task: checkout-staging-sha
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: eirini-release
+      - name: repository
+      - name: ci-resources
+      outputs:
+      - name: repository-modified
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/checkout-sha-by-image.sh" ))
     input_mapping:
       repository: staging
     output_mapping:
@@ -60,7 +158,6 @@ jobs:
       IMAGE_NAME: eirini/recipe-downloader
       VERSION_FILE: staging-downloader
     privileged: true
-    task: checkout-staging-sha
   - params:
       only_tag: true
       repository: staging-modified

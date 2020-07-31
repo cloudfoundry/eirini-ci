@@ -10,13 +10,28 @@ jobs:
   - get: state
     resource: cluster-state
   - get: cf-smoke-tests
-  - file: ci-resources/tasks/download-kubeconfig/task.yml
+  - task: download-kubeconfig
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ibmcloud
+      inputs:
+      - name: ci-resources
+      outputs:
+      - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: acceptance
       IBMCLOUD_ACCOUNT: ((ibmcloud-account))
       IBMCLOUD_PASSWORD: ((ibmcloud-password))
       IBMCLOUD_USER: ((ibmcloud-user))
-    task: download-kubeconfig
   - config:
       container_limits: {}
       image_resource:
@@ -38,10 +53,25 @@ jobs:
     params:
       CLUSTER_NAME: acceptance
     task: get-cf-credentials
-  - file: ci-resources/tasks/run-smoke-tests/task.yml
+  - task: run smoke tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name: ci-resources
+      - name: cf-smoke-tests
+      - name: cf-credentials
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-cf-smoke-tests.sh" ))
     params:
       CLUSTER_NAME: acceptance
-    task: run smoke tests
   public: true
   serial_groups:
   - acceptance
