@@ -9,4 +9,4 @@ cf auth admin "$cf_admin_password"
 cf target -o jefe -s jefe
 
 set -x
-./eirini-private-config/jefe/deploy.sh $PWD/jefe
+./eirini-private-config/jefe/deploy.sh "$PWD/jefe"

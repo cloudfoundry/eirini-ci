@@ -20,16 +20,16 @@ cf push -f eirini-private-config/postfacto-deployment/api/manifest.yml \
   --hostname retro-temp \
   -d "${domain}" \
   --var api-app-name=postfacto-api \
-  --var pcf-url=${domain} \
-  --var domain=${domain} \
+  --var pcf-url="${domain}" \
+  --var domain="${domain}" \
   --var namespace=postfacto-redis \
-  --var redis-password=${redis_password} \
+  --var redis-password="${redis_password}" \
   --var mysql-password="((mysql-password))"
 
 curl --fail "https://retro-temp.${domain}"
-cf map-route postfacto-api ${domain} --hostname retro
-cf unmap-route postfacto-api-old ${domain} --hostname retro
-cf unmap-route postfacto-api ${domain} --hostname retro-temp
+cf map-route postfacto-api "${domain}" --hostname retro
+cf unmap-route postfacto-api-old "${domain}" --hostname retro
+cf unmap-route postfacto-api "${domain}" --hostname retro-temp
 
 curl --fail "https://retro.${domain}"
 cf delete -f postfacto-api-old
