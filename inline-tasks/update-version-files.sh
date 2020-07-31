@@ -9,6 +9,18 @@ update-digest() {
   echo -n "$(cat "$image_path/digest")" >eirini-release/helm/eirini/versions/"$image_name"
 }
 
+update-deployment-manifest() {
+  local image_path image_name image_digest deployment_file
+  image_path="$1"
+  image_name="$2"
+  image_digest="$(cat "$image_path/digest")"
+
+  deployment_file="eirini-release/deploy/core/${image_name}-deployment.yml"
+  if [[ -f "${deployment_file}" ]]; then
+    sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" "$deployment_file"
+  fi
+}
+
 commit-changes() {
   local msg component repo
   component="$1"
@@ -52,6 +64,7 @@ commit-message() {
 
 for image in $IMAGES; do
   update-digest "docker-${image}" "$image"
+  update-deployment-manifest "docker-${image}" "$image"
 done
 
 commit-changes "$COMPONENT_NAME" "$COMPONENT_REPO"
