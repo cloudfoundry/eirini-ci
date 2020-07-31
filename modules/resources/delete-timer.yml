@@ -7,9 +7,3 @@ resources:
     - Saturday
     start: 12:00 AM
     stop: 1:00 AM
-- name: redeploy-timer
-  type: time
-  icon: bomb
-  source:
-    start: 12:00 AM
-    stop: 1:00 AM
