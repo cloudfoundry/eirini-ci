@@ -2,10 +2,18 @@
 
 set -euo pipefail
 
+PIPELINE_YML=$(mktemp)
+export PIPELINE_YML
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-PIPELINE_YML="$PROJECT_ROOT/pipelines/egg/pipeline.yml"
 
 readonly target="${1:-eirini}"
+
+basedir="$(cd "$(dirname "$0")" && pwd)"
+pushd "$basedir"
+{
+  aviator
+}
+popd
 
 fly -t "$target" \
   set-pipeline \
@@ -19,4 +27,5 @@ fly -t "$target" \
   --var jefe-client-id="$(pass eirini/jefe/client-id)" \
   --var jefe-client-secret="$(pass eirini/jefe/client-secret)" \
   --var jefe-dbuser-pass="$(pass eirini/jefe/dbuser-pass)" \
-  --var jefe-admin-pass="$(pass eirini/jefe/admin-pass)"
+  --var jefe-admin-pass="$(pass eirini/jefe/admin-pass)" \
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
