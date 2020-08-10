@@ -25,7 +25,7 @@ pushd ci-resources/gke-cluster || exit 1
     gcloud-login
     firewall_rules=$(gcloud compute firewall-rules list --filter=network="$cluster_network" --format="value(name)")
     for rule_name in $firewall_rules; do
-      gcloud compute firewall-rules delete "$rule_name" --quiet
+      gcloud compute firewall-rules delete "$rule_name" --quiet || echo "firewall rule $rule_name not found"
     done
   fi
 
