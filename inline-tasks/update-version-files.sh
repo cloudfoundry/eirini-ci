@@ -10,15 +10,12 @@ update-digest() {
 }
 
 update-deployment-manifest() {
-  local image_path image_name image_digest deployment_file
+  local image_path image_name image_digest
   image_path="$1"
   image_name="$2"
   image_digest="$(cat "$image_path/digest")"
 
-  deployment_file="eirini-release/deploy/core/${image_name}-deployment.yml"
-  if [[ -f "${deployment_file}" ]]; then
-    sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" "$deployment_file"
-  fi
+  sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" eirini-release/deploy/core/*
 }
 
 commit-changes() {
