@@ -1,0 +1,59 @@
+jobs:
+- name: run-integration-tests-((world-name))
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: cluster-((world-name))-staging-event-created
+        passed:
+          - deploy-eirini-yamls-((world-name))
+        trigger: true
+      - get: eirini
+      - get: eirini-release
+        trigger: true
+        passed:
+          - deploy-eirini-yamls-((world-name))
+      - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: ((world-name))
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - task: run-integration-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+      - name:  eirini
+      - name:  kube
+      outputs:
+      - name:  output
+      params:
+          EIRINIUSER_PASSWORD: ((dockerhub-password))
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-integration-tests.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

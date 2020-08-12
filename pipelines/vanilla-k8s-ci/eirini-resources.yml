@@ -1,0 +1,11 @@
+resources:
+- name: eirini
+  type: git
+  icon: git
+  source:
+    branch: ((eirini-branch))
+    ignore_paths:
+    - docker/opi/init/
+    - docker/registry/certs/smuggler/
+    - fluentd/
+    uri: https://github.com/cloudfoundry-incubator/eirini.git
