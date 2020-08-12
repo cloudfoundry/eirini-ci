@@ -5,7 +5,7 @@ IFS=$'\n\t'
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-readonly main_pipelines=(acceptance ci check-shell ci-images dev-envs egg)
+readonly main_pipelines=(acceptance ci check-shell ci-images dev-envs egg vanilla-k8s-ci)
 for pipeline in ${main_pipelines[@]}; do
   $PROJECT_ROOT/pipelines/$pipeline/set-pipeline
 done

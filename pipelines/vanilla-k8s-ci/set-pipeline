@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+PIPELINE_YML=$(mktemp)
+export PIPELINE_YML
+
+readonly world_name=vanillak8sci
+readonly target="${1:-eirini}"
+readonly working_branch=${2:-"master"}
+readonly ci_branch=${3:-"master"}
+readonly release_branch=${4:-"develop"}
+readonly worker_count=${5:-"3"}
+
+basedir="$(cd "$(dirname "$0")" && pwd)"
+pushd "$basedir"
+{
+  aviator
+}
+popd
+
+fly --target "$target" \
+  set-pipeline \
+  --config "$PIPELINE_YML" \
+  --pipeline "$world_name" \
+  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --var gcp-region="europe-west1" \
+  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-zone="europe-west1-b" \
+  --var cluster-admin-password="$(pass eirini/ci/cluster-admin-password)" \
+  --var world-name="$world_name" \
+  --var worker_count="$worker_count" \
+  --var ci-resources-branch="$ci_branch" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
+  --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+  --var eirinifs-private-key="$(pass eirini/github/eirinifs/ssh-key)" \
+  --var eirinifs-branch="master" \
+  --var eirini-release-branch="$release_branch" \
+  --var eirini-branch="$working_branch" \
+  --var nats-password="$(pass eirini/ci/nats-password)" \
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"

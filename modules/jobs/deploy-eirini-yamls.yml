@@ -1,0 +1,56 @@
+jobs:
+- name: deploy-eirini-yamls-((world-name))
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: cluster-((world-name))-staging-event-created
+    trigger: true
+    passed:
+      - create-cluster-((world-name))
+  - get: eirini-release
+  - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: ((world-name))
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - task: deploy-eirini-yamls
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      container_limits: {}
+      inputs:
+      - name: eirini-release
+      - name: kube
+      params:
+        CLUSTER_NAME: ((world-name))
+        # GCP_REGION: ((gcp-region))
+        # GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+        # GCP_ZONE: ((gcp-zone))
+        USE_LOADBALANCED_SERVICE: true
+        KUBECONFIG: "kube/config"
+        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+      platform: linux
+      run:
+        path: eirini-release/deploy/scripts/deploy.sh
+  public: true
+  serial_groups:
+  - ((world-name))
