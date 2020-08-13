@@ -8,7 +8,7 @@ export PIPELINE_YML
 
 readonly world_name=vanillak8sci
 readonly target="${1:-eirini}"
-readonly working_branch=${2:-"master"}
+readonly eirini_branch=${2:-"master"}
 readonly ci_branch=${3:-"master"}
 readonly release_branch=${4:-"develop"}
 readonly worker_count=${5:-"3"}
@@ -40,6 +40,6 @@ fly --target "$target" \
   --var eirinifs-private-key="$(pass eirini/github/eirinifs/ssh-key)" \
   --var eirinifs-branch="master" \
   --var eirini-release-branch="$release_branch" \
-  --var eirini-branch="$working_branch" \
+  --var eirini-branch="$eirini_branch" \
   --var nats-password="$(pass eirini/ci/nats-password)" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"
