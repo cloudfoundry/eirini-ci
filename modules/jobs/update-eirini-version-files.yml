@@ -74,6 +74,12 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
+      - get: docker-instance-index-env-injector
+        params:
+          skip_download: true
+        passed:
+        - create-go-docker-images
+        trigger: true
   - task: update-version-files
     config:
       container_limits: {}
