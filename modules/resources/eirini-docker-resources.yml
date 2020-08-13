@@ -126,3 +126,11 @@ resources:
     password: ((dockerhub-password))
     repository: eirini/eirini-controller
     username: ((dockerhub-user))
+
+- name: docker-instance-index-env-injector
+  type: docker-image
+  icon: docker
+  source:
+    password: ((dockerhub-password))
+    repository: eirini/instance-index-env-injector
+    username: ((dockerhub-user))

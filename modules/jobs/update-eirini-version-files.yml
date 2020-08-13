@@ -95,11 +95,12 @@ jobs:
       - name: docker-staging-reporter
       - name: docker-task-reporter
       - name: docker-eirini-controller
+      - name: docker-instance-index-env-injector
       outputs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter eirini-controller"
+        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter eirini-controller instance-index-env-injector"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

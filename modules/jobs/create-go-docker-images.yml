@@ -85,4 +85,9 @@ jobs:
           build: eirini
           build_args_file: docker-build-args/args.json
           dockerfile: eirini/docker/eirini-controller/Dockerfile
+      - put: docker-instance-index-env-injector
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/instance-index-env-injector/Dockerfile
   on_failure: (( grab slack-notification.on_failure ))
