@@ -36,7 +36,7 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-  - task: run-integration-tests
+  - task: run-eats-tests
     config:
       platform: linux
       image_resource:
@@ -50,10 +50,12 @@ jobs:
       - name:  output
       params:
           EIRINIUSER_PASSWORD: ((dockerhub-password))
+          KUBECONFIG: "kube/config"
+          GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
       run:
         path: /usr/bin/env
         args:
         - bash
         - -c
-        - (( file "../../inline-tasks/run-integration-tests.sh" ))
-  on_failure: (( grab slack-notification.on_failure ))
+        - (( file "../../inline-tasks/run-eats-tests.sh" ))
+  # on_failure: (( grab slack-notification.on_failure ))
