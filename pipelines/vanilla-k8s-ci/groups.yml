@@ -1,7 +1,0 @@
-groups:
-- name: all
-  jobs:
-  - delete-cluster-((world-name))
-  - create-cluster-((world-name))
-  - deploy-eirini-yamls-((world-name))
-  - run-integration-tests-((world-name))
