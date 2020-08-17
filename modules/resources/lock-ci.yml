@@ -1,0 +1,9 @@
+resources:
+- name: lock-ci
+  type: pool
+  icon: lock
+  source:
+    branch: ci-locks
+    pool: ci
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config.git

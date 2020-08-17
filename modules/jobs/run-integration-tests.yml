@@ -4,15 +4,12 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: cluster-ci-staging-event-created
+      - get: lock-ci
         passed:
         - verify-helm-deployment
         trigger: true
       - get: eirini
       - get: eirini-release
-        trigger: true
-        passed:
-        - verify-helm-deployment
       - get: ci-resources
   - in_parallel:
       steps:

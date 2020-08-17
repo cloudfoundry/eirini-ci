@@ -1,0 +1,17 @@
+jobs:
+- name: unlock-ci
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini-release
+    passed:
+    - run-integration-tests
+    - run-eats-tests-((gcp-cluster-name))
+  - get: lock-ci
+    passed:
+    - run-integration-tests
+    - run-eats-tests-((gcp-cluster-name))
+    trigger: true
+  - params:
+      release: lock-ci
+    put: lock-ci
+  serial: true

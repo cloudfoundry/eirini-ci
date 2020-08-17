@@ -4,8 +4,7 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - run-integration-tests
-    - run-eats-tests-((gcp-cluster-name))
+    - unlock-ci
   - get: eirini-release-master
   - put: eirini-release-master
     params:

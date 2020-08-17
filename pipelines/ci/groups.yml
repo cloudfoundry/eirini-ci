@@ -46,6 +46,11 @@ groups:
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))
 
+- name: locks
+  jobs:
+  - lock-ci
+  - unlock-ci
+  - release-lock-ci
 
 - name: test-and-build
   jobs:

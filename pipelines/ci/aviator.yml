@@ -19,6 +19,8 @@ spruce:
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/resources/bump-day.yml
+      - ../../modules/resources/lock-ci.yml
+      - ../../modules/resources/pool-resource-type.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"
@@ -51,5 +53,8 @@ spruce:
       - ../../modules/jobs/create-gke-cluster.yml
       - ../../modules/jobs/deploy-eirini-yamls.yml
       - ../../modules/jobs/run-eats-tests.yml
+      - ../../modules/jobs/lock-ci.yml
+      - ../../modules/jobs/unlock-ci.yml
+      - ../../modules/jobs/release-lock-ci.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML

@@ -2,10 +2,10 @@ jobs:
 - name: deploy-eirini-yamls-((gcp-cluster-name))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
-  - get: cluster-((gcp-cluster-name))-staging-event-created
+  - get: lock-ci
     trigger: true
     passed:
-      - create-cluster-((gcp-cluster-name))
+      - lock-ci
   - get: eirini-release
   - get: ci-resources
   - task: download-kubeconfig

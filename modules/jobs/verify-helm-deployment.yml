@@ -1,14 +1,13 @@
 jobs:
 - name: verify-helm-deployment
   plan:
+  - get: lock-ci
+    trigger: true
+    passed:
+      - lock-ci
   - get: ci-resources
   - get: cluster-state
-  - get: cluster-ci-staging-event-created
-    passed:
-    - prepare-cluster-ci
-    trigger: true
   - get: eirini-release
-    trigger: true
   - task: get-kubeconfig
     config:
       platform: linux
