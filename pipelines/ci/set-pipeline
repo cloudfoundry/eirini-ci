@@ -7,6 +7,7 @@ PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
 
 readonly world_name=ci
+readonly plain_yaml_gcp_cluster_name=monaco
 readonly target="${1:-eirini}"
 readonly working_branch=${3:-"master"}
 readonly ci_branch=${4:-"master"}
@@ -27,6 +28,10 @@ fly --target "$target" \
   --var ibmcloud-user=eirini@cloudfoundry.org \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var world-name="$world_name" \
+  --var gcp-cluster-name="$plain_yaml_gcp_cluster_name" \
+  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --var gcp-zone="europe-west1-b" \
+  --var gcp-region="europe-west1" \
   --var ci-resources-branch="$ci_branch" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \

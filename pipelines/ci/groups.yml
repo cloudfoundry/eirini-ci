@@ -20,6 +20,10 @@ groups:
   - fast-forward-release
   - bump-go-modules-eirini
   - bump-go-modules-eirinifs
+  - delete-cluster-((gcp-cluster-name))
+  - create-cluster-((gcp-cluster-name))
+  - deploy-eirini-yamls-((gcp-cluster-name))
+  - run-eats-tests-((gcp-cluster-name))
 
 - name: bumps
   jobs:
@@ -31,6 +35,17 @@ groups:
   - delete-cluster-ci
   - create-cluster-ci
   - prepare-cluster-ci
+
+- name: cluster-((gcp-cluster-name))
+  jobs:
+  - delete-cluster-((gcp-cluster-name))
+  - create-cluster-((gcp-cluster-name))
+
+- name: test-and-build-((gcp-cluster-name))
+  jobs:
+  - deploy-eirini-yamls-((gcp-cluster-name))
+  - run-eats-tests-((gcp-cluster-name))
+
 
 - name: test-and-build
   jobs:

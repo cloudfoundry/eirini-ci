@@ -1,16 +1,16 @@
 jobs:
-- name: deploy-eirini-yamls-((world-name))
+- name: deploy-eirini-yamls-((gcp-cluster-name))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
-  - get: cluster-((world-name))-staging-event-created
+  - get: cluster-((gcp-cluster-name))-staging-event-created
     trigger: true
     passed:
-      - create-cluster-((world-name))
+      - create-cluster-((gcp-cluster-name))
   - get: eirini-release
   - get: ci-resources
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((world-name))
+      CLUSTER_NAME: ((gcp-cluster-name))
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
@@ -49,4 +49,5 @@ jobs:
         path: eirini-release/deploy/scripts/deploy.sh
   public: true
   serial_groups:
-  - ((world-name))
+  - ((gcp-cluster-name))
+  on_failure: (( grab slack-notification.on_failure ))

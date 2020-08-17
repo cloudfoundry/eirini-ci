@@ -1,6 +1,8 @@
 jobs:
-- name: delete-cluster-((world-name))
+- name: delete-cluster-((gcp-cluster-name))
   plan:
+  - get: delete-timer
+    trigger: true
   - get: ci-resources
   - task: delete-kubernetes-cluster
     config:
@@ -12,9 +14,9 @@ jobs:
       inputs:
         - name: ci-resources
       params:
-        GCP_SERVICE_ACCOUNT_JSON:
-        CLUSTER_NAME:
-        WORKER_COUNT:
+        CLUSTER_NAME: ((gcp-cluster-name))
+        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+        WORKER_COUNT: ((worker_count))
       run:
         path: /usr/bin/env
         args:
@@ -22,7 +24,7 @@ jobs:
         - -c
         - (( file "../../inline-tasks/gcp-delete-cluster.sh" ))
     params:
-      CLUSTER_NAME: ((world-name))
+      CLUSTER_NAME: ((gcp-cluster-name))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       WORKER_COUNT: ((worker_count))
   - get: cluster-state
@@ -38,7 +40,7 @@ jobs:
       outputs:
         - name: state-modified
       params:
-        CLUSTER_NAME: ((world-name))
+        CLUSTER_NAME: ((gcp-cluster-name))
       run:
         path: /usr/bin/env
         args:

@@ -1,22 +1,22 @@
 jobs:
-- name: run-integration-tests-((world-name))
+- name: run-eats-tests-((gcp-cluster-name))
   public: true
   plan:
   - in_parallel:
       steps:
-      - get: cluster-((world-name))-staging-event-created
+      - get: cluster-((gcp-cluster-name))-staging-event-created
         passed:
-          - deploy-eirini-yamls-((world-name))
+          - deploy-eirini-yamls-((gcp-cluster-name))
         trigger: true
       - get: eirini
       - get: eirini-release
         trigger: true
         passed:
-          - deploy-eirini-yamls-((world-name))
+          - deploy-eirini-yamls-((gcp-cluster-name))
       - get: ci-resources
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((world-name))
+      CLUSTER_NAME: ((gcp-cluster-name))
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
@@ -58,4 +58,4 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/run-eats-tests.sh" ))
-  # on_failure: (( grab slack-notification.on_failure ))
+  on_failure: (( grab slack-notification.on_failure ))

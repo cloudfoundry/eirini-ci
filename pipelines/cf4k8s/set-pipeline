@@ -49,4 +49,5 @@ fly -t "$target" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
   --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
   --var worker_count="$worker_count" \
-  --var world-name="$world_name"
+  --var world-name="$world_name" \
+  --var gcp-cluster-name="$world_name"

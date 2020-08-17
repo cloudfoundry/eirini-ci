@@ -1,10 +1,10 @@
 jobs:
-- name: create-cluster-((world-name))
+- name: create-cluster-((gcp-cluster-name))
   plan:
   - get: ci-resources
   - get: cluster-state
     trigger: true
-    passed: [delete-cluster-((world-name))]
+    passed: [delete-cluster-((gcp-cluster-name))]
   - task: create-kubernetes-cluster
     config:
       platform: linux
@@ -16,7 +16,7 @@ jobs:
         - name: ci-resources
       params:
         GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-        CLUSTER_NAME: ((world-name))
+        CLUSTER_NAME: ((gcp-cluster-name))
         WORKER_COUNT: ((worker_count))
       run:
         path: /usr/bin/env
@@ -24,6 +24,6 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/gcp-create-cluster.sh" ))
-  - put: cluster-((world-name))-staging-event-created
+  - put: cluster-((gcp-cluster-name))-staging-event-created
     params:
       bump: major
