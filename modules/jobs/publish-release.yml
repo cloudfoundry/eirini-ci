@@ -44,6 +44,7 @@ jobs:
       - name: eirini-release-version
       outputs:
       - name: release-output
+      - name: release-output-yaml
       run:
         path: /usr/bin/env
         args:
@@ -73,6 +74,7 @@ jobs:
   - params:
       globs:
       - release-output/eirini*.tgz
+      - release-output-yaml/*.tgz
       name: eirini-release-version/version
       tag: eirini-release-version/version
       tag_prefix: v

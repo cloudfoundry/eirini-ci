@@ -41,7 +41,12 @@ zip-templates() {
   tar -zcvf "eirini-uaa.tgz" uaa
   tar -zcvf "eirini.tgz" eirini
   popd
+
   mv eirini-release/helm/*.tgz release-output
+
+  pushd eirini-release
+  tar -zcvf ../release-output-yaml/eirini-yaml.tgz deploy
+  popd
 }
 
 main
