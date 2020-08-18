@@ -87,8 +87,16 @@ resource "local_file" "private_service_account_key" {
   filename = "sa-private-key.json"
 }
 
+resource "google_compute_subnetwork" "subnetwork" {
+  name          = var.name
+  ip_cidr_range = "10.2.0.0/16"
+  region        = var.region
+  network       = google_compute_network.network.id
+}
+
 resource "google_compute_network" "network" {
   name = var.name
+  auto_create_subnetworks = false
 }
 
 resource "google_container_cluster" "cluster" {
@@ -96,6 +104,7 @@ resource "google_container_cluster" "cluster" {
   location = var.zone
 
   network = google_compute_network.network.name
+  subnetwork = google_compute_subnetwork.subnetwork.name
   min_master_version = 1.16
 
   # We can't create a cluster with no node pool defined, but we want to only use
