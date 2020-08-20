@@ -1,9 +1,4 @@
 jobs:
-- name: delete-cluster-((world-name))
-  plan:
-  - (( prepend ))
-  - get: delete-timer
-    trigger: true
 - name: deploy-cf-for-k8s-((world-name))
   plan:
   - (( prepend ))

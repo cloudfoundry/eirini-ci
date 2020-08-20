@@ -17,14 +17,27 @@ spruce:
       - ../../modules/resources/eirinifs.yml
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/slack-resource-type.yml
-      - ../../modules/resources/cluster-event-created.yml
       - ../../modules/resources/bump-day.yml
       - ../../modules/resources/lock-ci.yml
       - ../../modules/resources/pool-resource-type.yml
   to: {{groups-and-resources}}
 
-- step: "merge groups and resources with jobs"
+- step: "monaco cluster"
   base: {{groups-and-resources}}
+  prune:
+    - cluster
+  merge:
+  - with:
+      files:
+      - cluster-monaco.yml
+      - ../../modules/resources/cluster-event-created.yml
+      - ../../modules/jobs/delete-gke-cluster.yml
+      - ../../modules/jobs/create-gke-cluster.yml
+      - ./add-cluster-recreate-timer.yml
+  to: {{monaco-cluster}}
+
+- step: "merge groups and resources with jobs"
+  base: {{monaco-cluster}}
   prune:
   - slack-notification
   merge:
@@ -33,6 +46,7 @@ spruce:
       - ../../modules/jobs/delete-cluster-ci.yml
       - ../../modules/jobs/create-cluster-ci.yml
       - ../../modules/jobs/run-tests.yml
+      - ../../modules/jobs/run-integration-tests.yml
       - ../../modules/jobs/create-go-docker-images.yml
       - ../../modules/jobs/create-secret-smuggler-docker-image.yml
       - ../../modules/jobs/run-fluentd-unit-tests.yml
@@ -45,12 +59,10 @@ spruce:
       - ../../modules/jobs/create-staging-docker-images.yml
       - ../../modules/jobs/prepare-cluster-ci.yml
       - ../../modules/jobs/verify-helm-deployment.yml
-      - ../../modules/jobs/run-integration-tests.yml
+      - ../../modules/jobs/run-eats-tests-ci.yml
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
       - ../../modules/jobs/bump-go-modules-eirinifs.yml
-      - ../../modules/jobs/delete-gke-cluster.yml
-      - ../../modules/jobs/create-gke-cluster.yml
       - ../../modules/jobs/deploy-eirini-yamls.yml
       - ../../modules/jobs/run-eats-tests.yml
       - ../../modules/jobs/lock-ci.yml

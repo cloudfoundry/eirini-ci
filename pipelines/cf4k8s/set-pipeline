@@ -15,13 +15,16 @@ readonly target="${4:-eirini}"
 pushd "$basedir"
 {
   redeploy_file_var=""
+  recreate_file_var=""
   timer_resources_var=""
   if $enable_redeploy; then
     redeploy_file_var="- ./add-redeploy-cf-for-k8s-timer.yml"
+    recreate_file_var="- ./add-cluster-recreate-timer.yml"
     timer_resources_var="- ../../modules/resources/timer-resources.yml"
   fi
   aviator \
     --var redeploy-trigger="$redeploy_file_var" \
+    --var recreate-trigger="$recreate_file_var" \
     --var timer-resources="$timer_resources_var"
 }
 popd
@@ -49,5 +52,4 @@ fly -t "$target" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
   --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
   --var worker_count="$worker_count" \
-  --var world-name="$world_name" \
-  --var gcp-cluster-name="$world_name"
+  --var world-name="$world_name"

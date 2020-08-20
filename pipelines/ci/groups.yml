@@ -23,6 +23,7 @@ groups:
   - delete-cluster-((gcp-cluster-name))
   - create-cluster-((gcp-cluster-name))
   - deploy-eirini-yamls-((gcp-cluster-name))
+  - run-eats-tests-ci
   - run-eats-tests-((gcp-cluster-name))
   - lock-ci
   - unlock-ci
@@ -31,6 +32,7 @@ groups:
 - name: eirini
   jobs:
   - run-tests
+  - run-integration-tests
   - create-go-docker-images
   - create-secret-smuggler-docker-image
   - run-fluentd-unit-tests
@@ -50,7 +52,7 @@ groups:
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))
   - verify-helm-deployment
-  - run-integration-tests
+  - run-eats-tests-ci
   - fast-forward-release
 
 - name: bumps
@@ -83,6 +85,7 @@ groups:
 - name: test-and-build
   jobs:
   - run-tests
+  - run-integration-tests
   - create-go-docker-images
   - create-secret-smuggler-docker-image
   - run-fluentd-unit-tests
@@ -90,7 +93,7 @@ groups:
   - staging-test
   - create-staging-docker-images
   - verify-helm-deployment
-  - run-integration-tests
+  - run-eats-tests-ci
 
 - name: update-version-files
   jobs:

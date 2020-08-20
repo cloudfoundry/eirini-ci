@@ -6,7 +6,7 @@ jobs:
       steps:
       - get: eirini
         passed:
-        - run-tests
+        - run-integration-tests
         trigger: true
   - task: make-docker-build-args
     input_mapping:

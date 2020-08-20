@@ -4,11 +4,11 @@ jobs:
   plan:
   - get: eirini-release
     passed:
-    - run-integration-tests
+    - run-eats-tests-ci
     - run-eats-tests-((gcp-cluster-name))
   - get: lock-ci
     passed:
-    - run-integration-tests
+    - run-eats-tests-ci
     - run-eats-tests-((gcp-cluster-name))
     trigger: true
   - params:

@@ -1,13 +1,15 @@
 jobs:
-- name: run-integration-tests
+- name: run-eats-tests-((world-name))
   public: true
   plan:
   - in_parallel:
       steps:
-      - get: eirini
-        trigger: true
+      - get: lock-ci
         passed:
-          - run-tests
+        - verify-helm-deployment
+        trigger: true
+      - get: eirini
+      - get: eirini-release
       - get: ci-resources
   - in_parallel:
       steps:
@@ -34,7 +36,7 @@ jobs:
                 - bash
                 - -c
                 - (( file "../../inline-tasks/download-kubeconfig.sh" ))
-        - task: run-integration-tests
+        - task: run-eats-tests
           config:
             platform: linux
             image_resource:
@@ -48,10 +50,11 @@ jobs:
             - name:  output
             params:
                 EIRINIUSER_PASSWORD: ((dockerhub-password))
+                KUBECONFIG: "kube/config"
             run:
               path: /usr/bin/env
               args:
               - bash
               - -c
-              - (( file "../../inline-tasks/run-integration-tests.sh" ))
+              - (( file "../../inline-tasks/run-eats-tests.sh" ))
   on_failure: (( grab slack-notification.on_failure ))
