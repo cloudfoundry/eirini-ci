@@ -3,6 +3,10 @@ groups:
   jobs:
   - delete-cluster-ci
   - create-cluster-ci
+  - delete-cluster-monaco
+  - create-cluster-monaco
+  - delete-cluster-integration
+  - create-cluster-integration
   - prepare-cluster-ci
   - verify-helm-deployment
   - run-tests
@@ -20,8 +24,6 @@ groups:
   - fast-forward-release
   - bump-go-modules-eirini
   - bump-go-modules-eirinifs
-  - delete-cluster-((gcp-cluster-name))
-  - create-cluster-((gcp-cluster-name))
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-ci
   - run-eats-tests-((gcp-cluster-name))
@@ -66,10 +68,12 @@ groups:
   - create-cluster-ci
   - prepare-cluster-ci
 
-- name: cluster-((gcp-cluster-name))
+- name: gke-clusters
   jobs:
-  - delete-cluster-((gcp-cluster-name))
-  - create-cluster-((gcp-cluster-name))
+  - delete-cluster-monaco
+  - create-cluster-monaco
+  - delete-cluster-integration
+  - create-cluster-integration
 
 - name: test-and-build-((gcp-cluster-name))
   jobs:

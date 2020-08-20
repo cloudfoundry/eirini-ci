@@ -36,8 +36,22 @@ spruce:
       - ./add-cluster-recreate-timer.yml
   to: {{monaco-cluster}}
 
-- step: "merge groups and resources with jobs"
+- step: "integration cluster"
   base: {{monaco-cluster}}
+  prune:
+    - cluster
+  merge:
+  - with:
+      files:
+      - cluster-integration.yml
+      - ../../modules/resources/cluster-event-created.yml
+      - ../../modules/jobs/delete-gke-cluster.yml
+      - ../../modules/jobs/create-gke-cluster.yml
+      - ./add-cluster-recreate-timer.yml
+  to: {{integration-cluster}}
+
+- step: "merge groups and resources with jobs"
+  base: {{integration-cluster}}
   prune:
   - slack-notification
   merge:
