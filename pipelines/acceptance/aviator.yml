@@ -21,7 +21,6 @@ spruce:
       - ../../modules/resources/eirini-staging-master.yml
       - ../../modules/resources/sunday-morning.yml
       - ../../modules/resources/slack-resource-type.yml
-      - ../../modules/resources/pool-resource-type.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"

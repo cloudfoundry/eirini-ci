@@ -19,7 +19,6 @@ spruce:
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/bump-day.yml
       - ../../modules/resources/lock-ci.yml
-      - ../../modules/resources/pool-resource-type.yml
   to: {{groups-and-resources}}
 
 - step: "monaco cluster"
