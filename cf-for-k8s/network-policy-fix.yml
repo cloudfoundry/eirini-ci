@@ -3,7 +3,7 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: cf-api-server
-  namespace: {{ .Release.Namespace }}
+  namespace: #@ data.values.system_namespace
 spec:
   policyTypes:
   - Ingress
@@ -50,7 +50,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: eirini-task-reporter
-  namespace: {{ .Release.Namespace }}
+  namespace: #@ data.values.system_namespace
 spec:
   podSelector:
     matchLabels:
@@ -65,7 +65,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: eirini-instance-index-env-injector
-  namespace: {{ .Release.Namespace }}
+  namespace: #@ data.values.system_namespace
 spec:
   podSelector:
     matchLabels:
