@@ -49,6 +49,7 @@ jobs:
           EIRINIUSER_PASSWORD: ((dockerhub-password))
           KUBECONFIG: "kube/config"
           GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+          HELMLESS_DEPLOYMENT: "true"
       run:
         path: /usr/bin/env
         args:
