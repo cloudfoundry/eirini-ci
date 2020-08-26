@@ -46,6 +46,8 @@ spruce:
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
+      - ../../modules/jobs/run-integration-tests.yml
+      - ../../modules/jobs/slack-notification.yml
       - ./add-cluster-recreate-timer.yml
   to: {{integration-cluster}}
 
@@ -59,7 +61,6 @@ spruce:
       - ../../modules/jobs/delete-cluster-ci.yml
       - ../../modules/jobs/create-cluster-ci.yml
       - ../../modules/jobs/run-tests.yml
-      - ../../modules/jobs/run-integration-tests.yml
       - ../../modules/jobs/create-go-docker-images.yml
       - ../../modules/jobs/create-secret-smuggler-docker-image.yml
       - ../../modules/jobs/run-fluentd-unit-tests.yml

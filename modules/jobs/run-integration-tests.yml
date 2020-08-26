@@ -18,22 +18,22 @@ jobs:
               image_resource:
                 type: docker-image
                 source:
-                  repository: eirini/ibmcloud
+                  repository: google/cloud-sdk
               inputs:
               - name:  ci-resources
               outputs:
               - name:  kube
               params:
-                CLUSTER_NAME: ((world-name))
-                IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-                IBMCLOUD_PASSWORD: ((ibmcloud-password))
-                IBMCLOUD_USER: ((ibmcloud-user))
+                CLUSTER_NAME: (( grab cluster.name ))
+                GCP_REGION: ((gcp-region))
+                GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+                GCP_ZONE: ((gcp-zone))
               run:
                 path: /usr/bin/env
                 args:
                 - bash
                 - -c
-                - (( file "../../inline-tasks/download-kubeconfig.sh" ))
+                - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
         - task: run-integration-tests
           config:
             platform: linux
@@ -48,6 +48,7 @@ jobs:
             - name:  output
             params:
                 EIRINIUSER_PASSWORD: ((dockerhub-password))
+                GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
             run:
               path: /usr/bin/env
               args:
