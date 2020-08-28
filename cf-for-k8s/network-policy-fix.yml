@@ -15,6 +15,14 @@ spec:
       namespaceSelector:
         matchLabels:
           cf-for-k8s.cloudfoundry.org/cf-system-ns: ""
+    #@overlay/match by=overlay.index(0)
+    #@overlay/insert before=True
+    - podSelector:
+        matchLabels:
+          name: eirini-events
+      namespaceSelector:
+        matchLabels:
+          cf-for-k8s.cloudfoundry.org/cf-system-ns: ""
 
 #@overlay/match by=overlay.subset({"kind": "NetworkPolicy", "metadata":{"name": "eirini-task-reporter"}})
 ---
