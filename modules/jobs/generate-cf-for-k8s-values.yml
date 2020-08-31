@@ -57,7 +57,7 @@ jobs:
     params:
       CLUSTER_NAME: ((world-name))
       GCP_SERVICE_ACCOUNT: ((gcp-service-account-json))
-    task: generate default values
+    task: generate-default-values
   - config:
       container_limits: {}
       image_resource:
@@ -80,7 +80,7 @@ jobs:
       GCP_REGION: ((gcp-region))
       GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
       GCP_ZONE: ((gcp-zone))
-    task: generate loadbalancer values
+    task: generate-loadbalancer-values
   - config:
       container_limits: {}
       image_resource:
@@ -102,7 +102,7 @@ jobs:
         path: /usr/bin/env
     params:
       CLUSTER_NAME: ((world-name))
-    task: aggregate cf4k8s values
+    task: aggregate-cf4k8s-values
   - params:
       merge: true
       repository: state-modified

@@ -64,7 +64,7 @@ jobs:
           curl -X PUT -u admin:$JEFE_ADMIN_PASSWORD https://jefe.acceptance.eu-gb.containers.appdomain.cloud/envs/unclaim
 
   on_failure: (( grab slack-notification.on_failure ))
-- name: deploy-jefe🌵
+- name: deploy-jefe
   serial: true
   plan:
   - in_parallel:

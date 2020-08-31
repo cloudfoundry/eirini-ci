@@ -27,7 +27,7 @@ jobs:
   - get: eirini-release
     passed:
     - run-smoke-tests-acceptance
-    - "the-egg-police \U0001F693"
+    - "the-egg-police"
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
   - task: create-release

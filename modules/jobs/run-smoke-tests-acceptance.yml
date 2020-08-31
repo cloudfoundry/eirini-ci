@@ -53,7 +53,7 @@ jobs:
     params:
       CLUSTER_NAME: acceptance
     task: get-cf-credentials
-  - task: run smoke tests
+  - task: run-smoke-tests
     config:
       platform: linux
       image_resource:

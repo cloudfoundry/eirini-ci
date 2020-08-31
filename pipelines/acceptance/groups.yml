@@ -13,7 +13,7 @@ groups:
   - lock-the-egg-police
   - unlock-the-egg-police
   - release-lock-the-egg-police
-  - "the-egg-police \U0001F693"
+  - "the-egg-police"
   - bump-cluster-k8s-version
   name: all
 - jobs:
@@ -33,7 +33,7 @@ groups:
   - run-smoke-tests-acceptance
   name: deploy-acceptance
 - jobs:
-  - "the-egg-police \U0001F693"
+  - "the-egg-police"
   name: egg
 - jobs:
   - lock-the-egg-police

@@ -33,7 +33,7 @@ jobs:
         - -c
         - (( file "../../inline-tasks/get-smoke-tests-variables.sh" ))
         path: /usr/bin/env
-  - task: run smoke tests
+  - task: run-smoke-tests
     config:
       container_limits: {}
       image_resource:

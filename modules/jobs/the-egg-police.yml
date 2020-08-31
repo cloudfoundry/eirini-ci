@@ -1,5 +1,5 @@
 jobs:
-- name: "the-egg-police \U0001F693"
+- name: "the-egg-police"
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: lock-the-egg-police

@@ -91,7 +91,7 @@ jobs:
         - -c
         - (( file "../../inline-tasks/deploy-cf-for-k8s.sh" ))
         path: /usr/bin/env
-    task: deploy CF for K8s
+    task: deploy-cf-for-k8s
   public: true
   serial_groups:
   - ((world-name))
