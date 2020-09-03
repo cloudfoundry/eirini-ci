@@ -14,6 +14,11 @@ pushd "$script_dir"
 }
 popd
 
+if ! flightattendant -target "$target"; then
+  echo "not logged in to concourse - attempting to log in"
+  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+fi
+
 fly -t "${target}" \
   set-pipeline \
   -p ci-images \

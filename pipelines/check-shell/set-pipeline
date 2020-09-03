@@ -15,6 +15,11 @@ pushd "$basedir"
 }
 popd
 
+if ! flightattendant -target "$target"; then
+  echo "not logged in to concourse - attempting to log in"
+  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+fi
+
 fly --target "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
