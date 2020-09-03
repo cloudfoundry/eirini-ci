@@ -17,11 +17,23 @@ RUN  apt-get update \
        unzip \
        vim \
        yarnpkg \
+       apt-transport-https \
+       gnupg2 \
+       sshfs \
+       conntrack \
+       iptables \
+       sudo \
   && rm -rf /var/lib/apt/lists/*
 
 # telepresence
 RUN curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | bash
 RUN apt-get install -y --no-install-recommends telepresence
+
+# kubectl
+RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+RUN apt-get update
+RUN apt-get install -y kubectl
 
 # CF CLI
 RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=6.49.0&source=github-rel" | tar -zx \
