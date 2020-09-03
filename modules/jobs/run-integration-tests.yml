@@ -35,6 +35,7 @@ jobs:
                 - -c
                 - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
         - task: run-integration-tests
+          privileged: true
           config:
             platform: linux
             image_resource:
