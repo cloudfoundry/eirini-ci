@@ -19,6 +19,10 @@ RUN  apt-get update \
        yarnpkg \
   && rm -rf /var/lib/apt/lists/*
 
+# telepresence
+RUN curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | bash
+RUN apt-get install -y --no-install-recommends telepresence
+
 # CF CLI
 RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=6.49.0&source=github-rel" | tar -zx \
   && mv cf /usr/local/bin
