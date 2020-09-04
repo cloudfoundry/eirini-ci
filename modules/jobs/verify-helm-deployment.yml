@@ -26,10 +26,10 @@ jobs:
         - -c
         - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
   - task: deploy-eirini-bits
     config:
       platform: linux
@@ -42,8 +42,8 @@ jobs:
       - name: eirini-release
       - name: cluster-state
       params:
-        CLUSTER_NAME: ((world-name))
-        NATS_PASSWORD: ((nats-password))
+        CLUSTER_NAME: (( grab config.cluster.name ))
+        NATS_PASSWORD: (( grab config.cluster.nats-password ))
       run:
         path: /usr/bin/env
         args:

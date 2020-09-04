@@ -1,0 +1,3 @@
+config:
+  slack:
+    webhook: ((slack-webhook))

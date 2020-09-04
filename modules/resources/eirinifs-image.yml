@@ -5,5 +5,5 @@ resources:
   source:
     repository: eirini/eirinifs
     tag: test-multi-stage
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))

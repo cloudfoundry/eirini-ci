@@ -1,9 +1,12 @@
 spruce:
 - step: "merge resources with groups"
   base: groups.yml
+  prine:
+    config
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/slack-resource-type.yml
@@ -16,6 +19,7 @@ spruce:
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/jobs/slack-notification.yml
       - ../../modules/jobs/check-shell.yml
       - ../../modules/jobs/format-shell.yml

@@ -1,9 +1,12 @@
 spruce:
 - step: "merge resources with groups"
   base: groups.yml
+  prune:
+  - config
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/cf-for-k8s-github-release.yml
       - ../../modules/resources/cf-smoke-tests.yml
@@ -30,6 +33,7 @@ spruce:
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/jobs/slack-notification.yml
       - ../../modules/jobs/deploy-scf-uaa.yml
       - ../../modules/jobs/deploy-scf-eirini-acceptance.yml

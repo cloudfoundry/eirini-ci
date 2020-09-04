@@ -19,7 +19,7 @@ jobs:
         - (( file "../../inline-tasks/bump-version-acceptance.sh" ))
         path: /usr/bin/env
     params:
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
     task: bump-k8s-version

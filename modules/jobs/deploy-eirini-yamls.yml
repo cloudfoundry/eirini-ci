@@ -1,5 +1,5 @@
 jobs:
-- name: deploy-eirini-yamls-((gcp-cluster-name))
+- name: (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: lock-ci
@@ -10,10 +10,10 @@ jobs:
   - get: ci-resources
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((gcp-cluster-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.gcp.cluster-name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     config:
       image_resource:
         source:
@@ -49,5 +49,5 @@ jobs:
         path: eirini-release/deploy/scripts/deploy.sh
   public: true
   serial_groups:
-  - ((gcp-cluster-name))
+  - (( grab config.gcp.cluster-name ))
   on_failure: (( grab slack-notification.on_failure ))

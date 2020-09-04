@@ -2,18 +2,18 @@ groups:
 - name: all
   jobs:
   - generate-cf-for-k8s-values
-  - deploy-cf-for-k8s-((world-name))
-  - smoke-tests-((world-name))
-  - delete-cluster-((world-name))
-  - create-cluster-((world-name))
-  - prepare-cluster-((world-name))
-- name: cf-for-k8s-((world-name))
+  - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
+  - (( concat "smoke-tests-" config.cluster.name ))
+  - (( concat "delete-cluster-" config.cluster.name ))
+  - (( concat "create-cluster-" config.cluster.name ))
+  - (( concat "prepare-cluster-" config.cluster.name ))
+- name: (( concat "cf-for-k8s-" config.cluster.name ))
   jobs:
   - generate-cf-for-k8s-values
-  - deploy-cf-for-k8s-((world-name))
-  - smoke-tests-((world-name))
-- name: cluster-((world-name))
+  - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
+  - (( concat "smoke-tests-" config.cluster.name ))
+- name: (( concat "cluster-" config.cluster.name ))
   jobs:
-  - delete-cluster-((world-name))
-  - create-cluster-((world-name))
-  - prepare-cluster-((world-name))
+  - (( concat "delete-cluster-" config.cluster.name ))
+  - (( concat "create-cluster-" config.cluster.name ))
+  - (( concat "prepare-cluster-" config.cluster.name ))

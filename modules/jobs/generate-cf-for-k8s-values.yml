@@ -10,16 +10,16 @@ jobs:
     trigger: true
   - get: cluster-state
   - get: ci-resources
-  - get: cluster-((world-name))-staging-event-ready
+  - get: (( concat "cluster-" config.cluster.name "-staging-event-ready" ))
     trigger: true
     passed:
-    - prepare-cluster-((world-name))
+    - (( concat "prepare-cluster-" config.cluster.name ))
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((world-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     config:
       image_resource:
         source:
@@ -55,8 +55,8 @@ jobs:
         - (( file "../../inline-tasks/generate-default-cf4k8s-values.sh" ))
         path: /usr/bin/env
     params:
-      CLUSTER_NAME: ((world-name))
-      GCP_SERVICE_ACCOUNT: ((gcp-service-account-json))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_SERVICE_ACCOUNT: (( grab config.gcp.service-account-json ))
     task: generate-default-values
   - config:
       container_limits: {}
@@ -76,10 +76,10 @@ jobs:
         - (( file "../../inline-tasks/generate-loadbalancer-cf4k8s-values.sh" ))
         path: /usr/bin/env
     params:
-      CLUSTER_NAME: ((world-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     task: generate-loadbalancer-values
   - config:
       container_limits: {}
@@ -101,7 +101,7 @@ jobs:
         - (( file "../../inline-tasks/aggregate-cf4k8s-values.sh" ))
         path: /usr/bin/env
     params:
-      CLUSTER_NAME: ((world-name))
+      CLUSTER_NAME: (( grab config.cluster.name ))
     task: aggregate-cf4k8s-values
   - params:
       merge: true
@@ -109,4 +109,4 @@ jobs:
     put: cluster-state
   public: true
   serial_groups:
-  - ((world-name))
+  - (( grab config.cluster.name ))

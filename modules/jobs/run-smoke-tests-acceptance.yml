@@ -29,9 +29,9 @@ jobs:
         - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: acceptance
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
   - config:
       container_limits: {}
       image_resource:

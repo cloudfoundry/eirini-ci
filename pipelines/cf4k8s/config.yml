@@ -1,0 +1,20 @@
+config:
+  slack:
+    webhook: ((slack-webhook))
+  github:
+    access-token: ((github-access-token))
+    private-key: ((github-private-key))
+  cluster:
+    name: ((world-name))
+    worker-count: ((worker_count))
+    admin-password: ((cluster-admin-password))
+    uaa-admin-client-secret: ((uaa-admin-client-secret))
+    nats-password: ((nats-password))
+  gcp:
+    service-account-json: ((gcp-service-account-json))
+    region: ((gcp-region))
+    zone: ((gcp-zone))
+  eirini-ci:
+    branch: ((ci-resources-branch))
+  eirini-release:
+    branch: ((eirini-release-branch))

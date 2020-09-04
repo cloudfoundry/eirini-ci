@@ -4,5 +4,5 @@ resources:
   icon: git
   source:
     branch: master
-    private_key: ((eirini-release-repo-key))
+    private_key: (( grab config.eirini-release.repo-key ))
     uri: git@github.com:cloudfoundry-incubator/eirini-release.git

@@ -6,6 +6,7 @@ spruce:
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/jobs/slack-notification.yml

@@ -1,18 +1,18 @@
 jobs:
-- name: prepare-cluster-((world-name))
+- name: (( concat "prepare-cluster-" config.cluster.name ))
   plan:
   - in_parallel:
     - get: ci-resources
-    - get: cluster-((world-name))-staging-event-created
+    - get: (( concat "cluster-" config.cluster.name "-staging-event-created" ))
       trigger: true
-      passed: [create-cluster-((world-name))]
+      passed: [(( concat "create-cluster-" config.cluster.name ))]
     - get: cluster-state
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((world-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     config:
       image_resource:
         source:
@@ -42,10 +42,10 @@ jobs:
      outputs:
        - name: state-modified
      params:
-       CLUSTER_NAME: ((world-name))
-       CLUSTER_ADMIN_PASSWORD: ((cluster-admin-password))
-       UAA_ADMIN_CLIENT_SECRET: ((uaa-admin-client-secret))
-       NATS_PASSWORD: ((nats-password))
+       CLUSTER_NAME: (( grab config.cluster.name ))
+       CLUSTER_ADMIN_PASSWORD: (( grab config.cluster.admin-password ))
+       UAA_ADMIN_CLIENT_SECRET: (( grab config.cluster.uaa-admin-client-secret ))
+       NATS_PASSWORD: (( grab config.cluster.nats-password ))
      run:
         path: /usr/bin/env
         args:
@@ -72,6 +72,6 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/init-helm.sh" ))
-  - put: cluster-((world-name))-staging-event-ready
+  - put: (( concat "cluster-" config.cluster.name "-staging-event-ready" ))
     params:
       bump: major

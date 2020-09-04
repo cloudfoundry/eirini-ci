@@ -5,11 +5,11 @@ jobs:
   - get: eirini-release
     passed:
     - run-eats-tests-ci
-    - run-eats-tests-((gcp-cluster-name))
+    - (( concat "run-eats-tests-" config.gcp.cluster-name ))
   - get: lock-ci
     passed:
     - run-eats-tests-ci
-    - run-eats-tests-((gcp-cluster-name))
+    - (( concat "run-eats-tests-" config.gcp.cluster-name ))
     trigger: true
   - params:
       release: lock-ci

@@ -1,11 +1,11 @@
 resources:
-- name: (( concat "cluster-" cluster.name "-staging-event-created" ))
+- name: (( concat "cluster-" config.cluster.name "-staging-event-created" ))
   type: semver
   icon: check-decagram
   source:
     branch: events
     driver: git
-    file: (( concat cluster.name "-event-created" ))
+    file: (( concat config.cluster.name "-event-created" ))
     initial_version: 0.1.0
-    private_key: ((github-private-key))
+    private_key: (( grab config.github.private-key ))
     uri: git@github.com:cloudfoundry/eirini-private-config.git

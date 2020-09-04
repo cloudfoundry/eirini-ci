@@ -1,0 +1,5 @@
+config:
+  slack:
+    webhook: ((slack-webhook))
+  eirini-ci:
+    branch: ((ci-resources-branch))

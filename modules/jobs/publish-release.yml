@@ -21,7 +21,7 @@ jobs:
         - -c
         - (( file "../../inline-tasks/check-for-pending-release.sh" ))
     params:
-      GITHUB_TOKEN: ((github-access-token))
+      GITHUB_TOKEN: (( grab config.github.access-token ))
   - get: state
     resource: cluster-state
   - get: eirini-release
@@ -98,7 +98,7 @@ jobs:
         - -c
         - (( file "../../inline-tasks/create-github-pr.sh" ))
     params:
-      GITHUB_TOKEN: ((github-access-token))
+      GITHUB_TOKEN: (( grab config.github.access-token ))
   - get: eirini
   - task: checkout-eirini-sha
     config:

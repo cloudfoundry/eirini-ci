@@ -1,13 +1,13 @@
 jobs:
-- name: deploy-cf-for-k8s-((world-name))
+- name: (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   plan:
   - (( prepend ))
   - get: redeploy-timer
     trigger: true
-- name: smoke-tests-((world-name))
+- name: (( concat "smoke-tests-" config.cluster.name ))
   plan:
   - (( prepend ))
   - get: redeploy-timer
     passed:
-    - deploy-cf-for-k8s-((world-name))
+    - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
     trigger: true

@@ -2,7 +2,7 @@ resources:
 - name: ci-image-source
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     paths:
     - images/ci/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
@@ -11,7 +11,7 @@ resources:
 - name: ibmcloud-image-source
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     paths:
     - images/ibmcloud/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
@@ -20,7 +20,7 @@ resources:
 - name: gcloud-image-source
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     paths:
     - images/gcloud/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
@@ -29,7 +29,7 @@ resources:
 - name: buildah-image-source
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     paths:
     - images/buildah/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
@@ -38,7 +38,7 @@ resources:
 - name: staging-integration-image-source
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     paths:
     - images/staging-integration/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci

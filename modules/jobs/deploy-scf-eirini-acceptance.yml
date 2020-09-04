@@ -29,9 +29,9 @@ jobs:
         - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
       CLUSTER_NAME: acceptance
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
   - task: deploy-scf
     config:
       platform: linux
@@ -89,9 +89,9 @@ jobs:
         - (( file "../../inline-tasks/block-network-access.sh" ))
     params:
       CLUSTER_NAME: acceptance
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
   - task: recheck-eirini
     config:
       platform: linux

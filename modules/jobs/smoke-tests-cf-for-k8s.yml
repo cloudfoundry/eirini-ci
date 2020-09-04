@@ -1,17 +1,17 @@
 jobs:
-- name: smoke-tests-((world-name))
+- name: (( concat "smoke-tests-" config.cluster.name ))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: cf-for-k8s-github-release
     params:
       include_source_tarball: true
     passed:
-    - deploy-cf-for-k8s-((world-name))
+    - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
     trigger: true
   - get: cluster-state
   - get: eirini-release
     passed:
-    - deploy-cf-for-k8s-((world-name))
+    - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
     trigger: true
   - task: get-smoke-tests-variables
     config:
@@ -26,7 +26,7 @@ jobs:
       - name: smoke-tests-env-vars
       platform: linux
       params:
-        CLUSTER_NAME: ((world-name))
+        CLUSTER_NAME: (( grab config.cluster.name ))
       run:
         args:
         - bash
@@ -55,4 +55,4 @@ jobs:
         path: /usr/bin/env
   public: true
   serial_groups:
-  - ((world-name))
+  - (( grab config.cluster.name ))

@@ -4,7 +4,7 @@ jobs:
   - get: cf-for-k8s-github-release
   - get: eirini-release
     trigger: false
-- name: deploy-cf-for-k8s-((world-name))
+- name: (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   plan:
   - get: eirini-release
     passed:
@@ -15,12 +15,12 @@ jobs:
     passed:
     - generate-cf-for-k8s-values
     trigger: true
-- name: smoke-tests-((world-name))
+- name: (( concat "smoke-tests-" config.cluster.name ))
   plan:
   - get: cf-for-k8s-github-release
   - get: cluster-state
     passed:
-    - deploy-cf-for-k8s-((world-name))
+    - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
     trigger: true
   - get: eirini-release
     trigger: false

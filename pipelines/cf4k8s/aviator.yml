@@ -2,11 +2,11 @@ spruce:
 - step: "merge resources with groups"
   base: groups.yml
   prune:
-  - cluster
+  - config
   merge:
   - with:
       files:
-      - ./cluster.yml
+      - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/cf-for-k8s-github-release.yml
       - ../../modules/resources/ci-resources.yml
@@ -20,11 +20,11 @@ spruce:
 - step: "cluster creation and deletion"
   base: {{groups-and-resources}}
   prune:
-  - cluster
+  - config
   merge:
   - with:
       files:
-      - ./cluster.yml
+      - ./config.yml
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
@@ -38,7 +38,7 @@ spruce:
   merge:
   - with:
       files:
-      - ./cluster.yml
+      - ./config.yml
       - ../../modules/jobs/slack-notification.yml
       - ../../modules/jobs/prepare-gke-cluster.yml
       - ../../modules/jobs/generate-cf-for-k8s-values.yml

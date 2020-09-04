@@ -1,5 +1,5 @@
 jobs:
-- name: (( concat "delete-cluster-" cluster.name ))
+- name: (( concat "delete-cluster-" config.cluster.name ))
   plan:
   - get: ci-resources
   - task: delete-kubernetes-cluster
@@ -12,9 +12,9 @@ jobs:
       inputs:
         - name: ci-resources
       params:
-        CLUSTER_NAME: (( grab cluster.name ))
-        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-        WORKER_COUNT: ((worker_count))
+        CLUSTER_NAME: (( grab config.cluster.name ))
+        GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+        WORKER_COUNT: (( grab config.cluster.worker-count))
       run:
         path: /usr/bin/env
         args:
@@ -22,9 +22,9 @@ jobs:
         - -c
         - (( file "../../inline-tasks/gcp-delete-cluster.sh" ))
     params:
-      CLUSTER_NAME: (( grab cluster.name ))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      WORKER_COUNT: ((worker_count))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      WORKER_COUNT: (( grab config.cluster.worker-count))
   - get: cluster-state
   - task: delete-values-file
     config:
@@ -38,7 +38,7 @@ jobs:
       outputs:
         - name: state-modified
       params:
-        CLUSTER_NAME: (( grab cluster.name ))
+        CLUSTER_NAME: (( grab config.cluster.name ))
       run:
         path: /usr/bin/env
         args:

@@ -25,10 +25,10 @@ jobs:
         - -c
         - (( file "../../inline-tasks/download-kubeconfig.sh" ))
     params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
 
   - task: configure-kubernetes
     config:
@@ -49,10 +49,10 @@ jobs:
 
   - task: get-ingress
     params:
-      CLUSTER_NAME: ((world-name))
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
-      IBMCLOUD_USER: ((ibmcloud-user))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+      IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+      IBMCLOUD_USER: (( grab config.ibmcloud.user ))
     config:
       platform: linux
       image_resource:
@@ -85,10 +85,10 @@ jobs:
       outputs:
         - name: state-modified
       params:
-        CLUSTER_NAME: ((world-name))
-        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-        IBMCLOUD_PASSWORD: ((ibmcloud-password))
-        IBMCLOUD_USER: ((ibmcloud-user))
+        CLUSTER_NAME: (( grab config.cluster.name ))
+        IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+        IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+        IBMCLOUD_USER: (( grab config.ibmcloud.user ))
       run:
         path: /usr/bin/env
         args:

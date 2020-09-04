@@ -1,5 +1,5 @@
 jobs:
-- name: deploy-cf-for-k8s-((world-name))
+- name: (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: eirini-release
@@ -16,10 +16,10 @@ jobs:
   - get: ci-resources
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((world-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     config:
       image_resource:
         source:
@@ -83,7 +83,7 @@ jobs:
       - name: cluster-state
       - name: kube
       params:
-        CLUSTER_NAME: ((world-name))
+        CLUSTER_NAME: (( grab config.cluster.name ))
       platform: linux
       run:
         args:
@@ -94,4 +94,4 @@ jobs:
     task: deploy-cf-for-k8s
   public: true
   serial_groups:
-  - ((world-name))
+  - (( grab config.cluster.name ))

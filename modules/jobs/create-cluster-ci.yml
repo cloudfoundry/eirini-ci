@@ -16,11 +16,11 @@ jobs:
       inputs:
       - name:  ci-resources
       params:
-        CLUSTER_NAME: ((world-name))
-        IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-        IBMCLOUD_PASSWORD: ((ibmcloud-password))
-        IBMCLOUD_USER: ((ibmcloud-user))
-        WORKER_COUNT: ((worker_count))
+        CLUSTER_NAME: (( grab config.cluster.name ))
+        IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+        IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+        IBMCLOUD_USER: (( grab config.ibmcloud.user ))
+        WORKER_COUNT: (( grab config.cluster.worker-count ))
       run:
         path: /usr/bin/env
         args:

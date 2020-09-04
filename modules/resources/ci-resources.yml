@@ -3,6 +3,6 @@ resources:
   type: git
   icon: git
   source:
-    branch: ((ci-resources-branch))
+    branch: (( grab config.eirini-ci.branch ))
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
 

@@ -1,9 +1,12 @@
 spruce:
 - step: "merge resources with groups"
   base: groups.yml
+  prune:
+  - config
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/cluster-ci-event-created.yml
@@ -24,11 +27,12 @@ spruce:
 - step: "monaco cluster"
   base: {{groups-and-resources}}
   prune:
-    - cluster
+    - config
   merge:
   - with:
       files:
-      - cluster-monaco.yml
+      - ./config.yml
+      - ./config-cluster-monaco.yml
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
@@ -38,11 +42,12 @@ spruce:
 - step: "integration cluster"
   base: {{monaco-cluster}}
   prune:
-    - cluster
+    - config
   merge:
   - with:
       files:
-      - cluster-integration.yml
+      - ./config.yml
+      - ./config-cluster-integration.yml
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
@@ -58,6 +63,8 @@ spruce:
   merge:
   - with:
       files:
+      - ./config.yml
+      - ./config-cluster-ci.yml
       - ../../modules/jobs/delete-cluster-ci.yml
       - ../../modules/jobs/create-cluster-ci.yml
       - ../../modules/jobs/run-tests.yml

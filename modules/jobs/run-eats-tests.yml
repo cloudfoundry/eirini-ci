@@ -1,22 +1,22 @@
 jobs:
-- name: run-eats-tests-((gcp-cluster-name))
+- name: (( concat "run-eats-tests-" config.gcp.cluster-name ))
   public: true
   plan:
   - in_parallel:
       steps:
       - get: lock-ci
         passed:
-          - deploy-eirini-yamls-((gcp-cluster-name))
+          - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
         trigger: true
       - get: eirini
       - get: eirini-release
       - get: ci-resources
   - task: download-kubeconfig
     params:
-      CLUSTER_NAME: ((gcp-cluster-name))
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
+      CLUSTER_NAME: (( grab config.gcp.cluster-name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
     config:
       image_resource:
         source:
@@ -68,7 +68,7 @@ jobs:
       outputs:
       - name:  output
       params:
-          EIRINIUSER_PASSWORD: ((dockerhub-password))
+          EIRINIUSER_PASSWORD: (( grab config.dockerhub.password ))
           KUBECONFIG: "kube/config"
           GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
           HELMLESS: "true"

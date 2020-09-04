@@ -3,4 +3,4 @@ resources:
   type: slack-notification
   icon: slack
   source:
-    url: ((slack-webhook))
+    url: (( grab config.slack.webhook ))

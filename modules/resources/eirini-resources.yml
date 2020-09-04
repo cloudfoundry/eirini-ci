@@ -3,7 +3,7 @@ resources:
   type: git
   icon: git
   source:
-    branch: ((eirini-branch))
+    branch: (( grab config.eirini.branch ))
     ignore_paths:
     - docker/opi/init/
     - docker/registry/certs/smuggler/
@@ -14,7 +14,7 @@ resources:
   icon: git
   name: eirini-fluentd
   source:
-    branch: ((eirini-branch))
+    branch: (( grab config.eirini.branch ))
     paths:
     - fluentd/
     - docker/loggregator-fluentd/
@@ -24,7 +24,7 @@ resources:
   icon: git
   type: git
   source:
-    branch: ((eirini-branch))
+    branch: (( grab config.eirini.branch ))
     paths:
     - docker/registry/certs/smuggler/
     uri: https://github.com/cloudfoundry-incubator/eirini.git

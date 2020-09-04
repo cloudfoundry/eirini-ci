@@ -1,0 +1,31 @@
+config:
+  slack:
+    webhook: ((slack-webhook))
+  github:
+    private-key: ((github-private-key))
+  cluster:
+    worker-count: ((worker_count))
+    nats-password: ((nats-password))
+  gcp:
+    service-account-json: ((gcp-service-account-json))
+    region: ((gcp-region))
+    zone: ((gcp-zone))
+    cluster-name: ((gcp-cluster-name))
+  ibmcloud:
+    account: ((ibmcloud-account))
+    user: ((ibmcloud-user))
+    password: ((ibmcloud-password))
+  eirini:
+    repo-key: ((eirini-repo-key))
+    branch: ((eirini-branch))
+  eirini-ci:
+    branch: ((ci-resources-branch))
+  eirini-release:
+    branch: ((eirini-release-branch))
+    repo-key: ((eirini-release-repo-key))
+  eirinifs:
+    branch: ((eirinifs-branch))
+    private-key: ((eirinifs-private-key))
+  dockerhub:
+    user: ((dockerhub-user))
+    password: ((dockerhub-password))

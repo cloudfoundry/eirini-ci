@@ -4,5 +4,5 @@ resources:
   icon: git
   source:
     branch: master
-    private_key: ((eirini-staging-repo-key))
+    private_key: (( grab config.eirini-staging.repo-key ))
     uri: git@github.com:cloudfoundry-incubator/eirini-staging.git

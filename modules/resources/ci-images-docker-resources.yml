@@ -4,37 +4,37 @@ resources:
   icon: docker
   source:
     repository: eirini/ci
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
 
 - name: ibmcloud-image
   type: docker-image
   icon: docker
   source:
     repository: eirini/ibmcloud
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
 
 - name: gcloud-image
   type: docker-image
   icon: docker
   source:
     repository: eirini/gcloud
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
 
 - name: buildah-image
   type: docker-image
   icon: docker
   source:
     repository: eirini/buildah
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
 
 - name: staging-integration-image
   type: docker-image
   icon: docker
   source:
     repository: eirini/staging-integration
-    username: ((dockerhub-user))
-    password: ((dockerhub-password))
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))

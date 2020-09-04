@@ -5,4 +5,4 @@ resources:
   source:
     owner: cloudfoundry-incubator
     repository: eirinifs
-    access_token: ((github-access-token))
+    access_token: (( grab config.github.access-token ))

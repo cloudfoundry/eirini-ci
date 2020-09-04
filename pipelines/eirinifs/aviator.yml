@@ -1,9 +1,12 @@
 spruce:
 - step: "merge resources with groups"
   base: empty.yml
+  prune:
+    - config
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/eirinifs.yml
@@ -21,6 +24,7 @@ spruce:
   merge:
   - with:
       files:
+      - ./config.yml
       - ../../modules/jobs/bump-cflinuxfs3.yml
       - ../../modules/jobs/run-eirinifs-integration-tests.yml
       - ../../modules/jobs/release-eirinifs.yml

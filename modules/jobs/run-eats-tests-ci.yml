@@ -1,5 +1,5 @@
 jobs:
-- name: run-eats-tests-((world-name))
+- name: (( concat "run-eats-tests-" config.cluster.name ))
   public: true
   plan:
   - in_parallel:
@@ -26,10 +26,10 @@ jobs:
               outputs:
               - name:  kube
               params:
-                CLUSTER_NAME: ((world-name))
-                IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-                IBMCLOUD_PASSWORD: ((ibmcloud-password))
-                IBMCLOUD_USER: ((ibmcloud-user))
+                CLUSTER_NAME: (( grab config.cluster.name ))
+                IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
+                IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
+                IBMCLOUD_USER: (( grab config.ibmcloud.user ))
               run:
                 path: /usr/bin/env
                 args:
@@ -49,7 +49,7 @@ jobs:
             outputs:
             - name:  output
             params:
-                EIRINIUSER_PASSWORD: ((dockerhub-password))
+                EIRINIUSER_PASSWORD: (( grab config.dockerhub.password ))
                 KUBECONFIG: "kube/config"
             run:
               path: /usr/bin/env

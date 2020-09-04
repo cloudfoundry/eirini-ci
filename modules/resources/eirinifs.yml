@@ -3,6 +3,6 @@ resources:
   type: git
   icon: git
   source:
-    branch: ((eirinifs-branch))
-    private_key: ((eirinifs-private-key))
+    branch: (( grab config.eirinifs.branch ))
+    private_key: (( grab config.eirinifs.private-key ))
     uri: git@github.com:cloudfoundry-incubator/eirinifs.git
