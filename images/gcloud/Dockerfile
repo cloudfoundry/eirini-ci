@@ -13,7 +13,7 @@ RUN apt-get update && \
 RUN curl -L https://k14s.io/install.sh | bash
 
 # helm
-RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.16.1-linux-amd64.tar.gz && tar xfz helm-v2.16.1-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
+RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.16.10-linux-amd64.tar.gz && tar xfz helm-v2.16.10-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
 
 RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
       && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
