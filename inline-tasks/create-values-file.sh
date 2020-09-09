@@ -57,9 +57,6 @@ opi:
       server:
         secretName: "cf-secrets"
 
-  rootfsPatcher:
-    enable: false
-
   metrics:
     tls:
       client:

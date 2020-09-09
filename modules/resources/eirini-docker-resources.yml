@@ -39,14 +39,6 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: docker-rootfs-patcher
-  icon: docker
-  type: docker-image
-  source:
-    repository: eirini/rootfs-patcher
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
 - name: docker-route-collector
   type: docker-image
   icon: docker

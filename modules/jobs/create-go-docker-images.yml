@@ -43,11 +43,6 @@ jobs:
       - params:
           build: eirini
           build_args_file: docker-build-args/args.json
-          dockerfile: eirini/docker/rootfs-patcher/Dockerfile
-        put: docker-rootfs-patcher
-      - params:
-          build: eirini
-          build_args_file: docker-build-args/args.json
           dockerfile: eirini/docker/route-collector/Dockerfile
         put: docker-route-collector
       - params:

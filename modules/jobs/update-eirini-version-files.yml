@@ -20,12 +20,6 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-rootfs-patcher
-        params:
-          skip_download: true
-        passed:
-        - create-go-docker-images
-        trigger: true
       - get: docker-route-collector
         params:
           skip_download: true
@@ -92,7 +86,6 @@ jobs:
       - name: eirini-release
       - name: docker-opi
       - name: docker-bits-waiter
-      - name: docker-rootfs-patcher
       - name: docker-route-collector
       - name: docker-route-pod-informer
       - name: docker-route-statefulset-informer
@@ -106,7 +99,7 @@ jobs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi bits-waiter rootfs-patcher route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter eirini-controller instance-index-env-injector"
+        IMAGES: "opi bits-waiter route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter eirini-controller instance-index-env-injector"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:
