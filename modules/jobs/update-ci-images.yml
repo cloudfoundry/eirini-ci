@@ -12,6 +12,17 @@ jobs:
     params:
       build: ci-image-source/images/ci
 
+- name: update-telepresence-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: telepresence-image-source
+    trigger: true
+  - put: telepresence-image
+    get_params:
+      skip_download: true
+    params:
+      build: telepresence-image-source/images/telepresence
+
 - name: update-ibmcloud-image
   on_failure: (( grab slack-notification.on_failure ))
   plan:

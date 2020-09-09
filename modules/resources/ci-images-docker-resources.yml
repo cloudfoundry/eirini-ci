@@ -7,6 +7,14 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
+- name: telepresence-image
+  type: docker-image
+  icon: docker
+  source:
+    repository: eirini/telepresence
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
+
 - name: ibmcloud-image
   type: docker-image
   icon: docker
