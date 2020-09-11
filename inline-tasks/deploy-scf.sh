@@ -50,7 +50,6 @@ helm-install() {
     image_tag=$(cat deployment-version/version)
     override_image_args=(
       "--set" "eirini.opi.image=eirini/opi"
-      "--set" "eirini.opi.bits_waiter_image=eirini/bits-waiter"
       "--set" "eirini.opi.secret_smuggler_image=eirini/secret-smuggler"
       "--set" "eirini.opi.loggregator_fluentd_image=eirini/loggregator-fluentd"
       "--set" "eirini.opi.route_collector_image=eirini/route-collector"

@@ -38,11 +38,6 @@ jobs:
       - params:
           build: eirini
           build_args_file: docker-build-args/args.json
-          dockerfile: eirini/docker/bits-waiter/Dockerfile
-        put: docker-bits-waiter
-      - params:
-          build: eirini
-          build_args_file: docker-build-args/args.json
           dockerfile: eirini/docker/route-collector/Dockerfile
         put: docker-route-collector
       - params:

@@ -1,12 +1,4 @@
 resources:
-- name: docker-bits-waiter
-  icon: docker
-  type: docker-image
-  source:
-    repository: eirini/bits-waiter
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
 - name: docker-event-reporter
   type: docker-image
   icon: docker
