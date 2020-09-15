@@ -86,6 +86,12 @@ opi:
   lrpController:
     tls:
       secretName: "cf-secrets"
+
+  cc_api:
+    serviceName: "cc-wiremock"
+    tls_disabled: true
+    protocol: http
+    port: 80
 EOF
   popd
 }
