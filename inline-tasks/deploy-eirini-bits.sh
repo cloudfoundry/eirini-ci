@@ -80,18 +80,12 @@ create-test-secret() {
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cf-secrets
+  name: eirini-certs
 type: Opaque
 data:
-  cc-server-crt: "$cert"
-  cc-server-crt-key: "$key"
-  doppler-cert: "$cert"
-  doppler-cert-key: "$key"
-  eirini-client-crt: "$cert"
-  eirini-client-crt-key: "$key"
-  internal-ca-cert: "$cert"
-  loggregator-agent-cert: "$cert"
-  loggregator-agent-cert-key: "$key"
+  tls.crt: "$cert"
+  ca.crt: "$cert"
+  tls.key: "$key"
   nats-password: ""
 EOF
 

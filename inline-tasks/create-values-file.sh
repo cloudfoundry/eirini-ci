@@ -37,55 +37,91 @@ opi:
   ingress_endpoint: $ingress_endpoint
   tls:
     opiCapiClient:
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+      keyPath: "tls.key"
+      certPath: "tls.crt"
     opiServer:
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+      certPath: "tls.crt"
+      keyPath: "tls.key"
     capi:
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+      caPath: "ca.crt"
     eirini:
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+      caPath: "ca.crt"
+
   events:
     tls:
       capiClient:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        keyPath: "tls.key"
+        certPath: "tls.crt"
       capi:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        caPath: "ca.crt"
+
   logs:
     tls:
       client:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        keyPath: "tls.key"
+        certPath: "tls.crt"
       server:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        caPath: "ca.crt"
 
   metrics:
     tls:
       client:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        keyPath: "tls.key"
+        certPath: "tls.crt"
       server:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        caPath: "ca.crt"
+
   routing:
     nats:
       serviceName: nats-client
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+
   secretSmuggler:
     enable: false
+
   staging:
     tls:
       client:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        certPath: "tls.crt"
+        keyPath: "tls.key"
       cc_uploader:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        certPath: "tls.crt"
+        keyPath: "tls.key"
       ca:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        path: "ca.crt"
       stagingReporter:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        certPath: "tls.crt"
+        keyPath: "tls.key"
+        caPath: "ca.crt"
+
   tasks:
     tls:
       taskReporter:
-        secretName: "cf-secrets"
+        secretName: "eirini-certs"
+        keyPath: "tls.key"
+        certPath: "tls.crt"
+        caPath: "ca.crt"
+
   lrpController:
     tls:
-      secretName: "cf-secrets"
+      secretName: "eirini-certs"
+      certPath: "tls.crt"
+      keyPath: "tls.key"
+      caPath: "ca.crt"
 
   cc_api:
     serviceName: "cc-wiremock"
