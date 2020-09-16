@@ -1,9 +1,6 @@
 config:
   slack:
     webhook: ((slack-webhook))
-  dockerhub:
-    user: ((dockerhub-user))
-    password: ((dockerhub-password))
   cluster:
     name: cf4k8s4a8e
     domain: ci-envs.eirini.cf-app.com

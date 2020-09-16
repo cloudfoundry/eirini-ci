@@ -1,0 +1,111 @@
+resources:
+- name: eirini-private-config
+  type: git
+  icon: git
+  source:
+    branch: master
+    private_key: ((github-private-key))
+    uri: git@github.com:cloudfoundry/eirini-private-config
+- name: postfacto
+  icon: egg-easter
+  type: github-release
+  check_every: 12h
+  source:
+    owner: pivotal
+    repository: postfacto
+    globs: package.zip
+- name: ci-resources
+  icon: git
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+
+jobs:
+- name: deploy-postfacto
+  serial: true
+  plan:
+  - in_parallel:
+    - get: postfacto
+      trigger: true
+    - get: eirini-private-config
+    - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+
+  - task: helm-install-redis
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/helm-install-redis.sh" ))
+      inputs:
+      - name: kube
+    params:
+      KUBECONFIG: kube/config
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+
+  - task: get-credentials
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/get-postfacto-credentials-cf4k8s.sh" ))
+      inputs:
+      - name: kube
+      outputs:
+      - name: redis-password
+
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/deploy-postfacto-cf4k8s.sh" ))
+      inputs:
+      - name: postfacto
+      - name: eirini-private-config
+      - name: ci-resources
+      - name: redis-password
+      PARAMS:
+        MYSQL_ADDRESS: ((mysql-address))

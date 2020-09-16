@@ -128,6 +128,7 @@ jobs:
         JEFE_O_AUTH_ORG: eirini-forks
         JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
   on_failure: (( grab slack-notification.on_failure ))
+
 - name: deploy-postfacto
   serial: true
   plan:
@@ -136,30 +137,72 @@ jobs:
       trigger: true
     - get: eirini-private-config
     - get: ci-resources
-  - task: get-credentials
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: (( grab config.cluster.name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+
+  - task: helm-install-redis
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: eirini/ibmcloud
+          repository: eirini/gcloud
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
       run:
         path: bash
         args:
         - -c
-        - (( file "../../inline-tasks/get-postfacto-credentials.sh" ))
+        - (( file "../../inline-tasks/helm-install-redis.sh" ))
       inputs:
-      - name: eirini-private-config
-      - name: ci-resources
+      - name: kube
+    params:
+      KUBECONFIG: kube/config
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+
+  - task: get-credentials
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/get-postfacto-credentials-cf4k8s.sh" ))
+      inputs:
+      - name: kube
       outputs:
       - name: redis-password
-    params:
-      CLUSTER_NAME: acceptance
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
+
   - task: deploy
     config:
       platform: linux
@@ -173,13 +216,16 @@ jobs:
         path: bash
         args:
         - -c
-        - (( file "../../inline-tasks/deploy-postfacto.sh" ))
+        - (( file "../../inline-tasks/deploy-postfacto-cf4k8s.sh" ))
       inputs:
       - name: postfacto
       - name: eirini-private-config
       - name: ci-resources
       - name: redis-password
+      PARAMS:
+        MYSQL_ADDRESS: ((mysql-address))
   on_failure: (( grab slack-notification.on_failure ))
+
 - name: bump-eirinidotcf-dependencies
   plan:
   - get: every-week
