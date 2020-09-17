@@ -9,10 +9,13 @@ fi
 
 readonly WORKSPACE="$(readlink -f eirini)"
 
+export EIRINI_ADDRESS EIRINI_TLS_SECRET EIRINI_SYSTEM_NS
+EIRINI_ADDRESS="https://eirini-opi.cf.svc.cluster.local:8085"
+EIRINI_TLS_SECRET="eirini-certs"
+EIRINI_SYSTEM_NS="cf"
+
 if [[ -n "$HELMLESS" ]]; then
-  export EIRINI_ADDRESS EIRINI_TLS_SECRET EIRINI_SYSTEM_NS
   EIRINI_ADDRESS="https://$(<kube/external-ip):8085"
-  EIRINI_TLS_SECRET="eirini-certs"
   EIRINI_SYSTEM_NS="eirini-core"
 fi
 
