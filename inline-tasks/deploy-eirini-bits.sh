@@ -67,10 +67,14 @@ EOF
 }
 
 create-test-secret() {
+  if kubectl -n cf get secret eirini-certs >/dev/null 2>&1; then
+    echo "Secret eirini-certs already exists. Skipping cert generation..."
+    exit 0
+  fi
+
   local nats_password_b64 cert key secrets_file
   nats_password_b64="$(echo -n "$NATS_PASSWORD" | base64)"
-
-  openssl req -nodes -new -x509 -keyout test.key -out test.cert -subj "/CN=localhost" -addext "subjectAltName = DNS:eirini-opi.cf.svc.cluster.local"
+  openssl req -x509 -newkey rsa:4096 -keyout test.key -out test.cert -nodes -subj '/CN=localhost' -addext "subjectAltName = DNS:eirini-opi.cf.svc.cluster.local" -days 365
   cert=$(base64 -w0 <test.cert)
   key=$(base64 -w0 <test.key)
   rm test.*
