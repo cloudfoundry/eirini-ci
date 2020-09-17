@@ -37,12 +37,13 @@ jobs:
                 - -c
                 - (( file "../../inline-tasks/download-kubeconfig.sh" ))
         - task: run-eats-tests
+          privileged: true
           config:
             platform: linux
             image_resource:
               type: docker-image
               source:
-                repository: eirini/ci
+                repository: eirini/telepresence
             inputs:
             - name:  eirini
             - name:  kube
