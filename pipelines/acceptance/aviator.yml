@@ -26,8 +26,39 @@ spruce:
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
 
-- step: "merge groups and resources with jobs"
+- step: "merge acceptance cluster jobs"
   base: {{groups-and-resources}}
+  prune:
+  - config
+  merge:
+  - with:
+      files:
+      - ./config.yml
+      - ./config-cluster-acceptance.yml
+      - ../../modules/resources/cluster-event-created.yml
+      - ../../modules/jobs/delete-ibm-cluster.yml
+      - ../../modules/jobs/create-ibm-cluster.yml
+      - ../../modules/jobs/prepare-ibm-cluster.yml
+      - ../../modules/jobs/slack-notification.yml
+  to: {{acceptance-cluster-jobs}}
+
+- step: "merge cf4k8s4a8e cluster jobs"
+  base: {{acceptance-cluster-jobs}}
+  prune:
+  - config
+  merge:
+  - with:
+      files:
+      - ./config.yml
+      - ./config-cluster-cf4k8s4a8e.yml
+      - ../../modules/resources/cluster-event-created.yml
+      - ../../modules/jobs/delete-gke-cluster.yml
+      - ../../modules/jobs/create-gke-cluster.yml
+      - ../../modules/jobs/slack-notification.yml
+  to: {{cf4k8s4a8e-cluster-jobs}}
+
+- step: "merge groups and resources with jobs"
+  base: {{cf4k8s4a8e-cluster-jobs}}
   prune:
   - slack-notification
   merge:
@@ -53,4 +84,5 @@ spruce:
   modify:
     delete:
     - jobs.name:generate-cf-for-k8s-values.plan.get:cluster-((world-name))-staging-event-ready
+    - jobs.name:delete-cluster-acceptance.plan.get:delete-timer
   to: $PIPELINE_YML

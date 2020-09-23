@@ -65,8 +65,8 @@ spruce:
       files:
       - ./config.yml
       - ./config-cluster-ci.yml
-      - ../../modules/jobs/delete-cluster-ci.yml
-      - ../../modules/jobs/create-cluster-ci.yml
+      - ../../modules/jobs/delete-ibm-cluster.yml
+      - ../../modules/jobs/create-ibm-cluster.yml
       - ../../modules/jobs/run-tests.yml
       - ../../modules/jobs/create-go-docker-images.yml
       - ../../modules/jobs/create-secret-smuggler-docker-image.yml
@@ -78,7 +78,7 @@ spruce:
       - ../../modules/jobs/update-fluentd-version-files.yml
       - ../../modules/jobs/update-secret-smuggler-version-files.yml
       - ../../modules/jobs/create-staging-docker-images.yml
-      - ../../modules/jobs/prepare-cluster-ci.yml
+      - ../../modules/jobs/prepare-ibm-cluster.yml
       - ../../modules/jobs/verify-helm-deployment.yml
       - ../../modules/jobs/run-eats-tests-ci.yml
       - ../../modules/jobs/fast-forward-release.yml

@@ -45,3 +45,10 @@ groups:
   - bump-major-version
   - publish-release
   name: publish-release
+- jobs:
+  - delete-cluster-acceptance
+  - create-cluster-acceptance
+  - prepare-cluster-acceptance
+  - delete-cluster-cf4k8s4a8e
+  - create-cluster-cf4k8s4a8e
+  name: clusters

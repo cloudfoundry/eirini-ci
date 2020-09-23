@@ -1,11 +1,11 @@
 jobs:
-- name: prepare-cluster-ci
+- name: (( concat "prepare-cluster-" config.cluster.name ))
   plan:
   - get: ci-resources
-  - get: cluster-ci-staging-event-created
+  - get: (( concat "cluster-" config.cluster.name "-staging-event-created" ))
     trigger: true
     passed:
-    - create-cluster-ci
+    - (( concat "create-cluster-" config.cluster.name ))
   - get: cluster-state
   - task: get-kubeconfig
     config:

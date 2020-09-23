@@ -7,6 +7,7 @@ export PIPELINE_YML
 
 readonly basedir="$(cd "$(dirname "$0")" && pwd)"
 readonly target="${1:-eirini}"
+export worker_count=${2:-"3"}
 readonly world_name=cf4k8s4a8e
 
 pushd "$basedir"
@@ -38,4 +39,5 @@ fly -t "$target" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
   --var world-name="$world_name" \
+  --var worker_count="$worker_count" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"

@@ -1,10 +1,10 @@
 jobs:
-- name: create-cluster-ci
+- name: (( concat "create-cluster-" config.cluster.name ))
   plan:
   - get: ci-resources
   - get: cluster-state
     passed:
-    - delete-cluster-ci
+    - (( concat "delete-cluster-" config.cluster.name ))
     trigger: true
   - task: create-kubernetes-cluster
     config:
@@ -27,7 +27,7 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/create-cluster.sh" ))
-  - put: cluster-ci-staging-event-created
+  - put: (( concat "cluster-" config.cluster.name "-staging-event-created" ))
     params:
       bump: major
   on_failure: (( grab slack-notification.on_failure ))
