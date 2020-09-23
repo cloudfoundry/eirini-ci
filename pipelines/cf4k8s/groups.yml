@@ -6,7 +6,6 @@ groups:
   - (( concat "smoke-tests-" config.cluster.name ))
   - (( concat "delete-cluster-" config.cluster.name ))
   - (( concat "create-cluster-" config.cluster.name ))
-  - (( concat "prepare-cluster-" config.cluster.name ))
 - name: (( concat "cf-for-k8s-" config.cluster.name ))
   jobs:
   - generate-cf-for-k8s-values
@@ -16,4 +15,3 @@ groups:
   jobs:
   - (( concat "delete-cluster-" config.cluster.name ))
   - (( concat "create-cluster-" config.cluster.name ))
-  - (( concat "prepare-cluster-" config.cluster.name ))

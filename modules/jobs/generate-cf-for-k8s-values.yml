@@ -10,10 +10,10 @@ jobs:
     trigger: true
   - get: cluster-state
   - get: ci-resources
-  - get: (( concat "cluster-" config.cluster.name "-staging-event-ready" ))
+  - get: (( concat "cluster-" config.cluster.name "-staging-event-created" ))
     trigger: true
     passed:
-    - (( concat "prepare-cluster-" config.cluster.name ))
+    - (( concat "create-cluster-" config.cluster.name ))
   - task: download-kubeconfig
     params:
       CLUSTER_NAME: (( grab config.cluster.name ))

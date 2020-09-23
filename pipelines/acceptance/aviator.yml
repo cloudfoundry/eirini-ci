@@ -83,6 +83,6 @@ spruce:
       - ../../modules/jobs/bump-cluster-k8s-version.yml
   modify:
     delete:
-    - jobs.name:generate-cf-for-k8s-values.plan.get:cluster-((world-name))-staging-event-ready
+    - jobs.name:generate-cf-for-k8s-values.plan.get:cluster-((world-name))-staging-event-created
     - jobs.name:delete-cluster-acceptance.plan.get:delete-timer
   to: $PIPELINE_YML

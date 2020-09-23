@@ -12,7 +12,6 @@ spruce:
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini-release-https.yml
-      - ../../modules/resources/cluster-event-ready.yml
       - ../../modules/resources/slack-resource-type.yml
       (( timer-resources ))
   to: {{groups-and-resources}}
@@ -40,7 +39,6 @@ spruce:
       files:
       - ./config.yml
       - ../../modules/jobs/slack-notification.yml
-      - ../../modules/jobs/prepare-gke-cluster.yml
       - ../../modules/jobs/generate-cf-for-k8s-values.yml
       - ../../modules/jobs/deploy-cf-for-k8s.yml
       - ../../modules/jobs/smoke-tests-cf-for-k8s.yml
