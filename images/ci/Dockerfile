@@ -1,6 +1,7 @@
 FROM golang:latest
 
 ENV PATH="$GOPATH/bin:${PATH}"
+ENV GO111MODULE="on"
 
 RUN  apt-get update \
   && apt-get install --yes \
@@ -16,7 +17,6 @@ RUN  apt-get update \
        lsb-release \
        unzip \
        vim \
-       yarnpkg \
        apt-transport-https \
        gnupg2 \
        sshfs \
@@ -45,3 +45,8 @@ RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/... mvdan.cc/
 # goml
 RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.7.0/goml-linux-amd64 && chmod +x /usr/bin/goml
 
+# yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
+  && sudo apt update \
+  && sudo apt install -y yarn
