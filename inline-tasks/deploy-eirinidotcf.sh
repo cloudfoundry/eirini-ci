@@ -47,8 +47,9 @@ cat >src/config.json.sh <<EOF
   "title": "Team Eirini"
 }
 EOF
-yarnpkg install
-yarnpkg run build
+yarn add -D eslint-plugin-vuetify
+yarn install
+yarn run build
 cf push eirinidotcf-web
 
 if ! cf domains | grep eirini.cf >/dev/null 2>&1; then
