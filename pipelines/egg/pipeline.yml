@@ -31,11 +31,20 @@ resources:
   type: git
   source:
     branch: master
-    uri: https://github.com/eirini-forks/eirinidotcf
+    private_key: ((eirinidotcf-private-key))
+    uri: git@github.com:eirini-forks/eirinidotcf
 - name: every-morning
   icon: alarm
   type: time
   source:
+    start: 5:00 AM
+    stop: 6:00 AM
+- name: every-week
+  icon: alarm
+  type: time
+  source:
+    days:
+    - Saturday
     start: 5:00 AM
     stop: 6:00 AM
 
@@ -140,6 +149,32 @@ jobs:
       - name: eirini-private-config
       - name: ci-resources
       - name: redis-password
+  on_failure: (( grab slack-notification.on_failure ))
+- name: bump-eirinidotcf-dependencies
+  plan:
+  - get: every-week
+    trigger: true
+  - get: eirinidotcf
+  - task: bump-eirinidotcf-dependencies
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+      inputs:
+        - name: eirinidotcf
+      outputs:
+        - name: eirinidotcf-updated
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/bump-yarn-packages.sh" ))
+  - put: eirinidotcf
+    params:
+      repository: eirinidotcf-updated
   on_failure: (( grab slack-notification.on_failure ))
 - name: deploy-eirinidotcf
   serial: true

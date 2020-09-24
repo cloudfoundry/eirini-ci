@@ -28,6 +28,7 @@ fly -t "$target" \
   --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var mysql-password="$(pass show eirini/mysql-admin-password)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var eirinidotcf-private-key="$(pass eirini/github/eirinidotcf/ssh-key)" \
   --var jefe-client-id="$(pass eirini/jefe/client-id)" \
   --var jefe-client-secret="$(pass eirini/jefe/client-secret)" \
   --var jefe-dbuser-pass="$(pass eirini/jefe/dbuser-pass)" \
