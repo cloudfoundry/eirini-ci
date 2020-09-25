@@ -1,7 +1,6 @@
 FROM golang:latest
 
 ENV PATH="$GOPATH/bin:${PATH}"
-ENV GO111MODULE="on"
 
 RUN  apt-get update \
   && apt-get install --yes \
@@ -40,7 +39,8 @@ RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&ver
   && mv cf /usr/local/bin
 
 # ginkgo && shfmt
-RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/... mvdan.cc/sh/cmd/shfmt
+RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/...
+RUN GO111MODULE="on" go get -u mvdan.cc/sh/cmd/shfmt
 
 # goml
 RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.7.0/goml-linux-amd64 && chmod +x /usr/bin/goml
