@@ -27,43 +27,7 @@ install-nats() {
 }
 
 install-wiremock() {
-  kubectl apply -n cf -f - <<EOF
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: cc-wiremock
-spec:
-  selector:
-    matchLabels:
-      name: cc-wiremock
-  template:
-    metadata:
-      labels:
-        name: cc-wiremock
-    spec:
-      containers:
-      - name: wiremock
-        image: rodolpheche/wiremock
-        ports:
-        - containerPort: 8080
-          name: http
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cc-wiremock
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 8080
-      protocol: TCP
-      name: http
-  selector:
-    name: cc-wiremock
-EOF
+  echo "$WIREMOCK_YAML" | kubectl apply -n cf -f -
 }
 
 create-test-secret() {

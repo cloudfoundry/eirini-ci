@@ -21,114 +21,15 @@ set-kube-state() {
 
   pushd cluster-state
   mkdir --parent "$CLUSTER_DIR"
-  cat >"$CLUSTER_DIR"/values.yaml <<EOF
-env:
-  DOMAIN: $node_ip.nip.io
-ingress:
-  endpoint: $ingress_endpoint
-  use: true
-secrets:
-  BITS_SERVICE_SECRET: $BITS_SECRET
-  BITS_SERVICE_SIGNING_USER_PASSWORD: $BITS_SECRET
-  BLOBSTORE_PASSWORD: $BITS_SECRET
-
-opi:
-  use_registry_ingress: true
-  ingress_endpoint: $ingress_endpoint
-  tls:
-    opiCapiClient:
-      secretName: "eirini-certs"
-      keyPath: "tls.key"
-      certPath: "tls.crt"
-    opiServer:
-      secretName: "eirini-certs"
-      certPath: "tls.crt"
-      keyPath: "tls.key"
-    capi:
-      secretName: "eirini-certs"
-      caPath: "ca.crt"
-    eirini:
-      secretName: "eirini-certs"
-      caPath: "ca.crt"
-
-  events:
-    tls:
-      capiClient:
-        secretName: "eirini-certs"
-        keyPath: "tls.key"
-        certPath: "tls.crt"
-      capi:
-        secretName: "eirini-certs"
-        caPath: "ca.crt"
-
-  logs:
-    tls:
-      client:
-        secretName: "eirini-certs"
-        keyPath: "tls.key"
-        certPath: "tls.crt"
-      server:
-        secretName: "eirini-certs"
-        caPath: "ca.crt"
-
-  metrics:
-    tls:
-      client:
-        secretName: "eirini-certs"
-        keyPath: "tls.key"
-        certPath: "tls.crt"
-      server:
-        secretName: "eirini-certs"
-        caPath: "ca.crt"
-
-  routing:
-    nats:
-      serviceName: nats-client
-      secretName: "eirini-certs"
-
-  secretSmuggler:
-    enable: false
-
-  staging:
-    tls:
-      client:
-        secretName: "eirini-certs"
-        certPath: "tls.crt"
-        keyPath: "tls.key"
-      cc_uploader:
-        secretName: "eirini-certs"
-        certPath: "tls.crt"
-        keyPath: "tls.key"
-      ca:
-        secretName: "eirini-certs"
-        path: "ca.crt"
-      stagingReporter:
-        secretName: "eirini-certs"
-        certPath: "tls.crt"
-        keyPath: "tls.key"
-        caPath: "ca.crt"
-
-  tasks:
-    tls:
-      taskReporter:
-        secretName: "eirini-certs"
-        keyPath: "tls.key"
-        certPath: "tls.crt"
-        caPath: "ca.crt"
-
-  lrpController:
-    tls:
-      secretName: "eirini-certs"
-      certPath: "tls.crt"
-      keyPath: "tls.key"
-      caPath: "ca.crt"
-
-  cc_api:
-    serviceName: "cc-wiremock"
-    tls_disabled: true
-    protocol: http
-    port: 80
-EOF
+  echo "$VALUES_TEMPLATE" >"$CLUSTER_DIR/values.yaml"
+  goml set --prop env.DOMAIN --value "$node_ip.nip.io" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop ingress.endpoint --value "$ingress_endpoint" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop ingress.use --value "true" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop secrets.BITS_SERVICE_SECRET --value "$BITS_SECRET" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop secrets.BITS_SERVICE_SIGNING_USER_PASSWORD --value "$BITS_SECRET" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop secrets.BLOBSTORE_PASSWORD --value "$BITS_SECRET" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop opi.use_registry_ingress --value "true" --file "$CLUSTER_DIR/values.yaml"
+  goml set --prop opi.ingress_endpoint --value "$ingress_endpoint" --file "$CLUSTER_DIR/values.yaml"
   popd
 }
 

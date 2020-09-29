@@ -89,6 +89,7 @@ jobs:
         IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
         IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
         IBMCLOUD_USER: (( grab config.ibmcloud.user ))
+        VALUES_TEMPLATE: (( file "../../../eirini-release/helm/scripts/assets/helm-values-template.yml" ))
       run:
         path: /usr/bin/env
         args:
