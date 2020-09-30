@@ -11,5 +11,5 @@ deployments="$(kubectl get deployments \
 for dep in $deployments; do
   kubectl rollout status deployment "$dep" \
     --namespace cf \
-    --timeout=30s
+    --timeout=1m
 done
