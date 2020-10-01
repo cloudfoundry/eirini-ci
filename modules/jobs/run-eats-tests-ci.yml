@@ -8,11 +8,11 @@ jobs:
       steps:
       - get: eirini-release
         passed:
-        - verify-helm-deployment
+        - deploy-eirini-helm-chart-((world-name))
         trigger: true
       - get: eirini
         passed:
-        - verify-helm-deployment
+        - deploy-eirini-helm-chart-((world-name))
       - get: ci-resources
   - in_parallel:
       steps:

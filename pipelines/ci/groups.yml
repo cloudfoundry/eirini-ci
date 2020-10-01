@@ -1,45 +1,14 @@
 groups:
 - name: main
   jobs:
-  - verify-helm-deployment
   - run-tests
   - run-integration-tests
   - create-go-docker-images
-  - create-secret-smuggler-docker-image
-  - run-fluentd-unit-tests
-  - create-fluentd-docker-image
-  - staging-test
-  - create-staging-docker-images
   - update-eirini-version-files
-  - update-fluentd-version-files
-  - update-secret-smuggler-version-files
-  - update-staging-version-files
-  - fast-forward-release
+  - deploy-eirini-helm-chart-((world-name))
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((world-name))
   - run-eats-tests-((gcp-cluster-name))
-
-- name: eirini
-  jobs:
-  - run-tests
-  - run-integration-tests
-  - create-go-docker-images
-  - create-secret-smuggler-docker-image
-  - run-fluentd-unit-tests
-  - create-fluentd-docker-image
-  - staging-test
-  - create-staging-docker-images
-  - update-eirini-version-files
-  - update-fluentd-version-files
-  - update-secret-smuggler-version-files
-  - update-staging-version-files
-
-- name: eirini-release
-  jobs:
-  - deploy-eirini-yamls-((gcp-cluster-name))
-  - run-eats-tests-((gcp-cluster-name))
-  - verify-helm-deployment
-  - run-eats-tests-((world-name))
   - fast-forward-release
 
 - name: bumps
@@ -60,27 +29,19 @@ groups:
   - delete-cluster-integration
   - create-cluster-integration
 
-- name: test-and-build-((gcp-cluster-name))
+- name: staging
   jobs:
-  - deploy-eirini-yamls-((gcp-cluster-name))
-  - run-eats-tests-((gcp-cluster-name))
-
-- name: test-and-build
-  jobs:
-  - run-tests
-  - run-integration-tests
-  - create-go-docker-images
-  - create-secret-smuggler-docker-image
-  - run-fluentd-unit-tests
-  - create-fluentd-docker-image
   - staging-test
   - create-staging-docker-images
-  - verify-helm-deployment
-  - run-eats-tests-((world-name))
-
-- name: update-version-files
-  jobs:
-  - update-eirini-version-files
-  - update-fluentd-version-files
-  - update-secret-smuggler-version-files
   - update-staging-version-files
+
+- name: fluentd
+  jobs:
+  - run-fluentd-unit-tests
+  - create-fluentd-docker-image
+  - update-fluentd-version-files
+
+- name: secret-smuggler
+  jobs:
+  - create-secret-smuggler-docker-image
+  - update-secret-smuggler-version-files

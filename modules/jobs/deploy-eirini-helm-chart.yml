@@ -1,5 +1,5 @@
 jobs:
-- name: verify-helm-deployment
+- name: deploy-eirini-helm-chart-((world-name))
   serial_groups:
   - helm-deployment
   plan:

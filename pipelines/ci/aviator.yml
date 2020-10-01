@@ -78,7 +78,7 @@ spruce:
       - ../../modules/jobs/update-secret-smuggler-version-files.yml
       - ../../modules/jobs/create-staging-docker-images.yml
       - ../../modules/jobs/prepare-ibm-cluster.yml
-      - ../../modules/jobs/verify-helm-deployment.yml
+      - ../../modules/jobs/deploy-eirini-helm-chart.yml
       - ../../modules/jobs/run-eats-tests-ci.yml
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
