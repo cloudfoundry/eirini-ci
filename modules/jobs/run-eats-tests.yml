@@ -36,28 +36,6 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-  - task: get-external-ip
-    params:
-      KUBECONFIG: "kube/config"
-      GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
-    config:
-      image_resource:
-        source:
-          repository: google/cloud-sdk
-        type: docker-image
-      platform: linux
-      inputs:
-        - name: kube
-      outputs:
-        - name: kube
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - |
-          set -e
-          kubectl get svc -n eirini-core eirini-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}' > kube/external-ip
   - task: run-eats-tests
     privileged: true
     config:

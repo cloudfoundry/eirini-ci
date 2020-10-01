@@ -45,7 +45,6 @@ jobs:
       - name: eirini-release
       - name: kube
       params:
-        USE_LOADBALANCED_SERVICE: true
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
       platform: linux

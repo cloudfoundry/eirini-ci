@@ -15,7 +15,7 @@ EIRINI_TLS_SECRET="eirini-certs"
 EIRINI_SYSTEM_NS="cf"
 
 if [[ -n "$HELMLESS" ]]; then
-  EIRINI_ADDRESS="https://$(<kube/external-ip):8085"
+  EIRINI_ADDRESS="https://eirini-api.eirini-core.svc.cluster.local:8085"
   EIRINI_SYSTEM_NS="eirini-core"
 fi
 
