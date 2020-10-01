@@ -1,5 +1,7 @@
 jobs:
 - name: verify-helm-deployment
+  serial_groups:
+  - helm-deployment
   plan:
   - get: ci-resources
   - get: cluster-state

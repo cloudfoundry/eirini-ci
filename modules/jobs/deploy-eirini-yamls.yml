@@ -1,5 +1,7 @@
 jobs:
 - name: (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
+  serial_groups:
+  - helmless-deployment
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: eirini-release

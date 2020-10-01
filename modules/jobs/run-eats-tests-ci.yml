@@ -1,5 +1,7 @@
 jobs:
 - name: (( concat "run-eats-tests-" config.cluster.name ))
+  serial_groups:
+  - helmless-deployment
   public: true
   plan:
   - in_parallel:
