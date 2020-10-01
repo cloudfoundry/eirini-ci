@@ -15,7 +15,9 @@ update-deployment-manifest() {
   image_name="$2"
   image_digest="$(cat "$image_path/digest")"
 
-  sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" eirini-release/deploy/core/*
+  for f in $(find eirini-release/deploy -type f); do
+    sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" "$f"
+  done
 }
 
 commit-changes() {
