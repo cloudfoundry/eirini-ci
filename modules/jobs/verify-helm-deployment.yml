@@ -7,6 +7,11 @@ jobs:
   - get: cluster-state
   - get: eirini-release
     trigger: true
+    passed:
+    - update-eirini-version-files
+  - get: eirini
+    passed:
+    - update-eirini-version-files
   - task: get-kubeconfig
     config:
       platform: linux

@@ -11,6 +11,8 @@ jobs:
         - verify-helm-deployment
         trigger: true
       - get: eirini
+        passed:
+        - verify-helm-deployment
       - get: ci-resources
   - in_parallel:
       steps:

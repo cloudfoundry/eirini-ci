@@ -11,6 +11,8 @@ jobs:
           - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
         trigger: true
       - get: eirini
+        passed:
+          - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
       - get: ci-resources
   - task: download-kubeconfig
     params:

@@ -6,6 +6,11 @@ jobs:
   plan:
   - get: eirini-release
     trigger: true
+    passed:
+    - update-eirini-version-files
+  - get: eirini
+    passed:
+    - update-eirini-version-files
   - get: ci-resources
   - task: download-kubeconfig
     params:
