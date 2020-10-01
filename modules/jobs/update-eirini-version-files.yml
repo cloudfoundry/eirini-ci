@@ -4,6 +4,7 @@ jobs:
   - in_parallel:
       steps:
       - get: eirini-release
+        trigger: true
       - get: eirini
         passed:
         - create-go-docker-images
