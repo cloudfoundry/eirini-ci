@@ -1,13 +1,10 @@
 jobs:
 - name: verify-helm-deployment
   plan:
-  - get: lock-ci
-    trigger: true
-    passed:
-      - lock-ci
   - get: ci-resources
   - get: cluster-state
   - get: eirini-release
+    trigger: true
   - task: get-kubeconfig
     config:
       platform: linux

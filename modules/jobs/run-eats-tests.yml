@@ -4,12 +4,11 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: lock-ci
+      - get: eirini-release
         passed:
           - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
         trigger: true
       - get: eirini
-      - get: eirini-release
       - get: ci-resources
   - task: download-kubeconfig
     params:

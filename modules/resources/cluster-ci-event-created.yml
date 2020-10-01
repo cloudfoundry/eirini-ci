@@ -1,5 +1,5 @@
 resources:
-- name: cluster-ci-staging-event-created
+- name: cluster-((world-name))-staging-event-created
   type: semver
   icon: check-decagram
   source:

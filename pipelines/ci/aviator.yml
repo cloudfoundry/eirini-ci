@@ -21,7 +21,6 @@ spruce:
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/bump-day.yml
-      - ../../modules/resources/lock-ci.yml
   to: {{groups-and-resources}}
 
 - step: "monaco cluster"
@@ -86,8 +85,5 @@ spruce:
       - ../../modules/jobs/bump-go-modules-eirinifs.yml
       - ../../modules/jobs/deploy-eirini-yamls.yml
       - ../../modules/jobs/run-eats-tests.yml
-      - ../../modules/jobs/lock-ci.yml
-      - ../../modules/jobs/unlock-ci.yml
-      - ../../modules/jobs/release-lock-ci.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML

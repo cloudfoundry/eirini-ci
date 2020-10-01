@@ -4,12 +4,11 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: lock-ci
+      - get: eirini-release
         passed:
         - verify-helm-deployment
         trigger: true
       - get: eirini
-      - get: eirini-release
       - get: ci-resources
   - in_parallel:
       steps:

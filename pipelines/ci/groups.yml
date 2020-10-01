@@ -1,13 +1,13 @@
 groups:
 - name: all
   jobs:
-  - delete-cluster-ci
-  - create-cluster-ci
+  - delete-cluster-((world-name))
+  - create-cluster-((world-name))
   - delete-cluster-monaco
   - create-cluster-monaco
   - delete-cluster-integration
   - create-cluster-integration
-  - prepare-cluster-ci
+  - prepare-cluster-((world-name))
   - verify-helm-deployment
   - run-tests
   - run-integration-tests
@@ -25,11 +25,8 @@ groups:
   - bump-go-modules-eirini
   - bump-go-modules-eirinifs
   - deploy-eirini-yamls-((gcp-cluster-name))
-  - run-eats-tests-ci
+  - run-eats-tests-((world-name))
   - run-eats-tests-((gcp-cluster-name))
-  - lock-ci
-  - unlock-ci
-  - release-lock-ci
 
 - name: eirini
   jobs:
@@ -48,13 +45,10 @@ groups:
 
 - name: eirini-release
   jobs:
-  - lock-ci
-  - unlock-ci
-  - release-lock-ci
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))
   - verify-helm-deployment
-  - run-eats-tests-ci
+  - run-eats-tests-((world-name))
   - fast-forward-release
 
 - name: bumps
@@ -62,11 +56,11 @@ groups:
   - bump-go-modules-eirini
   - bump-go-modules-eirinifs
 
-- name: cluster-ci
+- name: cluster-((world-name))
   jobs:
-  - delete-cluster-ci
-  - create-cluster-ci
-  - prepare-cluster-ci
+  - delete-cluster-((world-name))
+  - create-cluster-((world-name))
+  - prepare-cluster-((world-name))
 
 - name: gke-clusters
   jobs:
@@ -80,12 +74,6 @@ groups:
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))
 
-- name: locks
-  jobs:
-  - lock-ci
-  - unlock-ci
-  - release-lock-ci
-
 - name: test-and-build
   jobs:
   - run-tests
@@ -97,7 +85,7 @@ groups:
   - staging-test
   - create-staging-docker-images
   - verify-helm-deployment
-  - run-eats-tests-ci
+  - run-eats-tests-((world-name))
 
 - name: update-version-files
   jobs:
