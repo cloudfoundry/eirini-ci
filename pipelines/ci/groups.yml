@@ -1,13 +1,6 @@
 groups:
-- name: all
+- name: main
   jobs:
-  - delete-cluster-((world-name))
-  - create-cluster-((world-name))
-  - delete-cluster-monaco
-  - create-cluster-monaco
-  - delete-cluster-integration
-  - create-cluster-integration
-  - prepare-cluster-((world-name))
   - verify-helm-deployment
   - run-tests
   - run-integration-tests
@@ -22,8 +15,6 @@ groups:
   - update-secret-smuggler-version-files
   - update-staging-version-files
   - fast-forward-release
-  - bump-go-modules-eirini
-  - bump-go-modules-eirinifs
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((world-name))
   - run-eats-tests-((gcp-cluster-name))
