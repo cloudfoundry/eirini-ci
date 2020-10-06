@@ -3,6 +3,7 @@ jobs:
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: cf-for-k8s-github-release
+    version: { tag: 'v0.6.0' }
     params:
       include_source_tarball: true
     passed:

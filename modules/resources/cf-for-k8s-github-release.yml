@@ -5,5 +5,4 @@ resources:
     access_token: (( grab config.github.access-token ))
     owner: cloudfoundry
     repository: cf-for-k8s
-    version: { tag: 'v0.6.0' }
   type: github-release
