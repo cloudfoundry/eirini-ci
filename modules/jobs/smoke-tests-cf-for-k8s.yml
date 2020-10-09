@@ -38,7 +38,7 @@ jobs:
       container_limits: {}
       image_resource:
         source:
-          repository: relintdockerhubpushbot/cf-test-runner
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
         type: docker-image
       inputs:
       - name: cf-for-k8s-github-release
