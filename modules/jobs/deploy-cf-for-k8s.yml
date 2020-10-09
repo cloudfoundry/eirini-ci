@@ -7,7 +7,6 @@ jobs:
     - generate-cf-for-k8s-values
     trigger: true
   - get: cf-for-k8s-github-release
-    version: { tag: 'v0.6.0' }
     params:
       include_source_tarball: true
     passed:
