@@ -35,8 +35,9 @@ RUN apt-get update
 RUN apt-get install -y kubectl
 
 # CF CLI
-RUN curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=6.49.0&source=github-rel" | tar -zx \
-  && mv cf /usr/local/bin
+RUN wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+RUN echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+RUN sudo apt-get update && sudo apt-get install -y cf7-cli
 
 # ginkgo && shfmt
 RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/...
