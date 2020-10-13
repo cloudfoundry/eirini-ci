@@ -1,0 +1,63 @@
+jobs:
+- name: (( concat "run-eats-tests-single-ns-" config.gcp.cluster-name ))
+  serial_groups:
+  - helm-deployment
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      - get: eirini-release
+        passed:
+          - (( concat "deploy-eirini-yamls-single-ns-" config.gcp.cluster-name ))
+        trigger: true
+      - get: eirini
+        passed:
+          - (( concat "deploy-eirini-yamls-single-ns-" config.gcp.cluster-name ))
+      - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: (( grab config.gcp.cluster-name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - task: run-eats-tests
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/telepresence
+      inputs:
+      - name:  eirini
+      - name:  kube
+      outputs:
+      - name:  output
+      params:
+          EIRINIUSER_PASSWORD: (( grab config.dockerhub.password ))
+          KUBECONFIG: "kube/config"
+          GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+          HELMLESS: "true"
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/run-eats-tests.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

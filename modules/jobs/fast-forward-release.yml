@@ -5,7 +5,7 @@ jobs:
     trigger: true
     passed:
     - run-eats-tests-((world-name))
-    - (( concat "run-eats-tests-" config.gcp.cluster-name ))
+    - (( concat "run-eats-tests-multi-ns-" config.gcp.cluster-name ))
   - get: eirini-release-master
   - put: eirini-release-master
     params:

@@ -83,7 +83,9 @@ spruce:
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
       - ../../modules/jobs/bump-go-modules-eirinifs.yml
-      - ../../modules/jobs/deploy-eirini-yamls.yml
-      - ../../modules/jobs/run-eats-tests.yml
+      - ../../modules/jobs/deploy-eirini-yamls-single-ns.yml
+      - ../../modules/jobs/run-eats-tests-single-ns.yml
+      - ../../modules/jobs/deploy-eirini-yamls-multi-ns.yml
+      - ../../modules/jobs/run-eats-tests-multi-ns.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML

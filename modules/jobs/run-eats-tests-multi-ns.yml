@@ -1,5 +1,5 @@
 jobs:
-- name: (( concat "run-eats-tests-" config.gcp.cluster-name ))
+- name: (( concat "run-eats-tests-multi-ns-" config.gcp.cluster-name ))
   serial_groups:
   - helm-deployment
   public: true
@@ -8,11 +8,12 @@ jobs:
       steps:
       - get: eirini-release
         passed:
-          - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
+          - (( concat "deploy-eirini-yamls-multi-ns-" config.gcp.cluster-name ))
         trigger: true
       - get: eirini
         passed:
-          - (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
+          - (( concat "deploy-eirini-yamls-multi-ns-" config.gcp.cluster-name ))
+        trigger: true
       - get: ci-resources
   - task: download-kubeconfig
     params:
@@ -54,6 +55,7 @@ jobs:
           KUBECONFIG: "kube/config"
           GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
           HELMLESS: "true"
+          USE_MULTI_NAMESPACE: "true"
       run:
         path: /usr/bin/env
         args:

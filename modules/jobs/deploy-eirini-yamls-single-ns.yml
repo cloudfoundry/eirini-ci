@@ -1,5 +1,5 @@
 jobs:
-- name: (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
+- name: (( concat "deploy-eirini-yamls-single-ns-" config.gcp.cluster-name ))
   serial_groups:
   - helmless-deployment
   on_failure: (( grab slack-notification.on_failure ))
@@ -34,6 +34,22 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - task: cleanup-deployment
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      container_limits: {}
+      inputs:
+      - name: eirini-release
+      - name: kube
+      params:
+        KUBECONFIG: "kube/config"
+        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+      platform: linux
+      run:
+        path: eirini-release/deploy/scripts/cleanup.sh
   - task: deploy-eirini-yamls
     config:
       image_resource:
@@ -47,6 +63,7 @@ jobs:
       params:
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+        USE_MULTI_NAMESPACE: false
       platform: linux
       run:
         path: eirini-release/deploy/scripts/deploy.sh

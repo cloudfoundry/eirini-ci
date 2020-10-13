@@ -6,9 +6,11 @@ groups:
   - create-go-docker-images
   - update-eirini-version-files
   - deploy-eirini-helm-chart-((world-name))
-  - deploy-eirini-yamls-((gcp-cluster-name))
+  - deploy-eirini-yamls-single-ns-((gcp-cluster-name))
+  - deploy-eirini-yamls-multi-ns-((gcp-cluster-name))
   - run-eats-tests-((world-name))
-  - run-eats-tests-((gcp-cluster-name))
+  - run-eats-tests-single-ns-((gcp-cluster-name))
+  - run-eats-tests-multi-ns-((gcp-cluster-name))
   - fast-forward-release
 
 - name: bumps

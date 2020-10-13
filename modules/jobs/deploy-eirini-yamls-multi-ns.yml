@@ -1,0 +1,73 @@
+jobs:
+- name: (( concat "deploy-eirini-yamls-multi-ns-" config.gcp.cluster-name ))
+  serial_groups:
+  - helmless-deployment
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini-release
+    trigger: true
+    passed:
+    - ((  concat "run-eats-tests-single-ns-" config.gcp.cluster-name ))
+  - get: eirini
+    passed:
+    - ((  concat "run-eats-tests-single-ns-" config.gcp.cluster-name ))
+  - get: ci-resources
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: (( grab config.gcp.cluster-name ))
+      GCP_REGION: (( grab config.gcp.region ))
+      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+      GCP_ZONE: (( grab config.gcp.zone ))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+  - task: cleanup-deployment
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      container_limits: {}
+      inputs:
+      - name: eirini-release
+      - name: kube
+      params:
+        KUBECONFIG: "kube/config"
+        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+      platform: linux
+      run:
+        path: eirini-release/deploy/scripts/cleanup.sh
+  - task: deploy-eirini-yamls
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+        type: docker-image
+      container_limits: {}
+      inputs:
+      - name: eirini-release
+      - name: kube
+      params:
+        KUBECONFIG: "kube/config"
+        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+        USE_MULTI_NAMESPACE: true
+      platform: linux
+      run:
+        path: eirini-release/deploy/scripts/deploy.sh
+  public: true
+  serial_groups:
+  - (( grab config.gcp.cluster-name ))
+  on_failure: (( grab slack-notification.on_failure ))
