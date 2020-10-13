@@ -4,7 +4,7 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - run-eats-tests-((world-name))
+    - run-eats-tests-multi-ns-((world-name))
     - (( concat "run-eats-tests-multi-ns-" config.gcp.cluster-name ))
   - get: eirini-release-master
   - put: eirini-release-master

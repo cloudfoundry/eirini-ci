@@ -1,5 +1,5 @@
 jobs:
-- name: deploy-eirini-helm-chart-((world-name))
+- name: deploy-eirini-helm-chart-single-ns-((world-name))
   serial_groups:
   - helm-deployment
   plan:
@@ -34,7 +34,23 @@ jobs:
       IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
       IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
       IBMCLOUD_USER: (( grab config.ibmcloud.user ))
-  - task: deploy-eirini-bits
+  - task: clean-up-helm-deployment
+    config:
+      platform: linux
+      image_resource:
+        source:
+          repository: eirini/ibmcloud
+        type: docker-image
+      inputs:
+      - name: kube
+      - name: eirini-release
+      params:
+        KUBECONFIG: "kube/config"
+      run:
+        path: eirini-release/helm/scripts/helm-cleanup.sh
+  - task: deploy-eirini
+    input_mapping:
+      eirini-ci: ci-resources
     config:
       platform: linux
       image_resource:
@@ -45,16 +61,14 @@ jobs:
       - name: kube
       - name: eirini-release
       - name: cluster-state
+      - name: eirini-ci
       params:
         CLUSTER_NAME: (( grab config.cluster.name ))
         NATS_PASSWORD: (( grab config.cluster.nats-password ))
-        WIREMOCK_YAML: (( file "../../../eirini-release/helm/scripts/assets/wiremock.yml" ))
+        KUBECONFIG: "kube/config"
+        USE_MULTI_NAMESPACE: "false"
       run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/deploy-eirini-bits.sh" ))
+        path: eirini-release/helm/scripts/helm-deploy-eirini.sh
   - task: verify-deployment
     config:
        platform: linux

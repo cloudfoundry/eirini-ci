@@ -1,18 +1,18 @@
 jobs:
-- name: (( concat "run-eats-tests-" config.cluster.name ))
+- name: (( concat "run-eats-tests-multi-ns-" config.cluster.name ))
   serial_groups:
-  - helmless-deployment
+  - helm-deployment
   public: true
   plan:
   - in_parallel:
       steps:
       - get: eirini-release
         passed:
-        - deploy-eirini-helm-chart-((world-name))
+        - deploy-eirini-helm-chart-multi-ns-((world-name))
         trigger: true
       - get: eirini
         passed:
-        - deploy-eirini-helm-chart-((world-name))
+        - deploy-eirini-helm-chart-multi-ns-((world-name))
       - get: ci-resources
   - in_parallel:
       steps:
@@ -55,6 +55,7 @@ jobs:
             params:
                 EIRINIUSER_PASSWORD: (( grab config.dockerhub.password ))
                 KUBECONFIG: "kube/config"
+                USE_MULTI_NAMESPACE: "true"
             run:
               path: /usr/bin/env
               args:
