@@ -37,6 +37,8 @@ jobs:
         - task: run-integration-tests
           privileged: true
           config:
+            caches:
+            - path: /root/.cache/go-build
             platform: linux
             image_resource:
               type: docker-image
