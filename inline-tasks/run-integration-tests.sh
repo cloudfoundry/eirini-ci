@@ -9,7 +9,7 @@ if [[ -n $GOOGLE_APPLICATION_CREDENTIALS ]]; then
   GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f "$GOOGLE_APPLICATION_CREDENTIALS")
 fi
 
-service_name=telepresence-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
+service_name=telepresence-$(tr -dc 'a-z0-9' </dev/urandom | fold -w 8 | head -n 1)
 
 export INTEGRATION_KUBECONFIG=${PWD}/kube/config
 export TELEPRESENCE_EXPOSE_PORT_START=10000

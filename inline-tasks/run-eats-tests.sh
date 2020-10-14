@@ -9,7 +9,7 @@ fi
 
 readonly WORKSPACE="$(readlink -f eirini)"
 
-export EIRINI_ADDRESS EIRINI_TLS_SECRET EIRINI_SYSTEM_NS
+export EIRINI_ADDRESS EIRINI_TLS_SECRET EIRINI_SYSTEM_NS EIRINI_WORKLOADS_NS
 EIRINI_ADDRESS="https://eirini-opi.cf.svc.cluster.local:8085"
 EIRINI_TLS_SECRET="eirini-certs"
 EIRINI_SYSTEM_NS="cf"
@@ -21,9 +21,11 @@ if [[ -n "$HELMLESS" ]]; then
   EIRINI_WORKLOADS_NS="eirini-workloads"
 fi
 
-service_name=telepresence-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
+service_name=telepresence-$(tr -dc 'a-z0-9' </dev/urandom | fold -w 8 | head -n 1)
 
-export INTEGRATION_KUBECONFIG="$(readlink -f "$KUBECONFIG")"
+export INTEGRATION_KUBECONFIG
+INTEGRATION_KUBECONFIG="$(readlink -f "$KUBECONFIG")"
+
 export TELEPRESENCE_SERVICE_NAME=${service_name}
 
 KUBECONFIG="$PWD"/kube/config telepresence --new-deployment "$service_name" \
