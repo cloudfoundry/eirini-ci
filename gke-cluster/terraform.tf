@@ -19,7 +19,7 @@ variable "zone" {
 
 variable "node-machine-type" {
   type = string
-  default = "n1-standard-4"
+  default = "n1-standard-8"
 }
 
 variable "dns-zone-name" {
