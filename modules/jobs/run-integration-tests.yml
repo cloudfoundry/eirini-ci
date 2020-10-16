@@ -1,6 +1,7 @@
 jobs:
 - name: run-integration-tests
   public: true
+  serial: true
   plan:
   - in_parallel:
       steps:
