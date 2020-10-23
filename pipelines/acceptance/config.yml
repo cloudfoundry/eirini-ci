@@ -27,3 +27,6 @@ config:
   eirini-release:
     branch: ((eirini-release-branch))
     repo-key: ((eirini-release-repo-key))
+  dockerhub:
+    user: ((dockerhub-user))
+    password: ((dockerhub-password))

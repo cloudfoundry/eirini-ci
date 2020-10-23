@@ -50,4 +50,6 @@ fly -t "$target" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
   --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
   --var worker_count="$worker_count" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var world-name="$world_name"

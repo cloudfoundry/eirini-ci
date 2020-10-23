@@ -12,6 +12,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: ci-resources
       outputs:
@@ -34,6 +36,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: kube
       - name: ci-resources

@@ -11,6 +11,8 @@ jobs:
         type: docker-image
         source:
           repository: koalaman/shellcheck-alpine
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
           tag: stable
       inputs:
       - name: ci-resources

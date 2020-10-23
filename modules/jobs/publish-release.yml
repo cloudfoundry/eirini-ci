@@ -11,6 +11,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: ci-resources
       - name: gh-pages-pr
@@ -37,6 +39,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: ci-resources
       - name: state
@@ -58,6 +62,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: ci-resources
       - name: release-output
@@ -89,6 +95,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: ci-resources
       run:
@@ -107,6 +115,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: eirini-release
       - name: repository
@@ -140,6 +150,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name: eirini-release
       - name: repository

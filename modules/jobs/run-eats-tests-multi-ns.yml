@@ -25,6 +25,8 @@ jobs:
       image_resource:
         source:
           repository: google/cloud-sdk
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
         type: docker-image
       platform: linux
       inputs:
@@ -47,6 +49,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/telepresence
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
       - name:  eirini
       - name:  kube

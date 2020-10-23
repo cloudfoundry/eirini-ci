@@ -16,6 +16,8 @@ jobs:
           image_resource:
             source:
               repository: eirini/ci
+              username: (( grab config.dockerhub.user ))
+              password: (( grab config.dockerhub.password ))
             type: docker-image
           inputs:
           - name: eirini-staging
@@ -33,6 +35,8 @@ jobs:
             type: docker-image
             source:
               repository: golangci/golangci-lint
+              username: (( grab config.dockerhub.user ))
+              password: (( grab config.dockerhub.password ))
               tag: latest
           inputs:
           - name: ci-resources
@@ -48,6 +52,8 @@ jobs:
           image_resource:
             source:
               repository: eirini/staging-integration
+              username: (( grab config.dockerhub.user ))
+              password: (( grab config.dockerhub.password ))
             type: docker-image
           inputs:
           - name: eirini-staging

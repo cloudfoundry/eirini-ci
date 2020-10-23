@@ -19,6 +19,8 @@ jobs:
       image_resource:
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
       - name: cluster-state
@@ -39,6 +41,8 @@ jobs:
       image_resource:
         source:
           repository: relintdockerhubpushbot/cf-for-k8s-ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
       - name: cf-for-k8s-github-release

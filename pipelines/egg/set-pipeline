@@ -33,4 +33,6 @@ fly -t "$target" \
   --var jefe-client-secret="$(pass eirini/jefe/client-secret)" \
   --var jefe-dbuser-pass="$(pass eirini/jefe/dbuser-pass)" \
   --var jefe-admin-pass="$(pass eirini/jefe/admin-pass)" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"

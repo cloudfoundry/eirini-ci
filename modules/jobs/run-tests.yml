@@ -25,6 +25,8 @@ jobs:
             type: docker-image
             source:
               repository: eirini/ci
+              username: (( grab config.dockerhub.user ))
+              password: (( grab config.dockerhub.password ))
           inputs:
           - name: eirini
           run:
@@ -40,6 +42,8 @@ jobs:
             type: docker-image
             source:
               repository: golangci/golangci-lint
+              username: (( grab config.dockerhub.user ))
+              password: (( grab config.dockerhub.password ))
               tag: latest
           inputs:
           - name: eirini

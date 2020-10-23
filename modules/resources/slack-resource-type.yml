@@ -2,5 +2,7 @@ resource_types:
 - name: slack-notification
   source:
     repository: cfcommunity/slack-notification-resource
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
     tag: latest
   type: docker-image

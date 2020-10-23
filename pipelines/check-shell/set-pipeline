@@ -25,6 +25,8 @@ fly --target "$target" \
   --config "$PIPELINE_YML" \
   --pipeline check-shell \
   --var ci-resources-branch="master" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"
 
 fly --target "$target" \

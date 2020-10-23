@@ -60,6 +60,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       params:
           JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
       run:
@@ -87,6 +89,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       run:
         path: bash
         args:
@@ -117,6 +121,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       run:
         path: bash
         args:
@@ -139,6 +145,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       run:
         path: bash
         args:
@@ -162,6 +170,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
         - name: eirinidotcf
       outputs:
@@ -191,6 +201,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ibmcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
         - name: ci-resources
         - name: eirinidotcf
@@ -216,6 +228,8 @@ jobs:
         type: docker-image
         source:
           repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
       inputs:
         - name: ci-resources
         - name: eirinidotcf
