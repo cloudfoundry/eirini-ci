@@ -35,7 +35,23 @@ verify-compilability() {
   popd
 }
 
+bump-go() {
+  local go_version
+  go_version="$(cat golang-image/metadata.json | jq -r '.env[] | select(test("GOLANG_VERSION"))' | awk -F '=' '{print $2}')"
+  go_minor_version="$(echo $go_version | grep -o "[0-9]\+.[0-9]\+")"
+  pushd repository
+  {
+    go mod edit -go="$go_minor_version"
+    for image in $(grep -r -l "FROM golang" docker); do
+      sed -i "s/golang:[0-9\.]\+/$go_version/g" "$image/Dockerfile"
+    done
+  }
+  popd
+
+}
+
 main() {
+  bump-go
   bump
   verify-compilability
   commit
