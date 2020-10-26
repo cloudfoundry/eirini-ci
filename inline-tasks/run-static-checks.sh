@@ -3,7 +3,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-golangci-lint --version
+golangci-lint version
 
 cd "eirini"
 test -f .golangci.yml
