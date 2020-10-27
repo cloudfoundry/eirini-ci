@@ -1,10 +1,13 @@
 jobs:
 - name: create-go-docker-images
   plan:
-  - get: eirini
-    passed:
-    - run-integration-tests
-    trigger: true
+  - in_parallel:
+      limit: 5
+      steps:
+      - get: eirini
+        passed:
+        - run-integration-tests
+        trigger: true
   - task: make-docker-build-args
     input_mapping:
         repository: eirini
@@ -27,276 +30,56 @@ jobs:
         - -c
         - (( file "../../inline-tasks/make-docker-build-args.sh" ))
   - in_parallel:
-      limit: 1
+      limit: 5
       steps:
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: opi-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/opi/Dockerfile
-        - put: docker-opi
-          params: {image: opi-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: route-collector-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/route-collector/Dockerfile
-        - put: docker-route-collector
-          params: {image: route-collector-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: route-pod-informer-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/route-pod-informer/Dockerfile
-        - put: docker-route-pod-informer
-          params: {image: route-pod-informer-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: metrics-collector-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/metrics-collector/Dockerfile
-        - put: docker-metrics-collector
-          params: {image: metrics-collector-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: event-reporter-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/event-reporter/Dockerfile
-        - put: docker-event-reporter
-          params: {image: event-reporter-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: staging-reporter-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/staging-reporter/Dockerfile
-        - put: docker-staging-reporter
-          params: {image: staging-reporter-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: task-reporter-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/task-reporter/Dockerfile
-        - put: docker-task-reporter
-          params: {image: task-reporter-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: route-statefulset-informer-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/route-statefulset-informer/Dockerfile
-        - put: docker-route-statefulset-informer
-          params: {image: route-statefulset-informer-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: eirini-controller-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/eirini-controller/Dockerfile
-        - put: docker-eirini-controller
-          params: {image: eirini-controller-image/image.tar}
-
-      - do:
-        - task: build
-          privileged: true
-          output_mapping:
-            image: instance-index-env-injector-image
-          config:
-            caches:
-            - path: cache
-            platform: linux
-            image_resource:
-              type: registry-image
-              source:
-                repository: vito/oci-build-task
-            inputs:
-            - name: eirini
-              path: .
-            - name: docker-build-args
-            outputs:
-            - name: image
-            run:
-              path: build
-            params:
-              BUILD_ARGS_FILE: docker-build-args/args
-              DOCKERFILE: docker/instance-index-env-injector/Dockerfile
-        - put: docker-instance-index-env-injector
-          params: {image: instance-index-env-injector-image/image.tar}
-
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/opi/Dockerfile
+        put: docker-opi
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-collector/Dockerfile
+        put: docker-route-collector
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-pod-informer/Dockerfile
+        put: docker-route-pod-informer
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/metrics-collector/Dockerfile
+        put: docker-metrics-collector
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/event-reporter/Dockerfile
+        put: docker-event-reporter
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/staging-reporter/Dockerfile
+        put: docker-staging-reporter
+      - put: docker-task-reporter
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/task-reporter/Dockerfile
+      - params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/route-statefulset-informer/Dockerfile
+        put: docker-route-statefulset-informer
+      - put: docker-eirini-controller
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/eirini-controller/Dockerfile
+      - put: docker-instance-index-env-injector
+        params:
+          build: eirini
+          build_args_file: docker-build-args/args.json
+          dockerfile: eirini/docker/instance-index-env-injector/Dockerfile
   on_failure: (( grab slack-notification.on_failure ))
