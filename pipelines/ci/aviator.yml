@@ -19,6 +19,7 @@ spruce:
       - ../../modules/resources/eirini-master.yml
       - ../../modules/resources/eirinifs.yml
       - ../../modules/resources/golang-lint.yml
+      - ../../modules/resources/golang-image.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/bump-day.yml
   to: {{groups-and-resources}}

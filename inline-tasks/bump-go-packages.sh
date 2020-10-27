@@ -44,7 +44,7 @@ bump-go() {
     go mod edit -go="$go_minor_version"
     grep -r -l "FROM golang" docker |
       while IFS= read -r image; do
-        sed -i "s/golang:[0-9\.]\+/$go_version/g" "$image/Dockerfile"
+        sed -i "s/golang:[0-9\.]\+/$go_version/g" "$image"
       done
   }
   popd
