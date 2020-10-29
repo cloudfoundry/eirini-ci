@@ -194,33 +194,55 @@ jobs:
     - get: eirinidotcf
       trigger: true
     - get: eirini-private-config
+  - task: download-kubeconfig
+    params:
+      CLUSTER_NAME: cf4k8s4a8e
+      GCP_REGION: ((gcp-region))
+      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+      GCP_ZONE: ((gcp-zone))
+    config:
+      image_resource:
+        source:
+          repository: google/cloud-sdk
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+        type: docker-image
+      platform: linux
+      inputs:
+        - name: ci-resources
+      outputs:
+        - name: kube
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
   - task: deploy-db
     config:
       platform: linux
       image_resource:
         type: docker-image
         source:
-          repository: eirini/ibmcloud
+          repository: eirini/gcloud
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
       inputs:
         - name: ci-resources
         - name: eirinidotcf
+        - name: kube
       outputs:
         - name: db-conf
       params:
         CLUSTER_NAME: acceptance
+        KUBECONFIG: "kube/config"
+        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
       run:
         path: /usr/bin/env
         args:
         - bash
         - -c
         - (( file "../../inline-tasks/deploy-eirinidotcf-db.sh" ))
-    params:
-      CLUSTER_NAME: acceptance
-      IBMCLOUD_ACCOUNT: ((ibmcloud-account))
-      IBMCLOUD_USER: ((ibmcloud-user))
-      IBMCLOUD_PASSWORD: ((ibmcloud-password))
   - task: deploy-web
     config:
       platform: linux

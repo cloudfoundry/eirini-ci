@@ -2,10 +2,15 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
-source ci-resources/scripts/ibmcloud-functions
-ibmcloud-login
-export-kubeconfig "$CLUSTER_NAME"
+export KUBECONFIG
+KUBECONFIG=${KUBECONFIG:-$HOME/.kube/config}
+KUBECONFIG=$(readlink -f "$KUBECONFIG")
+
+export GOOGLE_APPLICATION_CREDENTIALS
+GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-""}
+if [[ -n $GOOGLE_APPLICATION_CREDENTIALS ]]; then
+  GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f "$GOOGLE_APPLICATION_CREDENTIALS")
+fi
 
 confdir=$PWD/db-conf
 cd eirinidotcf/db

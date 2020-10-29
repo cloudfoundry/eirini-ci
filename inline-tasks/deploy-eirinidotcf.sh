@@ -2,12 +2,15 @@
 
 set -euo pipefail
 
-values=eirini-private-config/environments/kube-clusters/acceptance/values.yaml
-cf_domain="$(goml get -f "$values" -p "env.DOMAIN")"
-cf_admin_password="$(goml get -f "$values" -p "secrets.CLUSTER_ADMIN_PASSWORD")"
+values=eirini-private-config/environments/kube-clusters/cf4k8s4a8e/default-values.yml
+cf_domain="$(goml get -f "$values" -p "system_domain")"
+cf_admin_password="$(goml get -f "$values" -p "cf_admin_password")"
 
 cf api "api.$cf_domain" --skip-ssl-validation
 cf auth admin "$cf_admin_password"
+
+cf create-org eirinidotcf || true
+cf create-space -o eirinidotcf eirinidotcf || true
 cf target -o eirinidotcf -s eirinidotcf
 
 export MYSQL_ROOT_PASSWORD
