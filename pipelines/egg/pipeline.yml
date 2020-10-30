@@ -218,31 +218,6 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-  - task: deploy-db
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/gcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-        - name: ci-resources
-        - name: eirinidotcf
-        - name: kube
-      outputs:
-        - name: db-conf
-      params:
-        CLUSTER_NAME: acceptance
-        KUBECONFIG: "kube/config"
-        GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/deploy-eirinidotcf-db.sh" ))
   - task: deploy-web
     config:
       platform: linux
@@ -256,7 +231,6 @@ jobs:
         - name: ci-resources
         - name: eirinidotcf
         - name: eirini-private-config
-        - name: db-conf
       run:
         path: /usr/bin/env
         args:
