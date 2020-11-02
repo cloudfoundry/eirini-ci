@@ -44,7 +44,7 @@ jobs:
           run:
             path: /usr/bin/env
             args:
-            - bash
+            - sh
             - -c
             - (( file "../../inline-tasks/run-static-checks.sh" ))
         task: lint

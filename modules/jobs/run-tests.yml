@@ -50,7 +50,7 @@ jobs:
           run:
             path: /usr/bin/env
             args:
-            - bash
+            - sh
             - -c
             - (( file "../../inline-tasks/run-static-checks.sh" ))
   on_failure: (( grab slack-notification.on_failure ))
