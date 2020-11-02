@@ -96,6 +96,7 @@ jobs:
       - name: kube
       params:
         CLUSTER_NAME: (( grab config.cluster.name ))
+        USE_CERT_MANAGER: (( grab config.cert-manager.enable ))
       platform: linux
       run:
         args:

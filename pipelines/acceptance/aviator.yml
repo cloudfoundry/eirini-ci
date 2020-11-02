@@ -53,6 +53,7 @@ spruce:
       - ../../modules/resources/cluster-event-created.yml
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
+      - ../../modules/jobs/generate-domain-certificates.yml
       - ../../modules/jobs/slack-notification.yml
   to: {{cf4k8s4a8e-cluster-jobs}}
 

@@ -51,4 +51,5 @@ groups:
   - prepare-cluster-acceptance
   - delete-cluster-cf4k8s4a8e
   - create-cluster-cf4k8s4a8e
+  - generate-domain-certificates
   name: clusters

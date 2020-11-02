@@ -4,6 +4,8 @@ config:
   github:
     access-token: ((github-access-token))
     private-key: ((github-private-key))
+  cert-manager:
+    enable: true
   cluster:
     name: ((world-name))
     worker-count: ((worker_count))
@@ -14,6 +16,8 @@ config:
     service-account-json: ((gcp-service-account-json))
     region: ((gcp-region))
     zone: ((gcp-zone))
+    project-id: ((gcp-project-id))
+    dns-service-account-json: ((gcp-dns-service-account-json))
   ibmcloud:
     account: ((ibmcloud-account))
     user: ((ibmcloud-user))

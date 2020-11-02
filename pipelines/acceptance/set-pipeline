@@ -37,6 +37,8 @@ fly -t "$target" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --var gcp-region="europe-west1" \
   --var gcp-zone="europe-west1-b" \
+  --var gcp-project-id="cff-eirini-peace-pods" \
+  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
   --var world-name="$world_name" \
   --var worker_count="$worker_count" \
   --var dockerhub-user=eiriniuser \

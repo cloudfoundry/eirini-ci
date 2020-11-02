@@ -4,6 +4,8 @@ config:
   github:
     access-token: ((github-access-token))
     private-key: ((github-private-key))
+  cert-manager:
+    enable: false
   cluster:
     name: ((world-name))
     worker-count: ((worker_count))
