@@ -1,7 +1,6 @@
 #!/bin/sh
 
-set -euo pipefail
-IFS=$'\n\t'
+set -eu
 
 golangci-lint version
 
