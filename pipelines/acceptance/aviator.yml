@@ -21,7 +21,6 @@ spruce:
       - ../../modules/resources/gh-pages-pr.yml
       - ../../modules/resources/lock-the-egg-police.yml
       - ../../modules/resources/scf-uaa-resources.yml
-      - ../../modules/resources/eirini-staging-master.yml
       - ../../modules/resources/sunday-morning.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}

@@ -63,43 +63,11 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: docker-staging-downloader
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/recipe-downloader
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
-- name: docker-staging-executor
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/recipe-executor
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
-- name: docker-staging-reporter
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/staging-reporter
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
 - name: docker-task-reporter
   type: docker-image
   icon: docker
   source:
     repository: eirini/task-reporter
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
-- name: docker-staging-uploader
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/recipe-uploader
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 

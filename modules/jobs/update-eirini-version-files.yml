@@ -45,12 +45,6 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-staging-reporter
-        params:
-          skip_download: true
-        passed:
-        - create-go-docker-images
-        trigger: true
       - get: docker-task-reporter
         params:
           skip_download: true
@@ -87,7 +81,6 @@ jobs:
       - name: docker-route-statefulset-informer
       - name: docker-metrics-collector
       - name: docker-event-reporter
-      - name: docker-staging-reporter
       - name: docker-task-reporter
       - name: docker-eirini-controller
       - name: docker-instance-index-env-injector
@@ -95,7 +88,7 @@ jobs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter staging-reporter task-reporter eirini-controller instance-index-env-injector"
+        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter task-reporter eirini-controller instance-index-env-injector"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

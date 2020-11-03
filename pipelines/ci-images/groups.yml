@@ -6,4 +6,3 @@ groups:
   - update-ibmcloud-image
   - update-gcloud-image
   - update-buildah-image
-  - update-staging-integration-image

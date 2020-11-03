@@ -20,8 +20,6 @@ config:
     password: ((ibmcloud-password))
   eirini:
     repo-key: ((eirini-repo-key))
-  eirini-staging:
-    repo-key: ((eirini-staging-repo-key))
   eirini-ci:
     branch: ((ci-resources-branch))
   eirini-release:

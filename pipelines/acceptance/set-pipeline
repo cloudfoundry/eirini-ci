@@ -32,7 +32,6 @@ fly -t "$target" \
   --var eirini-release-branch="master" \
   --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
   --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
-  --var eirini-staging-repo-key="$(pass eirini/github/eirini-staging/ssh-key)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \

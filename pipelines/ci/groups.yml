@@ -33,12 +33,6 @@ groups:
   - delete-cluster-integration
   - create-cluster-integration
 
-- name: staging
-  jobs:
-  - staging-test
-  - create-staging-docker-images
-  - update-staging-version-files
-
 - name: fluentd
   jobs:
   - run-fluentd-unit-tests

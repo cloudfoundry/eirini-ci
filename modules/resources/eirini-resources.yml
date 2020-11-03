@@ -28,10 +28,3 @@ resources:
     paths:
     - docker/registry/certs/smuggler/
     uri: https://github.com/cloudfoundry-incubator/eirini.git
-
-- name: eirini-staging
-  type: git
-  icon: git
-  source:
-    branch: master
-    uri: https://github.com/cloudfoundry-incubator/eirini-staging.git

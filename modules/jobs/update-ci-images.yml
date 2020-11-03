@@ -60,15 +60,3 @@ jobs:
     params:
       build: buildah-image-source/images/buildah
 
-- name: update-staging-integration-image
-  on_failure: (( grab slack-notification.on_failure ))
-  plan:
-  - get: cflinuxfs3
-    trigger: true
-  - get: staging-integration-image-source
-    trigger: true
-  - put: staging-integration-image
-    get_params:
-      skip_download: true
-    params:
-      build: staging-integration-image-source/images/staging-integration

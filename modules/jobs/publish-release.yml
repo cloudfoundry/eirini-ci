@@ -142,38 +142,3 @@ jobs:
       repository: eirini-modified
       tag: eirini-release-version/version
     put: eirini
-  - get: staging
-  - task: checkout-staging-sha
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-      - name: eirini-release
-      - name: repository
-      - name: ci-resources
-      outputs:
-      - name: repository-modified
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/checkout-sha-by-image.sh" ))
-    input_mapping:
-      repository: staging
-    output_mapping:
-      repository-modified: staging-modified
-    params:
-      IMAGE_NAME: eirini/recipe-downloader
-      VERSION_FILE: staging-downloader
-    privileged: true
-  - params:
-      only_tag: true
-      repository: staging-modified
-      tag: eirini-release-version/version
-    put: staging
