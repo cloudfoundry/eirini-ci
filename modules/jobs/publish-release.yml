@@ -26,6 +26,9 @@ jobs:
       GITHUB_TOKEN: (( grab config.github.access-token ))
   - get: state
     resource: cluster-state
+    passed:
+    - run-smoke-tests-acceptance
+    - smoke-tests-cf4k8s4a8e
   - get: eirini-release
     passed:
     - run-smoke-tests-acceptance

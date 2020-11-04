@@ -9,6 +9,8 @@ jobs:
     - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
     trigger: true
   - get: cluster-state
+    passed:
+    - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   - get: eirini-release
     passed:
     - (( concat "deploy-cf-for-k8s-" config.cluster.name ))
