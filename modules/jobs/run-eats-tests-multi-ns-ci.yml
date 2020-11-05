@@ -1,7 +1,8 @@
 jobs:
 - name: (( concat "run-eats-tests-multi-ns-" config.cluster.name ))
+  serial: true
   serial_groups:
-  - helm-deployment
+  - (( grab config.cluster.name ))
   public: true
   plan:
   - in_parallel:

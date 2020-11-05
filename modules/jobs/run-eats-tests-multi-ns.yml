@@ -1,7 +1,8 @@
 jobs:
 - name: (( concat "run-eats-tests-multi-ns-" config.gcp.cluster-name ))
+  serial: true
   serial_groups:
-  - helmless-deployment
+  - (( grab config.gcp.cluster-name ))
   public: true
   plan:
   - in_parallel:

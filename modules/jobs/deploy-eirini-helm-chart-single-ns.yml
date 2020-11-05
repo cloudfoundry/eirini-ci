@@ -1,7 +1,8 @@
 jobs:
 - name: deploy-eirini-helm-chart-single-ns-((world-name))
+  serial: true
   serial_groups:
-  - helm-deployment
+  - ((world-name))
   plan:
   - get: ci-resources
   - get: cluster-state

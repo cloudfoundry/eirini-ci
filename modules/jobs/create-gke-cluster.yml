@@ -1,5 +1,8 @@
 jobs:
 - name: (( concat "create-cluster-" config.cluster.name ))
+  serial: true
+  serial_groups:
+  - (( grab config.cluster.name ))
   plan:
   - get: ci-resources
   - get: cluster-state
