@@ -30,11 +30,3 @@ resources:
     repository: eirini/gcloud
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
-
-- name: buildah-image
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/buildah
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))

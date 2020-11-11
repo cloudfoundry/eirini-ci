@@ -5,4 +5,3 @@ groups:
   - update-telepresence-image
   - update-ibmcloud-image
   - update-gcloud-image
-  - update-buildah-image

@@ -34,13 +34,3 @@ resources:
     - images/gcloud/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
   type: git
-
-- name: buildah-image-source
-  icon: git
-  source:
-    branch: (( grab config.eirini-ci.branch ))
-    paths:
-    - images/buildah/Dockerfile
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci
-  type: git
-

@@ -47,16 +47,3 @@ jobs:
       skip_download: true
     params:
       build: gcloud-image-source/images/gcloud
-
-
-- name: update-buildah-image
-  on_failure: (( grab slack-notification.on_failure ))
-  plan:
-  - get: buildah-image-source
-    trigger: true
-  - put: buildah-image
-    get_params:
-      skip_download: true
-    params:
-      build: buildah-image-source/images/buildah
-
