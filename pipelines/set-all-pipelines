@@ -10,6 +10,9 @@ readonly excluded_pipelines=("cf4k8s/")
 pushd "$PROJECT_ROOT/pipelines"
 {
   for pipeline in */; do
+    echo "+----------------------------------------------"
+    echo "| Setting pipeline $pipeline"
+    echo "+----------------------------------------------"
     if [[ ! "$excluded_pipelines[@]" =~ "$pipeline" ]]; then
       $PROJECT_ROOT/pipelines/$pipeline/set-pipeline
     fi
