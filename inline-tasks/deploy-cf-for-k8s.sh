@@ -17,7 +17,7 @@ deploy-cf() {
       -f ci-resources/cf-for-k8s \
       -f cluster-state/environments/kube-clusters/"${1}"/default-values.yml \
       -f cluster-state/environments/kube-clusters/"${1}"/loadbalancer-values.yml \
-      ${extra_args[@]}
+      "${extra_args[@]}"
   ) -y
 
   if [[ "$USE_CERT_MANAGER" == "true" ]]; then

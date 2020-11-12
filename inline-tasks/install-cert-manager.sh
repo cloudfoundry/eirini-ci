@@ -28,12 +28,14 @@ configure-certs() {
   local cert_config_file key_file
   if ! kubectl get secret -n "$CERT_MANAGER_NAMESPACE" clouddns-dns01-solver-svc-acct; then
     key_file=$(mktemp)
+    # shellcheck disable=SC2064
     trap "rm -f $key_file" RETURN
     echo "$DNS_SERVICE_ACCOUNT_JSON" >"$key_file"
     kubectl create secret -n "$CERT_MANAGER_NAMESPACE" generic clouddns-dns01-solver-svc-acct --from-file=key.json="$key_file"
   fi
 
   cert_config_file=$(mktemp)
+  # shellcheck disable=SC2064
   trap "rm -f $cert_config_file" RETURN
   cat <<EOF >>"$cert_config_file"
 ---
