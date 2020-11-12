@@ -1,6 +1,6 @@
 resources:
-- name: event-reporter-image
-  type: registry-image
+- name: docker-event-reporter
+  type: docker-image
   icon: docker
   source:
     repository: eirini/event-reporter
@@ -15,41 +15,40 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: metrics-collector-image
-  type: registry-image
+- name: docker-metrics-collector
+  type: docker-image
   icon: docker
   source:
     repository: eirini/metrics-collector
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-
-- name: opi-image
-  type: registry-image
+- name: docker-opi
+  type: docker-image
   icon: docker
   source:
     repository: eirini/opi
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: route-collector-image
-  type: registry-image
+- name: docker-route-collector
+  type: docker-image
   icon: docker
   source:
     repository: eirini/route-collector
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: route-pod-informer-image
+- name: docker-route-pod-informer
   icon: docker
-  type: registry-image
+  type: docker-image
   source:
     repository: eirini/route-pod-informer
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: route-statefulset-informer-image
-  type: registry-image
+- name: docker-route-statefulset-informer
+  type: docker-image
   icon: docker
   source:
     repository: eirini/route-statefulset-informer
@@ -64,24 +63,24 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: task-reporter-image
-  type: registry-image
+- name: docker-task-reporter
+  type: docker-image
   icon: docker
   source:
     repository: eirini/task-reporter
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: eirini-controller-image
-  type: registry-image
+- name: docker-eirini-controller
+  type: docker-image
   icon: docker
   source:
     repository: eirini/eirini-controller
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: instance-index-env-injector-image
-  type: registry-image
+- name: docker-instance-index-env-injector
+  type: docker-image
   icon: docker
   source:
     repository: eirini/instance-index-env-injector
