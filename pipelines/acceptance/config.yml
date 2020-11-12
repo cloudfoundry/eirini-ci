@@ -1,4 +1,5 @@
 config:
+  do_not_delete_cf: "true"
   slack:
     webhook: ((slack-webhook))
   github:

@@ -1,3 +1,4 @@
 config:
   cluster:
     name: cf4k8s4a8e
+  do_not_delete_cf: "true"

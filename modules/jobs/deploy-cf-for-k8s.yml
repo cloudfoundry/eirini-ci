@@ -53,6 +53,8 @@ jobs:
       inputs:
       - name: kube
       platform: linux
+      params:
+          DO_NOT_DELETE_CF: (( grab config.do_not_delete_cf ))
       run:
         args:
         - bash
