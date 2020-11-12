@@ -9,55 +9,55 @@ jobs:
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-opi
+      - get: opi-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-route-collector
+      - get: route-collector-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-route-pod-informer
+      - get: route-pod-informer-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-route-statefulset-informer
+      - get: route-statefulset-informer-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-metrics-collector
+      - get: metrics-collector-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-event-reporter
+      - get: event-reporter-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-task-reporter
+      - get: task-reporter-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-eirini-controller
+      - get: eirini-controller-image
         params:
           skip_download: true
         passed:
         - create-go-docker-images
         trigger: true
-      - get: docker-instance-index-env-injector
+      - get: instance-index-env-injector-image
         params:
           skip_download: true
         passed:
@@ -75,15 +75,15 @@ jobs:
       inputs:
       - name: eirini
       - name: eirini-release
-      - name: docker-opi
-      - name: docker-route-collector
-      - name: docker-route-pod-informer
-      - name: docker-route-statefulset-informer
-      - name: docker-metrics-collector
-      - name: docker-event-reporter
-      - name: docker-task-reporter
-      - name: docker-eirini-controller
-      - name: docker-instance-index-env-injector
+      - name: opi-image
+      - name: route-collector-image
+      - name: route-pod-informer-image
+      - name: route-statefulset-informer-image
+      - name: metrics-collector-image
+      - name: event-reporter-image
+      - name: task-reporter-image
+      - name: eirini-controller-image
+      - name: instance-index-env-injector-image
       outputs:
       - name: eirini-release-updated
       platform: linux
