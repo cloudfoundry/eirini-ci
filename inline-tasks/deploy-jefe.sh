@@ -11,6 +11,12 @@ cf auth admin "$cf_admin_password"
 cf create-org jefe || true
 cf create-space -o jefe jefe || true
 cf target -o jefe -s jefe
+cf enable-feature-flag diego_docker
 
-set -x
-./eirini-private-config/jefe/deploy.sh "$PWD/jefe"
+cf push jefe --no-start -o eirini/jefe
+cf set-env jefe JEFE_DSN $JEFE_DSN
+cf set-env jefe JEFE_GITHUB_CLIENT_ID $JEFE_GITHUB_CLIENT_ID
+cf set-env jefe JEFE_GITHUB_SECRET $JEFE_GITHUB_SECRET
+cf set-env jefe JEFE_GITHUB_O_AUTH_ORG $JEFE_O_AUTH_ORG
+cf set-env jefe JEFE_ADMIN_PASSWORD $JEFE_ADMIN_PASSWORD
+cf start jefe

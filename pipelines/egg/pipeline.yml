@@ -25,7 +25,7 @@ resources:
   type: git
   source:
     branch: master
-    uri: https://github.com/herrjulz/jefe
+    uri: https://github.com/eirini-forks/jefe
 - name: eirinidotcf
   icon: git
   type: git
@@ -33,6 +33,13 @@ resources:
     branch: master
     private_key: ((eirinidotcf-private-key))
     uri: git@github.com:eirini-forks/eirinidotcf
+- name: docker-jefe
+  type: docker-image
+  icon: docker
+  source:
+    repository: eirini/jefe
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
 - name: every-morning
   icon: alarm
   type: time
@@ -72,15 +79,25 @@ jobs:
           #!/bin/bash
           set -eoux pipefail
 
-          curl -X PUT -u admin:$JEFE_ADMIN_PASSWORD https://jefe.acceptance.eu-gb.containers.appdomain.cloud/envs/unclaim
+          curl -k -X PUT -u admin:$JEFE_ADMIN_PASSWORD https://jefe.apps.cf4k8s4a8e.ci-envs.eirini.cf-app.com/envs/unclaim
 
   on_failure: (( grab slack-notification.on_failure ))
+
+- name: build-jefe
+  plan:
+  - get: jefe
+    trigger: true
+  - put: docker-jefe
+    params:
+      build: jefe
 - name: deploy-jefe
   serial: true
   plan:
   - in_parallel:
-    - get: jefe
+    - get: docker-jefe
       trigger: true
+      passed:
+      - build-jefe
     - get: eirini-private-config
   - task: deploy
     config:
@@ -91,6 +108,8 @@ jobs:
           repository: eirini/ci
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
+      inputs:
+        - name: eirini-private-config
       run:
         path: bash
         args:
@@ -99,12 +118,9 @@ jobs:
       params:
         JEFE_GITHUB_CLIENT_ID: ((jefe-client-id))
         JEFE_GITHUB_SECRET: ((jefe-client-secret))
-        JEFE_DSN: jefeuser:((jefe-dbuser-pass))@tcp(sl-eu-gb-p05.dblayer.com:19522)
+        JEFE_DSN: jefeuser:((jefe-dbuser-pass))@tcp(((jefe-db-ip-address)):3306)
         JEFE_O_AUTH_ORG: eirini-forks
         JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
-      inputs:
-      - name: jefe
-      - name: eirini-private-config
   on_failure: (( grab slack-notification.on_failure ))
 - name: deploy-postfacto
   serial: true

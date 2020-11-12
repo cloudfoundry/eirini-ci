@@ -18,6 +18,7 @@ if ! flightattendant -target "$target"; then
   echo "not logged in to concourse - attempting to log in"
   fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
 fi
+jefe_db_ip_address="$(gcloud sql instances describe jefe-db --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')"
 
 fly -t "$target" \
   set-pipeline \
@@ -30,6 +31,7 @@ fly -t "$target" \
   --var gcp-zone="europe-west1-b" \
   --var gcp-region="europe-west1" \
   --var mysql-password="$(pass show eirini/mysql-admin-password)" \
+  --var jefe-db-ip-address="$jefe_db_ip_address" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
   --var eirinidotcf-private-key="$(pass eirini/github/eirinidotcf/ssh-key)" \
   --var jefe-client-id="$(pass eirini/jefe/client-id)" \
