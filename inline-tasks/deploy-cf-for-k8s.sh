@@ -8,7 +8,8 @@ extra_args=()
 deploy-cf() {
   if [[ "$USE_CERT_MANAGER" == "true" ]]; then
     extra_args=(
-      "-f ci-resources/cert-manager/custom-app-domain.yml"
+      "-f"
+      "ci-resources/cert-manager/custom-app-domain.yml"
     )
   fi
 
