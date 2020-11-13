@@ -12,7 +12,7 @@ groups:
   - release-lock-the-egg-police
   - "the-egg-police"
   - bump-cluster-k8s-version
-  name: all
+  name: main
 - jobs:
   - bump-cluster-k8s-version
   name: bump-cluster-k8s-version
