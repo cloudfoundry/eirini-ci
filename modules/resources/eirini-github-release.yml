@@ -1,5 +1,5 @@
 resources:
-- name: eirini-scf-release
+- name: eirini-github-release
   type: github-release
   icon: rocket
   source:

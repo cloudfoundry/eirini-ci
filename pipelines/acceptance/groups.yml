@@ -3,9 +3,6 @@ groups:
   - generate-cf-for-k8s-values
   - deploy-cf-for-k8s-cf4k8s4a8e
   - smoke-tests-cf4k8s4a8e
-  - deploy-scf-uaa-acceptance
-  - deploy-scf-eirini-acceptance
-  - run-smoke-tests-acceptance
   - cleanup-blobstore
   - bump-minor-version
   - bump-major-version
@@ -28,11 +25,6 @@ groups:
   - cleanup-blobstore
   name: cleanup-blobstore
 - jobs:
-  - deploy-scf-uaa-acceptance
-  - deploy-scf-eirini-acceptance
-  - run-smoke-tests-acceptance
-  name: deploy-acceptance
-- jobs:
   - "the-egg-police"
   name: egg
 - jobs:
@@ -46,9 +38,6 @@ groups:
   - publish-release
   name: publish-release
 - jobs:
-  - delete-cluster-acceptance
-  - create-cluster-acceptance
-  - prepare-cluster-acceptance
   - delete-cluster-cf4k8s4a8e
   - create-cluster-cf4k8s4a8e
   - generate-domain-certificates

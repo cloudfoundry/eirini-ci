@@ -27,11 +27,9 @@ jobs:
   - get: state
     resource: cluster-state
     passed:
-    - run-smoke-tests-acceptance
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release
     passed:
-    - run-smoke-tests-acceptance
     - "the-egg-police"
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
@@ -87,7 +85,7 @@ jobs:
       name: eirini-release-version/version
       tag: eirini-release-version/version
       tag_prefix: v
-    put: eirini-scf-release
+    put: eirini-github-release
   - params:
       repository: gh-pages-updated
     put: gh-pages-pr

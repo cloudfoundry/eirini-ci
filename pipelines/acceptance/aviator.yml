@@ -9,40 +9,21 @@ spruce:
       - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/cf-for-k8s-github-release.yml
-      - ../../modules/resources/cf-smoke-tests.yml
       - ../../modules/resources/ci-resources.yml
-      - ../../modules/resources/uaa-ready-event.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini.yml
       - ../../modules/resources/eirini-release-https.yml
+      - ../../modules/resources/eirini-github-release.yml
       - ../../modules/resources/eirini-release-version.yml
-      - ../../modules/resources/eirini-scf-github-release.yml
       - ../../modules/resources/every-30-seconds.yml
       - ../../modules/resources/gh-pages-pr.yml
       - ../../modules/resources/lock-the-egg-police.yml
-      - ../../modules/resources/scf-uaa-resources.yml
       - ../../modules/resources/sunday-morning.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
 
-- step: "merge acceptance cluster jobs"
-  base: {{groups-and-resources}}
-  prune:
-  - config
-  merge:
-  - with:
-      files:
-      - ./config.yml
-      - ./config-cluster-acceptance.yml
-      - ../../modules/resources/cluster-event-created.yml
-      - ../../modules/jobs/delete-ibm-cluster.yml
-      - ../../modules/jobs/create-ibm-cluster.yml
-      - ../../modules/jobs/prepare-ibm-cluster.yml
-      - ../../modules/jobs/slack-notification.yml
-  to: {{acceptance-cluster-jobs}}
-
 - step: "merge cf4k8s4a8e cluster jobs"
-  base: {{acceptance-cluster-jobs}}
+  base: {{groups-and-resources}}
   prune:
   - config
   merge:
@@ -66,9 +47,6 @@ spruce:
       files:
       - ./config.yml
       - ../../modules/jobs/slack-notification.yml
-      - ../../modules/jobs/deploy-scf-uaa.yml
-      - ../../modules/jobs/deploy-scf-eirini-acceptance.yml
-      - ../../modules/jobs/run-smoke-tests-acceptance.yml
       - ../../modules/jobs/publish-release.yml
       - ../../modules/jobs/cleanup-blobstore.yml
       - ../../modules/jobs/bump-major-version.yml
