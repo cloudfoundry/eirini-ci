@@ -6,8 +6,6 @@ jobs:
     params:
       include_source_tarball: true
     trigger: true
-  - get: eirini-release
-    trigger: true
   - get: cluster-state
   - get: ci-resources
   - get: (( concat "cluster-" config.cluster.name "-staging-event-created" ))

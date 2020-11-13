@@ -3,8 +3,6 @@ jobs:
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: eirini-release
-    passed:
-    - generate-cf-for-k8s-values
     trigger: true
   - get: cf-for-k8s-github-release
     params:
@@ -16,8 +14,6 @@ jobs:
     passed:
     - generate-cf-for-k8s-values
   - get: ci-resources
-    passed:
-    - generate-cf-for-k8s-values
   - task: download-kubeconfig
     params:
       CLUSTER_NAME: (( grab config.cluster.name ))
