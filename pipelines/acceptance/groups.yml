@@ -3,7 +3,6 @@ groups:
   - generate-cf-for-k8s-values
   - deploy-cf-for-k8s-cf4k8s4a8e
   - smoke-tests-cf4k8s4a8e
-  - cleanup-blobstore
   - bump-minor-version
   - bump-major-version
   - publish-release
@@ -17,9 +16,6 @@ groups:
   - deploy-cf-for-k8s-cf4k8s4a8e
   - smoke-tests-cf4k8s4a8e
   name: cf-for-k8s-cf4k8s4a8e
-- jobs:
-  - cleanup-blobstore
-  name: cleanup-blobstore
 - jobs:
   - bump-minor-version
   - bump-major-version

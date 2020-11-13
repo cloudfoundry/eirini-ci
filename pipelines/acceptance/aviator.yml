@@ -16,7 +16,6 @@ spruce:
       - ../../modules/resources/eirini-github-release.yml
       - ../../modules/resources/eirini-release-version.yml
       - ../../modules/resources/gh-pages-pr.yml
-      - ../../modules/resources/sunday-morning.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
 
@@ -46,7 +45,6 @@ spruce:
       - ./config.yml
       - ../../modules/jobs/slack-notification.yml
       - ../../modules/jobs/publish-release.yml
-      - ../../modules/jobs/cleanup-blobstore.yml
       - ../../modules/jobs/bump-major-version.yml
       - ../../modules/jobs/bump-minor-version.yml
       - ../../modules/jobs/generate-cf-for-k8s-values.yml
