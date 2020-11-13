@@ -23,7 +23,8 @@ jobs:
         - |
           set -euo pipefail
 
-          curl --fail https://retro.acceptance.eu-gb.containers.appdomain.cloud
+          curl --fail https://eirini.cf
+          curl --fail https://jefe.eirini.cf
         path: /usr/bin/env
     task: curl-egg
   serial: true
