@@ -2,8 +2,6 @@ jobs:
 - name: generate-cf-for-k8s-values
   plan:
   - get: cf-for-k8s-github-release
-  - get: eirini-release
-    trigger: false
 - name: (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   plan:
   - get: eirini-release
