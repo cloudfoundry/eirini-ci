@@ -70,6 +70,7 @@ spec:
   secretName: eirinidotcf-cert
   commonName: eirini.cf
   dnsNames:
+  - "*.eirini.cf"
   - eirini.cf
   issuerRef:
     name: letsencrypt

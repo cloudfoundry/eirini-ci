@@ -14,6 +14,8 @@ cf target -o jefe -s jefe
 cf enable-feature-flag diego_docker
 
 cf push jefe --no-start -o eirini/jefe
+cf share-private-domain jefe eirini.cf
+cf map-route jefe eirini.cf --hostname jefe
 cf set-env jefe JEFE_DSN $JEFE_DSN
 cf set-env jefe JEFE_GITHUB_CLIENT_ID $JEFE_GITHUB_CLIENT_ID
 cf set-env jefe JEFE_GITHUB_SECRET $JEFE_GITHUB_SECRET

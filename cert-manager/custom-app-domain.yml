@@ -8,6 +8,7 @@ spec:
   servers:
   #@overlay/append
   - hosts:
+    - #@ workloads_namespace() + '/*.eirini.cf'
     - #@ workloads_namespace() + '/eirini.cf'
     port:
       name: eirinidotcf
