@@ -15,9 +15,7 @@ spruce:
       - ../../modules/resources/eirini-release-https.yml
       - ../../modules/resources/eirini-github-release.yml
       - ../../modules/resources/eirini-release-version.yml
-      - ../../modules/resources/every-30-seconds.yml
       - ../../modules/resources/gh-pages-pr.yml
-      - ../../modules/resources/lock-the-egg-police.yml
       - ../../modules/resources/sunday-morning.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
@@ -51,10 +49,6 @@ spruce:
       - ../../modules/jobs/cleanup-blobstore.yml
       - ../../modules/jobs/bump-major-version.yml
       - ../../modules/jobs/bump-minor-version.yml
-      - ../../modules/jobs/the-egg-police.yml
-      - ../../modules/jobs/lock-the-egg-police.yml
-      - ../../modules/jobs/unlock-the-egg-police.yml
-      - ../../modules/jobs/release-lock-the-egg-police.yml
       - ../../modules/jobs/generate-cf-for-k8s-values.yml
       - ../../modules/jobs/deploy-cf-for-k8s.yml
       - ../../modules/jobs/smoke-tests-cf-for-k8s.yml

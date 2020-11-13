@@ -1,9 +1,0 @@
-resources:
-- name: lock-the-egg-police
-  type: pool
-  icon: lock
-  source:
-    branch: ci-locks
-    pool: the-egg-police
-    private_key: (( grab config.github.private-key ))
-    uri: git@github.com:cloudfoundry/eirini-private-config.git

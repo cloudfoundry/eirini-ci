@@ -30,7 +30,6 @@ jobs:
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release
     passed:
-    - "the-egg-police"
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
   - task: create-release

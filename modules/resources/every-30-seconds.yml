@@ -1,6 +1,0 @@
-resources:
-- name: every-30-seconds
-  type: time
-  icon: timer
-  source:
-    interval: 30s

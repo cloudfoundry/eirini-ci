@@ -7,10 +7,6 @@ groups:
   - bump-minor-version
   - bump-major-version
   - publish-release
-  - lock-the-egg-police
-  - unlock-the-egg-police
-  - release-lock-the-egg-police
-  - "the-egg-police"
   - bump-cluster-k8s-version
   name: main
 - jobs:
@@ -24,14 +20,6 @@ groups:
 - jobs:
   - cleanup-blobstore
   name: cleanup-blobstore
-- jobs:
-  - "the-egg-police"
-  name: egg
-- jobs:
-  - lock-the-egg-police
-  - unlock-the-egg-police
-  - release-lock-the-egg-police
-  name: lock-the-egg-police
 - jobs:
   - bump-minor-version
   - bump-major-version
