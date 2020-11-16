@@ -60,8 +60,8 @@ commit-message() {
 }
 
 for image in $IMAGES; do
-  update-digest "docker-${image}" "$image"
-  update-deployment-manifest "docker-${image}" "$image"
+  update-digest "${image}-image" "$image"
+  update-deployment-manifest "${image}-image" "$image"
 done
 
 commit-changes "$COMPONENT_NAME" "$COMPONENT_REPO"
