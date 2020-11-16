@@ -1,5 +1,5 @@
 jobs:
-- name: deploy-eirini-helm-chart-single-ns-((world-name))
+- name: deploy-eirini-helm-chart-((world-name))
   serial: true
   serial_groups:
   - ((world-name))
@@ -72,8 +72,8 @@ jobs:
       params:
         CLUSTER_NAME: (( grab config.cluster.name ))
         NATS_PASSWORD: (( grab config.cluster.nats-password ))
+        WIREMOCK_YAML: (( file "../../../eirini-release/helm/scripts/assets/wiremock.yml" ))
         KUBECONFIG: "kube/config"
-        USE_MULTI_NAMESPACE: "false"
       run:
         path: eirini-release/helm/scripts/helm-deploy-eirini.sh
   - task: verify-deployment

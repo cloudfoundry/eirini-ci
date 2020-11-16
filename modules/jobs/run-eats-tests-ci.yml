@@ -1,5 +1,5 @@
 jobs:
-- name: (( concat "run-eats-tests-single-ns-" config.cluster.name ))
+- name: (( concat "run-eats-tests-" config.cluster.name ))
   serial: true
   serial_groups:
   - (( grab config.cluster.name ))
@@ -9,11 +9,11 @@ jobs:
       steps:
       - get: eirini-release
         passed:
-        - deploy-eirini-helm-chart-single-ns-((world-name))
+        - deploy-eirini-helm-chart-((world-name))
         trigger: true
       - get: eirini
         passed:
-        - deploy-eirini-helm-chart-single-ns-((world-name))
+        - deploy-eirini-helm-chart-((world-name))
       - get: ci-resources
   - in_parallel:
       steps:
@@ -60,7 +60,6 @@ jobs:
             params:
                 EIRINIUSER_PASSWORD: (( grab config.dockerhub.password ))
                 KUBECONFIG: "kube/config"
-                USE_MULTI_NAMESPACE: "false"
             run:
               path: /usr/bin/env
               args:

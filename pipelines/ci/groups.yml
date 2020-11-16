@@ -5,14 +5,10 @@ groups:
   - run-integration-tests
   - create-go-docker-images
   - update-eirini-version-files
-  - deploy-eirini-helm-chart-single-ns-((world-name))
-  - deploy-eirini-helm-chart-multi-ns-((world-name))
-  - deploy-eirini-yamls-single-ns-((gcp-cluster-name))
-  - deploy-eirini-yamls-multi-ns-((gcp-cluster-name))
-  - run-eats-tests-single-ns-((world-name))
-  - run-eats-tests-multi-ns-((world-name))
-  - run-eats-tests-single-ns-((gcp-cluster-name))
-  - run-eats-tests-multi-ns-((gcp-cluster-name))
+  - deploy-eirini-helm-chart-((world-name))
+  - deploy-eirini-yamls-((gcp-cluster-name))
+  - run-eats-tests-((world-name))
+  - run-eats-tests-((gcp-cluster-name))
   - fast-forward-release
 
 - name: bumps

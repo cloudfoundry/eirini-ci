@@ -76,16 +76,12 @@ spruce:
       - ../../modules/jobs/update-fluentd-version-files.yml
       - ../../modules/jobs/update-secret-smuggler-version-files.yml
       - ../../modules/jobs/prepare-ibm-cluster.yml
-      - ../../modules/jobs/deploy-eirini-helm-chart-single-ns.yml
-      - ../../modules/jobs/deploy-eirini-helm-chart-multi-ns.yml
-      - ../../modules/jobs/run-eats-tests-single-ns-ci.yml
-      - ../../modules/jobs/run-eats-tests-multi-ns-ci.yml
+      - ../../modules/jobs/deploy-eirini-helm-chart.yml
+      - ../../modules/jobs/run-eats-tests-ci.yml
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
       - ../../modules/jobs/bump-go-modules-eirinifs.yml
-      - ../../modules/jobs/deploy-eirini-yamls-single-ns.yml
-      - ../../modules/jobs/run-eats-tests-single-ns.yml
-      - ../../modules/jobs/deploy-eirini-yamls-multi-ns.yml
-      - ../../modules/jobs/run-eats-tests-multi-ns.yml
+      - ../../modules/jobs/deploy-eirini-yamls.yml
+      - ../../modules/jobs/run-eats-tests.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML

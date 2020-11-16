@@ -1,5 +1,5 @@
 jobs:
-- name: (( concat "deploy-eirini-yamls-multi-ns-" config.gcp.cluster-name ))
+- name: (( concat "deploy-eirini-yamls-" config.gcp.cluster-name ))
   serial: true
   serial_groups:
   - (( grab config.gcp.cluster-name ))
@@ -8,10 +8,10 @@ jobs:
   - get: eirini-release
     trigger: true
     passed:
-    - ((  concat "run-eats-tests-single-ns-" config.gcp.cluster-name ))
+    - update-eirini-version-files
   - get: eirini
     passed:
-    - ((  concat "run-eats-tests-single-ns-" config.gcp.cluster-name ))
+    - update-eirini-version-files
   - get: ci-resources
   - task: download-kubeconfig
     params:
@@ -70,7 +70,6 @@ jobs:
       params:
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
-        USE_MULTI_NAMESPACE: true
       platform: linux
       run:
         path: eirini-release/deploy/scripts/deploy.sh
