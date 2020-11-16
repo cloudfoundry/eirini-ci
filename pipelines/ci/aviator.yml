@@ -16,7 +16,7 @@ spruce:
       - ../../modules/resources/eirini-resources.yml
       - ../../modules/resources/eirini-release.yml
       - ../../modules/resources/eirini-release-master.yml
-      - ../../modules/resources/eirini-master.yml
+      - ../../modules/resources/eirini.yml
       - ../../modules/resources/eirinifs.yml
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/golang-image.yml
@@ -69,12 +69,7 @@ spruce:
       - ../../modules/jobs/create-ibm-cluster.yml
       - ../../modules/jobs/run-tests.yml
       - ../../modules/jobs/create-go-docker-images.yml
-      - ../../modules/jobs/create-secret-smuggler-docker-image.yml
-      - ../../modules/jobs/run-fluentd-unit-tests.yml
-      - ../../modules/jobs/create-fluentd-docker-image.yml
       - ../../modules/jobs/update-eirini-version-files.yml
-      - ../../modules/jobs/update-fluentd-version-files.yml
-      - ../../modules/jobs/update-secret-smuggler-version-files.yml
       - ../../modules/jobs/prepare-ibm-cluster.yml
       - ../../modules/jobs/deploy-eirini-helm-chart.yml
       - ../../modules/jobs/run-eats-tests-ci.yml

@@ -7,14 +7,6 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: docker-fluentd
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/loggregator-fluentd
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
 - name: metrics-collector-image
   type: registry-image
   icon: docker
@@ -53,14 +45,6 @@ resources:
   icon: docker
   source:
     repository: eirini/route-statefulset-informer
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-
-- name: docker-secret-smuggler
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/secret-smuggler
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 

@@ -70,7 +70,7 @@ jobs:
           - sh
           - -c
           - (( file "../../inline-tasks/run-static-checks.sh" ))
-    - put: eirini-master
+    - put: eirini
       params:
         repository: repository-updated
 
