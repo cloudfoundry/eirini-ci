@@ -7,61 +7,69 @@ jobs:
         trigger: true
       - get: eirini
         passed:
-        - create-go-docker-images
+        - create-route-pod-informer-docker-image
+        - create-event-reporter-docker-image
+        - create-instance-index-env-injector-docker-image
+        - create-metrics-collector-docker-image
+        - create-route-statefulset-informer-docker-image
+        - create-eirini-controller-docker-image
+        - create-opi-docker-image
+        - create-route-collector-docker-image
+        - create-task-reporter-docker-image
         trigger: true
       - get: opi-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-opi-docker-image
         trigger: true
       - get: route-collector-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-route-collector-docker-image
         trigger: true
       - get: route-pod-informer-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-route-pod-informer-docker-image
         trigger: true
       - get: route-statefulset-informer-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-route-statefulset-informer-docker-image
         trigger: true
       - get: metrics-collector-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-metrics-collector-docker-image
         trigger: true
       - get: event-reporter-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-event-reporter-docker-image
         trigger: true
       - get: task-reporter-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-task-reporter-docker-image
         trigger: true
       - get: eirini-controller-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-eirini-controller-docker-image
         trigger: true
       - get: instance-index-env-injector-image
         params:
           skip_download: false
         passed:
-        - create-go-docker-images
+        - create-instance-index-env-injector-docker-image
         trigger: true
   - task: update-version-files
     config:

@@ -1,0 +1,22 @@
+make-docker-build-args:
+    task: make-docker-build-args
+    input_mapping:
+        repository: eirini
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+      inputs:
+      - name: repository
+      outputs:
+      - name: docker-build-args
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/make-docker-build-args.sh" ))

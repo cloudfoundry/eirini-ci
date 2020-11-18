@@ -3,7 +3,15 @@ groups:
   jobs:
   - run-tests
   - run-integration-tests
-  - create-go-docker-images
+  - create-route-pod-informer-docker-image
+  - create-event-reporter-docker-image
+  - create-instance-index-env-injector-docker-image
+  - create-metrics-collector-docker-image
+  - create-route-statefulset-informer-docker-image
+  - create-eirini-controller-docker-image
+  - create-opi-docker-image
+  - create-route-collector-docker-image
+  - create-task-reporter-docker-image
   - update-eirini-version-files
   - deploy-eirini-helm-chart-((world-name))
   - deploy-eirini-yamls-((gcp-cluster-name))
