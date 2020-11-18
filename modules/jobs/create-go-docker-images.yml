@@ -6,7 +6,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-opi
     privileged: true
     config:
@@ -17,14 +18,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/opi/Dockerfile
       run:
         path: build
@@ -39,7 +39,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-route-collector
     privileged: true
     config:
@@ -50,14 +51,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/route-collector/Dockerfile
       run:
         path: build
@@ -72,7 +72,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-route-pod-informer
     privileged: true
     config:
@@ -83,14 +84,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/route-pod-informer/Dockerfile
       run:
         path: build
@@ -106,7 +106,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-metrics-collector
     privileged: true
     config:
@@ -117,14 +118,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/metrics-collector/Dockerfile
       run:
         path: build
@@ -139,7 +139,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-event-reporter
     privileged: true
     config:
@@ -150,14 +151,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/event-reporter/Dockerfile
       run:
         path: build
@@ -172,7 +172,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-task-reporter
     privileged: true
     config:
@@ -183,14 +184,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/task-reporter/Dockerfile
       run:
         path: build
@@ -205,7 +205,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-route-statefulset-informer
     privileged: true
     config:
@@ -216,14 +217,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/route-statefulset-informer/Dockerfile
       run:
         path: build
@@ -238,7 +238,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-eirini-controller
     privileged: true
     config:
@@ -249,14 +250,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/eirini-controller/Dockerfile
       run:
         path: build
@@ -271,7 +271,8 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - (( grab make-docker-build-args ))
+  - load_var: git-sha
+    file: eirini/.git/ref
   - task: build-instance-index-env-injector
     privileged: true
     config:
@@ -282,14 +283,13 @@ jobs:
           repository: vito/oci-build-task
       inputs:
       - name: eirini
-      - name: docker-build-args
       outputs:
       - name: image
       caches:
       - path: cache
       params:
         CONTEXT: eirini
-        BUILD_ARGS_FILE: docker-build-args/args
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
         DOCKERFILE: eirini/docker/instance-index-env-injector/Dockerfile
       run:
         path: build

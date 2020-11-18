@@ -79,5 +79,4 @@ spruce:
       - ../../modules/jobs/deploy-eirini-yamls.yml
       - ../../modules/jobs/run-eats-tests.yml
       - ../../modules/jobs/slack-notification.yml
-      - ../../modules/jobs/make-docker-build-args.yml
   to: $PIPELINE_YML
