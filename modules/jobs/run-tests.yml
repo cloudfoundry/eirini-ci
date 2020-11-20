@@ -29,6 +29,8 @@ jobs:
               password: (( grab config.dockerhub.password ))
           inputs:
           - name: eirini
+          caches:
+          - path: /root/.cache/go-build
           run:
             path: /usr/bin/env
             args:
@@ -47,6 +49,8 @@ jobs:
               tag: latest
           inputs:
           - name: eirini
+          caches:
+          - path: /root/.cache/go-build
           run:
             path: /usr/bin/env
             args:
