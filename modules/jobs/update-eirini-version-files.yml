@@ -22,55 +22,46 @@ jobs:
           skip_download: false
         passed:
         - create-opi-docker-image
-        trigger: true
       - get: route-collector-image
         params:
           skip_download: false
         passed:
         - create-route-collector-docker-image
-        trigger: true
       - get: route-pod-informer-image
         params:
           skip_download: false
         passed:
         - create-route-pod-informer-docker-image
-        trigger: true
       - get: route-statefulset-informer-image
         params:
           skip_download: false
         passed:
         - create-route-statefulset-informer-docker-image
-        trigger: true
       - get: metrics-collector-image
         params:
           skip_download: false
         passed:
         - create-metrics-collector-docker-image
-        trigger: true
       - get: event-reporter-image
         params:
           skip_download: false
         passed:
         - create-event-reporter-docker-image
-        trigger: true
       - get: task-reporter-image
         params:
           skip_download: false
         passed:
         - create-task-reporter-docker-image
-        trigger: true
       - get: eirini-controller-image
         params:
           skip_download: false
         passed:
         - create-eirini-controller-docker-image
-        trigger: true
       - get: instance-index-env-injector-image
         params:
           skip_download: false
         passed:
         - create-instance-index-env-injector-docker-image
-        trigger: true
   - task: update-version-files
     config:
       container_limits: {}
