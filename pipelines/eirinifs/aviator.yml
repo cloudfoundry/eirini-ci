@@ -14,7 +14,6 @@ spruce:
       - ../../modules/resources/eirinifs-version.yml
       - ../../modules/resources/eirinifs-image.yml
       - ../../modules/resources/cflinuxfs3-release.yml
-      - ../../modules/resources/eirini-release.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"
@@ -28,6 +27,5 @@ spruce:
       - ../../modules/jobs/bump-cflinuxfs3.yml
       - ../../modules/jobs/run-eirinifs-integration-tests.yml
       - ../../modules/jobs/release-eirinifs.yml
-      - ../../modules/jobs/update-eirinifs-version-in-eirini-release.yml
       - ../../modules/jobs/slack-notification.yml
   to: $PIPELINE_YML
