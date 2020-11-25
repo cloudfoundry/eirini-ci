@@ -1,0 +1,8 @@
+config:
+  slack:
+    webhook: ((slack-webhook))
+  gcp:
+    service-account-json: ((gcp-service-account-json))
+  dockerhub:
+    user: ((dockerhub-user))
+    password: ((dockerhub-password))
