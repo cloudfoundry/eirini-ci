@@ -26,8 +26,8 @@ main() {
 
   while IFS= read -r line; do
     local disk_name zone
-    disk_name="$(echo $line | awk '{print $1}')"
-    zone="$(echo $line | awk '{print $2}')"
+    disk_name="$(echo "$line" | awk '{print $1}')"
+    zone="$(echo "$line" | awk '{print $2}')"
     delete-disk "$disk_name" "$zone"
   done < <(echo "${disks}")
 }
