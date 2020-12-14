@@ -107,6 +107,12 @@ resource "google_container_cluster" "cluster" {
   subnetwork = google_compute_subnetwork.subnetwork.name
   min_master_version = 1.16
 
+  # Enable Alias IPs to allow Windows Server networking.
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block  = "/14"
+    services_ipv4_cidr_block = "/20"
+  }
+
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
@@ -133,7 +139,6 @@ resource "google_container_cluster" "cluster" {
     cluster_ipv4_cidr_block  = ""
     services_ipv4_cidr_block = ""
   }
-
 }
 
 
@@ -201,6 +206,9 @@ resource "google_container_node_pool" "windows_pool" {
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
+
+  # The Linux node pool must be created before the Windows Server node pool.
+  depends_on = [google_container_node_pool.linux_pool]
 }
 
 resource "google_compute_address" "ingress_address" {
