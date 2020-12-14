@@ -137,7 +137,7 @@ resource "google_container_cluster" "cluster" {
 }
 
 resource "google_container_node_pool" "linux_pool" {
-  name       = var.name
+  name       = "${var.name}-linux"
   location   = var.zone
   cluster    = google_container_cluster.cluster.name
   management {
@@ -170,7 +170,7 @@ resource "google_container_node_pool" "linux_pool" {
 
 # Node pool of Windows Server machines.
 resource "google_container_node_pool" "windows_pool" {
-  name       = var.name
+  name       = "${var.name}-windows"
   location   = var.zone
   cluster    = google_container_cluster.cluster.name
 
