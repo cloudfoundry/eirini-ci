@@ -11,6 +11,7 @@ readonly world_name="${1:?}"
 readonly enable_redeploy="${2:-false}"
 readonly worker_count=${3:-"3"}
 readonly target="${4:-eirini}"
+readonly windows_pool="${5:-false}"
 
 pushd "$basedir"
 {
@@ -52,4 +53,5 @@ fly -t "$target" \
   --var worker_count="$worker_count" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
-  --var world-name="$world_name"
+  --var world-name="$world_name" \
+  --var windows-pool="$windows_pool"

@@ -12,6 +12,7 @@ config:
     admin-password: ((cluster-admin-password))
     uaa-admin-client-secret: ((uaa-admin-client-secret))
     nats-password: ((nats-password))
+    windows-pool: ((windows-pool))
   gcp:
     service-account-json: ((gcp-service-account-json))
     region: ((gcp-region))
