@@ -134,14 +134,7 @@ resource "google_container_cluster" "cluster" {
       disabled = false
     }
   }
-
-  ip_allocation_policy {
-    cluster_ipv4_cidr_block  = ""
-    services_ipv4_cidr_block = ""
-  }
 }
-
-
 
 resource "google_container_node_pool" "linux_pool" {
   name       = var.name
