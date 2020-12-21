@@ -52,6 +52,25 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/clean-up-cluster-config.sh" ))
+  - task: delete-disks
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: eirini/gcloud
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+      params:
+        GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+        CLUSTER_NAME: (( grab config.cluster.name ))
+      inputs:
+        - name: ci-resources
+      run:
+        path: bash
+        args:
+        - -c
+        - (( file "../../inline-tasks/delete-unused-gcp-disks.sh" ))
   - put: cluster-state
     params:
       merge: true

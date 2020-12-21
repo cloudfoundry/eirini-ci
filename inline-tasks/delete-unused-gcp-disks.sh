@@ -18,7 +18,8 @@ delete-disk() {
 
 main() {
   gcloud-login
-  disks=$(gcloud compute disks list --filter="-users:*" --format="csv[separator=' ',no-heading](name, location())")
+  echo "Deleting leftover disks for cluster $CLUSTER_NAME"
+  disks=$(gcloud compute disks list --filter="$CLUSTER_NAME" --format="csv[separator=' ',no-heading](name, location())")
   if [[ -z "$disks" ]]; then
     echo "Nothing to delete!"
     exit 0
