@@ -185,7 +185,7 @@ resource "google_container_node_pool" "windows_pool" {
   initial_node_count = var.node-count-per-zone
 
   node_config {
-    disk_size_gb = 200
+    disk_size_gb = 50
     disk_type = "pd-ssd"
     machine_type = var.node-machine-type
     image_type   = "WINDOWS_LTSC"
