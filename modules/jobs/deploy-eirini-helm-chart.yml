@@ -72,6 +72,7 @@ jobs:
         NATS_PASSWORD: (( grab config.cluster.nats-password ))
         WIREMOCK_YAML: (( file "../../../eirini-release/helm/scripts/assets/wiremock.yml" ))
         KUBECONFIG: "kube/config"
+        WIREMOCK_KEYSTORE_PASSWORD: (( grab config.wiremock.keystore-pass ))
       run:
         path: eirini-release/helm/scripts/helm-deploy-eirini.sh
   - task: verify-deployment

@@ -30,3 +30,5 @@ config:
   dockerhub:
     user: ((dockerhub-user))
     password: ((dockerhub-password))
+  wiremock:
+    keystore-pass: ((wiremock-keystore-pass))

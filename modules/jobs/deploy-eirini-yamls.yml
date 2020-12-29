@@ -68,6 +68,7 @@ jobs:
       params:
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+        WIREMOCK_KEYSTORE_PASSWORD: (( grab config.wiremock.keystore-pass ))
       platform: linux
       run:
         path: eirini-release/deploy/scripts/deploy.sh
