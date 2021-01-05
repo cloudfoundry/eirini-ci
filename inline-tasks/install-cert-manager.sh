@@ -9,15 +9,15 @@ install-cert-manager() {
     kubectl create namespace "$CERT_MANAGER_NAMESPACE"
   fi
 
-  helm repo add jetstack https://charts.jetstack.io
-  helm repo update
-  helm upgrade \
-    --install \
-    cert-manager \
-    jetstack/cert-manager \
-    --namespace "$CERT_MANAGER_NAMESPACE" \
-    --set installCRDs=true \
-    --wait
+  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.1.0/cert-manager.yaml
+
+  deployments="$(kubectl get deployments \
+    --namespace cert-manager \
+    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{ end }}')"
+
+  for dep in $deployments; do
+    kubectl rollout status deployment "$dep" --namespace cert-manager
+  done
 }
 
 configure-certs() {
@@ -89,6 +89,8 @@ wait-for-certs() {
     echo "Certs not generated. Attempt #$i..."
     sleep 10
   done
+  echo "Certs not generated after 60 attempts."
+  exit 1
 }
 
 main() {
