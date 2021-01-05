@@ -9,9 +9,6 @@ install-cert-manager() {
     kubectl create namespace "$CERT_MANAGER_NAMESPACE"
   fi
 
-  kubectl apply -f ci-resources/k8s-specs/tiller-service-account.yml
-  kubectl apply -f ci-resources/k8s-specs/restricted-psp.yaml
-  helm init --service-account tiller --upgrade --wait
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
   helm upgrade \
@@ -19,7 +16,6 @@ install-cert-manager() {
     cert-manager \
     jetstack/cert-manager \
     --namespace "$CERT_MANAGER_NAMESPACE" \
-    --version v1.0.4 \
     --set installCRDs=true \
     --wait
 }

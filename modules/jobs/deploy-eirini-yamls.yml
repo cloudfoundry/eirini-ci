@@ -57,7 +57,7 @@ jobs:
     config:
       image_resource:
         source:
-          repository: google/cloud-sdk
+          repository: eirini/gcloud
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
         type: docker-image
