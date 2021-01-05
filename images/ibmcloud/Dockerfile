@@ -26,7 +26,7 @@ RUN echo source /usr/local/ibmcloud/autocomplete/bash_autocomplete >> ~/.bashrc
 RUN curl https://storage.googleapis.com/kubernetes-release/release/$(curl --silent https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl > /usr/bin/kubectl && chmod +x /usr/bin/kubectl
 
 # helm
-RUN wget --quiet https://storage.googleapis.com/kubernetes-helm/helm-v2.17.0-linux-amd64.tar.gz && tar xfz helm-v2.17.0-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
+RUN wget --quiet https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz && tar xfz helm-v3.4.2-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
 
 # hub
 RUN wget --quiet https://github.com/github/hub/releases/download/v2.11.2/hub-linux-amd64-2.11.2.tgz && tar xfz hub-linux-amd64-2.11.2.tgz && mv hub-linux-amd64-2.11.2/bin/hub /usr/bin/hub && chmod +x /usr/bin/hub
