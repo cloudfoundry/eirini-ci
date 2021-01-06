@@ -35,25 +35,6 @@ jobs:
       IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
       IBMCLOUD_USER: (( grab config.ibmcloud.user ))
 
-  - task: configure-kubernetes
-    config:
-      image_resource:
-        source:
-          repository: eirini/ibmcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-        type: docker-image
-      inputs:
-      - name: ci-resources
-      - name: kube
-      platform: linux
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/prepare-cluster.sh" ))
-
   - task: get-ingress
     params:
       CLUSTER_NAME: (( grab config.cluster.name ))
