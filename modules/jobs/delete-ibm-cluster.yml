@@ -8,29 +8,6 @@ jobs:
     trigger: true
   - get: ci-resources
   - get: cluster-state
-  - task: purge-cluster-deployments
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ibmcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-      - name: ci-resources
-      params:
-        CLUSTER_NAME: (( grab config.cluster.name ))
-        IBMCLOUD_ACCOUNT: (( grab config.ibmcloud.account ))
-        IBMCLOUD_PASSWORD: (( grab config.ibmcloud.password ))
-        IBMCLOUD_USER: (( grab config.ibmcloud.user ))
-        IS_CF4K8S_DEPLOYMENT: "false"
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/purge-cluster-deployments.sh" ))
   - task: delete-kubernetes-cluster
     config:
       platform: linux
