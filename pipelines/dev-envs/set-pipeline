@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
 readonly target="${1:-eirini}"
 readonly worker_count=${2:-"3"}
-readonly dev_cluster_names=("okinawa" "lisbon" "barcelona" "velikotarnovo")
+readonly dev_cluster_names=("lisbon" "barcelona")
 pushd "$PROJECT_ROOT/pipelines/cf4k8s" || exit 1
 {
   for name in "${dev_cluster_names[@]}"; do
