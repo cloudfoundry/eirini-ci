@@ -39,7 +39,7 @@ jobs:
     config:
       image_resource:
         source:
-          repository: google/cloud-sdk
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
         type: docker-image
@@ -57,7 +57,7 @@ jobs:
     config:
       image_resource:
         source:
-          repository: eirini/gcloud
+          repository: relintdockerhubpushbot/cf-for-k8s-ci
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
         type: docker-image
