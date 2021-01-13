@@ -26,6 +26,12 @@ resources:
   source:
     branch: master
     uri: https://github.com/eirini-forks/jefe
+- name: pairup
+  icon: git
+  type: git
+  source:
+    branch: master
+    uri: https://github.com/eirini-forks/pairup
 - name: eirinidotcf
   icon: git
   type: git
@@ -253,4 +259,58 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/deploy-eirinidotcf.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))
+- name: deploy-pairup
+  serial: true
+  plan:
+    - in_parallel:
+        - get: ci-resources
+        - get: pairup
+          trigger: true
+        - get: eirini-private-config
+    - task: download-kubeconfig
+      params:
+        CLUSTER_NAME: cf4k8s4a8e
+        GCP_REGION: ((gcp-region))
+        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
+        GCP_ZONE: ((gcp-zone))
+      config:
+        image_resource:
+          source:
+            repository: google/cloud-sdk
+            username: (( grab config.dockerhub.user ))
+            password: (( grab config.dockerhub.password ))
+          type: docker-image
+        platform: linux
+        inputs:
+          - name: ci-resources
+        outputs:
+          - name: kube
+        run:
+          path: /usr/bin/env
+          args:
+            - bash
+            - -c
+            - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+    - task: deploy-web
+      params:
+        FIREBASE_CONF: ((firebase-conf))
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: eirini/ci
+            username: (( grab config.dockerhub.user ))
+            password: (( grab config.dockerhub.password ))
+        inputs:
+          - name: ci-resources
+          - name: pairup
+          - name: eirini-private-config
+        run:
+          path: /usr/bin/env
+          args:
+            - bash
+            - -c
+            - (( file "../../inline-tasks/deploy-pairup.sh" ))
   on_failure: (( grab slack-notification.on_failure ))
