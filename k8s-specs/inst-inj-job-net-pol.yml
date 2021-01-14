@@ -10,8 +10,6 @@ spec:
       job-name: instance-index-env-injector
   egress:
   - {}
-  ingress:
-  - {}
   policyTypes:
   - Ingress
   - Egress
