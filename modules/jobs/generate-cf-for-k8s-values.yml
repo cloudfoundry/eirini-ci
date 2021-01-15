@@ -109,10 +109,10 @@ jobs:
     params:
       CLUSTER_NAME: (( grab config.cluster.name ))
     task: aggregate-cf4k8s-values
-  - params:
+  - put: cluster-state
+    params:
       merge: true
       repository: state-modified
-    put: cluster-state
   public: true
   serial_groups:
   - (( grab config.cluster.name ))
