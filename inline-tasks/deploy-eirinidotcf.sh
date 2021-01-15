@@ -23,7 +23,7 @@ EOF
 yarn add -D eslint-plugin-vuetify
 yarn install
 yarn run build
-cf push eirinidotcf-web
+cf push eirinidotcf-web -c '/cnb/lifecycle/launcher nginx -p /workspace -c "/workspace/nginx.conf"'
 
 if ! cf domains | grep "^eirini.cf" >/dev/null 2>&1; then
   cf create-domain eirinidotcf eirini.cf
