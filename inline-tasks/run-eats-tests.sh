@@ -10,16 +10,10 @@ fi
 readonly WORKSPACE="$(readlink -f eirini)"
 
 export EIRINI_ADDRESS EIRINI_TLS_SECRET EIRINI_SYSTEM_NS EIRINI_WORKLOADS_NS
-EIRINI_ADDRESS="https://eirini-opi.cf.svc.cluster.local:8085"
 EIRINI_TLS_SECRET="eirini-certs"
-EIRINI_SYSTEM_NS="cf"
-EIRINI_WORKLOADS_NS="eirini"
-
-if [[ -n "$HELMLESS" ]]; then
-  EIRINI_ADDRESS="https://eirini-api.eirini-core.svc.cluster.local:8085"
-  EIRINI_SYSTEM_NS="eirini-core"
-  EIRINI_WORKLOADS_NS="eirini-workloads"
-fi
+EIRINI_ADDRESS="https://eirini-api.eirini-core.svc.cluster.local:8085"
+EIRINI_SYSTEM_NS="eirini-core"
+EIRINI_WORKLOADS_NS="eirini-workloads"
 
 service_name=telepresence-$(tr -dc 'a-z0-9' </dev/urandom | fold -w 8 | head -n 1)
 
