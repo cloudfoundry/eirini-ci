@@ -6,16 +6,9 @@ update-digest() {
   local image_path image_name
   image_path="$1"
   image_name="$2"
-  echo -n "$(cat "$image_path/digest")" >eirini-release/helm/eirini/versions/"$image_name"
-}
 
-update-deployment-manifest() {
-  local image_path image_name image_digest
-  image_path="$1"
-  image_name="$2"
-  image_digest="$(cat "$image_path/digest")"
-
-  find eirini-release/deploy -type f -exec sed -i -e "s|image: eirini/${image_name}.*$|image: eirini/${image_name}@${image_digest}|g" {} +
+  digest=$(cat "$image_path/digest")
+  sed -i -e "s|eirini/${image_name}@sha256:.*$|eirini/${image_name}@${digest}|g" eirini-release/helm/values.yaml
 }
 
 commit-changes() {
@@ -26,7 +19,7 @@ commit-changes() {
   pushd eirini-release || exit
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
-    git add helm/eirini/versions/
+    git add helm/values.yaml
     git --no-pager diff --staged
     git config --global user.email "eirini@cloudfoundry.org"
     git config --global user.name "Come-On Eirini"
@@ -61,7 +54,6 @@ commit-message() {
 
 for image in $IMAGES; do
   update-digest "${image}-image" "$image"
-  update-deployment-manifest "${image}-image" "$image"
 done
 
 commit-changes "$COMPONENT_NAME" "$COMPONENT_REPO"

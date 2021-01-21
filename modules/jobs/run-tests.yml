@@ -4,10 +4,6 @@ jobs:
   plan:
   - in_parallel:
       steps:
-      - get: cluster-((world-name))-staging-event-created
-        passed:
-        - create-cluster-((world-name))
-        trigger: true
       - get: eirini
         trigger: true
       - get: eirini-release

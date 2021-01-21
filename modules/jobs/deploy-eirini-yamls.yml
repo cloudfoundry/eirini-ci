@@ -52,7 +52,7 @@ jobs:
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
       platform: linux
       run:
-        path: eirini-release/deploy/scripts/cleanup.sh
+        path: eirini-release/scripts/cleanup.sh
   - task: deploy-eirini-yamls
     config:
       image_resource:
@@ -69,9 +69,10 @@ jobs:
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
         WIREMOCK_KEYSTORE_PASSWORD: (( grab config.wiremock.keystore-pass ))
+        NATS_PASSWORD: (( grab config.cluster.nats-password ))
       platform: linux
       run:
-        path: eirini-release/deploy/scripts/deploy.sh
+        path: eirini-release/scripts/deploy.sh
   public: true
   serial_groups:
   - (( grab config.gcp.cluster-name ))

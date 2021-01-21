@@ -13,9 +13,7 @@ groups:
   - create-route-collector-docker-image
   - create-task-reporter-docker-image
   - update-eirini-version-files
-  - deploy-eirini-helm-chart-((world-name))
   - deploy-eirini-yamls-((gcp-cluster-name))
-  - run-eats-tests-((world-name))
   - run-eats-tests-((gcp-cluster-name))
   - fast-forward-release
 
@@ -23,12 +21,6 @@ groups:
   jobs:
   - bump-go-modules-eirini
   - bump-go-modules-eirinifs
-
-- name: cluster-((world-name))
-  jobs:
-  - delete-cluster-((world-name))
-  - create-cluster-((world-name))
-  - prepare-cluster-((world-name))
 
 - name: gke-clusters
   jobs:

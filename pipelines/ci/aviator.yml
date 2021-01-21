@@ -65,14 +65,9 @@ spruce:
       files:
       - ./config.yml
       - ./config-cluster-ci.yml
-      - ../../modules/jobs/delete-ibm-cluster.yml
-      - ../../modules/jobs/create-ibm-cluster.yml
       - ../../modules/jobs/run-tests.yml
       - ../../modules/jobs/create-go-docker-images.yml
       - ../../modules/jobs/update-eirini-version-files.yml
-      - ../../modules/jobs/prepare-ibm-cluster.yml
-      - ../../modules/jobs/deploy-eirini-helm-chart.yml
-      - ../../modules/jobs/run-eats-tests-ci.yml
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
       - ../../modules/jobs/bump-go-modules-eirinifs.yml
