@@ -8,7 +8,7 @@ spruce:
       files:
       - ./config.yml
       - ../../modules/resources/slack.yml
-      - ../../modules/resources/cf-for-k8s-github-release.yml
+      - ../../modules/resources/cf-for-k8s-helmless.yml
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini-release-https.yml

@@ -1,0 +1,7 @@
+resources:
+- name: cf-for-k8s-helmless
+  type: git
+  icon: git
+  source:
+    branch: helmless-ci
+    uri: https://github.com/eirini-forks/cf-for-k8s.git

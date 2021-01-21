@@ -2,9 +2,7 @@ jobs:
 - name: generate-cf-for-k8s-values
   on_failure: (( grab slack-notification.on_failure ))
   plan:
-  - get: cf-for-k8s-github-release
-    params:
-      include_source_tarball: true
+  - get: cf-for-k8s-helmless
     trigger: true
   - get: cluster-state
   - get: ci-resources
@@ -45,7 +43,7 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
-      - name: cf-for-k8s-github-release
+      - name: cf-for-k8s-helmless
       - name: kube
       outputs:
       - name: default-values-file

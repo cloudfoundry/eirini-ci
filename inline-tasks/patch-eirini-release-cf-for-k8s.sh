@@ -2,12 +2,14 @@
 
 set -euo pipefail
 
-tar xzvf cf-for-k8s-github-release/source.tar.gz -C .
-sha="$(<cf-for-k8s-github-release/commit_sha)"
-src_folder="cloudfoundry-cf-for-k8s-${sha:0:7}"
+src_folder="cf-for-k8s-helmless"
+render_dir="$(mktemp -d)"
+trap "rm -rf $render_dir" EXIT
 
 rm -rf "$src_folder/build/eirini/_vendir/eirini"
-eirini-release/scripts/render-templates.sh cf-system "$src_folder/build/eirini/_vendir/eirini"
+
+eirini-release/scripts/render-templates.sh cf-system "$render_dir" --values eirini-release/scripts/assets/cf4k8s-value-overrides.yml
+mv "${render_dir}/templates" "$src_folder/build/eirini/_vendir/eirini"
 
 ./"$src_folder"/build/eirini/build.sh
 

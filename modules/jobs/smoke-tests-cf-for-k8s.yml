@@ -2,7 +2,7 @@ jobs:
 - name: (( concat "smoke-tests-" config.cluster.name ))
   on_failure: (( grab slack-notification.on_failure ))
   plan:
-  - get: cf-for-k8s-github-release
+  - get: cf-for-k8s-helmless
     params:
       include_source_tarball: true
     passed:
@@ -47,7 +47,7 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
-      - name: cf-for-k8s-github-release
+      - name: cf-for-k8s-helmless
       - name: smoke-tests-env-vars
       params:
         SMOKE_TEST_SKIP_SSL: "true"

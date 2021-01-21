@@ -4,9 +4,7 @@ jobs:
   plan:
   - get: eirini-release
     trigger: true
-  - get: cf-for-k8s-github-release
-    params:
-      include_source_tarball: true
+  - get: cf-for-k8s-helmless
     passed:
     - generate-cf-for-k8s-values
     trigger: true
@@ -67,7 +65,7 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
-      - name: cf-for-k8s-github-release
+      - name: cf-for-k8s-helmless
       - name: eirini-release
       outputs:
       - name: patched-cf-for-k8s
