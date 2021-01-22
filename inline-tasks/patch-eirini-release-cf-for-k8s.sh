@@ -4,6 +4,7 @@ set -euo pipefail
 
 src_folder="cf-for-k8s-helmless"
 render_dir="$(mktemp -d)"
+# shellcheck disable=SC2064
 trap "rm -rf $render_dir" EXIT
 
 rm -rf "$src_folder/build/eirini/_vendir/eirini"
