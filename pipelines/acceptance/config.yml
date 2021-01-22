@@ -25,6 +25,7 @@ config:
     user: ((ibmcloud-user))
     password: ((ibmcloud-password))
   eirini:
+    branch: ((eirini-branch))
     repo-key: ((eirini-repo-key))
   eirini-ci:
     branch: ((ci-resources-branch))

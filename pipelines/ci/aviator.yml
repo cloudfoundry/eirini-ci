@@ -9,7 +9,6 @@ spruce:
       - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
-      - ../../modules/resources/cluster-ci-event-created.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/delete-timer.yml
       - ../../modules/resources/eirini-docker-resources.yml
