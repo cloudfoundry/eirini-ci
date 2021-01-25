@@ -6,26 +6,26 @@ IFS=$'\n\t'
 # shellcheck disable=SC1091
 readonly VERSION_FILE="eirini-release-version/version"
 readonly VERSION=$(cat "$VERSION_FILE")
+readonly RENDER_DIR=$(mktemp -d)
+
+# shellcheck disable=SC2064
+trap "rm -r $RENDER_DIR" EXIT
 
 main() {
-  update-chart-version
-  zip-templates
+  generate-eirini-yamls
+  zip-eirini-yamls
 }
 
-update-chart-version() {
-  goml set -f eirini-release/helm/eirini/Chart.yaml -p version -v "$VERSION"
+generate-eirini-yamls() {
+  eirini-release/scripts/render-templates.sh cf-system "$RENDER_DIR/eirini"
 }
 
-zip-templates() {
-  pushd eirini-release/helm
+zip-eirini-yamls() {
+  pushd "$RENDER_DIR"
   tar -zcvf "eirini.tgz" eirini
   popd
 
-  mv eirini-release/helm/*.tgz release-output
-
-  pushd eirini-release
-  tar -zcvf ../release-output-yaml/eirini-yaml.tgz deploy
-  popd
+  mv $RENDER_DIR/*.tgz release-output
 }
 
 main

@@ -3,27 +3,6 @@ jobs:
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: ci-resources
-  - get: gh-pages-pr
-  - task: check-for-pending-release
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ibmcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-      - name: ci-resources
-      - name: gh-pages-pr
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/check-for-pending-release.sh" ))
-    params:
-      GITHUB_TOKEN: (( grab config.github.access-token ))
   - get: state
     resource: cluster-state
     passed:
@@ -55,59 +34,14 @@ jobs:
         - bash
         - -c
         - (( file "../../inline-tasks/create-release.sh" ))
-  - task: update-helm-repo
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ibmcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-      - name: ci-resources
-      - name: release-output
-      - name: eirini-release-version
-      - name: gh-pages-pr
-      outputs:
-      - name: gh-pages-updated
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/update-helm-repo.sh" ))
-  - params:
+  - get: eirini
+  - put: eirini-github-release
+    params:
       globs:
       - release-output/eirini*.tgz
-      - release-output-yaml/*.tgz
       name: eirini-release-version/version
       tag: eirini-release-version/version
       tag_prefix: v
-    put: eirini-github-release
-  - params:
-      repository: gh-pages-updated
-    put: gh-pages-pr
-  - task: create-github-pr
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ibmcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-      - name: ci-resources
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/create-github-pr.sh" ))
-    params:
-      GITHUB_TOKEN: (( grab config.github.access-token ))
-  - get: eirini
   - task: checkout-eirini-sha
     config:
       platform: linux
@@ -119,26 +53,19 @@ jobs:
           password: (( grab config.dockerhub.password ))
       inputs:
       - name: eirini-release
-      - name: repository
+      - name: eirini
       - name: ci-resources
       outputs:
-      - name: repository-modified
+      - name: eirini-stable
       run:
         path: /usr/bin/env
         args:
         - bash
         - -c
         - (( file "../../inline-tasks/checkout-sha-by-image.sh" ))
-    input_mapping:
-      repository: eirini
-    output_mapping:
-      repository-modified: eirini-modified
-    params:
-      IMAGE_NAME: eirini/opi
-      VERSION_FILE: opi
     privileged: true
-  - params:
+  - put: eirini
+    params:
       only_tag: true
-      repository: eirini-modified
+      repository: eirini-stable
       tag: eirini-release-version/version
-    put: eirini

@@ -15,7 +15,6 @@ spruce:
       - ../../modules/resources/eirini-release-https.yml
       - ../../modules/resources/eirini-github-release.yml
       - ../../modules/resources/eirini-release-version.yml
-      - ../../modules/resources/gh-pages-pr.yml
       - ../../modules/resources/slack-resource-type.yml
   to: {{groups-and-resources}}
 
