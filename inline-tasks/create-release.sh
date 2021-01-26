@@ -4,8 +4,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck disable=SC1091
-readonly VERSION_FILE="eirini-release-version/version"
-readonly VERSION=$(cat "$VERSION_FILE")
 readonly RENDER_DIR=$(mktemp -d)
 
 # shellcheck disable=SC2064
@@ -25,7 +23,7 @@ zip-eirini-yamls() {
   tar -zcvf "eirini.tgz" eirini
   popd
 
-  mv $RENDER_DIR/*.tgz release-output
+  mv "$RENDER_DIR/*.tgz" release-output
 }
 
 main
