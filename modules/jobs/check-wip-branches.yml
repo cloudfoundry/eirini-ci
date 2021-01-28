@@ -2,10 +2,8 @@ jobs:
 - name: check-wip-branches
   public: true
   plan:
-  - in_parallel:
-      steps:
-      # - get: every-morning
-      #   trigger: true
+  - get: every-morning
+    trigger: true
   - task: check-wip-branches
     config:
       image_resource:
