@@ -1,0 +1,7 @@
+resources:
+- name: every-morning
+  icon: alarm
+  type: time
+  source:
+    start: 5:00 AM
+    stop: 6:00 AM

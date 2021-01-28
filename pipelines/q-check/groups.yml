@@ -1,5 +1,6 @@
 groups:
-- name: ci-check-shell
+- name: checkers
   jobs:
   - check-shell
   - format-shell
+  - check-wip-branches

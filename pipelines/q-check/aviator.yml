@@ -10,6 +10,7 @@ spruce:
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/slack-resource-type.yml
+      # - ../../modules/resources/morning-timer.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"
@@ -23,5 +24,6 @@ spruce:
       - ../../modules/jobs/slack-notification.yml
       - ../../modules/jobs/check-shell.yml
       - ../../modules/jobs/format-shell.yml
+      - ../../modules/jobs/check-wip-branches.yml
 
   to: $PIPELINE_YML

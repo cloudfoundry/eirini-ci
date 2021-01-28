@@ -1,0 +1,24 @@
+jobs:
+- name: check-wip-branches
+  public: true
+  plan:
+  - in_parallel:
+      steps:
+      # - get: every-morning
+      #   trigger: true
+  - task: check-wip-branches
+    config:
+      image_resource:
+        source:
+          repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+        type: docker-image
+      platform: linux
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/check-wip-branches.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

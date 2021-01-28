@@ -23,12 +23,16 @@ fi
 fly --target "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
-  --pipeline check-shell \
+  --pipeline q-check \
   --var ci-resources-branch="master" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
+  --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
+  --var eirini-branch="master" \
+  --var eirini-release-branch="develop" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"
 
 fly --target "$target" \
   expose-pipeline \
-  --pipeline check-shell
+  --pipeline q-check
