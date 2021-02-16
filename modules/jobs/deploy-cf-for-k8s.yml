@@ -12,6 +12,7 @@ jobs:
     passed:
     - generate-cf-for-k8s-values
   - get: ci-resources
+  - get: cf-k8s-prometheus
   - task: download-kubeconfig
     params:
       CLUSTER_NAME: (( grab config.cluster.name ))
@@ -87,6 +88,7 @@ jobs:
         type: docker-image
       inputs:
       - name: patched-cf-for-k8s
+      - name: cf-k8s-prometheus
       - name: ci-resources
       - name: cluster-state
       - name: kube
