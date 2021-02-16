@@ -42,7 +42,7 @@ jobs:
       container_limits: {}
       image_resource:
         source:
-          repository: relintdockerhubpushbot/cf-for-k8s-ci
+          repository: cloudfoundry/cf-for-k8s-ci
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
         type: docker-image
