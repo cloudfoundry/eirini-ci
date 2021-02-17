@@ -1,21 +1,21 @@
 jobs:
 - name: generate-cf-for-k8s-values
   plan:
-  - get: cf-for-k8s-helmless
+  - get: cf-for-k8s-prs
 - name: (( concat "deploy-cf-for-k8s-" config.cluster.name ))
   plan:
   - get: eirini-release
     passed:
     - (( replace ))
     trigger: false
-  - get: cf-for-k8s-helmless
+  - get: cf-for-k8s-prs
   - get: cluster-state
     passed:
     - generate-cf-for-k8s-values
     trigger: true
 - name: (( concat "smoke-tests-" config.cluster.name ))
   plan:
-  - get: cf-for-k8s-helmless
+  - get: cf-for-k8s-prs
   - get: cluster-state
     passed:
     - (( concat "deploy-cf-for-k8s-" config.cluster.name ))

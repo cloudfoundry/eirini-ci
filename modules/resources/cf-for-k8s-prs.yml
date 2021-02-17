@@ -1,7 +1,7 @@
 resources:
-- name: cf-for-k8s-helmless
+- name: cf-for-k8s-prs
   type: git
   icon: git
   source:
-    branch: helmless-ci
+    branch: pending-prs
     uri: https://github.com/eirini-forks/cf-for-k8s.git
