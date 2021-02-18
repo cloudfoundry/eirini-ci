@@ -11,6 +11,7 @@ jobs:
         trigger: true
         passed:
           - run-tests
+      - get: eirini-release
       - get: ci-resources
   - in_parallel:
       steps:
@@ -39,6 +40,27 @@ jobs:
                 - bash
                 - -c
                 - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+        - task: apply-eirini-crds
+          config:
+            image_resource:
+              source:
+                repository: cloudfoundry/cf-for-k8s-ci
+                username: (( grab config.dockerhub.user ))
+                password: (( grab config.dockerhub.password ))
+              type: docker-image
+            inputs:
+            - name: eirini-release
+            - name: kube
+            params:
+              KUBECONFIG: "kube/config"
+              GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+            platform: linux
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/apply-eirini-crds.sh" ))
         - task: run-integration-tests
           privileged: true
           config:
