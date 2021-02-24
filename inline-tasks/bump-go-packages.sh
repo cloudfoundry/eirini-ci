@@ -19,7 +19,6 @@ commit() {
 }
 
 bump() {
-  go get github.com/maxbrunsfeld/counterfeiter
   pushd repository
   go get -t -u ./...
   go mod tidy
