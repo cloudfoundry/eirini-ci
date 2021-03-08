@@ -12,10 +12,6 @@ config:
     region: ((gcp-region))
     zone: ((gcp-zone))
     cluster-name: ((gcp-cluster-name))
-  ibmcloud:
-    account: ((ibmcloud-account))
-    user: ((ibmcloud-user))
-    password: ((ibmcloud-password))
   eirini:
     repo-key: ((eirini-repo-key))
     branch: ((eirini-branch))

@@ -29,9 +29,6 @@ fly --target "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
   --pipeline "$world_name" \
-  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
-  --var ibmcloud-user=eirini@cloudfoundry.org \
-  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var world-name="$world_name" \
   --var gcp-cluster-name="$plain_yaml_gcp_cluster_name" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \

@@ -6,11 +6,11 @@ IFS=$'\n\t'
 readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
 
 main() {
-  remove-scf-values
+  remove-cluster-values
   copy-output
 }
 
-remove-scf-values() {
+remove-cluster-values() {
   pushd cluster-state
   rm -rf "$CLUSTER_DIR"
   popd
@@ -23,7 +23,7 @@ copy-output() {
     git add "$CLUSTER_DIR"
     git config --global user.email "eirini@cloudfoundry.org"
     git config --global user.name "Come-On Eirini"
-    git commit --all --message "Delete scf values file for cluster: $CLUSTER_NAME"
+    git commit --all --message "Delete values file for cluster: $CLUSTER_NAME"
   else
     echo "Repo is clean"
   fi

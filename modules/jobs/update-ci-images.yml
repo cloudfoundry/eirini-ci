@@ -23,18 +23,6 @@ jobs:
     params:
       build: telepresence-image-source/images/telepresence
 
-- name: update-ibmcloud-image
-  on_failure: (( grab slack-notification.on_failure ))
-  plan:
-  - get: ibmcloud-image-source
-    trigger: true
-  - put: ibmcloud-image
-    get_params:
-      skip_download: true
-    params:
-      build: ibmcloud-image-source/images/ibmcloud
-
-
 - name: update-gcloud-image
   on_failure: (( grab slack-notification.on_failure ))
   plan:

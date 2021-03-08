@@ -6,11 +6,7 @@ groups:
   - bump-minor-version
   - bump-major-version
   - publish-release
-  - bump-cluster-k8s-version
   name: main
-- jobs:
-  - bump-cluster-k8s-version
-  name: bump-cluster-k8s-version
 - jobs:
   - generate-cf-for-k8s-values
   - deploy-cf-for-k8s-cf4k8s4a8e

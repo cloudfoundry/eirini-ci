@@ -1,6 +1,0 @@
-persistence:
-  storageClassName: ibmc-block-gold
-ingress:
-  annotations:
-    ingress.bluemix.net/client-max-body-size: size=100m
-    ingress.bluemix.net/redirect-to-https: "True"

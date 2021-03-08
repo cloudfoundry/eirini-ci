@@ -25,9 +25,6 @@ fly -t "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
   --pipeline "acceptance" \
-  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
-  --var ibmcloud-user=eirini@cloudfoundry.org \
-  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var ci-resources-branch="master" \
   --var eirini-release-branch="master" \
   --var eirini-branch="master" \

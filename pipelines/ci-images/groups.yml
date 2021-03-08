@@ -3,5 +3,4 @@ groups:
   jobs:
   - update-ci-image
   - update-telepresence-image
-  - update-ibmcloud-image
   - update-gcloud-image

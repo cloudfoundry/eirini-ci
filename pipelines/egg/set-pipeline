@@ -24,9 +24,6 @@ fly -t "$target" \
   set-pipeline \
   --config "$PIPELINE_YML" \
   --pipeline egg \
-  --var ibmcloud-account=7e51fbb83371a0cb0fd553fab15aebf4 \
-  --var ibmcloud-user=eirini@cloudfoundry.org \
-  --var ibmcloud-password="$(pass show eirini/ibm-id)" \
   --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --var gcp-zone="europe-west1-b" \
   --var gcp-region="europe-west1" \
