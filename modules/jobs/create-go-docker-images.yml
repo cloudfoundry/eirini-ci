@@ -328,4 +328,4 @@ jobs:
         path: build
     output_mapping: {image: migration-image}
   - put: migration-image
-    params: {image: migration/image.tar}
+    params: {image: migration-image/image.tar}
