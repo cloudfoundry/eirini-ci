@@ -12,6 +12,7 @@ groups:
   - create-opi-docker-image
   - create-route-collector-docker-image
   - create-task-reporter-docker-image
+  - create-migration-docker-image
   - update-eirini-version-files
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))

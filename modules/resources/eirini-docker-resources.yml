@@ -80,3 +80,12 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
     tag: latest
+
+- name: migration-image
+  type: registry-image
+  icon: docker
+  source:
+    repository: eirini/migration
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
+    tag: latest
