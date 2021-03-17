@@ -1,0 +1,11 @@
+config:
+  slack:
+    webhook: ((slack-webhook))
+  eirini-ci:
+    branch: ((ci-resources-branch))
+  dockerhub:
+    user: ((dockerhub-user))
+    password: ((dockerhub-password))
+  github:
+    access-token: ((github-access-token))
+    private-key: ((github-private-key))

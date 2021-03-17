@@ -1,0 +1,4 @@
+groups:
+- name: pending-prs
+  jobs:
+  - update-pending-prs

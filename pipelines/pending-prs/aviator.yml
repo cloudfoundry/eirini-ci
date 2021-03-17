@@ -1,0 +1,27 @@
+spruce:
+- step: "merge resources with groups"
+  base: groups.yml
+  prune:
+  - config
+  merge:
+  - with:
+      files:
+      - ./config.yml
+      - ../../modules/resources/slack.yml
+      - ../../modules/resources/slack-resource-type.yml
+      - ../../modules/resources/cf-for-k8s-prs.yml
+      - ../../modules/resources/cf-for-k8s-prs-to-merge.yml
+  to: {{groups-and-resources}}
+
+- step: "merge groups and resources with jobs"
+  base: {{groups-and-resources}}
+  prune:
+  - slack-notification
+  merge:
+  - with:
+      files:
+      - ./config.yml
+      - ../../modules/jobs/slack-notification.yml
+      - ../../modules/jobs/update-pending-prs.yml
+
+  to: $PIPELINE_YML

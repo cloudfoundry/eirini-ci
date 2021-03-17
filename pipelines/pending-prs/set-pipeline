@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+target="${1:-eirini}"
+
+PIPELINE_YML=$(mktemp)
+export PIPELINE_YML
+
+pushd "$script_dir"
+{
+  aviator
+}
+popd
+
+if ! flightattendant -target "$target"; then
+  echo "not logged in to concourse - attempting to log in"
+  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+fi
+
+fly -t "${target}" \
+  set-pipeline \
+  -p pending-prs \
+  -c "$PIPELINE_YML" \
+  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
+  --var dockerhub-user=eiriniuser \
+  --var dockerhub-password="$(pass eirini/docker-hub)" \
+  --var ci-resources-branch="master" \
+  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
