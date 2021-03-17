@@ -56,3 +56,9 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
 RUN curl -sLo yq https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 \
   && sudo install yq /usr/bin/ \
   && rm -f yq
+
+# gh cli
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
+  && apt-add-repository https://cli.github.com/packages \
+  && apt update \
+  && apt install gh
