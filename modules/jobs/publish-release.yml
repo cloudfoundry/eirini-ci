@@ -35,6 +35,12 @@ jobs:
         - -c
         - (( file "../../inline-tasks/create-release.sh" ))
   - get: eirini
+  - put: eirini-release
+    params:
+      only_tag: true
+      repository: eirini-release
+      tag: eirini-release-version/version
+      tag_prefix: v
   - put: eirini-github-release
     params:
       globs:
