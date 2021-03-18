@@ -62,3 +62,6 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
   && apt-add-repository https://cli.github.com/packages \
   && apt update \
   && apt install gh
+
+# helm
+RUN wget --quiet https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz && tar xfz helm-v3.5.3-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
