@@ -23,7 +23,7 @@ fly -t "${target}" \
   set-pipeline \
   -p pending-prs \
   -c "$PIPELINE_YML" \
-  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
+  --var github-private-key="$(pass eirini/github/eirini-forks/cf-for-k8s/ssh-key)" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var dockerhub-user=eiriniuser \
   --var dockerhub-password="$(pass eirini/docker-hub)" \

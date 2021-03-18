@@ -4,4 +4,5 @@ resources:
   icon: git
   source:
     branch: pending-prs
-    uri: https://github.com/eirini-forks/cf-for-k8s.git
+    private_key: (( grab config.github.private-key ))
+    uri: git@github.com:eirini-forks/cf-for-k8s.git

@@ -14,13 +14,21 @@ trust_github() {
   ssh-keyscan -H github.com >>"$HOME/.ssh/known_hosts"
 }
 
+configure_git() {
+  git config --global user.email "eirini@cloudfoundry.org"
+  git config --global user.name "Come-On Eirini"
+}
+
 main() {
   local prs
 
+  # shellcheck disable=SC2010
   prs=$(ls | grep -E 'pr-[0-9]+' | sed s/pr-//g)
 
   trust_github
-  gh repo clone git@github.com:cloudfoundry/cf-for-k8s.git combined-prs
+  configure_git
+
+  gh repo clone https://github.com/cloudfoundry/cf-for-k8s.git combined-prs
 
   pushd combined-prs
   {
@@ -31,7 +39,7 @@ main() {
         # If git fails to apply the PR diff with a 3 way merge we assume that the currently
         # applied change is what we want. This should normally be correct as PRs are applied
         # in chronological order
-        git co . --theirs
+        git checkout . --theirs
       fi
 
       git add .
