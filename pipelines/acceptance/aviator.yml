@@ -13,7 +13,7 @@ spruce:
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/eirini.yml
-      - ../../modules/resources/eirini-release-https.yml
+      - ../../modules/resources/eirini-release.yml
       - ../../modules/resources/eirini-github-release.yml
       - ../../modules/resources/eirini-release-version.yml
       - ../../modules/resources/slack-resource-type.yml

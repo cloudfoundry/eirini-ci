@@ -23,7 +23,7 @@ zip-eirini-yamls() {
   tar -zcvf "eirini.tgz" eirini
   popd
 
-  mv "$RENDER_DIR/*.tgz" release-output
+  mv "$RENDER_DIR/eirini.tgz" release-output
 }
 
 main
