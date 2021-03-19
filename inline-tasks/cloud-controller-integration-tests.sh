@@ -11,7 +11,7 @@ export KUBECONFIG=${PWD}/kube/config
 export CF_RUN_EIRINI_SPECS=true
 export PGPASSWORD=password
 export KUBE_CLUSTER_NAME
-KUBE_CLUSTER_NAME="$(awk '/current-context:/ { print $2 }' $KUBECONFIG)"
+KUBE_CLUSTER_NAME="$(awk '/current-context:/ { print $2 }' "$KUBECONFIG")"
 
 # The ruby kubeclient supports GOOGLE_APPLICATION_CREDENTIALS, but needs to
 # have an empty config object in the auth_provider of the kubeconfig file
