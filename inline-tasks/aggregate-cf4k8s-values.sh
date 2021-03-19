@@ -33,16 +33,16 @@ aggregate-files() {
 # should also not be rotated.
 preserve_deployed_passwords() {
   local blobstore_key ccdb_password ccdb_encryption_key uaa_password
-  blobstore_key="$(yq read "${CLUSTER_DIR}/default-values.yml" blobstore.secret_access_key)"
-  ccdb_password="$(yq read "${CLUSTER_DIR}/default-values.yml" capi.database.password)"
-  ccdb_encryption_key="$(yq read "${CLUSTER_DIR}/default-values.yml" capi.database.encryption_key)"
-  uaa_password="$(yq read "${CLUSTER_DIR}/default-values.yml" uaa.database.password)"
+  blobstore_key="$(yq eval '.blobstore.secret_access_key' "${CLUSTER_DIR}/default-values.yml")"
+  ccdb_password="$(yq eval '.capi.database.password' "${CLUSTER_DIR}/default-values.yml")"
+  ccdb_encryption_key="$(yq eval '.capi.database.encryption_key' "${CLUSTER_DIR}/default-values.yml")"
+  uaa_password="$(yq eval '.uaa.database.password' "${CLUSTER_DIR}/default-values.yml")"
 
   local blobstore_key_old ccdb_password_old ccdb_encryption_key_old uaa_password_old
-  blobstore_key_old="$(yq read default-values-file/values.yml blobstore.secret_access_key)"
-  ccdb_password_old="$(yq read default-values-file/values.yml capi.database.password)"
-  ccdb_encryption_key_old="$(yq read default-values-file/values.yml capi.database.encryption_key)"
-  uaa_password_old="$(yq read default-values-file/values.yml uaa.database.password)"
+  blobstore_key_old="$(yq eval '.blobstore.secret_access_key' default-values-file/values.yml)"
+  ccdb_password_old="$(yq eval '.capi.database.password' default-values-file/values.yml)"
+  ccdb_encryption_key_old="$(yq eval '.capi.database.encryption_key' default-values-file/values.yml)"
+  uaa_password_old="$(yq eval '.uaa.database.password' default-values-file/values.yml)"
 
   sed -i "s/$blobstore_key_old/$blobstore_key/g" default-values-file/values.yml
   sed -i "s/$ccdb_password_old/$ccdb_password/g" default-values-file/values.yml

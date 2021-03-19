@@ -40,7 +40,7 @@ get_image_config() {
     "https://registry-1.docker.io/v2/$image/blobs/$digest"
 }
 
-latest_stable_image_sha=$(yq read eirini-release/helm/values.yaml images.api | grep -o "sha256.*")
+latest_stable_image_sha=$(yq eval '.images.api' eirini-release/helm/values.yaml | grep -o "sha256.*")
 latest_stable_commit_sha=$(get_image_config eirini/opi "$latest_stable_image_sha" | jq -r '.config.Labels["org.opencontainers.image.revision"]')
 
 git -C eirini checkout "$latest_stable_commit_sha"

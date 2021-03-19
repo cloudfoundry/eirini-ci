@@ -53,8 +53,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
   && sudo apt install -y yarn
 
 # yq
-RUN curl -sLo yq https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 \
-  && sudo install yq /usr/bin/ \
+RUN curl -sLo yq https://github.com/mikefarah/yq/releases/download/v4.6.2/yq_linux_amd64 \
+  && install yq /usr/bin/ \
   && rm -f yq
 
 # gh cli
