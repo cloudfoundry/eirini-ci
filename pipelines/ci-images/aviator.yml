@@ -9,6 +9,7 @@ spruce:
       - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-images-docker-resources.yml
+      - ../../modules/resources/capi-ruby-units-image.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/golang-image.yml
       - ../../modules/resources/docker-image-sources.yml

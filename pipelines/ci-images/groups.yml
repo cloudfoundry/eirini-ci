@@ -4,3 +4,4 @@ groups:
   - update-ci-image
   - update-telepresence-image
   - update-gcloud-image
+  - update-capi-integration-image

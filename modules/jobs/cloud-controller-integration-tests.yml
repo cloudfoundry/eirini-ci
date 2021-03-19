@@ -65,7 +65,7 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: eirini/capi-ruby-units
+                repository: eirini/capi-integration
                 username: (( grab config.dockerhub.user ))
                 password: (( grab config.dockerhub.password ))
             inputs:

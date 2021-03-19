@@ -22,3 +22,11 @@ resources:
     repository: eirini/gcloud
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
+
+- name: capi-integration-image
+  type: docker-image
+  icon: docker
+  source:
+    repository: eirini/capi-integration
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))

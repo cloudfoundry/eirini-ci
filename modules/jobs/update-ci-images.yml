@@ -35,3 +35,16 @@ jobs:
       skip_download: true
     params:
       build: gcloud-image-source/images/gcloud
+
+- name: update-capi-integration-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: capi-ruby-units-image
+    trigger: true
+  - get: capi-integration-image-source
+    trigger: true
+  - put: capi-integration-image
+    get_params:
+      skip_download: true
+    params:
+      build: capi-integration-image-source/images/capi-integration
