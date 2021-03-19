@@ -1,0 +1,84 @@
+jobs:
+- name: cloud-controller-integration-tests
+  public: true
+  serial: true
+  serial_groups:
+  - integration-cc
+  plan:
+  - in_parallel:
+      steps:
+      - get: cloud_controller_ng
+        trigger: true
+      - get: eirini-release
+      - get: ci-resources
+  - in_parallel:
+      steps:
+      - do:
+        - task: download-kubeconfig
+          config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: google/cloud-sdk
+                  username: (( grab config.dockerhub.user ))
+                  password: (( grab config.dockerhub.password ))
+              inputs:
+              - name:  ci-resources
+              outputs:
+              - name:  kube
+              params:
+                CLUSTER_NAME: (( grab config.cluster.name ))
+                GCP_REGION: (( grab config.gcp.region ))
+                GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
+                GCP_ZONE: (( grab config.gcp.zone ))
+              run:
+                path: /usr/bin/env
+                args:
+                - bash
+                - -c
+                - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
+        - task: apply-eirini-crds
+          config:
+            image_resource:
+              source:
+                repository: cloudfoundry/cf-for-k8s-ci
+                username: (( grab config.dockerhub.user ))
+                password: (( grab config.dockerhub.password ))
+              type: docker-image
+            inputs:
+            - name: eirini-release
+            - name: kube
+            params:
+              KUBECONFIG: "kube/config"
+              GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+            platform: linux
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/apply-eirini-crds.sh" ))
+        - task: run-cc-integration-tests
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: eirini/capi-ruby-units
+                username: (( grab config.dockerhub.user ))
+                password: (( grab config.dockerhub.password ))
+            inputs:
+            - name:  cloud_controller_ng
+            - name:  kube
+            outputs:
+            - name:  output
+            params:
+                GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/cloud-controller-integration-tests.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

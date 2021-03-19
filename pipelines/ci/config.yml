@@ -28,3 +28,5 @@ config:
     password: ((dockerhub-password))
   wiremock:
     keystore-pass: ((wiremock-keystore-pass))
+  cloud_controller_ng:
+    branch: ((cloud-controller-ng-branch))

@@ -17,6 +17,9 @@ groups:
   - deploy-eirini-yamls-((gcp-cluster-name))
   - run-eats-tests-((gcp-cluster-name))
   - fast-forward-release
+- name: cloud-controller
+  jobs:
+  - cloud-controller-integration-tests
 
 - name: bumps
   jobs:

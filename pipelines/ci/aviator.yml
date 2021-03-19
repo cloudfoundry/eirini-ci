@@ -9,6 +9,7 @@ spruce:
       - ./config.yml
       - ../../modules/resources/slack.yml
       - ../../modules/resources/ci-resources.yml
+      - ../../modules/resources/cloud-controller-ng.yml
       - ../../modules/resources/cluster-state.yml
       - ../../modules/resources/delete-timer.yml
       - ../../modules/resources/eirini-docker-resources.yml
@@ -51,6 +52,7 @@ spruce:
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
       - ../../modules/jobs/run-integration-tests.yml
+      - ../../modules/jobs/cloud-controller-integration-tests.yml
       - ../../modules/jobs/slack-notification.yml
       - ./add-cluster-recreate-timer.yml
   to: {{integration-cluster}}

@@ -44,6 +44,7 @@ fly --target "$target" \
   --var eirinifs-branch="master" \
   --var eirini-release-branch="develop" \
   --var eirini-branch="$working_branch" \
+  --var cloud-controller-ng-branch="crds-main" \
   --var worker_count="$worker_count" \
   --var nats-password="$(pass eirini/ci/nats-password)" \
   --var wiremock-keystore-pass="$(pass eirini/ci/wiremock-keystore-password)" \

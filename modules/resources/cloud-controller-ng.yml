@@ -1,0 +1,7 @@
+resources:
+- name: cloud_controller_ng
+  type: git
+  icon: git
+  source:
+    branch: (( grab config.cloud_controller_ng.branch ))
+    uri: https://github.com/eirini-forks/cloud_controller_ng.git
