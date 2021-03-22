@@ -19,7 +19,7 @@ groups:
   - fast-forward-release
 - name: cloud-controller
   jobs:
-  - cloud-controller-integration-tests
+  - cloud-controller-tests
 
 - name: bumps
   jobs:

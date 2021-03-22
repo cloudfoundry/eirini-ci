@@ -26,11 +26,11 @@ resources:
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
   type: git
 
-- name: capi-integration-image-source
+- name: capi-tests-image-source
   icon: git
   source:
     branch: (( grab config.eirini-ci.branch ))
     paths:
-    - images/capi-integration/Dockerfile
+    - images/capi-tests/Dockerfile
     uri: https://github.com/cloudfoundry-incubator/eirini-ci
   type: git

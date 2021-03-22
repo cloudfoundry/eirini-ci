@@ -23,10 +23,10 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
 
-- name: capi-integration-image
+- name: capi-tests-image
   type: docker-image
   icon: docker
   source:
-    repository: eirini/capi-integration
+    repository: eirini/capi-tests
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
