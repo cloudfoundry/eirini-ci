@@ -1,9 +1,9 @@
 jobs:
-- name: cloud-controller-integration-tests
+- name: cloud-controller-tests
   public: true
   serial: true
   serial_groups:
-  - integration-cc
+  - cc-tests
   plan:
   - in_parallel:
       steps:
@@ -59,13 +59,13 @@ jobs:
               - bash
               - -c
               - (( file "../../inline-tasks/apply-eirini-crds.sh" ))
-        - task: run-cc-integration-tests
+        - task: run-cc-tests
           config:
             platform: linux
             image_resource:
               type: docker-image
               source:
-                repository: eirini/capi-integration
+                repository: eirini/capi-tests
                 username: (( grab config.dockerhub.user ))
                 password: (( grab config.dockerhub.password ))
             inputs:
@@ -80,5 +80,5 @@ jobs:
               args:
               - bash
               - -c
-              - (( file "../../inline-tasks/cloud-controller-integration-tests.sh" ))
+              - (( file "../../inline-tasks/cloud-controller-tests.sh" ))
   on_failure: (( grab slack-notification.on_failure ))

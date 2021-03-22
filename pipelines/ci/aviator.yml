@@ -52,7 +52,7 @@ spruce:
       - ../../modules/jobs/delete-gke-cluster.yml
       - ../../modules/jobs/create-gke-cluster.yml
       - ../../modules/jobs/run-integration-tests.yml
-      - ../../modules/jobs/cloud-controller-integration-tests.yml
+      - ../../modules/jobs/cloud-controller-tests.yml
       - ../../modules/jobs/slack-notification.yml
       - ./add-cluster-recreate-timer.yml
   to: {{integration-cluster}}
