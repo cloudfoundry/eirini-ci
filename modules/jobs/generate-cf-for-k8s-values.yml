@@ -2,7 +2,7 @@ jobs:
 - name: generate-cf-for-k8s-values
   on_failure: (( grab slack-notification.on_failure ))
   plan:
-  - get: cf-for-k8s-prs
+  - get: cf-for-k8s
     trigger: true
   - get: cluster-state
   - get: ci-resources
@@ -43,7 +43,7 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
-      - name: cf-for-k8s-prs
+      - name: cf-for-k8s
       - name: kube
       outputs:
       - name: default-values-file

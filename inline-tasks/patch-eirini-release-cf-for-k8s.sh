@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-src_folder="cf-for-k8s-prs"
+src_folder="cf-for-k8s"
 render_dir="$(mktemp -d)"
 # shellcheck disable=SC2064
 trap "rm -rf $render_dir" EXIT

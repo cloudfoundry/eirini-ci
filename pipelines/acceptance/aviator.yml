@@ -8,7 +8,7 @@ spruce:
       files:
       - ./config.yml
       - ../../modules/resources/slack.yml
-      - ../../modules/resources/cf-for-k8s-prs.yml
+      - ../../modules/resources/cf-for-k8s.yml
       - ../../modules/resources/cf-k8s-prometheus.yml
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/cluster-state.yml
