@@ -24,7 +24,6 @@ groups:
 - name: bumps
   jobs:
   - bump-go-modules-eirini
-  - bump-go-modules-eirinifs
 
 - name: gke-clusters
   jobs:

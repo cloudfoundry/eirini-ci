@@ -17,7 +17,6 @@ spruce:
       - ../../modules/resources/eirini-release.yml
       - ../../modules/resources/eirini-release-master.yml
       - ../../modules/resources/eirini.yml
-      - ../../modules/resources/eirinifs.yml
       - ../../modules/resources/golang-lint.yml
       - ../../modules/resources/golang-image.yml
       - ../../modules/resources/slack-resource-type.yml
@@ -71,7 +70,6 @@ spruce:
       - ../../modules/jobs/update-eirini-version-files.yml
       - ../../modules/jobs/fast-forward-release.yml
       - ../../modules/jobs/bump-go-modules-eirini.yml
-      - ../../modules/jobs/bump-go-modules-eirinifs.yml
       - ../../modules/jobs/deploy-eirini-yamls.yml
       - ../../modules/jobs/run-eats-tests.yml
       - ../../modules/jobs/slack-notification.yml

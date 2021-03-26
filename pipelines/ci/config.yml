@@ -20,9 +20,6 @@ config:
   eirini-release:
     branch: ((eirini-release-branch))
     repo-key: ((eirini-release-repo-key))
-  eirinifs:
-    branch: ((eirinifs-branch))
-    private-key: ((eirinifs-private-key))
   dockerhub:
     user: ((dockerhub-user))
     password: ((dockerhub-password))

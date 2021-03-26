@@ -1,9 +1,0 @@
-resources:
-- name: eirinifs-image
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/eirinifs
-    tag: test-multi-stage
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))

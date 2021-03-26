@@ -1,8 +1,0 @@
-resources:
-- name: eirinifs
-  type: git
-  icon: git
-  source:
-    branch: (( grab config.eirinifs.branch ))
-    private_key: (( grab config.eirinifs.private-key ))
-    uri: git@github.com:cloudfoundry-incubator/eirinifs.git

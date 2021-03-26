@@ -1,7 +1,0 @@
-resources:
-- name: cflinuxfs3-release
-  check_every: 2h
-  type: github-release
-  source:
-    owner: cloudfoundry
-    repository: cflinuxfs3
