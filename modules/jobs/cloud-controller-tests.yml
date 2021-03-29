@@ -59,6 +59,23 @@ jobs:
               - bash
               - -c
               - (( file "../../inline-tasks/apply-eirini-crds.sh" ))
+        - task: run-rubocop
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: eirini/capi-tests
+                username: (( grab config.dockerhub.user ))
+                password: (( grab config.dockerhub.password ))
+            inputs:
+            - name:  cloud_controller_ng
+            run:
+              path: /usr/bin/env
+              args:
+              - bash
+              - -c
+              - (( file "../../inline-tasks/cloud-controller-rubocop.sh" ))
         - task: run-cc-tests
           config:
             platform: linux
