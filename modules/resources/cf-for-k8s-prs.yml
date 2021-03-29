@@ -1,8 +1,0 @@
-resources:
-- name: cf-for-k8s-prs
-  type: git
-  icon: git
-  source:
-    branch: pending-prs
-    private_key: (( grab config.github.private-key ))
-    uri: git@github.com:eirini-forks/cf-for-k8s.git
