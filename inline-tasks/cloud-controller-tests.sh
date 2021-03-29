@@ -24,5 +24,5 @@ cd cloud_controller_ng
 service postgresql start
 
 bundle install
-bundle exec rspec spec/unit/lib/cloud_controller/opi/ spec/unit/lib/kubernetes/eirini_client_spec.rb spec/unit/lib/cloud_controller/dependency_locator_spec.rb
+bundle exec rspec spec/unit/lib/cloud_controller/opi/ spec/unit/lib/kubernetes/api_client_spec.rb spec/unit/lib/cloud_controller/dependency_locator_spec.rb
 bundle exec rspec spec/integration/eirini_k8s_client_spec.rb
