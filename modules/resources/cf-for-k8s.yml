@@ -3,6 +3,6 @@ resources:
   type: git
   icon: git
   source:
-    branch: main
+    branch: develop
     private_key: (( grab config.github.private-key ))
     uri: git@github.com:eirini-forks/cf-for-k8s.git
