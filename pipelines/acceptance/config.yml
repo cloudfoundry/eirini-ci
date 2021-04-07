@@ -12,7 +12,6 @@ config:
     worker-count: ((worker_count))
     admin-password: ((cluster-admin-password))
     uaa-admin-client-secret: ((uaa-admin-client-secret))
-    nats-password: ((nats-password))
     windows-pool: false
   gcp:
     service-account-json: ((gcp-service-account-json))

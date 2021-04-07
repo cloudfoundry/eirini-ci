@@ -47,7 +47,6 @@ fly -t "$target" \
   --var gcp-zone="europe-west1-b" \
   --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
   --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
-  --var nats-password="$(pass eirini/ci/nats-password)" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
   --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
   --var worker_count="$worker_count" \

@@ -5,7 +5,6 @@ config:
     private-key: ((github-private-key))
   cluster:
     worker-count: ((worker_count))
-    nats-password: ((nats-password))
     windows-pool: false
   gcp:
     service-account-json: ((gcp-service-account-json))

@@ -6,13 +6,10 @@ jobs:
       - get: eirini-release
       - get: eirini
         passed:
-        - create-route-pod-informer-docker-image
         - create-event-reporter-docker-image
         - create-instance-index-env-injector-docker-image
-        - create-route-statefulset-informer-docker-image
         - create-eirini-controller-docker-image
         - create-opi-docker-image
-        - create-route-collector-docker-image
         - create-task-reporter-docker-image
         - create-migration-docker-image
         - create-resource-validator-docker-image
@@ -22,21 +19,6 @@ jobs:
           skip_download: false
         passed:
         - create-opi-docker-image
-      - get: route-collector-image
-        params:
-          skip_download: false
-        passed:
-        - create-route-collector-docker-image
-      - get: route-pod-informer-image
-        params:
-          skip_download: false
-        passed:
-        - create-route-pod-informer-docker-image
-      - get: route-statefulset-informer-image
-        params:
-          skip_download: false
-        passed:
-        - create-route-statefulset-informer-docker-image
         params:
           skip_download: false
       - get: event-reporter-image
@@ -82,9 +64,6 @@ jobs:
       - name: eirini
       - name: eirini-release
       - name: opi-image
-      - name: route-collector-image
-      - name: route-pod-informer-image
-      - name: route-statefulset-informer-image
       - name: event-reporter-image
       - name: task-reporter-image
       - name: eirini-controller-image
@@ -95,7 +74,7 @@ jobs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
+        IMAGES: "opi event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

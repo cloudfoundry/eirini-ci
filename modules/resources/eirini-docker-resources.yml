@@ -17,33 +17,6 @@ resources:
     password: (( grab config.dockerhub.password ))
     tag: latest
 
-- name: route-collector-image
-  type: registry-image
-  icon: docker
-  source:
-    repository: eirini/route-collector
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-    tag: latest
-
-- name: route-pod-informer-image
-  icon: docker
-  type: registry-image
-  source:
-    repository: eirini/route-pod-informer
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-    tag: latest
-
-- name: route-statefulset-informer-image
-  type: registry-image
-  icon: docker
-  source:
-    repository: eirini/route-statefulset-informer
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-    tag: latest
-
 - name: task-reporter-image
   type: registry-image
   icon: docker

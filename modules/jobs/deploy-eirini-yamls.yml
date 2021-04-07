@@ -69,7 +69,6 @@ jobs:
         KUBECONFIG: "kube/config"
         GOOGLE_APPLICATION_CREDENTIALS: "kube/service-account.json"
         WIREMOCK_KEYSTORE_PASSWORD: (( grab config.wiremock.keystore-pass ))
-        NATS_PASSWORD: (( grab config.cluster.nats-password ))
       platform: linux
       run:
         path: eirini-release/scripts/deploy.sh

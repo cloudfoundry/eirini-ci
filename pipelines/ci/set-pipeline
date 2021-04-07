@@ -44,6 +44,5 @@ fly --target "$target" \
   --var eirini-branch="$working_branch" \
   --var cloud-controller-ng-branch="pr-lrp-crds" \
   --var worker_count="$worker_count" \
-  --var nats-password="$(pass eirini/ci/nats-password)" \
   --var wiremock-keystore-pass="$(pass eirini/ci/wiremock-keystore-password)" \
   --var slack-webhook="$(pass eirini/ci/slack-webhook)"
