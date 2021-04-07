@@ -9,7 +9,6 @@ jobs:
         - create-route-pod-informer-docker-image
         - create-event-reporter-docker-image
         - create-instance-index-env-injector-docker-image
-        - create-metrics-collector-docker-image
         - create-route-statefulset-informer-docker-image
         - create-eirini-controller-docker-image
         - create-opi-docker-image
@@ -38,11 +37,8 @@ jobs:
           skip_download: false
         passed:
         - create-route-statefulset-informer-docker-image
-      - get: metrics-collector-image
         params:
           skip_download: false
-        passed:
-        - create-metrics-collector-docker-image
       - get: event-reporter-image
         params:
           skip_download: false
@@ -89,7 +85,6 @@ jobs:
       - name: route-collector-image
       - name: route-pod-informer-image
       - name: route-statefulset-informer-image
-      - name: metrics-collector-image
       - name: event-reporter-image
       - name: task-reporter-image
       - name: eirini-controller-image
@@ -100,7 +95,7 @@ jobs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
+        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

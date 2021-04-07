@@ -99,39 +99,6 @@ jobs:
     params: {image: route-pod-informer-image/image.tar}
 
 
-- name: create-metrics-collector-docker-image
-  on_failure: (( grab slack-notification.on_failure ))
-  plan:
-  - get: eirini
-    passed:
-    - run-integration-tests
-    trigger: true
-  - load_var: git-sha
-    file: eirini/.git/ref
-  - task: build-metrics-collector
-    privileged: true
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: vito/oci-build-task
-      inputs:
-      - name: eirini
-      outputs:
-      - name: image
-      caches:
-      - path: cache
-      params:
-        CONTEXT: eirini
-        BUILD_ARG_GIT_SHA: ((.:git-sha))
-        DOCKERFILE: eirini/docker/metrics-collector/Dockerfile
-      run:
-        path: build
-    output_mapping: {image: metrics-collector-image}
-  - put: metrics-collector-image
-    params: {image: metrics-collector-image/image.tar}
-
 - name: create-event-reporter-docker-image
   on_failure: (( grab slack-notification.on_failure ))
   plan:

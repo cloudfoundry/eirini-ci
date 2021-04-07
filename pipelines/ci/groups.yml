@@ -6,7 +6,6 @@ groups:
   - create-route-pod-informer-docker-image
   - create-event-reporter-docker-image
   - create-instance-index-env-injector-docker-image
-  - create-metrics-collector-docker-image
   - create-route-statefulset-informer-docker-image
   - create-eirini-controller-docker-image
   - create-opi-docker-image

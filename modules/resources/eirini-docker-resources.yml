@@ -8,16 +8,6 @@ resources:
     password: (( grab config.dockerhub.password ))
     tag: latest
 
-- name: metrics-collector-image
-  type: registry-image
-  icon: docker
-  source:
-    repository: eirini/metrics-collector
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-    tag: latest
-
-
 - name: opi-image
   type: registry-image
   icon: docker
