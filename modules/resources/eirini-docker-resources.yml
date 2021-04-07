@@ -89,3 +89,12 @@ resources:
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
     tag: latest
+
+- name: resource-validator-image
+  type: registry-image
+  icon: docker
+  source:
+    repository: eirini/resource-validator
+    username: (( grab config.dockerhub.user ))
+    password: (( grab config.dockerhub.password ))
+    tag: latest

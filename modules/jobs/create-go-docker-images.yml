@@ -329,3 +329,36 @@ jobs:
     output_mapping: {image: migration-image}
   - put: migration-image
     params: {image: migration-image/image.tar}
+
+- name: create-resource-validator-docker-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: eirini
+    passed:
+    - run-integration-tests
+    trigger: true
+  - load_var: git-sha
+    file: eirini/.git/ref
+  - task: build-resource-validator
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: vito/oci-build-task
+      inputs:
+      - name: eirini
+      outputs:
+      - name: image
+      caches:
+      - path: cache
+      params:
+        CONTEXT: eirini
+        BUILD_ARG_GIT_SHA: ((.:git-sha))
+        DOCKERFILE: eirini/docker/resource-validator/Dockerfile
+      run:
+        path: build
+    output_mapping: {image: resource-validator-image}
+  - put: resource-validator-image
+    params: {image: resource-validator-image/image.tar}

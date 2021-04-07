@@ -16,6 +16,7 @@ jobs:
         - create-route-collector-docker-image
         - create-task-reporter-docker-image
         - create-migration-docker-image
+        - create-resource-validator-docker-image
         trigger: true
       - get: opi-image
         params:
@@ -67,6 +68,11 @@ jobs:
           skip_download: false
         passed:
         - create-migration-docker-image
+      - get: resource-validator-image
+        params:
+          skip_download: false
+        passed:
+        - create-resource-validator-docker-image
   - task: update-version-files
     config:
       container_limits: {}
@@ -89,11 +95,12 @@ jobs:
       - name: eirini-controller-image
       - name: instance-index-env-injector-image
       - name: migration-image
+      - name: resource-validator-image
       outputs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter task-reporter eirini-controller instance-index-env-injector migration"
+        IMAGES: "opi route-collector route-pod-informer route-statefulset-informer metrics-collector event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:
