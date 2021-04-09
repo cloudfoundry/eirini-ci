@@ -1,0 +1,22 @@
+jobs:
+- name: check-golangci-linters
+  public: true
+  plan:
+  - get: every-morning
+    trigger: true
+  - task: check-golangci-linters
+    config:
+      image_resource:
+        source:
+          repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+        type: docker-image
+      platform: linux
+      run:
+        path: /usr/bin/env
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/check-golangci-linters.sh" ))
+  on_failure: (( grab slack-notification.on_failure ))

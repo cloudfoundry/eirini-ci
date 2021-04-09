@@ -25,5 +25,6 @@ spruce:
       - ../../modules/jobs/check-shell.yml
       - ../../modules/jobs/format-shell.yml
       - ../../modules/jobs/check-wip-branches.yml
+      - ../../modules/jobs/check-golangci-linters.yml
 
   to: $PIPELINE_YML

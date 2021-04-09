@@ -4,3 +4,4 @@ groups:
   - check-shell
   - format-shell
   - check-wip-branches
+  - check-golangci-linters
