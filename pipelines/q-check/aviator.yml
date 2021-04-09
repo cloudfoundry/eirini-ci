@@ -11,6 +11,8 @@ spruce:
       - ../../modules/resources/ci-resources.yml
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/morning-timer.yml
+      - ../../modules/resources/eirini.yml
+      - ../../modules/resources/eirini-golangci-lint-docker-resource.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"

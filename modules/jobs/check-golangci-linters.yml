@@ -2,7 +2,9 @@ jobs:
 - name: check-golangci-linters
   public: true
   plan:
-  - get: every-morning
+  - get: golangci-lint-image
+    trigger: true
+  - get: eirini
     trigger: true
   - task: check-golangci-linters
     config:
@@ -13,6 +15,8 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       platform: linux
+      inputs:
+        - name: eirini
       run:
         path: /usr/bin/env
         args:

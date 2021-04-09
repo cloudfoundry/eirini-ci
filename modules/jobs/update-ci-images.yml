@@ -60,5 +60,5 @@ jobs:
     get_params:
       skip_download: true
     params:
-      build: ci-image-source/images/golangci-lint
+      build: golangci-lint-image-source/images/golangci-lint
 
