@@ -13,6 +13,7 @@ spruce:
       - ../../modules/resources/slack-resource-type.yml
       - ../../modules/resources/golang-image.yml
       - ../../modules/resources/docker-image-sources.yml
+      - ../../modules/resources/golangci-lint-image.yml
   to: {{groups-and-resources}}
 
 - step: "merge groups and resources with jobs"

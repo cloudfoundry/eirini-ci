@@ -48,3 +48,17 @@ jobs:
       skip_download: true
     params:
       build: capi-tests-image-source/images/capi-tests
+
+- name: update-golangci-lint-image
+  on_failure: (( grab slack-notification.on_failure ))
+  plan:
+  - get: golangci-lint
+    trigger: true
+  - get: golangci-lint-image-source
+    trigger: true
+  - put: golangci-lint-image
+    get_params:
+      skip_download: true
+    params:
+      build: ci-image-source/images/golangci-lint
+

@@ -5,3 +5,4 @@ groups:
   - update-telepresence-image
   - update-gcloud-image
   - update-capi-tests-image
+  - update-golangci-lint-image
