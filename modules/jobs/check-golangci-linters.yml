@@ -8,7 +8,7 @@ jobs:
     config:
       image_resource:
         source:
-          repository: eirini/ci
+          repository: eirini/golangci-lint
           username: (( grab config.dockerhub.user ))
           password: (( grab config.dockerhub.password ))
         type: docker-image
