@@ -1,5 +1,5 @@
 jobs:
-- name: create-opi-docker-image
+- name: create-api-docker-image
   on_failure: (( grab slack-notification.on_failure ))
   plan:
   - get: eirini
@@ -8,7 +8,7 @@ jobs:
     trigger: true
   - load_var: git-sha
     file: eirini/.git/ref
-  - task: build-opi
+  - task: build-api
     privileged: true
     config:
       platform: linux
@@ -25,12 +25,12 @@ jobs:
       params:
         CONTEXT: eirini
         BUILD_ARG_GIT_SHA: ((.:git-sha))
-        DOCKERFILE: eirini/docker/opi/Dockerfile
+        DOCKERFILE: eirini/docker/api/Dockerfile
       run:
         path: build
-    output_mapping: {image: opi-image}
-  - put: opi-image
-    params: {image: opi-image/image.tar}
+    output_mapping: {image: api-image}
+  - put: api-image
+    params: {image: api-image/image.tar}
 
 - name: create-event-reporter-docker-image
   on_failure: (( grab slack-notification.on_failure ))

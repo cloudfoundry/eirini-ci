@@ -9,18 +9,16 @@ jobs:
         - create-event-reporter-docker-image
         - create-instance-index-env-injector-docker-image
         - create-eirini-controller-docker-image
-        - create-opi-docker-image
+        - create-api-docker-image
         - create-task-reporter-docker-image
         - create-migration-docker-image
         - create-resource-validator-docker-image
         trigger: true
-      - get: opi-image
+      - get: api-image
         params:
           skip_download: false
         passed:
-        - create-opi-docker-image
-        params:
-          skip_download: false
+        - create-api-docker-image
       - get: event-reporter-image
         params:
           skip_download: false
@@ -63,7 +61,7 @@ jobs:
       inputs:
       - name: eirini
       - name: eirini-release
-      - name: opi-image
+      - name: api-image
       - name: event-reporter-image
       - name: task-reporter-image
       - name: eirini-controller-image
@@ -74,7 +72,7 @@ jobs:
       - name: eirini-release-updated
       platform: linux
       params:
-        IMAGES: "opi event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
+        IMAGES: "api event-reporter task-reporter eirini-controller instance-index-env-injector migration resource-validator"
         COMPONENT_NAME: "eirini"
         COMPONENT_REPO: "eirini"
       run:

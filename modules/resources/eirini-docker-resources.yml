@@ -8,11 +8,11 @@ resources:
     password: (( grab config.dockerhub.password ))
     tag: latest
 
-- name: opi-image
+- name: api-image
   type: registry-image
   icon: docker
   source:
-    repository: eirini/opi
+    repository: eirini/api
     username: (( grab config.dockerhub.user ))
     password: (( grab config.dockerhub.password ))
     tag: latest
