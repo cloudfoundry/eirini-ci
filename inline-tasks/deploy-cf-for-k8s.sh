@@ -22,6 +22,7 @@ deploy-cf() {
       -f ci-resources/k8s-specs/inst-inj-job-net-pol.yml \
       -f cluster-state/environments/kube-clusters/"${1}"/default-values.yml \
       -f cluster-state/environments/kube-clusters/"${1}"/loadbalancer-values.yml \
+      -f eirini-image-overrides/values.yml \
       "${extra_args[@]}"
   ) -y
 

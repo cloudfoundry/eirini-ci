@@ -78,6 +78,26 @@ jobs:
         - (( file "../../inline-tasks/patch-eirini-release-cf-for-k8s.sh" ))
         path: /usr/bin/env
     task: patch-eirini-release
+  - task: generate-eirini-image-overrides
+    config:
+      container_limits: {}
+      image_resource:
+        source:
+          repository: eirini/ci
+          username: (( grab config.dockerhub.user ))
+          password: (( grab config.dockerhub.password ))
+        type: docker-image
+      inputs:
+      - name: eirini-release
+      outputs:
+      - name: eirini-image-overrides
+      platform: linux
+      run:
+        args:
+        - bash
+        - -c
+        - (( file "../../inline-tasks/generate-eirini-image-overrides.sh" ))
+        path: /usr/bin/env
   - config:
       container_limits: {}
       image_resource:
@@ -87,10 +107,11 @@ jobs:
           password: (( grab config.dockerhub.password ))
         type: docker-image
       inputs:
+      - name: eirini-image-overrides
       - name: patched-cf-for-k8s
       - name: cf-k8s-prometheus
-      - name: ci-resources
       - name: cluster-state
+      - name: ci-resources
       - name: kube
       params:
         CLUSTER_NAME: (( grab config.cluster.name ))
