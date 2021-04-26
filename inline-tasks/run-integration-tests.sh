@@ -2,7 +2,8 @@
 
 set -e
 
-readonly WORKSPACE="$(readlink -f eirini)"
+WORKSPACE="$(readlink -f eirini)"
+readonly WORKSPACE
 
 if [[ -n $GOOGLE_APPLICATION_CREDENTIALS ]]; then
   export GOOGLE_APPLICATION_CREDENTIALS

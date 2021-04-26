@@ -3,8 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# shellcheck disable=SC1091
-readonly RENDER_DIR=$(mktemp -d)
+RENDER_DIR=$(mktemp -d)
+readonly RENDER_DIR
 
 # shellcheck disable=SC2064
 trap "rm -r $RENDER_DIR" EXIT

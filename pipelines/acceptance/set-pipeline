@@ -5,10 +5,14 @@ set -euo pipefail
 PIPELINE_YML=$(mktemp)
 export PIPELINE_YML
 
-readonly basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly target="${1:-eirini}"
-export worker_count=${2:-"3"}
-readonly world_name=cf4k8s4a8e
+basedir="$(cd "$(dirname "$0")" && pwd)"
+readonly basedir
+target="${1:-eirini}"
+readonly target
+worker_count=${2:-"3"}
+export worker_count
+world_name=cf4k8s4a8e
+readonly world_name
 
 pushd "$basedir"
 {

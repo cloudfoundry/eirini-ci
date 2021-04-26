@@ -2,5 +2,6 @@
 
 set -e
 
-readonly WORKSPACE="$(readlink -f eirini)"
+WORKSPACE="$(readlink -f eirini)"
+readonly WORKSPACE
 "$WORKSPACE"/scripts/run_unit_tests.sh
