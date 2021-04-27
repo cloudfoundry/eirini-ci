@@ -1,0 +1,21 @@
+#@ def notify_slack():
+put: slack
+params:
+  attachments: |2
+      [{
+          "color": "danger",
+          "actions": [
+                {
+                  "type": "button",
+                  "text": "View in Concourse",
+                  "url": "https://jetson.eirini.cf-app.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME"
+                }
+          ]
+      }]
+  channel: '#eirini-ci'
+  text: |
+    Pipeline *$BUILD_PIPELINE_NAME* failed :cry:
+
+    Job is *$BUILD_JOB_NAME*
+    Build name is *$BUILD_NAME*
+#@ end

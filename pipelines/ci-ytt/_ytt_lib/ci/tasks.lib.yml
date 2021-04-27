@@ -1,0 +1,289 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:template", "template")
+
+#@ def run_unit_tests(input_name="eirini"):
+task: run-unit-tests
+input_mapping:
+  eirini: #@ input_name
+config:
+  _: #@ template.replace(config())
+  inputs:
+  - name: eirini
+  image_resource: #@ image_resource("eirini/ci")
+  run: #@ task_script("run-unit-tests.sh")
+#@ end
+
+#@ def run_static_checks(input_name="eirini"):
+task: run-static-checks
+input_mapping:
+  eirini: #@ input_name
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("golangci/golangci-lint")
+  inputs:
+  - name: eirini
+  run: #@ task_script("run-static-checks.sh")
+#@ end
+
+#@ def download_kubeconfig(cluster_name):
+task: download-kubeconfig
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("google/cloud-sdk")
+  inputs:
+  - name: ci-resources
+  outputs:
+  - name: kube
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_REGION: #@ data.values.gcp.region
+    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+    GCP_ZONE: #@ data.values.gcp.zone
+  run: #@ task_script("gcp-download-kubeconfig.sh")
+#@ end
+
+#@ def apply_eirini_crds():
+task: apply-eirini-crds
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: eirini-release
+  - name: kube
+  params:
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+    KUBECONFIG: kube/config
+  run: #@ task_script("apply-eirini-crds.sh")
+#@ end
+
+#@ def run_integration_tests():
+task: run-integration-tests
+privileged: true
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/telepresence")
+  inputs:
+  - name: eirini
+  - name: kube
+  outputs:
+  - name: output
+  params:
+    EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  run: #@ task_script("run-integration-tests.sh")
+#@ end
+
+#@ def run_eats_tests():
+task: run-eats-tests
+privileged: true
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/telepresence")
+  inputs:
+  - name: eirini
+  - name: kube
+  outputs:
+  - name: output
+  params:
+    EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+    KUBECONFIG: kube/config
+  run: #@ task_script("run-eats-tests.sh")
+#@ end
+
+#@ def update_version_files(components):
+task: update-version-files
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: eirini
+  - name: eirini-release
+  #@ for component in components:
+  - name: #@ component + "-image"
+  #@ end
+  outputs:
+  - name: eirini-release-updated
+  params:
+    COMPONENT_NAME: eirini
+    COMPONENT_REPO: eirini
+    IMAGES: #@ " ".join(components)
+  run: #@ task_script("update-version-files.sh")
+#@ end
+
+#@ def cleanup_deployment():
+task: cleanup-deployment
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: eirini-release
+  - name: kube
+  params:
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+    KUBECONFIG: kube/config
+  run:
+    path: eirini-release/scripts/cleanup.sh
+#@ end
+
+#@ def deploy_eirini_yamls():
+task: deploy-eirini-yamls
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: eirini-release
+  - name: kube
+  params:
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+    KUBECONFIG: kube/config
+    WIREMOCK_KEYSTORE_PASSWORD: #@ data.values.wiremock_keystore_pass
+  run:
+    path: eirini-release/scripts/deploy.sh
+#@ end
+
+#@ def run_rubocop():
+task: run-rubocop
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/capi-tests")
+  inputs:
+  - name: cloud_controller_ng
+  run: #@ task_script("cloud-controller-rubocop.sh")
+#@ end
+
+#@ def run_cc_tests():
+task: run-cc-tests
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/capi-tests")
+  inputs:
+  - name: cloud_controller_ng
+  - name: kube
+  outputs:
+  - name: output
+  params:
+    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  run: #@ task_script("cloud-controller-tests.sh")
+#@ end
+
+#@ def bump_go_modules(input_name):
+task: bump-go-modules
+input_mapping:
+  repository: #@ input_name
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: repository
+  - name: golang-image
+  outputs:
+  - name: repository-updated
+  run: #@ task_script("bump-go-packages.sh")
+#@ end
+
+#@ def delete_kubernetes_cluster(cluster_name):
+task: delete-kubernetes-cluster
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/gcloud")
+  inputs:
+  - name: ci-resources
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+    WORKER_COUNT: #@ data.values.gcp.worker_count
+  run: #@ task_script("gcp-delete-cluster.sh")
+#@ end
+
+#@ def delete_values_file(cluster_name):
+task: delete-values-file
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: cluster-state
+  outputs:
+  - name: state-modified
+  params:
+    CLUSTER_NAME: #@ cluster_name
+  run: #@ task_script("clean-up-cluster-config.sh")
+#@ end
+
+#@ def delete_disks(cluster_name):
+task: delete-disks
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/gcloud")
+  inputs:
+  - name: ci-resources
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+  run: #@ task_script("delete-unused-gcp-disks.sh")
+#@ end
+
+#@ def create_kubernetes_cluster(cluster_name):
+task: create-kubernetes-cluster
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/gcloud")
+  inputs:
+  - name: ci-resources
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+    WINDOWS_POOL: "false"
+    WORKER_COUNT: #@ data.values.gcp.worker_count
+  run: #@ task_script("gcp-create-cluster.sh")
+#@ end
+
+#@ def build_docker_image(component):
+task: #@ "build-" + component
+privileged: true
+output_mapping:
+  image: #@ component + "-image"
+config:
+  platform: linux
+  caches:
+  - path: cache
+  image_resource: #@ image_resource("vito/oci-build-task")
+  inputs:
+  - name: eirini
+  outputs:
+  - name: image
+  params:
+    CONTEXT: eirini
+    DOCKERFILE: #@ "eirini/docker/" + component + "/Dockerfile"
+  run:
+    path: /bin/sh
+    args:
+      - -c
+      - -e
+      - |
+        BUILD_ARG_GIT_SHA=$(cat eirini/.git/ref)
+        export BUILD_ARG_GIT_SHA
+        build
+#@ end
+
+#@ def config():
+platform: linux
+caches:
+- path: /root/.cache/go-build
+#@ end
+
+#@ def image_resource(repository):
+type: registry-image
+source:
+  repository: #@ repository
+  tag: latest
+  username: #@ data.values.dockerhub.username
+  password: #@ data.values.dockerhub.password
+#@ end
+
+#@ def task_script(filename):
+path: /bin/bash
+args:
+- -c
+- #@ data.read("tasks/" + filename)
+#@ end

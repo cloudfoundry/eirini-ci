@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+pipeline_yml=$(mktemp)
+trap "rm "$pipeline_yml"" EXIT
+readonly pipeline_yml
+readonly target="${1:-eirini}"
+
+main_private_key=$(pass eirini/github/private-config/ssh-key)
+eirini_release_private_key=$(pass eirini/github/eirini-release/ssh-key)
+
+ytt -f "$SCRIPT_DIR" \
+  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="dockerhub.username=eiriniuser" \
+  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="repos.eirini.private_key=$(pass eirini/github/eirini/ssh-key)" \
+  --data-value="repos.eirini_release.private_key=$eirini_release_private_key" \
+  --data-value="repos.eirini_release_master.private_key=$eirini_release_private_key" \
+  --data-value="repos.eirini_ci.private_key=$main_private_key" \
+  --data-value="repos.eirini_private_config.private_key=$main_private_key" \
+  --data-value="repos.cloud_controller_ng.private_key=$main_private_key" \
+  --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --data-value="wiremock_keystore_pass=$(pass eirini/ci/wiremock-keystore-password)" \
+  >"$pipeline_yml"
+
+fly --target "$target" \
+  set-pipeline \
+  --config "$pipeline_yml" \
+  --pipeline ci

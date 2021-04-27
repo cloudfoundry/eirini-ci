@@ -1,0 +1,301 @@
+#@ load("@ytt:data", "data")
+#@ load("@ci:notifications.lib.yml",
+#@   "notify_slack",
+#@ )
+#@ load("@ci:resources.lib.yml",
+#@   "slack",
+#@   "eirini_docker_image",
+#@   "docker_image",
+#@   "docker_image_type",
+#@   "git",
+#@   "cluster_event_created",
+#@ )
+#@ load("@ci:tasks.lib.yml",
+#@   "run_unit_tests",
+#@   "run_static_checks",
+#@   "download_kubeconfig",
+#@   "apply_eirini_crds",
+#@   "run_integration_tests",
+#@   "update_version_files",
+#@   "cleanup_deployment",
+#@   "deploy_eirini_yamls",
+#@   "run_eats_tests",
+#@   "run_rubocop",
+#@   "run_cc_tests",
+#@   "bump_go_modules",
+#@   "delete_kubernetes_cluster",
+#@   "delete_values_file",
+#@   "delete_disks",
+#@   "create_kubernetes_cluster",
+#@   "build_docker_image",
+#@ )
+
+groups:
+- name: main
+  jobs:
+  - run-tests
+  - run-integration-tests
+  - create-event-reporter-docker-image
+  - create-instance-index-env-injector-docker-image
+  - create-eirini-controller-docker-image
+  - create-api-docker-image
+  - create-task-reporter-docker-image
+  - create-migration-docker-image
+  - create-resource-validator-docker-image
+  - update-eirini-version-files
+  - deploy-eirini-yamls-monaco
+  - run-eats-tests-monaco
+  - fast-forward-release
+- name: bumps
+  jobs:
+  - bump-go-modules-eirini
+- name: gke-clusters
+  jobs:
+  - delete-cluster-monaco
+  - create-cluster-monaco
+  - delete-cluster-integration
+  - create-cluster-integration
+- name: cloud-controller
+  jobs:
+  - cloud-controller-tests
+
+jobs:
+- name: run-tests
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini
+      trigger: true
+    - get: eirini-release
+    - get: golang-lint
+      params:
+        skip_download: true
+      trigger: true
+    - get: ci-resources
+  - in_parallel:
+    - #@ run_unit_tests()
+    - #@ run_static_checks()
+  public: true
+
+- name: run-integration-tests
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini
+      passed:
+      - run-tests
+      trigger: true
+    - get: eirini-release
+    - get: ci-resources
+  - #@ download_kubeconfig("integration")
+  - #@ apply_eirini_crds()
+  - #@ run_integration_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - integration
+
+#@ components = [
+#@   "api",
+#@   "eirini-controller",
+#@   "event-reporter",
+#@   "instance-index-env-injector",
+#@   "migration",
+#@   "resource-validator",
+#@   "task-reporter",
+#@ ]
+
+#@ for component in components:
+- name: #@ "create-" + component + "-docker-image"
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini
+    passed:
+    - run-integration-tests
+    trigger: true
+  - #@ build_docker_image(component)
+  - put: #@ component + "-image"
+    params:
+      image: #@ component + "-image/image.tar"
+#@ end
+
+- name: update-eirini-version-files
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-release
+    - get: eirini
+      passed:
+      #@ for component in components:
+      - #@ "create-" + component + "-docker-image"
+      #@ end
+      trigger: true
+    #@ for component in components:
+    - get: #@ component + "-image"
+      params:
+        skip_download: false
+      passed:
+      - #@ "create-" + component + "-docker-image"
+    #@ end
+  - #@ update_version_files(components)
+  - params:
+      repository: eirini-release-updated
+    put: eirini-release
+  serial: true
+
+- name: deploy-eirini-yamls-monaco
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release
+    trigger: true
+  - get: eirini
+    passed:
+    - update-eirini-version-files
+  - get: ci-resources
+  - #@ download_kubeconfig("monaco")
+  - #@ cleanup_deployment()
+  - #@ deploy_eirini_yamls()
+  public: true
+  serial: true
+  serial_groups:
+  - monaco
+
+- name: run-eats-tests-monaco
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-release
+      passed:
+      - deploy-eirini-yamls-monaco
+      trigger: true
+    - get: eirini
+      passed:
+      - deploy-eirini-yamls-monaco
+      trigger: true
+    - get: ci-resources
+  - #@ download_kubeconfig("monaco")
+  - #@ run_eats_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - monaco
+
+- name: fast-forward-release
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release
+    passed:
+    - run-eats-tests-monaco
+    trigger: true
+  - get: eirini-release-master
+  - params:
+      repository: eirini-release
+    put: eirini-release-master
+
+- name: cloud-controller-tests
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: cloud_controller_ng
+      trigger: true
+    - get: eirini-release
+    - get: ci-resources
+  - #@ download_kubeconfig("integration")
+  - #@ apply_eirini_crds()
+  - #@ run_rubocop()
+  - #@ run_cc_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - cc-tests
+
+- name: bump-go-modules-eirini
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: bump-day
+      trigger: true
+    - get: golang-image
+    - get: eirini
+  - #@ bump_go_modules("eirini")
+  - #@ run_unit_tests("repository-updated")
+  - #@ run_static_checks("repository-updated")
+  - put: eirini
+    params:
+      repository: repository-updated
+  public: true
+
+#@ for cluster in ["monaco", "integration"]:
+- name: #@ "delete-cluster-" + cluster
+  on_failure: #@ notify_slack()
+  plan:
+  - get: delete-timer
+    trigger: true
+  - get: ci-resources
+  - #@ delete_kubernetes_cluster(cluster)
+  - get: cluster-state
+  - #@ delete_values_file(cluster)
+  - #@ delete_disks(cluster)
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified
+  serial: true
+  serial_groups:
+  - #@ cluster
+
+- name: #@ "create-cluster-" + cluster
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+  - get: cluster-state
+    passed:
+    - #@ "delete-cluster-" + cluster
+    trigger: true
+  - #@ create_kubernetes_cluster(cluster)
+  - put: #@ "cluster-" + cluster + "-staging-event-created"
+    params:
+      bump: major
+  serial: true
+  serial_groups:
+  - #@ cluster
+#@ end
+
+resource_types:
+- #@ docker_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ slack()
+- #@ cluster_event_created("integration")
+- #@ cluster_event_created("monaco")
+- #@ git("cloud_controller_ng", data.values.repos.cloud_controller_ng)
+- #@ git("ci-resources", data.values.repos.eirini_ci)
+- #@ git("eirini", data.values.repos.eirini)
+- #@ git("eirini-release-master", data.values.repos.eirini_release_master)
+- #@ git("eirini-release", data.values.repos.eirini_release)
+- #@ git("cluster-state", data.values.repos.eirini_private_config)
+- #@ docker_image("golang-image", "golang")
+- #@ docker_image("golang-lint", "golangci/golangci-lint")
+- #@ eirini_docker_image("api")
+- #@ eirini_docker_image("eirini-controller")
+- #@ eirini_docker_image("event-reporter")
+- #@ eirini_docker_image("instance-index-env-injector")
+- #@ eirini_docker_image("migration")
+- #@ eirini_docker_image("resource-validator")
+- #@ eirini_docker_image("task-reporter")
+- name: delete-timer
+  source:
+    days:
+    - Saturday
+    start: 12:00 AM
+    stop: 1:00 AM
+  type: time
+  icon: bomb
+- name: bump-day
+  source:
+    days:
+    - Wednesday
+    start: 12:00 AM
+    stop: 11:59 PM
+  type: time
+  icon: timetable

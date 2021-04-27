@@ -1,0 +1,49 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:template", "template")
+
+#@ def slack():
+name: slack
+type: slack-notification
+icon: slack
+source:
+  url: #@ data.values.slack.webhook
+#@ end
+
+#@ def docker_image_type(name, repository):
+name: #@ name
+type: registry-image
+source:
+  repository: #@ repository
+  tag: latest
+  username: #@ data.values.dockerhub.username
+  password: #@ data.values.dockerhub.password
+#@ end
+
+#@ def docker_image(name, repository):
+_: #@ template.replace(docker_image_type(name, repository))
+icon: docker
+#@ end
+
+#@ def eirini_docker_image(component_name):
+#@     return docker_image(component_name + "-image", "eirini/" + component_name)
+#@ end
+
+#@ def git(name, source):
+name: #@ name
+type: git
+icon: git
+source: #@ source
+#@ end
+
+#@ def cluster_event_created(cluster_name):
+name: #@ "cluster-" + cluster_name + "-staging-event-created"
+type: semver
+icon: check-decagram
+source:
+  branch: events
+  driver: git
+  file: #@ cluster_name + "-event-created"
+  initial_version: 0.1.0
+  private_key: #@ data.values.repos.eirini_private_config.private_key
+  uri: #@ data.values.repos.eirini_private_config.uri
+#@ end
