@@ -18,11 +18,11 @@ if [[ "$CHART_STATUS" == "deployed" ]]; then
   helm upgrade postfacto-redis bitnami/redis \
     --namespace postfacto-redis \
     --set securityContext.fsGroup=65531 \
-    --set auth.password=$REDIS_PASSWORD
+    --set auth.password="$REDIS_PASSWORD"
 else
   helm repo add bitnami https://charts.bitnami.com/bitnami
-  helm install postfacto-redis bitnami/redis
-  --namespace postfacto-redis \
+  helm install postfacto-redis bitnami/redis \
+    --namespace postfacto-redis \
     --create-namespace \
     --set securityContext.fsGroup=65531
 fi
