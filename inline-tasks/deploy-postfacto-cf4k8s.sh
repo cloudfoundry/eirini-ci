@@ -12,18 +12,7 @@ cf_admin_password="$(goml get -f "$values" -p "cf_admin_password")"
 unzip postfacto/package.zip -d postfacto/
 cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/
 
-sed -i "s/ruby '2.6.3'.*$//" postfacto/package/assets/Gemfile
-sed -i "s/ruby 2.6.3p62.*$//" postfacto/package/assets/Gemfile.lock
 sed -i "34igem 'therubyracer'" postfacto/package/assets/Gemfile
-sed -i "34igem 'execjs'" postfacto/package/assets/Gemfile
-
-# echo "web:  bundle exec rake db:migrate && bundle exec rails s -p \$PORT -e development" >postfacto/package/assets/Procfile
-rm postfacto/package/assets/.ruby-version
-
-sed -i "s/Rails.application.configure do/Rails.application.configure do\\n\
-  config.hosts << 'retro.${cf_domain}'\\n\
-  config.hosts << 'retro.eirini.cf'/" \
-  postfacto/package/assets/config/environments/production.rb
 
 cf api "api.$cf_domain" --skip-ssl-validation
 cf auth admin "$cf_admin_password"
