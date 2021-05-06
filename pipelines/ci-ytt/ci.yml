@@ -95,17 +95,7 @@ jobs:
   serial_groups:
   - integration
 
-#@ components = [
-#@   "api",
-#@   "eirini-controller",
-#@   "event-reporter",
-#@   "instance-index-env-injector",
-#@   "migration",
-#@   "resource-validator",
-#@   "task-reporter",
-#@ ]
-
-#@ for component in components:
+#@ for component in data.values.components:
 - name: #@ "create-" + component + "-docker-image"
   on_failure: #@ notify_slack()
   plan:
@@ -126,18 +116,18 @@ jobs:
     - get: eirini-release
     - get: eirini
       passed:
-      #@ for component in components:
+      #@ for component in data.values.components:
       - #@ "create-" + component + "-docker-image"
       #@ end
       trigger: true
-    #@ for component in components:
+    #@ for component in data.values.components:
     - get: #@ component + "-image"
       params:
         skip_download: false
       passed:
       - #@ "create-" + component + "-docker-image"
     #@ end
-  - #@ update_version_files(components)
+  - #@ update_version_files(data.values.components)
   - params:
       repository: eirini-release-updated
     put: eirini-release

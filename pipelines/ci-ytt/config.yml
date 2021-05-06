@@ -36,3 +36,11 @@ repos:
     branch: pr-lrp-crds
     uri: git@github.com:eirini-forks/cloud_controller_ng.git
     private_key:
+components:
+  - api
+  - eirini-controller
+  - event-reporter
+  - instance-index-env-injector
+  - migration
+  - resource-validator
+  - task-reporter
