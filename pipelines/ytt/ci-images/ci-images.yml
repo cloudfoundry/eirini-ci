@@ -1,0 +1,106 @@
+#@ load("@ytt:data", "data")
+#@ load("@ci:notifications.lib.yml",
+#@   "notify_slack",
+#@ )
+#@ load("@ci:resources.lib.yml",
+#@   "slack",
+#@   "eirini_docker_image",
+#@   "docker_image",
+#@   "docker_image_type",
+#@   "git",
+#@ )
+
+jobs:
+- name: update-ci-image
+  on_failure: #@ notify_slack()
+  plan:
+  - get: golang-image
+    trigger: true
+  - get: ci-image-source
+    trigger: true
+  - put: ci-image
+    get_params:
+      skip_download: true
+    params:
+      build: ci-image-source/images/ci
+
+- name: update-gcloud-image
+  on_failure: #@ notify_slack()
+  plan:
+  - get: gcloud-sdk
+    trigger: true
+  - get: gcloud-image-source
+    trigger: true
+  - put: gcloud-image
+    get_params:
+      skip_download: true
+    params:
+      build: gcloud-image-source/images/gcloud
+
+- name: update-telepresence-image
+  on_failure: #@ notify_slack()
+  plan:
+  - get: telepresence-image-source
+    trigger: true
+  - put: telepresence-image
+    get_params:
+      skip_download: true
+    params:
+      build: telepresence-image-source/images/telepresence
+
+- name: update-capi-tests-image
+  on_failure: #@ notify_slack()
+  plan:
+  - get: capi-ruby-units-image
+    trigger: true
+  - get: capi-tests-image-source
+    trigger: true
+  - put: capi-tests-image
+    get_params:
+      skip_download: true
+    params:
+      build: capi-tests-image-source/images/capi-tests
+
+- name: update-golangci-lint-image
+  on_failure: #@ notify_slack()
+  plan:
+  - get: golangci-lint
+    trigger: true
+  - get: golanglint-ci-image-source
+    trigger: true
+  - put: golangci-lint-image
+    get_params:
+      skip_download: true
+    params:
+      build: golanglint-ci-image-source/images/golangci-lint
+
+resource_types:
+- #@ docker_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ slack()
+
+- #@ docker_image("capi-ruby-units-image", "cloudfoundry/capi", "ruby-units")
+- #@ eirini_docker_image("capi-tests")
+
+- #@ docker_image("golang-image", "golang")
+- #@ eirini_docker_image("ci")
+
+- #@ docker_image("gcloud-sdk", "google/cloud-sdk")
+- #@ eirini_docker_image("gcloud")
+
+- #@ eirini_docker_image("golangci-lint")
+- #@ docker_image("golangci-lint", "golangci/golangci-lint")
+
+- #@ eirini_docker_image("telepresence")
+
+#@ for image in ["capi-tests", "ci", "gcloud", "golanglint-ci", "telepresence"]:
+- name: #@ image + "-image-source"
+  type: git
+  icon: git
+  source:
+    branch: master
+    paths:
+    - #@ "images/" + image + "/Dockerfile"
+    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+#@ end

@@ -1,0 +1,7 @@
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:

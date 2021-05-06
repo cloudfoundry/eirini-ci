@@ -9,18 +9,18 @@ source:
   url: #@ data.values.slack.webhook
 #@ end
 
-#@ def docker_image_type(name, repository):
+#@ def docker_image_type(name, repository, tag="latest"):
 name: #@ name
 type: registry-image
 source:
   repository: #@ repository
-  tag: latest
+  tag: #@ tag
   username: #@ data.values.dockerhub.username
   password: #@ data.values.dockerhub.password
 #@ end
 
-#@ def docker_image(name, repository):
-_: #@ template.replace(docker_image_type(name, repository))
+#@ def docker_image(name, repository, tag="latest"):
+_: #@ template.replace(docker_image_type(name, repository, tag))
 icon: docker
 #@ end
 
