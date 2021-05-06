@@ -12,7 +12,7 @@ readonly target="${1:-eirini}"
 main_private_key=$(pass eirini/github/private-config/ssh-key)
 eirini_release_private_key=$(pass eirini/github/eirini-release/ssh-key)
 
-ytt -f "$SCRIPT_DIR" \
+ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
   --data-value="dockerhub.username=eiriniuser" \
   --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
