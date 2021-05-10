@@ -9,9 +9,7 @@ source:
   url: #@ data.values.slack.webhook
 #@ end
 
-#@ def docker_image_type(name, repository, tag="latest"):
-name: #@ name
-type: registry-image
+#@ def image_source(repository, tag="latest"):
 source:
   repository: #@ repository
   tag: #@ tag
@@ -19,9 +17,30 @@ source:
   password: #@ data.values.dockerhub.password
 #@ end
 
+#@ def docker_image_type(name, repository, tag="latest"):
+name: #@ name
+type: docker-image
+_: #@ template.replace(image_source(repository, tag))
+#@ end
+
+#@ def registry_image_type(name, repository, tag="latest"):
+name: #@ name
+type: registry-image
+_: #@ template.replace(image_source(repository, tag))
+#@ end
+
+#@ def registry_image(name, repository, tag="latest"):
+_: #@ template.replace(registry_image_type(name, repository, tag))
+icon: docker
+#@ end
+
 #@ def docker_image(name, repository, tag="latest"):
 _: #@ template.replace(docker_image_type(name, repository, tag))
 icon: docker
+#@ end
+
+#@ def eirini_registry_image(component_name):
+#@     return registry_image(component_name + "-image", "eirini/" + component_name)
 #@ end
 
 #@ def eirini_docker_image(component_name):

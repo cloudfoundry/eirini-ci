@@ -6,7 +6,7 @@
 #@   "slack",
 #@   "eirini_docker_image",
 #@   "docker_image",
-#@   "docker_image_type",
+#@   "registry_image_type",
 #@   "git",
 #@ )
 
@@ -66,16 +66,16 @@ jobs:
   plan:
   - get: golangci-lint
     trigger: true
-  - get: golanglint-ci-image-source
+  - get: golangci-lint-image-source
     trigger: true
   - put: golangci-lint-image
     get_params:
       skip_download: true
     params:
-      build: golanglint-ci-image-source/images/golangci-lint
+      build: golangci-lint-image-source/images/golangci-lint
 
 resource_types:
-- #@ docker_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
 - #@ slack()
@@ -94,7 +94,7 @@ resources:
 
 - #@ eirini_docker_image("telepresence")
 
-#@ for image in ["capi-tests", "ci", "gcloud", "golanglint-ci", "telepresence"]:
+#@ for image in ["capi-tests", "ci", "gcloud", "golangci-lint", "telepresence"]:
 - name: #@ image + "-image-source"
   type: git
   icon: git

@@ -4,9 +4,9 @@
 #@ )
 #@ load("@ci:resources.lib.yml",
 #@   "slack",
-#@   "eirini_docker_image",
-#@   "docker_image",
-#@   "docker_image_type",
+#@   "eirini_registry_image",
+#@   "registry_image",
+#@   "registry_image_type",
 #@   "git",
 #@   "cluster_event_created",
 #@ )
@@ -252,7 +252,7 @@ jobs:
 #@ end
 
 resource_types:
-- #@ docker_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
 - #@ slack()
@@ -264,15 +264,15 @@ resources:
 - #@ git("eirini-release-master", data.values.repos.eirini_release_master)
 - #@ git("eirini-release", data.values.repos.eirini_release)
 - #@ git("cluster-state", data.values.repos.eirini_private_config)
-- #@ docker_image("golang-image", "golang")
-- #@ docker_image("golang-lint", "golangci/golangci-lint")
-- #@ eirini_docker_image("api")
-- #@ eirini_docker_image("eirini-controller")
-- #@ eirini_docker_image("event-reporter")
-- #@ eirini_docker_image("instance-index-env-injector")
-- #@ eirini_docker_image("migration")
-- #@ eirini_docker_image("resource-validator")
-- #@ eirini_docker_image("task-reporter")
+- #@ registry_image("golang-image", "golang")
+- #@ registry_image("golang-lint", "golangci/golangci-lint")
+- #@ eirini_registry_image("api")
+- #@ eirini_registry_image("eirini-controller")
+- #@ eirini_registry_image("event-reporter")
+- #@ eirini_registry_image("instance-index-env-injector")
+- #@ eirini_registry_image("migration")
+- #@ eirini_registry_image("resource-validator")
+- #@ eirini_registry_image("task-reporter")
 - name: delete-timer
   source:
     days:
