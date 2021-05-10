@@ -105,7 +105,6 @@ resource "google_container_cluster" "cluster" {
 
   network = google_compute_network.network.name
   subnetwork = google_compute_subnetwork.subnetwork.name
-  min_master_version = 1.16
 
   # Enable Alias IPs to allow Windows Server networking.
   ip_allocation_policy {
