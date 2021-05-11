@@ -47,11 +47,18 @@ icon: docker
 #@     return docker_image(component_name + "-image", "eirini/" + component_name)
 #@ end
 
-#@ def git(name, source):
+#@ def git(name, path, branch="master", private_key=None):
 name: #@ name
 type: git
 icon: git
-source: #@ source
+source:
+  branch: #@ branch
+  #@ if private_key:
+  uri: #@ "git@github.com:" + path + ".git"
+  private_key: #@ private_key
+  #@ else:
+  uri: #@ "https://github.com/" + path + ".git"
+  #@ end
 #@ end
 
 #@ def cluster_event_created(cluster_name):
@@ -63,6 +70,6 @@ source:
   driver: git
   file: #@ cluster_name + "-event-created"
   initial_version: 0.1.0
-  private_key: #@ data.values.repos.eirini_private_config.private_key
-  uri: #@ data.values.repos.eirini_private_config.uri
+  private_key: #@ data.values.private_keys.eirini_private_config
+  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end

@@ -11,31 +11,10 @@ gcp:
   region: europe-west1
   worker_count: 3
 wiremock_keystore_pass:
-repos:
+private_keys:
   eirini:
-    branch: master
-    uri: git@github.com:cloudfoundry-incubator/eirini.git
-    private_key:
-  eirini_ci:
-    branch: master
-    uri: git@github.com:cloudfoundry-incubator/eirini-ci.git
-    private_key:
   eirini_release:
-    branch: develop
-    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    private_key:
-  eirini_release_master:
-    branch: master
-    uri: git@github.com:cloudfoundry-incubator/eirini-release.git
-    private_key:
   eirini_private_config:
-    branch: master
-    uri: git@github.com:cloudfoundry/eirini-private-config.git
-    private_key:
-  cloud_controller_ng:
-    branch: pr-lrp-crds
-    uri: git@github.com:eirini-forks/cloud_controller_ng.git
-    private_key:
 components:
   - api
   - eirini-controller
