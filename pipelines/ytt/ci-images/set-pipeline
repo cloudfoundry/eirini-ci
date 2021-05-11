@@ -5,11 +5,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 pipeline_yml=$(mktemp)
-trap "rm "$pipeline_yml"" EXIT
+trap "rm $pipeline_yml" EXIT
 readonly pipeline_yml
 readonly target="${1:-eirini}"
-
-main_private_key=$(pass eirini/github/private-config/ssh-key)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
