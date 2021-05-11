@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 pipeline_yml=$(mktemp)
+# shellcheck disable=SC2064
 trap "rm $pipeline_yml" EXIT
 readonly pipeline_yml
 readonly target="${1:-eirini}"
