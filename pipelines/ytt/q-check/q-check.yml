@@ -1,0 +1,68 @@
+#@ load("@ytt:data", "data")
+#@ load("@ci:notifications.lib.yml",
+#@   "notify_slack",
+#@ )
+#@ load("@ci:resources.lib.yml",
+#@   "slack",
+#@   "eirini_docker_image",
+#@   "registry_image",
+#@   "registry_image_type",
+#@   "git",
+#@   "cluster_event_created",
+#@ )
+#@ load("@ci:tasks.lib.yml",
+#@   "run_shellcheck",
+#@   "run_shfmt",
+#@   "check_wip_branches",
+#@   "check_golangci_linters",
+#@ )
+groups:
+- jobs:
+  - check-shell
+  - format-shell
+  - check-wip-branches
+  - check-golangci-linters
+  name: checkers
+
+jobs:
+- name: check-shell
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+    trigger: true
+  - #@ run_shellcheck()
+- name: format-shell
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+    trigger: true
+  - #@ run_shfmt()
+- name: check-wip-branches
+  on_failure: #@ notify_slack()
+  plan:
+  - get: every-morning
+    trigger: true
+  - #@ check_wip_branches()
+- name: check-golangci-linters
+  on_failure: #@ notify_slack()
+  plan:
+  - get: golangci-lint-image
+    trigger: true
+  - get: eirini
+    trigger: true
+  - #@ check_golangci_linters()
+
+resource_types:
+- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ slack()
+- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ git("eirini", "cloudfoundry-incubator/eirini")
+- #@ eirini_docker_image("golangci-lint")
+- icon: alarm
+  name: every-morning
+  source:
+    start: 5:00 AM
+    stop: 6:00 AM
+  type: time

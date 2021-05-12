@@ -1,6 +1,50 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:template", "template")
 
+#@ def run_shellcheck(input_name="eirini"):
+task: run-shellcheck
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("koalaman/shellcheck-alpine", "stable")
+  inputs:
+  - name: ci-resources
+  run:
+    path: /usr/bin/env
+    args:
+    - sh
+    - -c
+    - #@ data.read("tasks/check-shell.sh")
+#@ end
+
+#@ def run_shfmt():
+task: run-shfmt
+config:
+  _: #@ template.replace(config())
+  inputs:
+  - name: ci-resources
+  image_resource: #@ image_resource("eirini/ci")
+  run: #@ task_script("format-shell.sh")
+#@ end
+
+#@ def check_wip_branches():
+task: check-wip-branches
+config:
+  _: #@ template.replace(config())
+  image_resource: #@ image_resource("eirini/ci")
+  run: #@ task_script("check-wip-branches.sh")
+#@ end
+
+#@ def check_golangci_linters():
+task: check-wip-branches
+config:
+  _: #@ template.replace(config())
+  inputs:
+  - name: eirini
+  image_resource: #@ image_resource("eirini/golangci-lint")
+  run: #@ task_script("check-golangci-linters.sh")
+#@ end
+
+
 #@ def run_unit_tests(input_name="eirini"):
 task: run-unit-tests
 input_mapping:
@@ -272,11 +316,11 @@ caches:
 - path: /root/.cache/go-build
 #@ end
 
-#@ def image_resource(repository):
+#@ def image_resource(repository, tag="latest"):
 type: registry-image
 source:
   repository: #@ repository
-  tag: latest
+  tag: #@ tag
   username: #@ data.values.dockerhub.username
   password: #@ data.values.dockerhub.password
 #@ end
@@ -287,3 +331,4 @@ args:
 - -c
 - #@ data.read("tasks/" + filename)
 #@ end
+
