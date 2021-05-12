@@ -27,11 +27,10 @@ jobs:
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
-      steps:
-      - get: postfacto
-        trigger: true
-      - get: eirini-private-config
-      - get: ci-resources
+    - get: postfacto
+      trigger: true
+    - get: eirini-private-config
+    - get: ci-resources
   - #@ download_kubeconfig("cf4k8s4a8e")
   - #@ helm_install_redis()
   - #@ get_redis_credentials()
@@ -42,12 +41,11 @@ jobs:
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
-      steps:
-      - get: docker-jefe
-        passed:
-        - build-jefe
-        trigger: true
-      - get: eirini-private-config
+    - get: docker-jefe
+      passed:
+      - build-jefe
+      trigger: true
+    - get: eirini-private-config
   - #@ deploy_jefe()
   serial: true
 
@@ -55,11 +53,10 @@ jobs:
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
-      steps:
-      - get: ci-resources
-      - get: eirinidotcf
-        trigger: true
-      - get: eirini-private-config
+    - get: ci-resources
+    - get: eirinidotcf
+      trigger: true
+    - get: eirini-private-config
   - #@ download_kubeconfig("cf4k8s4a8e")
   - #@ deploy_eirinidotcf()
   serial: true
@@ -81,6 +78,7 @@ jobs:
   - put: eirinidotcf
     params:
       repository: eirinidotcf-updated
+  serial: true
 
 - name: build-jefe
   plan:
@@ -89,16 +87,16 @@ jobs:
   - put: docker-jefe
     params:
       build: jefe
+  serial: true
 
 - name: deploy-pairup
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
-      steps:
-      - get: ci-resources
-      - get: pairup
-        trigger: true
-      - get: eirini-private-config
+    - get: ci-resources
+    - get: pairup
+      trigger: true
+    - get: eirini-private-config
   - #@ download_kubeconfig("cf4k8s4a8e")
   - #@ deploy_pairup()
   serial: true
@@ -109,12 +107,12 @@ resource_types:
 resources:
 - #@ slack()
 - #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ docker_image("docker-jefe", "eirini/jefe")
-- #@ git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
 - #@ git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
-- #@ git("jefe", "eirini-forks/jefe")
-- #@ git("pairup", "eirini-forks/pairup")
 - #@ github_release("postfacto", "pivotal", "postfacto", "package.zip")
+- #@ git("jefe", "eirini-forks/jefe")
+- #@ git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
+- #@ git("pairup", "eirini-forks/pairup")
+- #@ docker_image("docker-jefe", "eirini/jefe")
 - icon: alarm
   name: every-morning
   source:
