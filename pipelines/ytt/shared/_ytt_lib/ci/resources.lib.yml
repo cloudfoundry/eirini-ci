@@ -61,6 +61,17 @@ source:
   #@ end
 #@ end
 
+#@ def github_release(name, owner, repo, globs):
+name: postfacto
+type: github-release
+source:
+  globs: #@ globs
+  owner: #@ owner
+  repository: #@ repo
+check_every: 12h0m0s
+icon: egg-easter
+#@ end
+
 #@ def cluster_event_created(cluster_name):
 name: #@ "cluster-" + cluster_name + "-staging-event-created"
 type: semver

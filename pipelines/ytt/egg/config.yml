@@ -1,0 +1,33 @@
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:
+private_keys:
+  eirinidotcf:
+  eirini_private_config:
+gcp:
+  service_account_json:
+  zone: europe-west1-b
+  region: europe-west1
+  worker_count: 3
+postfacto:
+  mysql:
+    address:
+    password:
+jefe:
+  admin_password:
+  url: https://jefe.eirini.cf/
+  github_oauth:
+    client_id:
+    client_secret:
+    org: eirini-forks
+  db:
+    username: jefeuser
+    password:
+    address:
+    port: 3306
+pairup:
+  firebase_conf:

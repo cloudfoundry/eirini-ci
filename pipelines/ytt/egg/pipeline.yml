@@ -1,0 +1,131 @@
+#@ load("@ytt:data", "data")
+#@ load("@ci:notifications.lib.yml",
+#@   "notify_slack",
+#@ )
+#@ load("@ci:resources.lib.yml",
+#@   "slack",
+#@   "eirini_docker_image",
+#@   "docker_image",
+#@   "registry_image_type",
+#@   "git",
+#@   "github_release",
+#@ )
+#@ load("@ci:tasks.lib.yml",
+#@   "download_kubeconfig",
+#@   "helm_install_redis",
+#@   "get_redis_credentials",
+#@   "deploy_postfacto",
+#@   "deploy_jefe",
+#@   "deploy_eirinidotcf",
+#@   "unclaim_clusters",
+#@   "bump_eirinidotcf_dependencies",
+#@   "deploy_pairup",
+#@ )
+
+jobs:
+- name: deploy-postfacto
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+      steps:
+      - get: postfacto
+        trigger: true
+      - get: eirini-private-config
+      - get: ci-resources
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ helm_install_redis()
+  - #@ get_redis_credentials()
+  - #@ deploy_postfacto()
+  serial: true
+
+- name: deploy-jefe
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+      steps:
+      - get: docker-jefe
+        passed:
+        - build-jefe
+        trigger: true
+      - get: eirini-private-config
+  - #@ deploy_jefe()
+  serial: true
+
+- name: deploy-eirinidotcf
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+      steps:
+      - get: ci-resources
+      - get: eirinidotcf
+        trigger: true
+      - get: eirini-private-config
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ deploy_eirinidotcf()
+  serial: true
+
+- name: unclaim-clusters
+  on_failure: #@ notify_slack()
+  plan:
+  - get: every-morning
+    trigger: true
+  - #@ unclaim_clusters()
+
+- name: bump-eirinidotcf-dependencies
+  on_failure: #@ notify_slack()
+  plan:
+  - get: every-week
+    trigger: true
+  - get: eirinidotcf
+  - #@ bump_eirinidotcf_dependencies()
+  - put: eirinidotcf
+    params:
+      repository: eirinidotcf-updated
+
+- name: build-jefe
+  plan:
+  - get: jefe
+    trigger: true
+  - put: docker-jefe
+    params:
+      build: jefe
+
+- name: deploy-pairup
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+      steps:
+      - get: ci-resources
+      - get: pairup
+        trigger: true
+      - get: eirini-private-config
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ deploy_pairup()
+  serial: true
+
+resource_types:
+- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ slack()
+- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ docker_image("docker-jefe", "eirini/jefe")
+- #@ git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
+- #@ git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ git("jefe", "eirini-forks/jefe")
+- #@ git("pairup", "eirini-forks/pairup")
+- #@ github_release("postfacto", "pivotal", "postfacto", "package.zip")
+- icon: alarm
+  name: every-morning
+  source:
+    start: 5:00 AM
+    stop: 6:00 AM
+  type: time
+- icon: alarm
+  name: every-week
+  source:
+    days:
+    - Saturday
+    start: 5:00 AM
+    stop: 6:00 AM
+  type: time
