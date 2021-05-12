@@ -1,0 +1,233 @@
+#@ load("@ytt:data", "data")
+#@ load("@ci:notifications.lib.yml",
+#@   "notify_slack",
+#@ )
+#@ load("@ci:resources.lib.yml",
+#@   "slack",
+#@   "registry_image_type",
+#@   "git",
+#@   "github_release",
+#@   "cluster_event_created",
+#@   "eirini_release_semver",
+#@ )
+#@ load("@ci:tasks.lib.yml",
+#@   "create_release",
+#@   "checkout_eirini_sha",
+#@   "download_kubeconfig",
+#@   "generate_default_values",
+#@   "generate_loadbalancer_values",
+#@   "aggregate_cf4k8s_values",
+#@   "patch_eirini_release",
+#@   "deploy_cf_for_k8s",
+#@   "get_smoke_test_variables",
+#@   "run_smoke_tests",
+#@   "delete_kubernetes_cluster",
+#@   "delete_values_file",
+#@   "delete_disks",
+#@   "create_kubernetes_cluster",
+#@   "generate_domain_certificates",
+#@ )
+
+groups:
+- name: main
+  jobs:
+  - generate-cf-for-k8s-values
+  - deploy-cf-for-k8s-cf4k8s4a8e
+  - smoke-tests-cf4k8s4a8e
+  - bump-minor-version
+  - bump-major-version
+  - publish-release
+
+- name: cf-for-k8s-cf4k8s4a8e
+  jobs:
+  - generate-cf-for-k8s-values
+  - deploy-cf-for-k8s-cf4k8s4a8e
+  - smoke-tests-cf4k8s4a8e
+
+- name: publish-release
+  jobs:
+  - bump-minor-version
+  - bump-major-version
+  - publish-release
+
+- name: clusters
+  jobs:
+  - delete-cluster-cf4k8s4a8e
+  - create-cluster-cf4k8s4a8e
+  - generate-domain-certificates
+
+jobs:
+- name: publish-release
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+  - get: state
+    passed:
+    - smoke-tests-cf4k8s4a8e
+    resource: cluster-state
+  - get: eirini-release
+    passed:
+    - smoke-tests-cf4k8s4a8e
+  - get: eirini-release-version
+  - #@ create_release()
+  - get: eirini
+  - put: eirini-release
+    params:
+      repository: eirini-release
+      tag: eirini-release-version/version
+      tag_prefix: v
+      only_tag: true
+  - put: eirini-github-release
+    params:
+      globs:
+      - release-output/eirini*.tgz
+      name: eirini-release-version/version
+      tag: eirini-release-version/version
+      tag_prefix: v
+  - #@ checkout_eirini_sha()
+  - put: eirini
+    params:
+      repository: eirini-stable
+      tag: eirini-release-version/version
+      only_tag: true
+
+- name: bump-major-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release-version
+    params:
+      bump: major
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
+
+- name: bump-minor-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release-version
+    params:
+      bump: minor
+    passed:
+    - publish-release
+    trigger: true
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
+
+- name: deploy-cf-for-k8s-cf4k8s4a8e
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release
+    trigger: true
+  - get: cf-for-k8s
+    passed:
+    - generate-cf-for-k8s-values
+    trigger: true
+  - get: cluster-state
+    passed:
+    - generate-cf-for-k8s-values
+  - get: ci-resources
+  - get: cf-k8s-prometheus
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ patch_eirini_release()
+  - #@ deploy_cf_for_k8s("cf4k8s4a8e")
+  public: true
+  serial_groups:
+  - cf4k8s4a8e
+
+- name: generate-cf-for-k8s-values
+  on_failure: #@ notify_slack()
+  plan:
+  - get: cf-for-k8s
+    trigger: true
+  - get: cluster-state
+  - get: ci-resources
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ generate_default_values("cf4k8s4a8e")
+  - #@ generate_loadbalancer_values("cf4k8s4a8e")
+  - #@ aggregate_cf4k8s_values("cf4k8s4a8e")
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified
+  public: true
+  serial_groups:
+  - cf4k8s4a8e
+
+- name: smoke-tests-cf4k8s4a8e
+  on_failure: #@ notify_slack()
+  plan:
+  - get: cf-for-k8s
+    params:
+      include_source_tarball: true
+    passed:
+    - deploy-cf-for-k8s-cf4k8s4a8e
+    trigger: true
+  - get: cluster-state
+    passed:
+    - deploy-cf-for-k8s-cf4k8s4a8e
+  - get: eirini-release
+    passed:
+    - deploy-cf-for-k8s-cf4k8s4a8e
+    trigger: true
+  - #@ get_smoke_test_variables("cf4k8s4a8e")
+  - #@ run_smoke_tests()
+  public: true
+  serial_groups:
+  - cf4k8s4a8e
+
+- name: delete-cluster-cf4k8s4a8e
+  plan:
+  - get: ci-resources
+  - #@ delete_kubernetes_cluster("cf4k8s4a8e")
+  - get: cluster-state
+  - #@ delete_values_file("cf4k8s4a8e")
+  - #@ delete_disks("cf4k8s4a8e")
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified
+  serial: true
+  serial_groups:
+  - cf4k8s4a8e
+
+- name: create-cluster-cf4k8s4a8e
+  plan:
+  - get: ci-resources
+  - get: cluster-state
+    passed:
+    - delete-cluster-cf4k8s4a8e
+    trigger: true
+  - #@ create_kubernetes_cluster("cf4k8s4a8e")
+  - put: cluster-cf4k8s4a8e-staging-event-created
+    params:
+      bump: major
+  serial: true
+  serial_groups:
+  - cf4k8s4a8e
+
+- name: generate-domain-certificates
+  plan:
+  - get: cluster-state
+    passed:
+    - create-cluster-cf4k8s4a8e
+    trigger: true
+  - get: ci-resources
+  - #@ download_kubeconfig("cf4k8s4a8e")
+  - #@ generate_domain_certificates()
+
+
+resource_types:
+- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ slack()
+- #@ git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirini_private_config)
+- #@ git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
+- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ git("eirini", "cloudfoundry-incubator/eirini", "master", data.values.private_keys.eirini)
+- #@ github_release("eirini-github-release", "cloudfoundry-incubator", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
+- #@ git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirini_release)
+- #@ cluster_event_created("cf4k8s4a8e")
+- #@ eirini_release_semver()

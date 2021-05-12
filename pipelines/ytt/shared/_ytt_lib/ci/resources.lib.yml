@@ -61,15 +61,33 @@ source:
   #@ end
 #@ end
 
-#@ def github_release(name, owner, repo, globs):
-name: postfacto
+#@ def github_release(name, owner, repo, globs=None, checkEvery=None, accessToken=None, drafts=False):
+name: #@ name
 type: github-release
 source:
-  globs: #@ globs
   owner: #@ owner
   repository: #@ repo
-check_every: 12h0m0s
+  #@ if/end globs:
+  globs: #@ globs
+  #@ if/end accessToken:
+  access_token: #@ accessToken
+  drafts: #@ drafts
+#@ if/end checkEvery:
+check_every: #@ checkEvery
 icon: egg-easter
+#@ end
+
+#@ def eirini_release_semver():
+name: eirini-release-version
+type: semver
+icon: counter
+source:
+  branch: master
+  driver: git
+  file: release-version
+  initial_version: 0.1.0
+  private_key: #@ data.values.private_keys.eirini_private_config
+  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
 #@ def cluster_event_created(cluster_name):

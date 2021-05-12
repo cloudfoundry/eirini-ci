@@ -1,0 +1,20 @@
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:
+access_tokens:
+  eirini_ci:
+private_keys:
+  eirini:
+  eirini_release:
+  eirini_private_config:
+gcp:
+  service_account_json:
+  dns_service_account_json:
+  zone: europe-west1-b
+  region: europe-west1
+  worker_count: 3
+  project_id: cff-eirini-peace-pods

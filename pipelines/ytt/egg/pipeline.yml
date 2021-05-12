@@ -108,7 +108,7 @@ resources:
 - #@ slack()
 - #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
 - #@ git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
-- #@ github_release("postfacto", "pivotal", "postfacto", "package.zip")
+- #@ github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
 - #@ git("jefe", "eirini-forks/jefe")
 - #@ git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
 - #@ git("pairup", "eirini-forks/pairup")

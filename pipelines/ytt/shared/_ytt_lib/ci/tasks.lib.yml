@@ -418,6 +418,168 @@ params:
   FIREBASE_CONF: #@ data.values.pairup.firebase_conf
 #@ end
 
+#@ def create_release():
+task: create-release
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: ci-resources
+  - name: state
+  - name: eirini-release
+  - name: eirini-release-version
+  outputs:
+  - name: release-output
+  - name: release-output-yaml
+  run: #@ task_script("create-release.sh")
+#@ end
+
+#@ def checkout_eirini_sha():
+task: checkout-eirini-sha
+privileged: true
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: eirini-release
+  - name: eirini
+  - name: ci-resources
+  outputs:
+  - name: eirini-stable
+  run: #@ task_script("checkout-sha-by-image.sh")
+#@ end
+
+#@ def generate_default_values(cluster_name):
+task: generate-default-values
+config:
+  platform: linux
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: cf-for-k8s
+  - name: kube
+  outputs:
+  - name: default-values-file
+  run: #@ task_script("generate-default-cf4k8s-values.sh")
+params:
+  CLUSTER_NAME: #@ cluster_name
+  GCP_SERVICE_ACCOUNT: #@ data.values.gcp.service_account_json
+#@ end
+
+#@ def generate_loadbalancer_values(cluster_name):
+task: generate-loadbalancer-values
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/gcloud")
+  inputs:
+  - name: ci-resources
+  outputs:
+  - name: loadbalancer-values-file
+  run: #@ task_script("generate-loadbalancer-cf4k8s-values.sh")
+params:
+  CLUSTER_NAME: #@ cluster_name
+  GCP_REGION: #@ data.values.gcp.region
+  GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+  GCP_ZONE: #@ data.values.gcp.zone
+#@ end
+
+#@ def aggregate_cf4k8s_values(cluster_name):
+task: aggregate-cf4k8s-values
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: cluster-state
+  - name: default-values-file
+  - name: loadbalancer-values-file
+  outputs:
+  - name: state-modified
+  run: #@ task_script("aggregate-cf4k8s-values.sh")
+params:
+  CLUSTER_NAME: #@ cluster_name
+#@ end
+
+#@ def delete_cf():
+task: delete-cf
+config:
+  platform: linux
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: kube
+  run: #@ task_script("delete-cf-for-k8s.sh")
+#@ end
+
+#@ def patch_eirini_release():
+task: patch-eirini-release
+config:
+  platform: linux
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: cf-for-k8s
+  - name: eirini-release
+  outputs:
+  - name: patched-cf-for-k8s
+  run: #@ task_script("patch-eirini-release-cf-for-k8s.sh")
+#@ end
+
+#@ def deploy_cf_for_k8s(cluster_name):
+task: deploy-cf-for-k8s
+config:
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: patched-cf-for-k8s
+  - name: cf-k8s-prometheus
+  - name: cluster-state
+  - name: ci-resources
+  - name: kube
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    USE_CERT_MANAGER: "true"
+  platform: linux
+  run: #@ task_script("deploy-cf-for-k8s.sh")
+#@ end
+
+#@ def get_smoke_test_variables(cluster_name):
+task: get-smoke-tests-variables
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: cluster-state
+  outputs:
+  - name: smoke-tests-env-vars
+  params:
+    CLUSTER_NAME: #@ cluster_name
+  run: #@ task_script("get-smoke-tests-variables.sh")
+#@ end
+
+#@ def run_smoke_tests():
+task: run-smoke-tests
+config:
+  platform: linux
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+  inputs:
+  - name: cf-for-k8s
+  - name: smoke-tests-env-vars
+  params:
+    SMOKE_TEST_SKIP_SSL: "true"
+    SMOKE_TEST_USERNAME: admin
+  run: #@ task_script("run-smoke-tests.sh")
+#@ end
+
+#@ def generate_domain_certificates():
+task: generate-domain-certificates
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/gcloud")
+  inputs:
+  - name: kube
+  - name: ci-resources
+  params:
+    DNS_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.dns_service_account_json
+    GCP_PROJECT_ID: #@ data.values.gcp.project_id
+  run: #@ task_script("install-cert-manager.sh")
+#@ end
+
 #@ def config():
 platform: linux
 caches:
