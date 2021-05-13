@@ -13,6 +13,10 @@ readonly target
 worker_count=${2:-"3"}
 readonly worker_count
 
+if ! fly -t "$target" status &>/dev/null; then
+  fly -t "$target" login
+fi
+
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
   --data-value="dockerhub.username=eiriniuser" \
