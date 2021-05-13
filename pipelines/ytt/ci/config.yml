@@ -9,7 +9,7 @@ gcp:
   service_account_json:
   zone: europe-west1-b
   region: europe-west1
-  worker_count: 3
+  worker_count:
 wiremock_keystore_pass:
 private_keys:
   eirini:

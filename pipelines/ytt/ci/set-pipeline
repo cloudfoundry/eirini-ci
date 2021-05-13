@@ -9,6 +9,8 @@ pipeline_yml=$(mktemp)
 trap "rm $pipeline_yml" EXIT
 readonly pipeline_yml
 readonly target="${1:-eirini}"
+worker_count=${2:-"3"}
+readonly worker_count
 
 eirini_release_private_key=$(pass eirini/github/eirini-release/ssh-key)
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
@@ -20,6 +22,7 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
   --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --data-value="wiremock_keystore_pass=$(pass eirini/ci/wiremock-keystore-password)" \
+  --data-value="gcp.worker_count=$worker_count" \
   >"$pipeline_yml"
 
 fly --target "$target" \

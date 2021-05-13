@@ -5,10 +5,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 pipeline_yml=$(mktemp)
+readonly pipeline_yml
 # shellcheck disable=SC2064
 trap "rm $pipeline_yml" EXIT
-readonly pipeline_yml
-readonly target="${1:-eirini}"
+target="${1:-eirini}"
+readonly target
+worker_count=${2:-"3"}
+readonly worker_count
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
@@ -20,6 +23,7 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="access_tokens.eirini_ci=$(pass eirini/github/eirinici/access-token)" \
   --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --data-value="gcp.dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --data-value="gcp.worker_count=$worker_count" \
   >"$pipeline_yml"
 
 fly --target "$target" \
