@@ -533,7 +533,7 @@ config:
   - name: kube
   params:
     CLUSTER_NAME: #@ cluster_name
-    USE_CERT_MANAGER: "true"
+    USE_CERT_MANAGER: #@ data.values.use_cert_manager
   platform: linux
   run: #@ task_script("deploy-cf-for-k8s.sh")
 #@ end

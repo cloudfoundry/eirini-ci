@@ -1,15 +1,12 @@
 #@data/values
 ---
+enable_cf4k8s_redeploy:
 slack:
   webhook:
 dockerhub:
   username:
   password:
-access_tokens:
-  eirini_ci:
 private_keys:
-  eirini:
-  eirini_release:
   eirini_private_config:
 gcp:
   service_account_json:
@@ -18,4 +15,6 @@ gcp:
   region: europe-west1
   worker_count:
   project_id: cff-eirini-peace-pods
-use_cert_manager: true
+  enable_windows_pool:
+  cluster_name:
+use_cert_manager: false

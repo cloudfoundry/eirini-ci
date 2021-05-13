@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+cluster_name="${1:?You must specify a cluster name}"
+readonly cluster_name
+
+enable_redeploy="${2:-false}"
+readonly enable_redeploy
+
+worker_count=${3:-"3"}
+readonly worker_count
+
+target="${4:-eirini}"
+readonly target
+
+windows_pool="${5:-false}"
+readonly windows_pool
+
+pipeline_yml=$(mktemp)
+readonly pipeline_yml
+# shellcheck disable=SC2064
+trap "rm $pipeline_yml" EXIT
+
+if ! fly -t "$target" status &>/dev/null; then
+  fly -t "$target" login
+fi
+
+ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
+  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="dockerhub.username=eiriniuser" \
+  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
+  --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --data-value="gcp.dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --data-value="gcp.worker_count=$worker_count" \
+  --data-value="gcp.cluster_name=$cluster_name" \
+  --data-value="gcp.enable_windows_pool=$windows_pool" \
+  --data-value="enable_cf4k8s_redeploy=$enable_redeploy" \
+  >"$pipeline_yml"
+
+fly --target "$target" \
+  set-pipeline \
+  --config "$pipeline_yml" \
+  --pipeline "$cluster_name"
