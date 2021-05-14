@@ -26,8 +26,10 @@ groups:
 jobs:
 - name: #@ "delete-cluster-" + data.values.gcp.cluster_name
   plan:
+  #@ if data.values.enable_cf4k8s_redeploy == "true":
   - get: delete-timer
     trigger: true
+  #@ end
   - get: ci-resources
   - #@ clusters.delete_kubernetes_cluster(data.values.gcp.cluster_name)
   - get: cluster-state
@@ -82,8 +84,10 @@ jobs:
 - name: #@ "deploy-cf-for-k8s-" + data.values.gcp.cluster_name
   on_failure: #@ notify_slack()
   plan:
+  #@ if data.values.enable_cf4k8s_redeploy == "true":
   - get: redeploy-timer
     trigger: true
+  #@ end
   - get: eirini-release
   - get: cf-for-k8s
     passed:
@@ -96,7 +100,6 @@ jobs:
   - get: ci-resources
   - get: cf-k8s-prometheus
   - #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
-  #@ if/end data.values.enable_cf4k8s_redeploy:
   - #@ cf_for_k8s.delete_cf()
   - #@ cf_for_k8s.patch_eirini_release()
   - #@ cf_for_k8s.deploy_cf_for_k8s(data.values.gcp.cluster_name)
@@ -107,10 +110,12 @@ jobs:
 - name: #@ "smoke-tests-" + data.values.gcp.cluster_name
   on_failure: #@ notify_slack()
   plan:
+  #@ if data.values.enable_cf4k8s_redeploy == "true":
   - get: redeploy-timer
     passed:
     - #@ "deploy-cf-for-k8s-" + data.values.gcp.cluster_name
     trigger: true
+  #@ end
   - get: cf-for-k8s
     params:
       include_source_tarball: true
@@ -142,6 +147,7 @@ resources:
 - #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release")
 - #@ resources.cluster_event_created(data.values.gcp.cluster_name)
 
+#@ if data.values.enable_cf4k8s_redeploy == "true":
 - icon: bomb
   name: delete-timer
   source:
@@ -157,3 +163,4 @@ resources:
     start: 12:00 AM
     stop: 1:00 AM
   type: time
+#@ end
