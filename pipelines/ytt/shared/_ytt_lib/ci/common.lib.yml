@@ -1,0 +1,17 @@
+#@ load("@ytt:data", "data")
+
+#@ def image_resource(repository, tag="latest"):
+type: registry-image
+source:
+  repository: #@ repository
+  tag: #@ tag
+  username: #@ data.values.dockerhub.username
+  password: #@ data.values.dockerhub.password
+#@ end
+
+#@ def task_script(filename):
+path: /bin/bash
+args:
+- -c
+- #@ data.read("tasks/" + filename)
+#@ end

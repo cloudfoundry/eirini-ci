@@ -1,13 +1,7 @@
 #@ load("@ytt:data", "data")
-#@ load("@ci:notifications.lib.yml",
-#@   "notify_slack",
-#@ )
-#@ load("@ci:resources.lib.yml",
-#@   "slack",
-#@   "eirini_docker_image",
-#@   "docker_image",
-#@   "registry_image_type",
-#@ )
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
 
 jobs:
 - name: update-ci-image
@@ -74,24 +68,24 @@ jobs:
       build: golangci-lint-image-source/images/golangci-lint
 
 resource_types:
-- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-- #@ slack()
+- #@ resources.slack()
 
-- #@ docker_image("capi-ruby-units-image", "cloudfoundry/capi", "ruby-units")
-- #@ eirini_docker_image("capi-tests")
+- #@ resources.docker_image("capi-ruby-units-image", "cloudfoundry/capi", "ruby-units")
+- #@ resources.eirini_docker_image("capi-tests")
 
-- #@ docker_image("golang-image", "golang")
-- #@ eirini_docker_image("ci")
+- #@ resources.docker_image("golang-image", "golang")
+- #@ resources.eirini_docker_image("ci")
 
-- #@ docker_image("gcloud-sdk", "google/cloud-sdk")
-- #@ eirini_docker_image("gcloud")
+- #@ resources.docker_image("gcloud-sdk", "google/cloud-sdk")
+- #@ resources.eirini_docker_image("gcloud")
 
-- #@ eirini_docker_image("golangci-lint")
-- #@ docker_image("golangci-lint", "golangci/golangci-lint")
+- #@ resources.eirini_docker_image("golangci-lint")
+- #@ resources.docker_image("golangci-lint", "golangci/golangci-lint")
 
-- #@ eirini_docker_image("telepresence")
+- #@ resources.eirini_docker_image("telepresence")
 
 #@ for image in ["capi-tests", "ci", "gcloud", "golangci-lint", "telepresence"]:
 - name: #@ image + "-image-source"

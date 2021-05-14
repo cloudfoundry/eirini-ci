@@ -1,32 +1,10 @@
 #@ load("@ytt:data", "data")
-#@ load("@ci:notifications.lib.yml",
-#@   "notify_slack",
-#@ )
-#@ load("@ci:resources.lib.yml",
-#@   "slack",
-#@   "registry_image_type",
-#@   "git",
-#@   "github_release",
-#@   "cluster_event_created",
-#@   "eirini_release_semver",
-#@ )
-#@ load("@ci:tasks.lib.yml",
-#@   "create_release",
-#@   "checkout_eirini_sha",
-#@   "download_kubeconfig",
-#@   "generate_default_values",
-#@   "generate_loadbalancer_values",
-#@   "aggregate_cf4k8s_values",
-#@   "patch_eirini_release",
-#@   "deploy_cf_for_k8s",
-#@   "get_smoke_test_variables",
-#@   "run_smoke_tests",
-#@   "delete_kubernetes_cluster",
-#@   "delete_values_file",
-#@   "delete_disks",
-#@   "create_kubernetes_cluster",
-#@   "generate_domain_certificates",
-#@ )
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:release_management.lib.yml", "release_management")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:cf_for_k8s.lib.yml", "cf_for_k8s")
 
 groups:
 - name: main
@@ -69,7 +47,7 @@ jobs:
     passed:
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
-  - #@ create_release()
+  - #@ release_management.create_release()
   - get: eirini
   - put: eirini-release
     params:
@@ -84,7 +62,7 @@ jobs:
       name: eirini-release-version/version
       tag: eirini-release-version/version
       tag_prefix: v
-  - #@ checkout_eirini_sha()
+  - #@ release_management.checkout_eirini_sha()
   - put: eirini
     params:
       repository: eirini-stable
@@ -128,9 +106,9 @@ jobs:
     - generate-cf-for-k8s-values
   - get: ci-resources
   - get: cf-k8s-prometheus
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ patch_eirini_release()
-  - #@ deploy_cf_for_k8s("cf4k8s4a8e")
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ cf_for_k8s.patch_eirini_release()
+  - #@ cf_for_k8s.deploy_cf_for_k8s("cf4k8s4a8e")
   public: true
   serial_groups:
   - cf4k8s4a8e
@@ -142,10 +120,10 @@ jobs:
     trigger: true
   - get: cluster-state
   - get: ci-resources
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ generate_default_values("cf4k8s4a8e")
-  - #@ generate_loadbalancer_values("cf4k8s4a8e")
-  - #@ aggregate_cf4k8s_values("cf4k8s4a8e")
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ cf_for_k8s.generate_default_values("cf4k8s4a8e")
+  - #@ cf_for_k8s.generate_loadbalancer_values("cf4k8s4a8e")
+  - #@ cf_for_k8s.aggregate_cf4k8s_values("cf4k8s4a8e")
   - put: cluster-state
     params:
       merge: true
@@ -170,8 +148,8 @@ jobs:
     passed:
     - deploy-cf-for-k8s-cf4k8s4a8e
     trigger: true
-  - #@ get_smoke_test_variables("cf4k8s4a8e")
-  - #@ run_smoke_tests()
+  - #@ cf_for_k8s.get_smoke_test_variables("cf4k8s4a8e")
+  - #@ cf_for_k8s.run_smoke_tests()
   public: true
   serial_groups:
   - cf4k8s4a8e
@@ -179,10 +157,10 @@ jobs:
 - name: delete-cluster-cf4k8s4a8e
   plan:
   - get: ci-resources
-  - #@ delete_kubernetes_cluster("cf4k8s4a8e")
+  - #@ clusters.delete_kubernetes_cluster("cf4k8s4a8e")
   - get: cluster-state
-  - #@ delete_values_file("cf4k8s4a8e")
-  - #@ delete_disks("cf4k8s4a8e")
+  - #@ clusters.delete_values_file("cf4k8s4a8e")
+  - #@ clusters.delete_disks("cf4k8s4a8e")
   - put: cluster-state
     params:
       merge: true
@@ -198,7 +176,7 @@ jobs:
     passed:
     - delete-cluster-cf4k8s4a8e
     trigger: true
-  - #@ create_kubernetes_cluster("cf4k8s4a8e")
+  - #@ clusters.create_kubernetes_cluster("cf4k8s4a8e")
   - put: cluster-cf4k8s4a8e-staging-event-created
     params:
       bump: major
@@ -213,21 +191,21 @@ jobs:
     - create-cluster-cf4k8s4a8e
     trigger: true
   - get: ci-resources
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ generate_domain_certificates()
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ cf_for_k8s.generate_domain_certificates()
 
 
 resource_types:
-- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-- #@ slack()
-- #@ git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirini_private_config)
-- #@ git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
-- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
-- #@ git("eirini", "cloudfoundry-incubator/eirini", "master", data.values.private_keys.eirini)
-- #@ github_release("eirini-github-release", "cloudfoundry-incubator", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
-- #@ git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirini_release)
-- #@ cluster_event_created("cf4k8s4a8e")
-- #@ eirini_release_semver()
+- #@ resources.slack()
+- #@ resources.git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirini_private_config)
+- #@ resources.git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ resources.git("eirini", "cloudfoundry-incubator/eirini", "master", data.values.private_keys.eirini)
+- #@ resources.github_release("eirini-github-release", "cloudfoundry-incubator", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
+- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirini_release)
+- #@ resources.cluster_event_created("cf4k8s4a8e")
+- #@ resources.eirini_release_semver()

@@ -1,25 +1,9 @@
 #@ load("@ytt:data", "data")
-#@ load("@ci:notifications.lib.yml",
-#@   "notify_slack",
-#@ )
-#@ load("@ci:resources.lib.yml",
-#@   "slack",
-#@   "docker_image",
-#@   "registry_image_type",
-#@   "git",
-#@   "github_release",
-#@ )
-#@ load("@ci:tasks.lib.yml",
-#@   "download_kubeconfig",
-#@   "helm_install_redis",
-#@   "get_redis_credentials",
-#@   "deploy_postfacto",
-#@   "deploy_jefe",
-#@   "deploy_eirinidotcf",
-#@   "unclaim_clusters",
-#@   "bump_eirinidotcf_dependencies",
-#@   "deploy_pairup",
-#@ )
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:egg.lib.yml", "egg")
 
 jobs:
 - name: deploy-postfacto
@@ -30,10 +14,10 @@ jobs:
       trigger: true
     - get: eirini-private-config
     - get: ci-resources
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ helm_install_redis()
-  - #@ get_redis_credentials()
-  - #@ deploy_postfacto()
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.helm_install_redis()
+  - #@ egg.get_redis_credentials()
+  - #@ egg.deploy_postfacto()
   serial: true
 
 - name: deploy-jefe
@@ -45,7 +29,7 @@ jobs:
       - build-jefe
       trigger: true
     - get: eirini-private-config
-  - #@ deploy_jefe()
+  - #@ egg.deploy_jefe()
   serial: true
 
 - name: deploy-eirinidotcf
@@ -56,8 +40,8 @@ jobs:
     - get: eirinidotcf
       trigger: true
     - get: eirini-private-config
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ deploy_eirinidotcf()
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.deploy_eirinidotcf()
   serial: true
 
 - name: unclaim-clusters
@@ -65,7 +49,7 @@ jobs:
   plan:
   - get: every-morning
     trigger: true
-  - #@ unclaim_clusters()
+  - #@ egg.unclaim_clusters()
 
 - name: bump-eirinidotcf-dependencies
   on_failure: #@ notify_slack()
@@ -73,7 +57,7 @@ jobs:
   - get: every-week
     trigger: true
   - get: eirinidotcf
-  - #@ bump_eirinidotcf_dependencies()
+  - #@ egg.bump_eirinidotcf_dependencies()
   - put: eirinidotcf
     params:
       repository: eirinidotcf-updated
@@ -96,22 +80,22 @@ jobs:
     - get: pairup
       trigger: true
     - get: eirini-private-config
-  - #@ download_kubeconfig("cf4k8s4a8e")
-  - #@ deploy_pairup()
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.deploy_pairup()
   serial: true
 
 resource_types:
-- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-- #@ slack()
-- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
-- #@ github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
-- #@ git("jefe", "eirini-forks/jefe")
-- #@ git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
-- #@ git("pairup", "eirini-forks/pairup")
-- #@ docker_image("docker-jefe", "eirini/jefe")
+- #@ resources.slack()
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
+- #@ resources.git("jefe", "eirini-forks/jefe")
+- #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
+- #@ resources.git("pairup", "eirini-forks/pairup")
+- #@ resources.docker_image("docker-jefe", "eirini/jefe")
 - icon: alarm
   name: every-morning
   source:

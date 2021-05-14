@@ -1,28 +1,9 @@
 #@ load("@ytt:data", "data")
-#@ load("@ci:notifications.lib.yml",
-#@   "notify_slack",
-#@ )
-#@ load("@ci:resources.lib.yml",
-#@   "slack",
-#@   "registry_image_type",
-#@   "git",
-#@   "cluster_event_created",
-#@ )
-#@ load("@ci:tasks.lib.yml",
-#@   "delete_kubernetes_cluster",
-#@   "delete_values_file",
-#@   "delete_disks",
-#@   "create_kubernetes_cluster",
-#@   "download_kubeconfig",
-#@   "generate_default_values",
-#@   "delete_cf",
-#@   "patch_eirini_release",
-#@   "generate_loadbalancer_values",
-#@   "aggregate_cf4k8s_values",
-#@   "deploy_cf_for_k8s",
-#@   "get_smoke_test_variables",
-#@   "run_smoke_tests",
-#@ )
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:cf_for_k8s.lib.yml", "cf_for_k8s")
 
 groups:
 - name: all
@@ -48,10 +29,10 @@ jobs:
   - get: delete-timer
     trigger: true
   - get: ci-resources
-  - #@ delete_kubernetes_cluster(data.values.gcp.cluster_name)
+  - #@ clusters.delete_kubernetes_cluster(data.values.gcp.cluster_name)
   - get: cluster-state
-  - #@ delete_values_file(data.values.gcp.cluster_name)
-  - #@ delete_disks(data.values.gcp.cluster_name)
+  - #@ clusters.delete_values_file(data.values.gcp.cluster_name)
+  - #@ clusters.delete_disks(data.values.gcp.cluster_name)
   - put: cluster-state
     params:
       merge: true
@@ -67,7 +48,7 @@ jobs:
     passed:
     - #@ "delete-cluster-" + data.values.gcp.cluster_name
     trigger: true
-  - #@ create_kubernetes_cluster(data.values.gcp.cluster_name)
+  - #@ clusters.create_kubernetes_cluster(data.values.gcp.cluster_name)
   - put: #@ "cluster-" + data.values.gcp.cluster_name + "-staging-event-created"
     params:
       bump: major
@@ -86,10 +67,10 @@ jobs:
     passed:
     - #@ "create-cluster-" + data.values.gcp.cluster_name
     trigger: true
-  - #@ download_kubeconfig(data.values.gcp.cluster_name)
-  - #@ generate_default_values(data.values.gcp.cluster_name)
-  - #@ generate_loadbalancer_values(data.values.gcp.cluster_name)
-  - #@ aggregate_cf4k8s_values(data.values.gcp.cluster_name)
+  - #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
+  - #@ cf_for_k8s.generate_default_values(data.values.gcp.cluster_name)
+  - #@ cf_for_k8s.generate_loadbalancer_values(data.values.gcp.cluster_name)
+  - #@ cf_for_k8s.aggregate_cf4k8s_values(data.values.gcp.cluster_name)
   - put: cluster-state
     params:
       merge: true
@@ -114,11 +95,11 @@ jobs:
     trigger: true
   - get: ci-resources
   - get: cf-k8s-prometheus
-  - #@ download_kubeconfig(data.values.gcp.cluster_name)
+  - #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
   #@ if/end data.values.enable_cf4k8s_redeploy:
-  - #@ delete_cf()
-  - #@ patch_eirini_release()
-  - #@ deploy_cf_for_k8s(data.values.gcp.cluster_name)
+  - #@ cf_for_k8s.delete_cf()
+  - #@ cf_for_k8s.patch_eirini_release()
+  - #@ cf_for_k8s.deploy_cf_for_k8s(data.values.gcp.cluster_name)
   public: true
   serial_groups:
   - #@ data.values.gcp.cluster_name
@@ -143,23 +124,23 @@ jobs:
   - get: eirini-release
     passed:
     - #@ "deploy-cf-for-k8s-" + data.values.gcp.cluster_name
-  - #@ get_smoke_test_variables(data.values.gcp.cluster_name)
-  - #@ run_smoke_tests()
+  - #@ cf_for_k8s.get_smoke_test_variables(data.values.gcp.cluster_name)
+  - #@ cf_for_k8s.run_smoke_tests()
   public: true
   serial_groups:
   - #@ data.values.gcp.cluster_name
 
 resource_types:
-- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-- #@ slack()
-- #@ git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirini_private_config)
-- #@ git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
-- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
-- #@ git("eirini-release", "cloudfoundry-incubator/eirini-release")
-- #@ cluster_event_created(data.values.gcp.cluster_name)
+- #@ resources.slack()
+- #@ resources.git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirini_private_config)
+- #@ resources.git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release")
+- #@ resources.cluster_event_created(data.values.gcp.cluster_name)
 
 - icon: bomb
   name: delete-timer

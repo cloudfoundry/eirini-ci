@@ -1,34 +1,11 @@
 #@ load("@ytt:data", "data")
-#@ load("@ci:notifications.lib.yml",
-#@   "notify_slack",
-#@ )
-#@ load("@ci:resources.lib.yml",
-#@   "slack",
-#@   "eirini_registry_image",
-#@   "registry_image",
-#@   "registry_image_type",
-#@   "git",
-#@   "cluster_event_created",
-#@ )
-#@ load("@ci:tasks.lib.yml",
-#@   "run_unit_tests",
-#@   "run_static_checks",
-#@   "download_kubeconfig",
-#@   "apply_eirini_crds",
-#@   "run_integration_tests",
-#@   "update_version_files",
-#@   "cleanup_deployment",
-#@   "deploy_eirini_yamls",
-#@   "run_eats_tests",
-#@   "run_rubocop",
-#@   "run_cc_tests",
-#@   "bump_go_modules",
-#@   "delete_kubernetes_cluster",
-#@   "delete_values_file",
-#@   "delete_disks",
-#@   "create_kubernetes_cluster",
-#@   "build_docker_image",
-#@ )
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:testing.lib.yml", "testing")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:release_management.lib.yml", "release_management")
+#@ load("@ci:ci_automation.lib.yml", "ci_automation")
 
 groups:
 - name: main
@@ -73,8 +50,8 @@ jobs:
       trigger: true
     - get: ci-resources
   - in_parallel:
-    - #@ run_unit_tests()
-    - #@ run_static_checks()
+    - #@ testing.run_unit_tests()
+    - #@ testing.run_static_checks()
   public: true
 
 - name: run-integration-tests
@@ -87,9 +64,9 @@ jobs:
       trigger: true
     - get: eirini-release
     - get: ci-resources
-  - #@ download_kubeconfig("integration")
-  - #@ apply_eirini_crds()
-  - #@ run_integration_tests()
+  - #@ clusters.download_kubeconfig("integration")
+  - #@ testing.apply_eirini_crds()
+  - #@ testing.run_integration_tests()
   public: true
   serial: true
   serial_groups:
@@ -103,7 +80,7 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - #@ build_docker_image(component)
+  - #@ release_management.build_docker_image(component)
   - put: #@ component + "-image"
     params:
       image: #@ component + "-image/image.tar"
@@ -127,7 +104,7 @@ jobs:
       passed:
       - #@ "create-" + component + "-docker-image"
     #@ end
-  - #@ update_version_files(data.values.components)
+  - #@ release_management.update_version_files(data.values.components)
   - params:
       repository: eirini-release-updated
     put: eirini-release
@@ -142,9 +119,9 @@ jobs:
     passed:
     - update-eirini-version-files
   - get: ci-resources
-  - #@ download_kubeconfig("monaco")
-  - #@ cleanup_deployment()
-  - #@ deploy_eirini_yamls()
+  - #@ clusters.download_kubeconfig("monaco")
+  - #@ testing.cleanup_deployment()
+  - #@ testing.deploy_eirini_yamls()
   public: true
   serial: true
   serial_groups:
@@ -163,8 +140,8 @@ jobs:
       - deploy-eirini-yamls-monaco
       trigger: true
     - get: ci-resources
-  - #@ download_kubeconfig("monaco")
-  - #@ run_eats_tests()
+  - #@ clusters.download_kubeconfig("monaco")
+  - #@ testing.run_eats_tests()
   public: true
   serial: true
   serial_groups:
@@ -190,10 +167,10 @@ jobs:
       trigger: true
     - get: eirini-release
     - get: ci-resources
-  - #@ download_kubeconfig("integration")
-  - #@ apply_eirini_crds()
-  - #@ run_rubocop()
-  - #@ run_cc_tests()
+  - #@ clusters.download_kubeconfig("integration")
+  - #@ testing.apply_eirini_crds()
+  - #@ testing.run_rubocop()
+  - #@ testing.run_cc_tests()
   public: true
   serial: true
   serial_groups:
@@ -207,9 +184,9 @@ jobs:
       trigger: true
     - get: golang-image
     - get: eirini
-  - #@ bump_go_modules("eirini")
-  - #@ run_unit_tests("repository-updated")
-  - #@ run_static_checks("repository-updated")
+  - #@ ci_automation.bump_go_modules("eirini")
+  - #@ testing.run_unit_tests("repository-updated")
+  - #@ testing.run_static_checks("repository-updated")
   - put: eirini
     params:
       repository: repository-updated
@@ -222,10 +199,10 @@ jobs:
   - get: delete-timer
     trigger: true
   - get: ci-resources
-  - #@ delete_kubernetes_cluster(cluster)
+  - #@ clusters.delete_kubernetes_cluster(cluster)
   - get: cluster-state
-  - #@ delete_values_file(cluster)
-  - #@ delete_disks(cluster)
+  - #@ clusters.delete_values_file(cluster)
+  - #@ clusters.delete_disks(cluster)
   - put: cluster-state
     params:
       merge: true
@@ -242,7 +219,7 @@ jobs:
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
-  - #@ create_kubernetes_cluster(cluster)
+  - #@ clusters.create_kubernetes_cluster(cluster)
   - put: #@ "cluster-" + cluster + "-staging-event-created"
     params:
       bump: major
@@ -252,27 +229,27 @@ jobs:
 #@ end
 
 resource_types:
-- #@ registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-- #@ slack()
-- #@ cluster_event_created("integration")
-- #@ cluster_event_created("monaco")
-- #@ git("cloud_controller_ng", "eirini-forks/cloud_controller_ng", branch="pr-lrp-crds")
-- #@ git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ git("eirini", "cloudfoundry-incubator/eirini", private_key=data.values.private_keys.eirini)
-- #@ git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirini_release)
-- #@ git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirini_release)
-- #@ git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
-- #@ registry_image("golang-image", "golang")
-- #@ registry_image("golang-lint", "golangci/golangci-lint")
-- #@ eirini_registry_image("api")
-- #@ eirini_registry_image("eirini-controller")
-- #@ eirini_registry_image("event-reporter")
-- #@ eirini_registry_image("instance-index-env-injector")
-- #@ eirini_registry_image("migration")
-- #@ eirini_registry_image("resource-validator")
-- #@ eirini_registry_image("task-reporter")
+- #@ resources.slack()
+- #@ resources.cluster_event_created("integration")
+- #@ resources.cluster_event_created("monaco")
+- #@ resources.git("cloud_controller_ng", "eirini-forks/cloud_controller_ng", branch="pr-lrp-crds")
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("eirini", "cloudfoundry-incubator/eirini", private_key=data.values.private_keys.eirini)
+- #@ resources.git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirini_release)
+- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirini_release)
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
+- #@ resources.registry_image("golang-image", "golang")
+- #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
+- #@ resources.eirini_registry_image("api")
+- #@ resources.eirini_registry_image("eirini-controller")
+- #@ resources.eirini_registry_image("event-reporter")
+- #@ resources.eirini_registry_image("instance-index-env-injector")
+- #@ resources.eirini_registry_image("migration")
+- #@ resources.eirini_registry_image("resource-validator")
+- #@ resources.eirini_registry_image("task-reporter")
 - name: delete-timer
   source:
     days:

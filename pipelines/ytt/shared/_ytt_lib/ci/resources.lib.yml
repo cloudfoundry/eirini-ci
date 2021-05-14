@@ -1,7 +1,8 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:template", "template")
+#@ load("@ytt:struct", "struct")
 
-#@ def slack():
+#@ def _slack():
 name: slack
 type: slack-notification
 icon: slack
@@ -9,7 +10,7 @@ source:
   url: #@ data.values.slack.webhook
 #@ end
 
-#@ def image_source(repository, tag="latest"):
+#@ def _image_source(repository, tag="latest"):
 source:
   repository: #@ repository
   tag: #@ tag
@@ -17,37 +18,37 @@ source:
   password: #@ data.values.dockerhub.password
 #@ end
 
-#@ def docker_image_type(name, repository, tag="latest"):
+#@ def _docker_image_type(name, repository, tag="latest"):
 name: #@ name
 type: docker-image
-_: #@ template.replace(image_source(repository, tag))
+_: #@ template.replace(_image_source(repository, tag))
 #@ end
 
-#@ def registry_image_type(name, repository, tag="latest"):
+#@ def _registry_image_type(name, repository, tag="latest"):
 name: #@ name
 type: registry-image
-_: #@ template.replace(image_source(repository, tag))
+_: #@ template.replace(_image_source(repository, tag))
 #@ end
 
-#@ def registry_image(name, repository, tag="latest"):
-_: #@ template.replace(registry_image_type(name, repository, tag))
+#@ def _registry_image(name, repository, tag="latest"):
+_: #@ template.replace(_registry_image_type(name, repository, tag))
 icon: docker
 #@ end
 
-#@ def docker_image(name, repository, tag="latest"):
-_: #@ template.replace(docker_image_type(name, repository, tag))
+#@ def _docker_image(name, repository, tag="latest"):
+_: #@ template.replace(_docker_image_type(name, repository, tag))
 icon: docker
 #@ end
 
-#@ def eirini_registry_image(component_name):
-#@     return registry_image(component_name + "-image", "eirini/" + component_name)
+#@ def _eirini_registry_image(component_name):
+#@     return _registry_image(component_name + "-image", "eirini/" + component_name)
 #@ end
 
-#@ def eirini_docker_image(component_name):
-#@     return docker_image(component_name + "-image", "eirini/" + component_name)
+#@ def _eirini_docker_image(component_name):
+#@     return _docker_image(component_name + "-image", "eirini/" + component_name)
 #@ end
 
-#@ def git(name, path, branch="master", private_key=None):
+#@ def _git(name, path, branch="master", private_key=None):
 name: #@ name
 type: git
 icon: git
@@ -61,7 +62,7 @@ source:
   #@ end
 #@ end
 
-#@ def github_release(name, owner, repo, globs=None, checkEvery=None, accessToken=None, drafts=False):
+#@ def _github_release(name, owner, repo, globs=None, checkEvery=None, accessToken=None, drafts=False):
 name: #@ name
 type: github-release
 source:
@@ -77,7 +78,7 @@ check_every: #@ checkEvery
 icon: egg-easter
 #@ end
 
-#@ def eirini_release_semver():
+#@ def _eirini_release_semver():
 name: eirini-release-version
 type: semver
 icon: counter
@@ -90,7 +91,7 @@ source:
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
-#@ def cluster_event_created(cluster_name):
+#@ def _cluster_event_created(cluster_name):
 name: #@ "cluster-" + cluster_name + "-staging-event-created"
 type: semver
 icon: check-decagram
@@ -102,3 +103,18 @@ source:
   private_key: #@ data.values.private_keys.eirini_private_config
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
+
+#@ resources = struct.make(
+#@   cluster_event_created=_cluster_event_created,
+#@   eirini_release_semver=_eirini_release_semver,
+#@   github_release=_github_release,
+#@   git=_git,
+#@   eirini_docker_image=_eirini_docker_image,
+#@   eirini_registry_image=_eirini_registry_image,
+#@   docker_image=_docker_image,
+#@   registry_image=_registry_image,
+#@   registry_image_type=_registry_image_type,
+#@   docker_image_type=_docker_image_type,
+#@   image_source=_image_source,
+#@   slack=_slack,
+#@ )
