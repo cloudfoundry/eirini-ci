@@ -5,10 +5,8 @@
 #@ load("@ci:resources.lib.yml",
 #@   "slack",
 #@   "eirini_docker_image",
-#@   "registry_image",
 #@   "registry_image_type",
 #@   "git",
-#@   "cluster_event_created",
 #@ )
 #@ load("@ci:tasks.lib.yml",
 #@   "run_shellcheck",

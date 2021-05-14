@@ -4,7 +4,6 @@
 #@ )
 #@ load("@ci:resources.lib.yml",
 #@   "slack",
-#@   "eirini_docker_image",
 #@   "docker_image",
 #@   "registry_image_type",
 #@   "git",
