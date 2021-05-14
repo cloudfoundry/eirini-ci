@@ -23,3 +23,6 @@ components:
   - migration
   - resource-validator
   - task-reporter
+repo_branches:
+  eirini:
+  eirini_ci:

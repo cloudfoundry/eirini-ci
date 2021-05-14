@@ -15,6 +15,12 @@ readonly target
 worker_count=${2:-"3"}
 readonly worker_count
 
+working_branch=${3:-"master"}
+readonly working_branch
+
+ci_branch=${4:-"master"}
+readonly ci_branch
+
 if ! fly -t "$target" status &>/dev/null; then
   fly -t "$target" login
 fi
@@ -30,6 +36,8 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
   --data-value="wiremock_keystore_pass=$(pass eirini/ci/wiremock-keystore-password)" \
   --data-value="gcp.worker_count=$worker_count" \
+  --data-value="repo_branches.eirini=$working_branch" \
+  --data-value="repo_branches.eirini_ci=$ci_branch" \
   >"$pipeline_yml"
 
 fly --target "$target" \
