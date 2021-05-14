@@ -1,8 +1,0 @@
-jobs:
-- name: release-lock-ci
-  on_failure: (( grab slack-notification.on_failure ))
-  plan:
-  - get: lock-ci
-  - put: lock-ci
-    params:
-      release: lock-ci

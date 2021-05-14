@@ -2,61 +2,46 @@
 
 set -euo pipefail
 
-PIPELINE_YML=$(mktemp)
-export PIPELINE_YML
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly basedir
+cluster_name="${1:?You must specify a cluster name}"
+readonly cluster_name
 
-world_name="${1:?}"
-readonly world_name
 enable_redeploy="${2:-false}"
 readonly enable_redeploy
+
 worker_count=${3:-"3"}
 readonly worker_count
+
 target="${4:-eirini}"
 readonly target
+
 windows_pool="${5:-false}"
 readonly windows_pool
 
-pushd "$basedir"
-{
-  redeploy_file_var=""
-  recreate_file_var=""
-  timer_resources_var=""
-  if $enable_redeploy; then
-    redeploy_file_var="- ./add-redeploy-cf-for-k8s-timer.yml"
-    recreate_file_var="- ./add-cluster-recreate-timer.yml"
-    timer_resources_var="- ../../modules/resources/timer-resources.yml"
-  fi
-  aviator \
-    --var redeploy-trigger="$redeploy_file_var" \
-    --var recreate-trigger="$recreate_file_var" \
-    --var timer-resources="$timer_resources_var"
-}
-popd
+pipeline_yml=$(mktemp)
+readonly pipeline_yml
+# shellcheck disable=SC2064
+trap "rm $pipeline_yml" EXIT
 
-if ! flightattendant -target "$target"; then
-  echo "not logged in to concourse - attempting to log in"
-  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+if ! fly -t "$target" status &>/dev/null; then
+  fly -t "$target" login
 fi
 
-fly -t "$target" \
+ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
+  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="dockerhub.username=eiriniuser" \
+  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
+  --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --data-value="gcp.dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --data-value="gcp.worker_count=$worker_count" \
+  --data-value="gcp.cluster_name=$cluster_name" \
+  --data-value="gcp.enable_windows_pool=$windows_pool" \
+  --data-value="enable_cf4k8s_redeploy=$enable_redeploy" \
+  >"$pipeline_yml"
+
+fly --target "$target" \
   set-pipeline \
-  --config "$PIPELINE_YML" \
-  --pipeline "$world_name" \
-  --var ci-resources-branch="master" \
-  --var cluster-admin-password="$(pass eirini/ci/cluster-admin-password)" \
-  --var eirini-release-branch="master" \
-  --var gcp-region="europe-west1" \
-  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --var gcp-zone="europe-west1-b" \
-  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
-  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
-  --var slack-webhook="$(pass eirini/ci/slack-webhook)" \
-  --var uaa-admin-client-secret="$(pass eirini/ci/uaa-admin-client-secret)" \
-  --var worker_count="$worker_count" \
-  --var dockerhub-user=eiriniuser \
-  --var dockerhub-password="$(pass eirini/docker-hub)" \
-  --var world-name="$world_name" \
-  --var windows-pool="$windows_pool"
+  --config "$pipeline_yml" \
+  --pipeline "$cluster_name"

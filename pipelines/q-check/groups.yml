@@ -1,7 +1,0 @@
-groups:
-- name: checkers
-  jobs:
-  - check-shell
-  - format-shell
-  - check-wip-branches
-  - check-golangci-linters

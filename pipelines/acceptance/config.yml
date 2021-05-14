@@ -1,32 +1,21 @@
-config:
-  do_not_delete_cf: "true"
-  slack:
-    webhook: ((slack-webhook))
-  github:
-    access-token: ((github-access-token))
-    private-key: ((github-private-key))
-  cert-manager:
-    enable: true
-  cluster:
-    name: ((world-name))
-    worker-count: ((worker_count))
-    admin-password: ((cluster-admin-password))
-    uaa-admin-client-secret: ((uaa-admin-client-secret))
-    windows-pool: false
-  gcp:
-    service-account-json: ((gcp-service-account-json))
-    region: ((gcp-region))
-    zone: ((gcp-zone))
-    project-id: ((gcp-project-id))
-    dns-service-account-json: ((gcp-dns-service-account-json))
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:
+access_tokens:
+  eirini_ci:
+private_keys:
   eirini:
-    branch: ((eirini-branch))
-    repo-key: ((eirini-repo-key))
-  eirini-ci:
-    branch: ((ci-resources-branch))
-  eirini-release:
-    branch: ((eirini-release-branch))
-    repo-key: ((eirini-release-repo-key))
-  dockerhub:
-    user: ((dockerhub-user))
-    password: ((dockerhub-password))
+  eirini_release:
+  eirini_private_config:
+gcp:
+  service_account_json:
+  dns_service_account_json:
+  zone: europe-west1-b
+  region: europe-west1
+  worker_count:
+  project_id: cff-eirini-peace-pods
+use_cert_manager: true

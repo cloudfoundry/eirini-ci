@@ -1,93 +1,67 @@
-resources:
-- name: eirini-private-config
-  type: git
-  icon: git
-  source:
-    branch: master
-    private_key: ((github-private-key))
-    uri: git@github.com:cloudfoundry/eirini-private-config
-- name: postfacto
-  icon: egg-easter
-  type: github-release
-  check_every: 12h
-  source:
-    owner: pivotal
-    repository: postfacto
-    globs: package.zip
-- name: ci-resources
-  icon: git
-  type: git
-  source:
-    branch: master
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci
-- name: jefe
-  icon: git
-  type: git
-  source:
-    branch: master
-    uri: https://github.com/eirini-forks/jefe
-- name: pairup
-  icon: git
-  type: git
-  source:
-    branch: master
-    uri: https://github.com/eirini-forks/pairup
-- name: eirinidotcf
-  icon: git
-  type: git
-  source:
-    branch: master
-    private_key: ((eirinidotcf-private-key))
-    uri: git@github.com:eirini-forks/eirinidotcf
-- name: docker-jefe
-  type: docker-image
-  icon: docker
-  source:
-    repository: eirini/jefe
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-- name: every-morning
-  icon: alarm
-  type: time
-  source:
-    start: 5:00 AM
-    stop: 6:00 AM
-- name: every-week
-  icon: alarm
-  type: time
-  source:
-    days:
-    - Saturday
-    start: 5:00 AM
-    stop: 6:00 AM
+#@ load("@ytt:data", "data")
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:egg.lib.yml", "egg")
 
 jobs:
+- name: deploy-postfacto
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: postfacto
+      trigger: true
+    - get: eirini-private-config
+    - get: ci-resources
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.helm_install_redis()
+  - #@ egg.get_redis_credentials()
+  - #@ egg.deploy_postfacto()
+  serial: true
+
+- name: deploy-jefe
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: docker-jefe
+      passed:
+      - build-jefe
+      trigger: true
+    - get: eirini-private-config
+  - #@ egg.deploy_jefe()
+  serial: true
+
+- name: deploy-eirinidotcf
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: ci-resources
+    - get: eirinidotcf
+      trigger: true
+    - get: eirini-private-config
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.deploy_eirinidotcf()
+  serial: true
+
 - name: unclaim-clusters
+  on_failure: #@ notify_slack()
   plan:
   - get: every-morning
     trigger: true
-  - task: unclaim
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      params:
-          JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
-      run:
-        path: bash
-        args:
-        - -c
-        - |
-          #!/bin/bash
-          set -eoux pipefail
+  - #@ egg.unclaim_clusters()
 
-          curl -k -X PUT -u admin:$JEFE_ADMIN_PASSWORD https://jefe.apps.cf4k8s4a8e.ci-envs.eirini.cf-app.com/envs/unclaim
-
-  on_failure: (( grab slack-notification.on_failure ))
+- name: bump-eirinidotcf-dependencies
+  on_failure: #@ notify_slack()
+  plan:
+  - get: every-week
+    trigger: true
+  - get: eirinidotcf
+  - #@ egg.bump_eirinidotcf_dependencies()
+  - put: eirinidotcf
+    params:
+      repository: eirinidotcf-updated
+  serial: true
 
 - name: build-jefe
   plan:
@@ -96,267 +70,43 @@ jobs:
   - put: docker-jefe
     params:
       build: jefe
-- name: deploy-jefe
   serial: true
-  plan:
-  - in_parallel:
-    - get: docker-jefe
-      trigger: true
-      passed:
-      - build-jefe
-    - get: eirini-private-config
-  - task: deploy
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-        - name: eirini-private-config
-      run:
-        path: bash
-        args:
-        - -c
-        - (( file "../../inline-tasks/deploy-jefe.sh" ))
-      params:
-        JEFE_GITHUB_CLIENT_ID: ((jefe-client-id))
-        JEFE_GITHUB_SECRET: ((jefe-client-secret))
-        JEFE_DSN: jefeuser:((jefe-dbuser-pass))@tcp(((jefe-db-ip-address)):3306)
-        JEFE_O_AUTH_ORG: eirini-forks
-        JEFE_ADMIN_PASSWORD: ((jefe-admin-pass))
-  on_failure: (( grab slack-notification.on_failure ))
 
-- name: deploy-postfacto
-  serial: true
-  plan:
-  - in_parallel:
-    - get: postfacto
-      trigger: true
-    - get: eirini-private-config
-    - get: ci-resources
-  - task: download-kubeconfig
-    params:
-      CLUSTER_NAME: (( grab config.cluster.name ))
-      GCP_REGION: (( grab config.gcp.region ))
-      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
-      GCP_ZONE: (( grab config.gcp.zone ))
-    config:
-      image_resource:
-        source:
-          repository: google/cloud-sdk
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-        type: docker-image
-      platform: linux
-      inputs:
-        - name: ci-resources
-      outputs:
-        - name: kube
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-
-  - task: helm-install-redis
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/gcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      run:
-        path: bash
-        args:
-        - -c
-        - (( file "../../inline-tasks/helm-install-redis.sh" ))
-      inputs:
-      - name: kube
-    params:
-      KUBECONFIG: kube/config
-      GCP_REGION: (( grab config.gcp.region ))
-      GCP_SERVICE_ACCOUNT_JSON: (( grab config.gcp.service-account-json ))
-      GCP_ZONE: (( grab config.gcp.zone ))
-
-  - task: get-credentials
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/gcloud
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      run:
-        path: bash
-        args:
-        - -c
-        - (( file "../../inline-tasks/get-postfacto-credentials-cf4k8s.sh" ))
-      inputs:
-      - name: kube
-      outputs:
-      - name: redis-password
-
-  - task: deploy
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      run:
-        path: bash
-        args:
-        - -c
-        - (( file "../../inline-tasks/deploy-postfacto-cf4k8s.sh" ))
-      inputs:
-      - name: postfacto
-      - name: eirini-private-config
-      - name: ci-resources
-      - name: redis-password
-      PARAMS:
-        MYSQL_ADDRESS: ((mysql-address))
-  on_failure: (( grab slack-notification.on_failure ))
-
-- name: bump-eirinidotcf-dependencies
-  plan:
-  - get: every-week
-    trigger: true
-  - get: eirinidotcf
-  - task: bump-eirinidotcf-dependencies
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-        - name: eirinidotcf
-      outputs:
-        - name: eirinidotcf-updated
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/bump-yarn-packages.sh" ))
-  - put: eirinidotcf
-    params:
-      repository: eirinidotcf-updated
-  on_failure: (( grab slack-notification.on_failure ))
-- name: deploy-eirinidotcf
-  serial: true
-  plan:
-  - in_parallel:
-    - get: ci-resources
-    - get: eirinidotcf
-      trigger: true
-    - get: eirini-private-config
-  - task: download-kubeconfig
-    params:
-      CLUSTER_NAME: cf4k8s4a8e
-      GCP_REGION: ((gcp-region))
-      GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-      GCP_ZONE: ((gcp-zone))
-    config:
-      image_resource:
-        source:
-          repository: google/cloud-sdk
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-        type: docker-image
-      platform: linux
-      inputs:
-        - name: ci-resources
-      outputs:
-        - name: kube
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-  - task: deploy-web
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: eirini/ci
-          username: (( grab config.dockerhub.user ))
-          password: (( grab config.dockerhub.password ))
-      inputs:
-        - name: ci-resources
-        - name: eirinidotcf
-        - name: eirini-private-config
-      run:
-        path: /usr/bin/env
-        args:
-        - bash
-        - -c
-        - (( file "../../inline-tasks/deploy-eirinidotcf.sh" ))
-  on_failure: (( grab slack-notification.on_failure ))
 - name: deploy-pairup
-  serial: true
+  on_failure: #@ notify_slack()
   plan:
-    - in_parallel:
-        - get: ci-resources
-        - get: pairup
-          trigger: true
-        - get: eirini-private-config
-    - task: download-kubeconfig
-      params:
-        CLUSTER_NAME: cf4k8s4a8e
-        GCP_REGION: ((gcp-region))
-        GCP_SERVICE_ACCOUNT_JSON: ((gcp-service-account-json))
-        GCP_ZONE: ((gcp-zone))
-      config:
-        image_resource:
-          source:
-            repository: google/cloud-sdk
-            username: (( grab config.dockerhub.user ))
-            password: (( grab config.dockerhub.password ))
-          type: docker-image
-        platform: linux
-        inputs:
-          - name: ci-resources
-        outputs:
-          - name: kube
-        run:
-          path: /usr/bin/env
-          args:
-            - bash
-            - -c
-            - (( file "../../inline-tasks/gcp-download-kubeconfig.sh" ))
-    - task: deploy-web
-      params:
-        FIREBASE_CONF: ((firebase-conf))
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: eirini/ci
-            username: (( grab config.dockerhub.user ))
-            password: (( grab config.dockerhub.password ))
-        inputs:
-          - name: ci-resources
-          - name: pairup
-          - name: eirini-private-config
-        run:
-          path: /usr/bin/env
-          args:
-            - bash
-            - -c
-            - (( file "../../inline-tasks/deploy-pairup.sh" ))
-  on_failure: (( grab slack-notification.on_failure ))
+  - in_parallel:
+    - get: ci-resources
+    - get: pairup
+      trigger: true
+    - get: eirini-private-config
+  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - #@ egg.deploy_pairup()
+  serial: true
+
+resource_types:
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+- #@ resources.slack()
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
+- #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
+- #@ resources.git("jefe", "eirini-forks/jefe")
+- #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
+- #@ resources.git("pairup", "eirini-forks/pairup")
+- #@ resources.docker_image("docker-jefe", "eirini/jefe")
+- icon: alarm
+  name: every-morning
+  source:
+    start: 5:00 AM
+    stop: 6:00 AM
+  type: time
+- icon: alarm
+  name: every-week
+  source:
+    days:
+    - Saturday
+    start: 5:00 AM
+    stop: 6:00 AM
+  type: time

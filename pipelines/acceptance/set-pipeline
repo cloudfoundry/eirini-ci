@@ -2,47 +2,35 @@
 
 set -euo pipefail
 
-PIPELINE_YML=$(mktemp)
-export PIPELINE_YML
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-basedir="$(cd "$(dirname "$0")" && pwd)"
-readonly basedir
+pipeline_yml=$(mktemp)
+readonly pipeline_yml
+# shellcheck disable=SC2064
+trap "rm $pipeline_yml" EXIT
 target="${1:-eirini}"
 readonly target
 worker_count=${2:-"3"}
-export worker_count
-world_name=cf4k8s4a8e
-readonly world_name
+readonly worker_count
 
-pushd "$basedir"
-{
-  aviator
-}
-popd
-
-if ! flightattendant -target "$target"; then
-  echo "not logged in to concourse - attempting to log in"
-  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+if ! fly -t "$target" status &>/dev/null; then
+  fly -t "$target" login
 fi
 
-fly -t "$target" \
+ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
+  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="dockerhub.username=eiriniuser" \
+  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="private_keys.eirini=$(pass eirini/github/eirini/ssh-key)" \
+  --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
+  --data-value="private_keys.eirini_release=$(pass eirini/github/eirini-release/ssh-key)" \
+  --data-value="access_tokens.eirini_ci=$(pass eirini/github/eirinici/access-token)" \
+  --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
+  --data-value="gcp.dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --data-value="gcp.worker_count=$worker_count" \
+  >"$pipeline_yml"
+
+fly --target "$target" \
   set-pipeline \
-  --config "$PIPELINE_YML" \
-  --pipeline "acceptance" \
-  --var ci-resources-branch="master" \
-  --var eirini-release-branch="master" \
-  --var eirini-branch="master" \
-  --var eirini-release-repo-key="$(pass eirini/github/eirini-release/ssh-key)" \
-  --var eirini-repo-key="$(pass eirini/github/eirini/ssh-key)" \
-  --var github-private-key="$(pass eirini/github/private-config/ssh-key)" \
-  --var github-access-token="$(pass eirini/github/eirinici/access-token)" \
-  --var gcp-service-account-json="$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --var gcp-region="europe-west1" \
-  --var gcp-zone="europe-west1-b" \
-  --var gcp-project-id="cff-eirini-peace-pods" \
-  --var gcp-dns-service-account-json="$(pass eirini/gcp-ci-dns-admin-json-key)" \
-  --var world-name="$world_name" \
-  --var worker_count="$worker_count" \
-  --var dockerhub-user=eiriniuser \
-  --var dockerhub-password="$(pass eirini/docker-hub)" \
-  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
+  --config "$pipeline_yml" \
+  --pipeline acceptance

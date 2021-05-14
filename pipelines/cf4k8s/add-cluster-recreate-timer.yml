@@ -1,6 +1,0 @@
-jobs:
-- name: (( concat "delete-cluster-" config.cluster.name ))
-  plan:
-  - (( prepend ))
-  - get: delete-timer
-    trigger: true

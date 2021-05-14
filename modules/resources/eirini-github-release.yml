@@ -1,9 +1,0 @@
-resources:
-- name: eirini-github-release
-  type: github-release
-  icon: rocket
-  source:
-    access_token: (( grab config.github.access-token ))
-    drafts: true
-    owner: cloudfoundry-incubator
-    repository: eirini-release

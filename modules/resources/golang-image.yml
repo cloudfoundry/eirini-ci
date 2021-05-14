@@ -1,8 +1,0 @@
-resources:
-- name: golang-image
-  icon: docker
-  source:
-    repository: golang
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-  type: docker-image

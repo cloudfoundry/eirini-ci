@@ -1,9 +1,0 @@
-resources:
-- name: capi-ruby-units-image
-  icon: docker
-  source:
-    repository: cloudfoundry/capi
-    tag: ruby-units
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-  type: docker-image

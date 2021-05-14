@@ -1,6 +1,0 @@
-resources:
-- name: slack
-  type: slack-notification
-  icon: slack
-  source:
-    url: (( grab config.slack.webhook ))

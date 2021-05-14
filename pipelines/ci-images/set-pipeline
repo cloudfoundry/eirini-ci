@@ -2,28 +2,27 @@
 
 set -euo pipefail
 
-script_dir="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+pipeline_yml=$(mktemp)
+readonly pipeline_yml
+# shellcheck disable=SC2064
+trap "rm $pipeline_yml" EXIT
+
 target="${1:-eirini}"
+readonly target
 
-PIPELINE_YML=$(mktemp)
-export PIPELINE_YML
-
-pushd "$script_dir"
-{
-  aviator
-}
-popd
-
-if ! flightattendant -target "$target"; then
-  echo "not logged in to concourse - attempting to log in"
-  fly -t "$target" login --team-name main --concourse-url https://jetson.eirini.cf-app.com/
+if ! fly -t "$target" status &>/dev/null; then
+  fly -t "$target" login
 fi
 
-fly -t "${target}" \
+ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
+  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="dockerhub.username=eiriniuser" \
+  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  >"$pipeline_yml"
+
+fly --target "$target" \
   set-pipeline \
-  -p ci-images \
-  -c "$PIPELINE_YML" \
-  --var dockerhub-user=eiriniuser \
-  --var dockerhub-password="$(pass eirini/docker-hub)" \
-  --var ci-resources-branch="master" \
-  --var slack-webhook="$(pass eirini/ci/slack-webhook)"
+  --config "$pipeline_yml" \
+  --pipeline ci-images

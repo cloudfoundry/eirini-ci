@@ -1,9 +1,0 @@
-resources:
-- name: golang-lint
-  icon: docker
-  type: docker-image
-  source:
-    repository: golangci/golangci-lint
-    username: (( grab config.dockerhub.user ))
-    password: (( grab config.dockerhub.password ))
-    tag: latest

@@ -1,14 +1,7 @@
-config:
-  slack:
-    webhook: ((slack-webhook))
-  eirini-ci:
-    branch: ((ci-resources-branch))
-  dockerhub:
-    user: ((dockerhub-user))
-    password: ((dockerhub-password))
-  eirini:
-    repo-key: ((eirini-repo-key))
-    branch: ((eirini-branch))
-  eirini-release:
-    branch: ((eirini-release-branch))
-    repo-key: ((eirini-release-repo-key))
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:

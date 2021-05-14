@@ -1,28 +1,28 @@
-config:
-  slack:
-    webhook: ((slack-webhook))
-  github:
-    private-key: ((github-private-key))
-  cluster:
-    worker-count: ((worker_count))
-    windows-pool: false
-  gcp:
-    service-account-json: ((gcp-service-account-json))
-    region: ((gcp-region))
-    zone: ((gcp-zone))
-    cluster-name: ((gcp-cluster-name))
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:
+gcp:
+  service_account_json:
+  zone: europe-west1-b
+  region: europe-west1
+  worker_count:
+wiremock_keystore_pass:
+private_keys:
   eirini:
-    repo-key: ((eirini-repo-key))
-    branch: ((eirini-branch))
-  eirini-ci:
-    branch: ((ci-resources-branch))
-  eirini-release:
-    branch: ((eirini-release-branch))
-    repo-key: ((eirini-release-repo-key))
-  dockerhub:
-    user: ((dockerhub-user))
-    password: ((dockerhub-password))
-  wiremock:
-    keystore-pass: ((wiremock-keystore-pass))
-  cloud_controller_ng:
-    branch: ((cloud-controller-ng-branch))
+  eirini_release:
+  eirini_private_config:
+components:
+  - api
+  - eirini-controller
+  - event-reporter
+  - instance-index-env-injector
+  - migration
+  - resource-validator
+  - task-reporter
+repo_branches:
+  eirini:
+  eirini_ci:

@@ -3,18 +3,19 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-readonly excluded_pipelines=("cf4k8s/")
+readonly excluded_pipelines=("cf4k8s/" "shared/")
 
-pushd "$PROJECT_ROOT/pipelines"
+pushd "$SCRIPT_DIR"
 {
   for pipeline in */; do
-    echo "+----------------------------------------------"
-    echo "| Setting pipeline $pipeline"
-    echo "+----------------------------------------------"
-    if [[ ! "$excluded_pipelines[@]" =~ "$pipeline" ]]; then
-      $PROJECT_ROOT/pipelines/$pipeline/set-pipeline
+    if [[ ! "${excluded_pipelines[@]}" =~ "$pipeline" ]]; then
+      echo "+----------------------------------------------"
+      echo "| Setting pipeline $pipeline"
+      echo "+----------------------------------------------"
+
+      $pipeline/set-pipeline
     fi
   done
 }

@@ -1,7 +1,0 @@
-resources:
-- name: eirini-release
-  type: git
-  icon: git
-  source:
-    branch: (( grab config.eirini-release.branch ))
-    uri: https://github.com/cloudfoundry-incubator/eirini-release.git
