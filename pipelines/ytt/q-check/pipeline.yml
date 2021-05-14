@@ -46,6 +46,7 @@ resource_types:
 
 resources:
 - #@ resources.slack()
+- #@ resources.git("eirini", "cloudfoundry-incubator/eirini")
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
 - #@ resources.slack()
 - #@ resources.eirini_docker_image("golangci-lint")
