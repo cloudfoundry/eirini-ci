@@ -41,7 +41,13 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="enable_cf4k8s_redeploy=$enable_redeploy" \
   >"$pipeline_yml"
 
+noColor=
+if ! [ -t 1 ]; then
+  noColor=--no-color
+fi
+
 fly --target "$target" \
   set-pipeline \
+  "$noColor" \
   --config "$pipeline_yml" \
   --pipeline "$cluster_name"

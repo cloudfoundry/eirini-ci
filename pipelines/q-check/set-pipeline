@@ -20,9 +20,16 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
   --data-value="dockerhub.username=eiriniuser" \
   --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="concourse.password=$(pass eirini/concourse/ci-user/password)" \
   >"$pipeline_yml"
+
+noColor=
+if ! [ -t 1 ]; then
+  noColor=--no-color
+fi
 
 fly --target "$target" \
   set-pipeline \
+  "$noColor" \
   --config "$pipeline_yml" \
   --pipeline q-check

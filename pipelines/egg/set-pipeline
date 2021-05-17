@@ -33,7 +33,13 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="pairup.firebase_conf=$(pass eirini/pairup/conf.js)" \
   >"$pipeline_yml"
 
+noColor=
+if ! [ -t 1 ]; then
+  noColor=--no-color
+fi
+
 fly --target "$target" \
   set-pipeline \
+  "$noColor" \
   --config "$pipeline_yml" \
   --pipeline egg

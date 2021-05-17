@@ -5,3 +5,6 @@ slack:
 dockerhub:
   username:
   password:
+concourse:
+  username: concourse-ci
+  password:

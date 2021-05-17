@@ -11,6 +11,7 @@ groups:
   - format-shell
   - check-wip-branches
   - check-golangci-linters
+  - check-pipelines-are-applied
   name: checkers
 
 jobs:
@@ -40,6 +41,12 @@ jobs:
   - get: eirini
     trigger: true
   - #@ ci_automation.check_golangci_linters()
+- name: check-pipelines-are-applied
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+    trigger: true
+  - #@ ci_automation.check_pipelines_are_applied()
 
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
@@ -48,7 +55,6 @@ resources:
 - #@ resources.slack()
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini")
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
-- #@ resources.slack()
 - #@ resources.eirini_docker_image("golangci-lint")
 - icon: alarm
   name: every-morning

@@ -37,8 +37,22 @@ config:
   run: #@ task_script("bump-go-packages.sh")
 #@ end
 
+#@ def _check_pipelines_are_applied():
+task: check-wip-branches
+config:
+  platform: linux
+  image_resource: #@ image_resource("eirini/ci")
+  inputs:
+  - name: ci-resources
+  run: #@ task_script("check-pipelines-are-applied.sh")
+params:
+  USERNAME: #@ data.values.concourse.username
+  PASSWORD: #@ data.values.concourse.password
+#@ end
+
 #@ ci_automation = struct.make(
 #@   check_wip_branches=_check_wip_branches,
 #@   check_golangci_linters=_check_golangci_linters,
-#@   bump_go_modules=_bump_go_modules
+#@   bump_go_modules=_bump_go_modules,
+#@   check_pipelines_are_applied=_check_pipelines_are_applied,
 #@ )
