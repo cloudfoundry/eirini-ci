@@ -41,7 +41,7 @@ config:
 task: check-wip-branches
 config:
   platform: linux
-  image_resource: #@ image_resource("eirini/ci")
+  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
   inputs:
   - name: ci-resources
   run: #@ task_script("check-pipelines-are-applied.sh")

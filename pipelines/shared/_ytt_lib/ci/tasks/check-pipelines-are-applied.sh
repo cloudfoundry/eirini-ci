@@ -7,7 +7,7 @@ chmod +x /usr/bin/fly
 
 export PATH=$PWD/ci-resources/pipelines/fakes:$PATH
 
-fly -t eirini login -c https://jetson.eirini.cf-app.com -u $USERNAME -p $PASSWORD
+fly -t eirini login -c https://jetson.eirini.cf-app.com -u "$USERNAME" -p "$PASSWORD"
 
 cd ci-resources/pipeline-checker
 ../pipelines/set-all-pipelines | go run main.go
