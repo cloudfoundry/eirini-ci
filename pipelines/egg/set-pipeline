@@ -23,7 +23,7 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="private_keys.eirinidotcf=$(pass eirini/github/eirinidotcf/ssh-key)" \
   --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
   --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --data-value="postfacto.mysql.address=$(gcloud --project cff-eirini-peace-pods sql instances describe postfacto-cf4k8s4a8e --format="value(ipAddresses[0].ipAddress)")" \
+  --data-value="postfacto.mysql.address=$(gcloud --project cff-eirini-peace-pods sql instances describe postfacto-cf4k8s4a8e --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')" \
   --data-value="postfacto.mysql.password=$(pass show eirini/postfacto-cf4k8s4a8e/mysql-admin-password)" \
   --data-value="jefe.github_oauth.client_id=$(pass eirini/jefe/client-id)" \
   --data-value="jefe.github_oauth.client_secret=$(pass eirini/jefe/client-secret)" \

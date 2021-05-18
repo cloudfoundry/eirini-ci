@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo fakepassword
+echo '{ "ipAddresses: [{ "type": "PRIVATE", "ipAddress": "fakepassword" }] }
