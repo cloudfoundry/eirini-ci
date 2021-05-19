@@ -11,7 +11,7 @@ func NewMultilineChomper() MultilineChomper {
 func (e MultilineChomper) Chomp(input []string) []string {
 	output := []string{}
 
-	hasPipe := regexp.MustCompile(` \|-$`)
+	hasPipe := regexp.MustCompile(`: +[>|]`)
 	getSpaces := regexp.MustCompile(`[-+]( *)\S`)
 
 	state := "out"
