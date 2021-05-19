@@ -41,10 +41,12 @@ jobs:
   - get: eirini
     trigger: true
   - #@ ci_automation.check_golangci_linters()
-- name: check-pipelines-are-applied
+- name: check-pipelines-are-applied-from-git
   on_failure: #@ notify_slack()
   plan:
   - get: ci-resources
+    trigger: true
+  - get: every-morning
     trigger: true
   - #@ ci_automation.check_pipelines_are_applied()
 
