@@ -66,9 +66,9 @@ var _ = Describe("Integration", func() {
 `, "\x08\x08"))
 		})
 
-		It("returns 1 with the diff", func() {
+		It("returns 1 with a warning message", func() {
 			Eventually(session).Should(gexec.Exit(1))
-			Expect(session.Err).To(gbytes.Say("myField: old field"))
+			Expect(session.Err).To(gbytes.Say("Pipeline is out of date"))
 		})
 	})
 
@@ -81,9 +81,9 @@ var _ = Describe("Integration", func() {
 `, "\x08\x08"))
 		})
 
-		It("returns 1 with the diff", func() {
+		It("returns 1 with a warning message", func() {
 			Eventually(session).Should(gexec.Exit(1))
-			Expect(session.Err).To(gbytes.Say("myField: new field"))
+			Expect(session.Err).To(gbytes.Say("Pipeline is out of date"))
 		})
 	})
 })
