@@ -38,7 +38,7 @@ config:
 #@ end
 
 #@ def _check_pipelines_are_applied():
-task: check-wip-branches
+task: check-pipelines-are-applied
 config:
   platform: linux
   image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
