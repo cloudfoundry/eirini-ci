@@ -3,7 +3,7 @@
 slack:
   webhook:
 dockerhub:
-  username:
+  username: eiriniuser
   password:
 concourse:
   username: concourse-ci
