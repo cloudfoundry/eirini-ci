@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 wget -q -O /usr/bin/fly 'https://jetson.eirini.cf-app.com/api/v1/cli?arch=amd64&platform=linux'
 chmod +x /usr/bin/fly
