@@ -11,7 +11,7 @@ groups:
   - format-shell
   - check-wip-branches
   - check-golangci-linters
-  - check-pipelines-are-applied
+  - check-pipelines-are-applied-from-git
   name: checkers
 
 jobs:
