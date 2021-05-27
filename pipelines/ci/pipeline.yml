@@ -7,6 +7,19 @@
 #@ load("@ci:release_management.lib.yml", "release_management")
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
 
+#@ ci_clusters={
+#@  "eats-rapid": "rapid",
+#@  "eats-regular": "regular",
+#@  "eats-stable": "stable",
+#@  "integration": "regular",
+#@ }
+
+#@ eats_clusters={
+#@  "eats-rapid": "rapid",
+#@  "eats-regular": "regular",
+#@  "eats-stable": "stable",
+#@ }
+
 groups:
 - name: main
   jobs:
@@ -20,18 +33,20 @@ groups:
   - create-migration-docker-image
   - create-resource-validator-docker-image
   - update-eirini-version-files
-  - deploy-eirini-yamls-monaco
-  - run-eats-tests-monaco
+#@ for channel in eats_clusters.values():
+  - #@ "deploy-eirini-yamls-" + channel
+  - #@ "run-eats-tests-" + channel
+#@ end
   - fast-forward-release
 - name: bumps
   jobs:
   - bump-go-modules-eirini
 - name: gke-clusters
   jobs:
-  - delete-cluster-monaco
-  - create-cluster-monaco
-  - delete-cluster-integration
-  - create-cluster-integration
+#@ for cluster in ci_clusters.keys():
+  - #@ "delete-cluster-" + cluster
+  - #@ "create-cluster-" + cluster
+#@ end
 - name: cloud-controller
   jobs:
   - cloud-controller-tests
@@ -110,7 +125,9 @@ jobs:
     put: eirini-release
   serial: true
 
-- name: deploy-eirini-yamls-monaco
+
+#@ for channel in eats_clusters.values():
+- name: #@ "deploy-eirini-yamls-" + channel
   on_failure: #@ notify_slack()
   plan:
   - get: eirini-release
@@ -119,40 +136,44 @@ jobs:
     passed:
     - update-eirini-version-files
   - get: ci-resources
-  - #@ clusters.download_kubeconfig("monaco")
+  - #@ clusters.download_kubeconfig("eats-" + channel)
   - #@ testing.cleanup_deployment()
   - #@ testing.deploy_eirini_yamls()
   public: true
   serial: true
   serial_groups:
-  - monaco
+  - #@ channel
 
-- name: run-eats-tests-monaco
+- name: #@ "run-eats-tests-" + channel
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
     - get: eirini-release
       passed:
-      - deploy-eirini-yamls-monaco
+      - #@ "deploy-eirini-yamls-" + channel
       trigger: true
     - get: eirini
       passed:
-      - deploy-eirini-yamls-monaco
+      - #@ "deploy-eirini-yamls-" + channel
       trigger: true
     - get: ci-resources
-  - #@ clusters.download_kubeconfig("monaco")
+  - #@ clusters.download_kubeconfig("eats-"+channel)
   - #@ testing.run_eats_tests()
   public: true
   serial: true
   serial_groups:
-  - monaco
+  - #@ channel
+#@ end
+
 
 - name: fast-forward-release
   on_failure: #@ notify_slack()
   plan:
   - get: eirini-release
     passed:
-    - run-eats-tests-monaco
+#@ for channel in eats_clusters.values():
+    - #@ "run-eats-tests-" + channel
+#@ end
     trigger: true
   - get: eirini-release-master
   - params:
@@ -192,7 +213,8 @@ jobs:
       repository: repository-updated
   public: true
 
-#@ for cluster in ["monaco", "integration"]:
+
+#@ for cluster, channel in ci_clusters.items():
 - name: #@ "delete-cluster-" + cluster
   on_failure: #@ notify_slack()
   plan:
@@ -219,7 +241,7 @@ jobs:
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
-  - #@ clusters.create_kubernetes_cluster(cluster)
+  - #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
   - put: #@ "cluster-" + cluster + "-staging-event-created"
     params:
       bump: major
@@ -232,9 +254,10 @@ resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
+#@ for cluster in ci_clusters.keys():
+- #@ resources.cluster_event_created(cluster)
+#@ end
 - #@ resources.slack()
-- #@ resources.cluster_event_created("integration")
-- #@ resources.cluster_event_created("monaco")
 - #@ resources.git("cloud_controller_ng", "eirini-forks/cloud_controller_ng", branch="pr-lrp-crds")
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini", branch=data.values.repo_branches.eirini, private_key=data.values.private_keys.eirini)

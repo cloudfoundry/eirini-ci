@@ -37,6 +37,11 @@ variable "project-id" {
   default = "cff-eirini-peace-pods"
 }
 
+variable "release-channel" {
+  type = string
+  default = "REGULAR"
+}
+
 provider "google" {
   project     = var.project-id
   region      = var.region
@@ -111,6 +116,8 @@ resource "google_container_cluster" "cluster" {
   # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count = var.node-count-per-zone
+
+  release_channel = var.release-channel
 
   maintenance_policy {
     daily_maintenance_window {

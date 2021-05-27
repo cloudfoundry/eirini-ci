@@ -2,7 +2,7 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _create_kubernetes_cluster(cluster_name):
+#@ def _create_kubernetes_cluster(cluster_name, channel):
 task: create-kubernetes-cluster
 config:
   platform: linux
@@ -14,6 +14,7 @@ config:
     GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
     WINDOWS_POOL: "false"
     WORKER_COUNT: #@ data.values.gcp.worker_count
+    RELEASE_CHANNEL: #@ channel
   run: #@ task_script("gcp-create-cluster.sh")
 #@ end
 

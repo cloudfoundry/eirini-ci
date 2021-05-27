@@ -13,5 +13,6 @@ fi
 terraform init -backend-config="prefix=terraform/state/$CLUSTER_NAME" "$TERRAFORM_CONFIG_PATH"
 terraform apply -var "name=$CLUSTER_NAME" \
   -var "node-count-per-zone=$WORKER_COUNT" \
+  -var "release-channel=$RELEASE_CHANNEL" \
   -auto-approve \
   "$TERRAFORM_CONFIG_PATH"
