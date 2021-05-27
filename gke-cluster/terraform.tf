@@ -117,7 +117,9 @@ resource "google_container_cluster" "cluster" {
   remove_default_node_pool = true
   initial_node_count = var.node-count-per-zone
 
-  release_channel = var.release-channel
+  release_channel {
+    channel = var.release-channel
+  }
 
   maintenance_policy {
     daily_maintenance_window {
