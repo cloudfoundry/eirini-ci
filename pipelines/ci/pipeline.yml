@@ -7,18 +7,15 @@
 #@ load("@ci:release_management.lib.yml", "release_management")
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
 
-#@ ci_clusters={
-#@  "eats-rapid": "rapid",
-#@  "eats-regular": "regular",
-#@  "eats-stable": "stable",
-#@  "integration": "regular",
-#@ }
-
 #@ eats_clusters={
 #@  "eats-rapid": "rapid",
 #@  "eats-regular": "regular",
 #@  "eats-stable": "stable",
 #@ }
+
+#@ ci_clusters = {}
+#@ ci_clusters.update(eats_clusters)
+#@ ci_clusters["integration"] = "regular"
 
 groups:
 - name: main

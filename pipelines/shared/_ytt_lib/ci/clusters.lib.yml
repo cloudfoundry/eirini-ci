@@ -2,7 +2,11 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _create_kubernetes_cluster(cluster_name, channel):
+#@ def _sanitize_cluster_name(cluster_name):
+#@   return cluster_name.replace("-", "")
+#@ end
+
+#@ def _create_kubernetes_cluster(cluster_name, channel="regular"):
 task: create-kubernetes-cluster
 config:
   platform: linux
@@ -10,7 +14,7 @@ config:
   inputs:
   - name: ci-resources
   params:
-    CLUSTER_NAME: #@ cluster_name
+    CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
     GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
     WINDOWS_POOL: "false"
     WORKER_COUNT: #@ data.values.gcp.worker_count
@@ -26,7 +30,7 @@ config:
   inputs:
   - name: ci-resources
   params:
-    CLUSTER_NAME: #@ cluster_name
+    CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
     GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
   run: #@ task_script("delete-unused-gcp-disks.sh")
 #@ end
@@ -39,7 +43,7 @@ config:
   inputs:
   - name: ci-resources
   params:
-    CLUSTER_NAME: #@ cluster_name
+    CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
     GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
     WORKER_COUNT: #@ data.values.gcp.worker_count
   run: #@ task_script("gcp-delete-cluster.sh")
@@ -55,7 +59,7 @@ config:
   outputs:
   - name: state-modified
   params:
-    CLUSTER_NAME: #@ cluster_name
+    CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
   run: #@ task_script("clean-up-cluster-config.sh")
 #@ end
 
@@ -70,7 +74,7 @@ config:
   - name: kube
   run: #@ task_script("gcp-download-kubeconfig.sh")
 params:
-  CLUSTER_NAME: #@ cluster_name
+  CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
   GCP_REGION: #@ data.values.gcp.region
   GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
   GCP_ZONE: #@ data.values.gcp.zone
