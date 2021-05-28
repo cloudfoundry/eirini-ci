@@ -57,6 +57,7 @@ terraform {
 }
 
 resource "google_service_account" "eirini" {
+  provider = google-beta
   account_id   = var.name
   display_name = var.name
 }
@@ -66,6 +67,7 @@ resource "google_service_account_key" "eirini" {
 }
 
 resource "google_project_iam_custom_role" "eirini_dns" {
+  provider = google-beta
   role_id     = "${var.name}_dns_role"
   title       = "${var.name} DNS Role"
   permissions = [
@@ -100,6 +102,7 @@ resource "google_compute_subnetwork" "subnetwork" {
 }
 
 resource "google_compute_network" "network" {
+  provider = google-beta
   name = var.name
   auto_create_subnetworks = false
 }
@@ -177,6 +180,7 @@ resource "google_container_node_pool" "node_pool" {
 }
 
 resource "google_compute_address" "ingress_address" {
+  provider = google-beta
   name = var.name
   region = var.region
 }
