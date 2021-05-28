@@ -10,9 +10,8 @@ if [[ $WINDOWS_POOL == "true" ]]; then
   TERRAFORM_CONFIG_PATH=ci-resources/gke-cluster-windows
 fi
 
-terraform init -backend-config="prefix=terraform/state/$CLUSTER_NAME" "$TERRAFORM_CONFIG_PATH"
-terraform apply -var "name=$CLUSTER_NAME" \
+terraform -chdir="$TERRAFORM_CONFIG_PATH" init -backend-config="prefix=terraform/state/$CLUSTER_NAME" -upgrade=true
+terraform -chdir="$TERRAFORM_CONFIG_PATH" apply -var "name=$CLUSTER_NAME" \
   -var "node-count-per-zone=$WORKER_COUNT" \
   -var "release-channel=$RELEASE_CHANNEL" \
-  -auto-approve \
-  "$TERRAFORM_CONFIG_PATH"
+  -auto-approve
