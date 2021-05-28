@@ -42,7 +42,7 @@ variable "release-channel" {
   default = "REGULAR"
 }
 
-provider "google" {
+provider "google-beta" {
   project     = var.project-id
   region      = var.region
 }
@@ -105,6 +105,7 @@ resource "google_compute_network" "network" {
 }
 
 resource "google_container_cluster" "cluster" {
+  provider = google-beta
   name     = var.name
   location = var.zone
 
