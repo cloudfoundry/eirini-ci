@@ -6,7 +6,7 @@
 #@   return cluster_name.replace("-", "")
 #@ end
 
-#@ def _create_kubernetes_cluster(cluster_name, channel="regular"):
+#@ def _create_kubernetes_cluster(cluster_name, channel="REGULAR"):
 task: create-kubernetes-cluster
 config:
   platform: linux
