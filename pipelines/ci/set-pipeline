@@ -36,7 +36,6 @@ fi
 # http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_09_01
 
 slack_webhook=$(pass eirini/ci/slack-webhook)
-dockerhub_username=eiriniuser
 dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirini=$(pass eirini/github/eirini/ssh-key)
 private_keys_eirini_release=$(pass eirini/github/eirini-release/ssh-key)
