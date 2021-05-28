@@ -16,10 +16,23 @@ if ! fly -t "$target" status &>/dev/null; then
   fly -t "$target" login
 fi
 
+# We want this script to exit with error if pass or gcloud fails rather than
+# silently interpolating an empty string into the pipeline vars!
+#
+# Assigning the subshell stdout to a variable preserves the expected semantics
+# of errexit, as these assignments are "simple commands" rather than
+# substitutions.
+#
+# This is a giant gotcha with shell scripts!
+# http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_09_01
+
+slack_webhook=$(pass eirini/ci/slack-webhook)
+dockerhub_password=$(pass eirini/docker-hub)
+
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
-  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="slack.webhook=$slack_webhook" \
   --data-value="dockerhub.username=eiriniuser" \
-  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
+  --data-value="dockerhub.password=$dockerhub_password" \
   >"$pipeline_yml"
 
 noColor=

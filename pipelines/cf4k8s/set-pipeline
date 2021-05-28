@@ -28,13 +28,29 @@ if ! fly -t "$target" status &>/dev/null; then
   fly -t "$target" login
 fi
 
+# We want this script to exit with error if pass or gcloud fails rather than
+# silently interpolating an empty string into the pipeline vars!
+#
+# Assigning the subshell stdout to a variable preserves the expected semantics
+# of errexit, as these assignments are "simple commands" rather than
+# substitutions.
+#
+# This is a giant gotcha with shell scripts!
+# http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_09_01
+
+slack_webhook=$(pass eirini/ci/slack-webhook)
+dockerhub_password=$(pass eirini/docker-hub)
+private_keys_eirini_private_config=$(pass eirini/github/private-config/ssh-key)
+gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
+gcp_dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)
+
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
-  --data-value="slack.webhook=$(pass eirini/ci/slack-webhook)" \
+  --data-value="slack.webhook=$slack_webhook" \
   --data-value="dockerhub.username=eiriniuser" \
-  --data-value="dockerhub.password=$(pass eirini/docker-hub)" \
-  --data-value="private_keys.eirini_private_config=$(pass eirini/github/private-config/ssh-key)" \
-  --data-value="gcp.service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)" \
-  --data-value="gcp.dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)" \
+  --data-value="dockerhub.password=$dockerhub_password" \
+  --data-value="private_keys.eirini_private_config=$private_keys_eirini_private_config" \
+  --data-value="gcp.service_account_json=$gcp_service_account_json" \
+  --data-value="gcp.dns_service_account_json=$gcp_dns_service_account_json" \
   --data-value="gcp.worker_count=$worker_count" \
   --data-value="gcp.cluster_name=$cluster_name" \
   --data-value="gcp.enable_windows_pool=$windows_pool" \
