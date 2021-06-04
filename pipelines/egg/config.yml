@@ -19,7 +19,7 @@ postfacto:
     password:
 jefe:
   admin_password:
-  url: https://jefe.eirini.cf/
+  url: https://jefe.eirini.cf
   github_oauth:
     client_id:
     client_secret:
