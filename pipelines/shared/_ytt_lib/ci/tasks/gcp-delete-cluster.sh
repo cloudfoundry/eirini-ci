@@ -34,8 +34,8 @@ pushd ci-resources/gke-cluster || exit 1
     # these resources they also must be deleted separately.
     network_endpoint_groups_csv=$(gcloud beta compute network-endpoint-groups list --filter="network ~ $CLUSTER_NAME" --format="csv[no-heading](name,zone)")
     for name_zone in $network_endpoint_groups_csv; do
-      name="$(echo $name_zone | awk -F ',' '{ print $1 }')"
-      zone="$(echo $name_zone | awk -F ',' '{ print $2 }')"
+      name="$(echo "$name_zone" | awk -F ',' '{ print $1 }')"
+      zone="$(echo "$name_zone" | awk -F ',' '{ print $2 }')"
       gcloud beta compute network-endpoint-groups delete --zone "$zone" "$name" --quiet
     done
 
