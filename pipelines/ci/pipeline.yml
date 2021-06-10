@@ -219,13 +219,7 @@ jobs:
     trigger: true
   - get: ci-resources
   - #@ clusters.delete_kubernetes_cluster(cluster)
-  - get: cluster-state
-  - #@ clusters.delete_values_file(cluster)
   - #@ clusters.delete_disks(cluster)
-  - put: cluster-state
-    params:
-      merge: true
-      repository: state-modified
   serial: true
   serial_groups:
   - #@ cluster
@@ -234,7 +228,7 @@ jobs:
   on_failure: #@ notify_slack()
   plan:
   - get: ci-resources
-  - get: cluster-state
+  - get: delete-timer
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
@@ -260,7 +254,6 @@ resources:
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini", branch=data.values.repo_branches.eirini, private_key=data.values.private_keys.eirini)
 - #@ resources.git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirini_release)
 - #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirini_release)
-- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
 - #@ resources.eirini_registry_image("api")
