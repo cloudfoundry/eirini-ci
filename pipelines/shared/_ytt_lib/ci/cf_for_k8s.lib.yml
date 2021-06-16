@@ -14,8 +14,8 @@ config:
   outputs:
   - name: state-modified
   run: #@ task_script("aggregate-cf4k8s-values.sh")
-params:
-  CLUSTER_NAME: #@ cluster_name
+  params:
+    CLUSTER_NAME: #@ cluster_name
 #@ end
 
 #@ def _delete_cf():
@@ -56,9 +56,9 @@ config:
   outputs:
   - name: default-values-file
   run: #@ task_script("generate-default-cf4k8s-values.sh")
-params:
-  CLUSTER_NAME: #@ cluster_name
-  GCP_SERVICE_ACCOUNT: #@ data.values.gcp.service_account_json
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_SERVICE_ACCOUNT: #@ data.values.gcp.service_account_json
 #@ end
 
 #@ def _generate_domain_certificates():
@@ -85,11 +85,11 @@ config:
   outputs:
   - name: loadbalancer-values-file
   run: #@ task_script("generate-loadbalancer-cf4k8s-values.sh")
-params:
-  CLUSTER_NAME: #@ cluster_name
-  GCP_REGION: #@ data.values.gcp.region
-  GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
-  GCP_ZONE: #@ data.values.gcp.zone
+  params:
+    CLUSTER_NAME: #@ cluster_name
+    GCP_REGION: #@ data.values.gcp.region
+    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+    GCP_ZONE: #@ data.values.gcp.zone
 #@ end
 
 #@ def _get_smoke_test_variables(cluster_name):

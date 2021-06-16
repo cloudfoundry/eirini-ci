@@ -45,9 +45,9 @@ config:
   inputs:
   - name: ci-resources
   run: #@ task_script("check-pipelines-are-applied.sh")
-params:
-  USERNAME: #@ data.values.concourse.username
-  PASSWORD: #@ data.values.concourse.password
+  params:
+    USERNAME: #@ data.values.concourse.username
+    PASSWORD: #@ data.values.concourse.password
 #@ end
 
 #@ ci_automation = struct.make(
