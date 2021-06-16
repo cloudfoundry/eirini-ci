@@ -22,13 +22,9 @@ groups:
   jobs:
   - run-tests
   - run-integration-tests
-  - create-event-reporter-docker-image
-  - create-instance-index-env-injector-docker-image
-  - create-eirini-controller-docker-image
-  - create-api-docker-image
-  - create-task-reporter-docker-image
-  - create-migration-docker-image
-  - create-resource-validator-docker-image
+#@ for component in data.values.components:
+  - #@ "create-" + component + "-docker-image"
+#@ end
   - update-eirini-version-files
 #@ for channel in eats_clusters.values():
   - #@ "deploy-eirini-yamls-" + channel
