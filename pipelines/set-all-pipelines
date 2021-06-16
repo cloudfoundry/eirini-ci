@@ -11,6 +11,7 @@ pushd "$SCRIPT_DIR"
 {
   for pipeline in */; do
     if [[ ! "${excluded_pipelines[@]}" =~ "$pipeline" ]]; then
+      clear
       echo "+----------------------------------------------"
       echo "| Setting pipeline $pipeline"
       echo "+----------------------------------------------"
