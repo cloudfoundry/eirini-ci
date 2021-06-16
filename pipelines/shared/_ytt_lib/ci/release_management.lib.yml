@@ -3,82 +3,70 @@
 #@ load("common.lib.yml", "image_resource", "task_script")
 
 #@ def _build_docker_image(component):
-task: #@ "build-" + component
-privileged: true
-output_mapping:
-  image: #@ component + "-image"
-config:
-  platform: linux
-  caches:
-  - path: cache
-  image_resource: #@ image_resource("vito/oci-build-task")
-  inputs:
-  - name: eirini
-  outputs:
-  - name: image
-  params:
-    CONTEXT: eirini
-    DOCKERFILE: #@ "eirini/docker/" + component + "/Dockerfile"
-  run:
-    path: /bin/sh
-    args:
-      - -c
-      - -e
-      - |
-        BUILD_ARG_GIT_SHA=$(cat eirini/.git/ref)
-        export BUILD_ARG_GIT_SHA
-        build
+platform: linux
+caches:
+- path: cache
+image_resource: #@ image_resource("vito/oci-build-task")
+inputs:
+- name: eirini
+outputs:
+- name: image
+params:
+  CONTEXT: eirini
+  DOCKERFILE: #@ "eirini/docker/" + component + "/Dockerfile"
+run:
+  path: /bin/sh
+  args:
+    - -c
+    - -e
+    - |
+      BUILD_ARG_GIT_SHA=$(cat eirini/.git/ref)
+      export BUILD_ARG_GIT_SHA
+      build
 #@ end
 
 #@ def _checkout_eirini_sha():
-task: checkout-eirini-sha
-privileged: true
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: eirini-release
-  - name: eirini
-  - name: ci-resources
-  outputs:
-  - name: eirini-stable
-  run: #@ task_script("checkout-sha-by-image.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: eirini-release
+- name: eirini
+- name: ci-resources
+outputs:
+- name: eirini-stable
+run: #@ task_script("checkout-sha-by-image.sh")
 #@ end
 
 #@ def _create_release():
-task: create-release
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: ci-resources
-  - name: state
-  - name: eirini-release
-  - name: eirini-release-version
-  outputs:
-  - name: release-output
-  - name: release-output-yaml
-  run: #@ task_script("create-release.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: ci-resources
+- name: state
+- name: eirini-release
+- name: eirini-release-version
+outputs:
+- name: release-output
+- name: release-output-yaml
+run: #@ task_script("create-release.sh")
 #@ end
 
 #@ def _update_version_files(components):
-task: update-version-files
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: eirini
-  - name: eirini-release
-  #@ for component in components:
-  - name: #@ component + "-image"
-  #@ end
-  outputs:
-  - name: eirini-release-updated
-  params:
-    COMPONENT_NAME: eirini
-    COMPONENT_REPO: eirini
-    IMAGES: #@ " ".join(components)
-  run: #@ task_script("update-version-files.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: eirini
+- name: eirini-release
+#@ for component in components:
+- name: #@ component + "-image"
+#@ end
+outputs:
+- name: eirini-release-updated
+params:
+  COMPONENT_NAME: eirini
+  COMPONENT_REPO: eirini
+  IMAGES: #@ " ".join(components)
+run: #@ task_script("update-version-files.sh")
 #@ end
 
 #@ release_management = struct.make(

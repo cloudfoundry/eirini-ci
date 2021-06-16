@@ -47,7 +47,8 @@ jobs:
     passed:
     - smoke-tests-cf4k8s4a8e
   - get: eirini-release-version
-  - #@ release_management.create_release()
+  - task: create-release
+    config: #@ release_management.create_release()
   - get: eirini
   - put: eirini-release
     params:
@@ -62,7 +63,9 @@ jobs:
       name: eirini-release-version/version
       tag: eirini-release-version/version
       tag_prefix: v
-  - #@ release_management.checkout_eirini_sha()
+  - task: checkout-eirini-sha
+    privileged: true
+    config: #@ release_management.checkout_eirini_sha()
   - put: eirini
     params:
       repository: eirini-stable
@@ -106,9 +109,12 @@ jobs:
     - generate-cf-for-k8s-values
   - get: ci-resources
   - get: cf-k8s-prometheus
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ cf_for_k8s.patch_eirini_release()
-  - #@ cf_for_k8s.deploy_cf_for_k8s("cf4k8s4a8e")
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: patch-eirini-release
+    config: #@ cf_for_k8s.patch_eirini_release()
+  - task: deploy-cf-for-k8s
+    config: #@ cf_for_k8s.deploy_cf_for_k8s("cf4k8s4a8e")
   public: true
   serial_groups:
   - cf4k8s4a8e
@@ -120,10 +126,14 @@ jobs:
     trigger: true
   - get: cluster-state
   - get: ci-resources
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ cf_for_k8s.generate_default_values("cf4k8s4a8e")
-  - #@ cf_for_k8s.generate_loadbalancer_values("cf4k8s4a8e")
-  - #@ cf_for_k8s.aggregate_cf4k8s_values("cf4k8s4a8e")
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: generate-default-values
+    config: #@ cf_for_k8s.generate_default_values("cf4k8s4a8e")
+  - task: generate-loadbalancer-values
+    config: #@ cf_for_k8s.generate_loadbalancer_values("cf4k8s4a8e")
+  - task: aggregate-cf4k8s-values
+    config: #@ cf_for_k8s.aggregate_cf4k8s_values("cf4k8s4a8e")
   - put: cluster-state
     params:
       merge: true
@@ -148,8 +158,10 @@ jobs:
     passed:
     - deploy-cf-for-k8s-cf4k8s4a8e
     trigger: true
-  - #@ cf_for_k8s.get_smoke_test_variables("cf4k8s4a8e")
-  - #@ cf_for_k8s.run_smoke_tests()
+  - task: get-smoke-tests-variables
+    config: #@ cf_for_k8s.get_smoke_test_variables("cf4k8s4a8e")
+  - task: run-smoke-tests
+    config: #@ cf_for_k8s.run_smoke_tests()
   public: true
   serial_groups:
   - cf4k8s4a8e
@@ -157,10 +169,13 @@ jobs:
 - name: delete-cluster-cf4k8s4a8e
   plan:
   - get: ci-resources
-  - #@ clusters.delete_kubernetes_cluster("cf4k8s4a8e")
+  - task: delete-kubernetes-cluster
+    config: #@ clusters.delete_kubernetes_cluster("cf4k8s4a8e")
   - get: cluster-state
-  - #@ clusters.delete_values_file("cf4k8s4a8e")
-  - #@ clusters.delete_disks("cf4k8s4a8e")
+  - task: delete-values-file
+    config: #@ clusters.delete_values_file("cf4k8s4a8e")
+  - task: delete-disks
+    config: #@ clusters.delete_disks("cf4k8s4a8e")
   - put: cluster-state
     params:
       merge: true
@@ -176,7 +191,8 @@ jobs:
     passed:
     - delete-cluster-cf4k8s4a8e
     trigger: true
-  - #@ clusters.create_kubernetes_cluster("cf4k8s4a8e")
+  - task: create-kubernetes-cluster
+    config: #@ clusters.create_kubernetes_cluster("cf4k8s4a8e")
   - put: cluster-cf4k8s4a8e-staging-event-created
     params:
       bump: major
@@ -191,8 +207,10 @@ jobs:
     - create-cluster-cf4k8s4a8e
     trigger: true
   - get: ci-resources
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ cf_for_k8s.generate_domain_certificates()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: generate-domain-certificates
+    config: #@ cf_for_k8s.generate_domain_certificates()
 
 
 resource_types:

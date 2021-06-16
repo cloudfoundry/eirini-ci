@@ -31,10 +31,13 @@ jobs:
     trigger: true
   #@ end
   - get: ci-resources
-  - #@ clusters.delete_kubernetes_cluster(data.values.gcp.cluster_name)
+  - task: delete-kubernetes-cluster
+    config: #@ clusters.delete_kubernetes_cluster(data.values.gcp.cluster_name)
   - get: cluster-state
-  - #@ clusters.delete_values_file(data.values.gcp.cluster_name)
-  - #@ clusters.delete_disks(data.values.gcp.cluster_name)
+  - task: delete-values-file
+    config: #@ clusters.delete_values_file(data.values.gcp.cluster_name)
+  - task: delete-disks
+    config: #@ clusters.delete_disks(data.values.gcp.cluster_name)
   - put: cluster-state
     params:
       merge: true
@@ -50,7 +53,8 @@ jobs:
     passed:
     - #@ "delete-cluster-" + data.values.gcp.cluster_name
     trigger: true
-  - #@ clusters.create_kubernetes_cluster(data.values.gcp.cluster_name)
+  - task: create-kubernetes-cluster
+    config: #@ clusters.create_kubernetes_cluster(data.values.gcp.cluster_name)
   - put: #@ "cluster-" + data.values.gcp.cluster_name + "-staging-event-created"
     params:
       bump: major
@@ -69,10 +73,14 @@ jobs:
     passed:
     - #@ "create-cluster-" + data.values.gcp.cluster_name
     trigger: true
-  - #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
-  - #@ cf_for_k8s.generate_default_values(data.values.gcp.cluster_name)
-  - #@ cf_for_k8s.generate_loadbalancer_values(data.values.gcp.cluster_name)
-  - #@ cf_for_k8s.aggregate_cf4k8s_values(data.values.gcp.cluster_name)
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
+  - task: generate-default-values
+    config: #@ cf_for_k8s.generate_default_values(data.values.gcp.cluster_name)
+  - task: generate-loadbalancer-values
+    config: #@ cf_for_k8s.generate_loadbalancer_values(data.values.gcp.cluster_name)
+  - task: aggregate-cf4k8s-values
+    config: #@ cf_for_k8s.aggregate_cf4k8s_values(data.values.gcp.cluster_name)
   - put: cluster-state
     params:
       merge: true
@@ -99,10 +107,14 @@ jobs:
     trigger: true
   - get: ci-resources
   - get: cf-k8s-prometheus
-  - #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
-  - #@ cf_for_k8s.delete_cf()
-  - #@ cf_for_k8s.patch_eirini_release()
-  - #@ cf_for_k8s.deploy_cf_for_k8s(data.values.gcp.cluster_name)
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig(data.values.gcp.cluster_name)
+  - task: delete-cf
+    config: #@ cf_for_k8s.delete_cf()
+  - task: patch-eirini-release
+    config: #@ cf_for_k8s.patch_eirini_release()
+  - task: deploy-cf-for-k8s
+    config: #@ cf_for_k8s.deploy_cf_for_k8s(data.values.gcp.cluster_name)
   public: true
   serial_groups:
   - #@ data.values.gcp.cluster_name
@@ -129,8 +141,10 @@ jobs:
   - get: eirini-release
     passed:
     - #@ "deploy-cf-for-k8s-" + data.values.gcp.cluster_name
-  - #@ cf_for_k8s.get_smoke_test_variables(data.values.gcp.cluster_name)
-  - #@ cf_for_k8s.run_smoke_tests()
+  - task: get-smoke-tests-variables
+    config: #@ cf_for_k8s.get_smoke_test_variables(data.values.gcp.cluster_name)
+  - task: run-smoke-tests
+    config: #@ cf_for_k8s.run_smoke_tests()
   public: true
   serial_groups:
   - #@ data.values.gcp.cluster_name

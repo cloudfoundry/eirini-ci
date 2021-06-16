@@ -62,8 +62,10 @@ jobs:
       trigger: true
     - get: ci-resources
   - in_parallel:
-    - #@ testing.run_unit_tests()
-    - #@ testing.run_static_checks()
+    - task: run-unit-tests
+      config: #@ testing.run_unit_tests()
+    - task: run-static-checks
+      config: #@ testing.run_static_checks()
   public: true
 
 - name: run-integration-tests
@@ -76,9 +78,13 @@ jobs:
       trigger: true
     - get: eirini-release
     - get: ci-resources
-  - #@ clusters.download_kubeconfig("integration")
-  - #@ testing.apply_eirini_crds()
-  - #@ testing.run_integration_tests()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("integration")
+  - task: apply-eirini-crds
+    config: #@ testing.apply_eirini_crds()
+  - task: run-integration-tests
+    privileged: true
+    config: #@ testing.run_integration_tests()
   public: true
   serial: true
   serial_groups:
@@ -92,7 +98,11 @@ jobs:
     passed:
     - run-integration-tests
     trigger: true
-  - #@ release_management.build_docker_image(component)
+  - task: #@ "build-" + component
+    privileged: true
+    output_mapping:
+      image: #@ component + "-image"
+    config: #@ release_management.build_docker_image(component)
   - put: #@ component + "-image"
     params:
       image: #@ component + "-image/image.tar"
@@ -116,7 +126,8 @@ jobs:
       passed:
       - #@ "create-" + component + "-docker-image"
     #@ end
-  - #@ release_management.update_version_files(data.values.components)
+  - task: update-version-files
+    config: #@ release_management.update_version_files(data.values.components)
   - params:
       repository: eirini-release-updated
     put: eirini-release
@@ -133,9 +144,12 @@ jobs:
     passed:
     - update-eirini-version-files
   - get: ci-resources
-  - #@ clusters.download_kubeconfig("eats-" + channel)
-  - #@ testing.cleanup_deployment()
-  - #@ testing.deploy_eirini_yamls()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("eats-" + channel)
+  - task: cleanup-deployment
+    config: #@ testing.cleanup_deployment()
+  - task: deploy-eirini-yamls
+    config: #@ testing.deploy_eirini_yamls()
   public: true
   serial: true
   serial_groups:
@@ -154,8 +168,11 @@ jobs:
       - #@ "deploy-eirini-yamls-" + channel
       trigger: true
     - get: ci-resources
-  - #@ clusters.download_kubeconfig("eats-"+channel)
-  - #@ testing.run_eats_tests()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("eats-"+channel)
+  - task: run-eats-tests
+    privileged: true
+    config: #@ testing.run_eats_tests()
   public: true
   serial: true
   serial_groups:
@@ -185,10 +202,14 @@ jobs:
       trigger: true
     - get: eirini-release
     - get: ci-resources
-  - #@ clusters.download_kubeconfig("integration")
-  - #@ testing.apply_eirini_crds()
-  - #@ testing.run_rubocop()
-  - #@ testing.run_cc_tests()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("integration")
+  - task: apply-eirini-crds
+    config: #@ testing.apply_eirini_crds()
+  - task: run-rubocop
+    config: #@ testing.run_rubocop()
+  - task: run-cc-tests
+    config: #@ testing.run_cc_tests()
   public: true
   serial: true
   serial_groups:
@@ -202,14 +223,22 @@ jobs:
       trigger: true
     - get: golang-image
     - get: eirini
-  - #@ ci_automation.bump_go_modules("eirini")
-  - #@ testing.run_unit_tests("repository-updated")
-  - #@ testing.run_static_checks("repository-updated")
+  - task: bump-go-modules
+    input_mapping:
+      repository: eirini
+    config: #@ ci_automation.bump_go_modules()
+  - task: run-unit-tests
+    input_mapping:
+      eirini: repository-updated
+    config: #@ testing.run_unit_tests()
+  - task: run-static-checks
+    input_mapping:
+      eirini: repository-updated
+    config: #@ testing.run_static_checks()
   - put: eirini
     params:
       repository: repository-updated
   public: true
-
 
 #@ for cluster, channel in ci_clusters.items():
 - name: #@ "delete-cluster-" + cluster
@@ -218,8 +247,10 @@ jobs:
   - get: delete-timer
     trigger: true
   - get: ci-resources
-  - #@ clusters.delete_kubernetes_cluster(cluster)
-  - #@ clusters.delete_disks(cluster)
+  - task: delete-kubernetes-cluster
+    config: #@ clusters.delete_kubernetes_cluster(cluster)
+  - task: delete-disks
+    config: #@ clusters.delete_disks(cluster)
   serial: true
   serial_groups:
   - #@ cluster
@@ -232,7 +263,8 @@ jobs:
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
-  - #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
+  - task: create-kubernetes-cluster
+    config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
   - put: #@ "cluster-" + cluster + "-staging-event-created"
     params:
       bump: major

@@ -3,169 +3,141 @@
 #@ load("common.lib.yml", "image_resource", "task_script")
 
 #@ def _apply_eirini_crds():
-task: apply-eirini-crds
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
-  inputs:
-  - name: eirini-release
-  - name: kube
-  params:
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-    KUBECONFIG: kube/config
-  run: #@ task_script("apply-eirini-crds.sh")
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+inputs:
+- name: eirini-release
+- name: kube
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run: #@ task_script("apply-eirini-crds.sh")
 #@ end
 
 #@ def _cleanup_deployment():
-task: cleanup-deployment
-config:
-  platform: linux
-  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
-  inputs:
-  - name: eirini-release
-  - name: kube
-  params:
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-    KUBECONFIG: kube/config
-  run:
-    path: eirini-release/scripts/cleanup.sh
+platform: linux
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+inputs:
+- name: eirini-release
+- name: kube
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run:
+  path: eirini-release/scripts/cleanup.sh
 #@ end
 
 #@ def _deploy_eirini_yamls():
-task: deploy-eirini-yamls
-config:
-  platform: linux
-  image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
-  inputs:
-  - name: eirini-release
-  - name: kube
-  params:
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-    KUBECONFIG: kube/config
-    WIREMOCK_KEYSTORE_PASSWORD: #@ data.values.wiremock_keystore_pass
-  run:
-    path: eirini-release/scripts/deploy.sh
+platform: linux
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+inputs:
+- name: eirini-release
+- name: kube
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+  WIREMOCK_KEYSTORE_PASSWORD: #@ data.values.wiremock_keystore_pass
+run:
+  path: eirini-release/scripts/deploy.sh
 #@ end
 
 #@ def _run_cc_tests():
-task: run-cc-tests
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  image_resource: #@ image_resource("eirini/capi-tests")
-  inputs:
-  - name: cloud_controller_ng
-  - name: kube
-  outputs:
-  - name: output
-  params:
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-  run: #@ task_script("cloud-controller-tests.sh")
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("eirini/capi-tests")
+inputs:
+- name: cloud_controller_ng
+- name: kube
+outputs:
+- name: output
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+run: #@ task_script("cloud-controller-tests.sh")
 #@ end
 
 #@ def _run_eats_tests():
-task: run-eats-tests
-privileged: true
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  image_resource: #@ image_resource("eirini/telepresence")
-  inputs:
-  - name: eirini
-  - name: kube
-  outputs:
-  - name: output
-  params:
-    EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-    KUBECONFIG: kube/config
-  run: #@ task_script("run-eats-tests.sh")
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("eirini/telepresence")
+inputs:
+- name: eirini
+- name: kube
+outputs:
+- name: output
+params:
+  EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run: #@ task_script("run-eats-tests.sh")
 #@ end
 
 #@ def _run_integration_tests():
-task: run-integration-tests
-privileged: true
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  image_resource: #@ image_resource("eirini/telepresence")
-  inputs:
-  - name: eirini
-  - name: kube
-  outputs:
-  - name: output
-  params:
-    EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
-    GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-  run: #@ task_script("run-integration-tests.sh")
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("eirini/telepresence")
+inputs:
+- name: eirini
+- name: kube
+outputs:
+- name: output
+params:
+  EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+run: #@ task_script("run-integration-tests.sh")
 #@ end
 
 #@ def _run_rubocop():
-task: run-rubocop
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/capi-tests")
-  inputs:
-  - name: cloud_controller_ng
-  run: #@ task_script("cloud-controller-rubocop.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/capi-tests")
+inputs:
+- name: cloud_controller_ng
+run: #@ task_script("cloud-controller-rubocop.sh")
 #@ end
 
 #@ def _run_shellcheck(input_name="eirini"):
-task: run-shellcheck
-config:
-  platform: linux
-  image_resource: #@ image_resource("koalaman/shellcheck-alpine", "stable")
-  inputs:
-  - name: ci-resources
-  run:
-    path: /usr/bin/env
-    args:
-    - sh
-    - -c
-    - #@ data.read("tasks/check-shell.sh")
+platform: linux
+image_resource: #@ image_resource("koalaman/shellcheck-alpine", "stable")
+inputs:
+- name: ci-resources
+run:
+  path: /usr/bin/env
+  args:
+  - sh
+  - -c
+  - #@ data.read("tasks/check-shell.sh")
 #@ end
 
 #@ def _run_shfmt():
-task: run-shfmt
-config:
-  platform: linux
-  inputs:
-  - name: ci-resources
-  image_resource: #@ image_resource("eirini/ci")
-  run: #@ task_script("format-shell.sh")
+platform: linux
+inputs:
+- name: ci-resources
+image_resource: #@ image_resource("eirini/ci")
+run: #@ task_script("format-shell.sh")
 #@ end
 
-#@ def _run_static_checks(input_name="eirini"):
-task: run-static-checks
-input_mapping:
-  eirini: #@ input_name
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  image_resource: #@ image_resource("golangci/golangci-lint")
-  inputs:
-  - name: eirini
-  run: #@ task_script("run-static-checks.sh")
+#@ def _run_static_checks():
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("golangci/golangci-lint")
+inputs:
+- name: eirini
+run: #@ task_script("run-static-checks.sh")
 #@ end
 
 #@ def _run_unit_tests(input_name="eirini"):
-task: run-unit-tests
-input_mapping:
-  eirini: #@ input_name
-config:
-  platform: linux
-  caches:
-  - path: /root/.cache/go-build
-  inputs:
-  - name: eirini
-  image_resource: #@ image_resource("eirini/ci")
-  run: #@ task_script("run-unit-tests.sh")
+platform: linux
+caches:
+- path: /root/.cache/go-build
+inputs:
+- name: eirini
+image_resource: #@ image_resource("eirini/ci")
+run: #@ task_script("run-unit-tests.sh")
 #@ end
 
 #@ testing = struct.make(

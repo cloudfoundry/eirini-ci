@@ -20,19 +20,22 @@ jobs:
   plan:
   - get: ci-resources
     trigger: true
-  - #@ testing.run_shellcheck()
+  - task: run-shellcheck
+    config: #@ testing.run_shellcheck()
 - name: format-shell
   on_failure: #@ notify_slack()
   plan:
   - get: ci-resources
     trigger: true
-  - #@ testing.run_shfmt()
+  - task: run-shfmt
+    config: #@ testing.run_shfmt()
 - name: check-wip-branches
   on_failure: #@ notify_slack()
   plan:
   - get: every-morning
     trigger: true
-  - #@ ci_automation.check_wip_branches()
+  - task: check-wip-branches
+    config: #@ ci_automation.check_wip_branches()
 - name: check-golangci-linters
   on_failure: #@ notify_slack()
   plan:
@@ -40,7 +43,8 @@ jobs:
     trigger: true
   - get: eirini
     trigger: true
-  - #@ ci_automation.check_golangci_linters()
+  - task: check-golangci-linters
+    config: #@ ci_automation.check_golangci_linters()
 - name: check-pipelines-are-applied-from-git
   on_failure: #@ notify_slack()
   plan:
@@ -48,7 +52,8 @@ jobs:
     trigger: true
   - get: every-morning
     trigger: true
-  - #@ ci_automation.check_pipelines_are_applied()
+  - task: check-pipelines-are-applied
+    config: #@ ci_automation.check_pipelines_are_applied()
 
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")

@@ -14,10 +14,14 @@ jobs:
       trigger: true
     - get: eirini-private-config
     - get: ci-resources
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ egg.helm_install_redis()
-  - #@ egg.get_redis_credentials()
-  - #@ egg.deploy_postfacto()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: helm-install-redis
+    config: #@ egg.helm_install_redis()
+  - task: get-credentials
+    config: #@ egg.get_redis_credentials()
+  - task: deploy
+    config: #@ egg.deploy_postfacto()
   serial: true
 
 - name: deploy-jefe
@@ -29,7 +33,8 @@ jobs:
       - build-jefe
       trigger: true
     - get: eirini-private-config
-  - #@ egg.deploy_jefe()
+  - task: deploy
+    config: #@ egg.deploy_jefe()
   serial: true
 
 - name: deploy-eirinidotcf
@@ -40,8 +45,10 @@ jobs:
     - get: eirinidotcf
       trigger: true
     - get: eirini-private-config
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ egg.deploy_eirinidotcf()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: deploy-web
+    config: #@ egg.deploy_eirinidotcf()
   serial: true
 
 - name: unclaim-clusters
@@ -49,7 +56,8 @@ jobs:
   plan:
   - get: every-morning
     trigger: true
-  - #@ egg.unclaim_clusters()
+  - task: unclaim
+    config: #@ egg.unclaim_clusters()
 
 - name: bump-eirinidotcf-dependencies
   on_failure: #@ notify_slack()
@@ -57,7 +65,8 @@ jobs:
   - get: every-week
     trigger: true
   - get: eirinidotcf
-  - #@ egg.bump_eirinidotcf_dependencies()
+  - task: bump-eirinidotcf-dependencies
+    config: #@ egg.bump_eirinidotcf_dependencies()
   - put: eirinidotcf
     params:
       repository: eirinidotcf-updated
@@ -80,8 +89,10 @@ jobs:
     - get: pairup
       trigger: true
     - get: eirini-private-config
-  - #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - #@ egg.deploy_pairup()
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
+  - task: deploy-web
+    config: #@ egg.deploy_pairup()
   serial: true
 
 resource_types:

@@ -3,111 +3,95 @@
 #@ load("common.lib.yml", "image_resource", "task_script")
 
 #@ def _bump_eirinidotcf_dependencies():
-task: bump-eirinidotcf-dependencies
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: eirinidotcf
-  outputs:
-  - name: eirinidotcf-updated
-  run: #@ task_script("bump-yarn-packages.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: eirinidotcf
+outputs:
+- name: eirinidotcf-updated
+run: #@ task_script("bump-yarn-packages.sh")
 #@ end
 
 #@ def _deploy_eirinidotcf():
-task: deploy-web
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: ci-resources
-  - name: eirinidotcf
-  - name: eirini-private-config
-  run: #@ task_script("deploy-eirinidotcf.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: ci-resources
+- name: eirinidotcf
+- name: eirini-private-config
+run: #@ task_script("deploy-eirinidotcf.sh")
 #@ end
 
 #@ def _deploy_jefe():
-task: deploy
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: eirini-private-config
-  params:
-    JEFE_ADMIN_PASSWORD: #@ data.values.jefe.admin_password
-    JEFE_DSN: #@ "{}:{}@tcp({}:{})".format(data.values.jefe.db.username, data.values.jefe.db.password, data.values.jefe.db.address, data.values.jefe.db.port)
-    JEFE_GITHUB_CLIENT_ID: #@ data.values.jefe.github_oauth.client_id
-    JEFE_GITHUB_SECRET: #@ data.values.jefe.github_oauth.client_secret
-    JEFE_O_AUTH_ORG: #@ data.values.jefe.github_oauth.org
-  run: #@ task_script("deploy-jefe.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: eirini-private-config
+params:
+  JEFE_ADMIN_PASSWORD: #@ data.values.jefe.admin_password
+  JEFE_DSN: #@ "{}:{}@tcp({}:{})".format(data.values.jefe.db.username, data.values.jefe.db.password, data.values.jefe.db.address, data.values.jefe.db.port)
+  JEFE_GITHUB_CLIENT_ID: #@ data.values.jefe.github_oauth.client_id
+  JEFE_GITHUB_SECRET: #@ data.values.jefe.github_oauth.client_secret
+  JEFE_O_AUTH_ORG: #@ data.values.jefe.github_oauth.org
+run: #@ task_script("deploy-jefe.sh")
 #@ end
 
 #@ def _deploy_pairup():
-task: deploy-web
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: ci-resources
-  - name: pairup
-  - name: eirini-private-config
-  run: #@ task_script("deploy-pairup.sh")
-  params:
-    FIREBASE_CONF: #@ data.values.pairup.firebase_conf
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: ci-resources
+- name: pairup
+- name: eirini-private-config
+run: #@ task_script("deploy-pairup.sh")
+params:
+  FIREBASE_CONF: #@ data.values.pairup.firebase_conf
 #@ end
 
 #@ def _deploy_postfacto():
-task: deploy
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  inputs:
-  - name: postfacto
-  - name: eirini-private-config
-  - name: ci-resources
-  - name: redis-password
-  params:
-    MYSQL_ADDRESS: #@ data.values.postfacto.mysql.address
-    MYSQL_PASSWORD: #@ data.values.postfacto.mysql.password
-  run: #@ task_script("deploy-postfacto-cf4k8s.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: postfacto
+- name: eirini-private-config
+- name: ci-resources
+- name: redis-password
+params:
+  MYSQL_ADDRESS: #@ data.values.postfacto.mysql.address
+  MYSQL_PASSWORD: #@ data.values.postfacto.mysql.password
+run: #@ task_script("deploy-postfacto-cf4k8s.sh")
 #@ end
 
 #@ def _get_redis_credentials():
-task: get-credentials
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/gcloud")
-  inputs:
-  - name: kube
-  outputs:
-  - name: redis-password
-  run: #@ task_script("get-postfacto-credentials-cf4k8s.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/gcloud")
+inputs:
+- name: kube
+outputs:
+- name: redis-password
+run: #@ task_script("get-postfacto-credentials-cf4k8s.sh")
 #@ end
 
 #@ def _helm_install_redis():
-task: helm-install-redis
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/gcloud")
-  inputs:
-  - name: kube
-  run: #@ task_script("helm-install-redis.sh")
-  params:
-    GCP_REGION: #@ data.values.gcp.region
-    GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
-    GCP_ZONE: #@ data.values.gcp.zone
-    KUBECONFIG: kube/config
+platform: linux
+image_resource: #@ image_resource("eirini/gcloud")
+inputs:
+- name: kube
+run: #@ task_script("helm-install-redis.sh")
+params:
+  GCP_REGION: #@ data.values.gcp.region
+  GCP_SERVICE_ACCOUNT_JSON: #@ data.values.gcp.service_account_json
+  GCP_ZONE: #@ data.values.gcp.zone
+  KUBECONFIG: kube/config
 #@ end
 
 #@ def _unclaim_clusters():
-task: unclaim
-config:
-  platform: linux
-  image_resource: #@ image_resource("eirini/ci")
-  params:
-    JEFE_ADMIN_PASSWORD: #@ data.values.jefe.admin_password
-    JEFE_URL: #@ data.values.jefe.url
-  run: #@ task_script("unclaim-clusters.sh")
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+params:
+  JEFE_ADMIN_PASSWORD: #@ data.values.jefe.admin_password
+  JEFE_URL: #@ data.values.jefe.url
+run: #@ task_script("unclaim-clusters.sh")
 #@ end
 
 #@ egg = struct.make(
