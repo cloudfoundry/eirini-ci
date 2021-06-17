@@ -8,12 +8,11 @@ caches:
 - path: /root/.cache/go-build
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
 inputs:
-- name: eirini-release
+- name: crds-repository
 - name: kube
 params:
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
   KUBECONFIG: kube/config
-  DEF_PATH: helm/templates/core
 run: #@ task_script("apply-eirini-crds.sh")
 #@ end
 

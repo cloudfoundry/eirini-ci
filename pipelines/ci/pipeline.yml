@@ -78,6 +78,8 @@ jobs:
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
     config: #@ testing.apply_eirini_crds()
+    params:
+      CRDS_PATH: helm/templates/core
   - task: run-integration-tests
     privileged: true
     config: #@ testing.run_integration_tests()
@@ -202,6 +204,8 @@ jobs:
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
     config: #@ testing.apply_eirini_crds()
+    params:
+      CRDS_PATH: helm/templates/core
   - task: run-rubocop
     config: #@ testing.run_rubocop()
   - task: run-cc-tests
