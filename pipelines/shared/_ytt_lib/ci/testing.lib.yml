@@ -29,6 +29,19 @@ run:
   path: eirini-release/scripts/cleanup.sh
 #@ end
 
+#@ def _cleanup_controller_deployment():
+platform: linux
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+inputs:
+- name: eirini-controller
+- name: kube
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run:
+  path: eirini-controller/deployment/scripts/cleanup.sh
+#@ end
+
 #@ def _deploy_eirini_yamls():
 platform: linux
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
@@ -41,6 +54,20 @@ params:
   WIREMOCK_KEYSTORE_PASSWORD: #@ data.values.wiremock_keystore_pass
 run:
   path: eirini-release/scripts/deploy.sh
+#@ end
+
+#@ def _deploy_eirini_controller_yamls():
+platform: linux
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+inputs:
+- name: eirini-controller
+- name: helm-values
+- name: kube
+params:
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run:
+  path: eirini-controller/deployment/scripts/deploy.sh
 #@ end
 
 #@ def _run_cc_tests():
@@ -143,7 +170,9 @@ run: #@ task_script("run-unit-tests.sh")
 #@ testing = struct.make(
 #@   apply_eirini_crds=_apply_eirini_crds,
 #@   cleanup_deployment=_cleanup_deployment,
+#@   cleanup_controller_deployment=_cleanup_controller_deployment,
 #@   deploy_eirini_yamls=_deploy_eirini_yamls,
+#@   deploy_eirini_controller_yamls=_deploy_eirini_controller_yamls,
 #@   run_cc_tests=_run_cc_tests,
 #@   run_eats_tests=_run_eats_tests,
 #@   run_integration_tests=_run_integration_tests,

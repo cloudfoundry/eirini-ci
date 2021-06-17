@@ -1,0 +1,227 @@
+#@ load("@ytt:data", "data")
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:testing.lib.yml", "testing")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:release_management.lib.yml", "release_management")
+#@ load("@ci:ci_automation.lib.yml", "ci_automation")
+
+#@ eats_clusters={
+#@  "eats-rapid": "rapid",
+#@  "eats-regular": "regular",
+#@  "eats-stable": "stable",
+#@ }
+
+#@ ci_clusters = {}
+#@ ci_clusters.update(eats_clusters)
+#@ ci_clusters["integration"] = "regular"
+
+groups:
+- name: main
+  jobs:
+  - run-tests
+  - run-integration-tests
+##@ for component in data.values.components:
+#  - #@ "create-" + component + "-docker-image"
+##@ end
+#  - update-eirini-version-files
+##@ for channel in eats_clusters.values():
+#  - #@ "deploy-eirini-yamls-" + channel
+#  - #@ "run-eats-tests-" + channel
+##@ end
+#- name: bumps
+#  jobs:
+#  - bump-go-modules-eirini
+#- name: gke-clusters
+#  jobs:
+##@ for cluster in ci_clusters.keys():
+#  - #@ "delete-cluster-" + cluster
+#  - #@ "create-cluster-" + cluster
+##@ end
+
+jobs:
+- name: run-tests
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      trigger: true
+    - get: golang-lint
+      params:
+        skip_download: true
+      trigger: true
+    - get: ci-resources
+  - in_parallel:
+    - task: run-unit-tests
+      input_mapping:
+        eirini: eirini-controller
+      config: #@ testing.run_unit_tests()
+    - task: run-static-checks
+      input_mapping:
+        eirini: eirini-controller
+      config: #@ testing.run_static_checks()
+  public: true
+
+- name: run-integration-tests
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      passed:
+      - run-tests
+      trigger: true
+    - get: ci-resources
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("integration")
+  - task: apply-eirini-crds
+    input_mapping:
+      crds-repository: eirini-controller
+    config: #@ testing.apply_eirini_crds()
+    params:
+      CRDS_PATH: deployment/helm/templates/core
+  - task: run-integration-tests
+    privileged: true
+    input_mapping:
+      eirini: eirini-controller
+    config: #@ testing.run_integration_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - integration
+
+- name: build-and-deploy
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      passed: run-integration-tests
+      trigger: true
+    - get: ci-resources
+  - task: build-images-and-generate-values
+    config: #@ testing.run_kbld()
+  - in_parallel:
+#@ for channel in eats_clusters.values():
+    - do:
+      - task: #@ "download-" + channel + "-kubeconfig"
+        config: #@ clusters.download_kubeconfig("eats-" + channel)
+      - task: #@ "cleanup-" + channel + "-deployment"
+        config: #@ testing.cleanup_controller_deployment()
+      - task: #@ "deploy-eirini-yamls-on-" + channel
+        config: #@ testing.deploy_eirini_controller_yamls()
+#@ end
+
+#@ for channel in eats_clusters.values():
+- name: #@ "run-eats-tests-" + channel
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      passed:
+      - build-and-deploy
+      trigger: true
+    - get: eirini
+      passed:
+      - #@ "deploy-eirini-yamls-" + channel
+      trigger: true
+    - get: ci-resources
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("eats-"+channel)
+  - task: run-eats-tests
+    privileged: true
+    config: #@ testing.run_eats_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - #@ channel
+#@ end
+
+# - name: bump-go-modules-eirini
+#   on_failure: #@ notify_slack()
+#   plan:
+#   - in_parallel:
+#     - get: bump-day
+#       trigger: true
+#     - get: golang-image
+#     - get: eirinin
+#   - task: bump-go-modules
+#     input_mapping:
+#       repository: eirini
+#     config: #@ ci_automation.bump_go_modules()
+#   - task: run-unit-tests
+#     input_mapping:
+#       eirini: repository-updated
+#     config: #@ testing.run_unit_tests()
+#   - task: run-static-checks
+#     input_mapping:
+#       eirini: repository-updated
+#     config: #@ testing.run_static_checks()
+#   - put: eirini
+#     params:
+#       repository: repository-updated
+#   public: true
+
+##@ for cluster, channel in ci_clusters.items():
+#- name: #@ "delete-cluster-" + cluster
+#  on_failure: #@ notify_slack()
+#  plan:
+#  - get: delete-timer
+#    trigger: true
+#  - get: ci-resources
+#  - task: delete-kubernetes-cluster
+#    config: #@ clusters.delete_kubernetes_cluster(cluster)
+#  - task: delete-disks
+#    config: #@ clusters.delete_disks(cluster)
+#  serial: true
+#  serial_groups:
+#  - #@ cluster
+
+#- name: #@ "create-cluster-" + cluster
+#  on_failure: #@ notify_slack()
+#  plan:
+#  - get: ci-resources
+#  - get: delete-timer
+#    passed:
+#    - #@ "delete-cluster-" + cluster
+#    trigger: true
+#  - task: create-kubernetes-cluster
+#    config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
+#  - put: #@ "cluster-" + cluster + "-staging-event-created"
+#    params:
+#      bump: major
+#  serial: true
+#  serial_groups:
+#  - #@ cluster
+##@ end
+
+resource_types:
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+##@ for cluster in ci_clusters.keys():
+#- #@ resources.cluster_event_created(cluster)
+##@ end
+- #@ resources.slack()
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
+- #@ resources.git("eirini-controller", "cloudfoundry-incubator/eirini-controller", branch=data.values.repo_branches.eirini_controller, private_key=data.values.private_keys.eirini_controller)
+# - #@ resources.registry_image("golang-image", "golang")
+- #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
+# - #@ resources.eirini_registry_image("eirini-controller")
+# - #@ resources.eirini_registry_image("instance-index-env-injector")
+# - #@ resources.eirini_registry_image("resource-validator")
+# - name: delete-timer
+#   source:
+#     days:
+#     - Saturday
+#     start: 12:00 AM
+#     stop: 1:00 AM
+#   type: time
+#   icon: bomb
+# - name: bump-day
+#   source:
+#     days:
+#     - Wednesday
+#     start: 12:00 AM
+#     stop: 11:59 PM
+#   type: time
+#   icon: timetable

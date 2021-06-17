@@ -1,0 +1,22 @@
+#@data/values
+---
+slack:
+  webhook:
+dockerhub:
+  username:
+  password:
+gcp:
+  service_account_json:
+  zone: europe-west1-b
+  region: europe-west1
+  worker_count:
+private_keys:
+  eirini_controller:
+  eirini_private_config:
+components:
+  - eirini-controller
+  - instance-index-env-injector
+  - resource-validator
+repo_branches:
+  eirini_controller:
+  eirini_ci:
