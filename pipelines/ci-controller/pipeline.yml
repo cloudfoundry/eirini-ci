@@ -93,7 +93,7 @@ jobs:
       trigger: true
     - get: ci-resources
   - task: build-images-and-generate-values
-    config: #@ testing.run_kbld()
+    config: #@ testing.build_eirini_controller()
   - in_parallel:
 #@ for channel in eats_clusters.values():
     - do:

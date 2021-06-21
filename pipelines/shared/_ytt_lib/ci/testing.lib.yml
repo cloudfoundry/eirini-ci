@@ -61,14 +61,13 @@ run:
 platform: linux
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
 inputs:
-- name: eirini-controller
-- name: helm-values
+- name: eirini-controller-built
 - name: kube
 params:
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
   KUBECONFIG: kube/config
 run:
-  path: eirini-controller/deployment/scripts/deploy.sh
+  path: eirini-controller-built/deployment/scripts/deploy-only.sh
 #@ end
 
 #@ def _run_cc_tests():
@@ -172,6 +171,18 @@ params:
 run: #@ task_script("run-unit-tests.sh")
 #@ end
 
+#@ def _build_eirini_controller():
+platform: linux
+caches:
+- path: /root/.cache/go-build
+inputs:
+- name: eirini-controller
+outputs:
+- name: eirini-controller-built
+image_resource: #@ image_resource("eirini/ci")
+run: #@ task_script("build-eirini-controller.sh")
+#@ end
+
 #@ testing = struct.make(
 #@   apply_eirini_crds=_apply_eirini_crds,
 #@   cleanup_deployment=_cleanup_deployment,
@@ -186,4 +197,5 @@ run: #@ task_script("run-unit-tests.sh")
 #@   run_shfmt=_run_shfmt,
 #@   run_static_checks=_run_static_checks,
 #@   run_unit_tests=_run_unit_tests,
+#@   build_eirini_controller=_build_eirini_controller,
 #@ )
