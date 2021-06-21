@@ -4,6 +4,6 @@ set -eu
 
 golangci-lint version
 
-cd eirini
+cd ${REPO_PATH}
 test -f .golangci.yml
 golangci-lint run --verbose

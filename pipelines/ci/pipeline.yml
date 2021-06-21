@@ -59,9 +59,9 @@ jobs:
     - get: ci-resources
   - in_parallel:
     - task: run-unit-tests
-      config: #@ testing.run_unit_tests()
+      config: #@ testing.run_unit_tests("eirini")
     - task: run-static-checks
-      config: #@ testing.run_static_checks()
+      config: #@ testing.run_static_checks("eirini")
   public: true
 
 - name: run-integration-tests
@@ -77,9 +77,7 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
-    input_mapping:
-      crds-repository: eirini-release
-    config: #@ testing.apply_eirini_crds()
+    config: #@ testing.apply_eirini_crds("eirini-release")
     params:
       CRDS_PATH: helm/templates/core
   - task: run-integration-tests
@@ -205,9 +203,7 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
-    input_mapping:
-      crds-repository: eirini-release
-    config: #@ testing.apply_eirini_crds()
+    config: #@ testing.apply_eirini_crds("eirini-release")
     params:
       CRDS_PATH: helm/templates/core
   - task: run-rubocop
@@ -232,13 +228,9 @@ jobs:
       repository: eirini
     config: #@ ci_automation.bump_go_modules()
   - task: run-unit-tests
-    input_mapping:
-      eirini: repository-updated
-    config: #@ testing.run_unit_tests()
+    config: #@ testing.run_unit_tests("repository-updated")
   - task: run-static-checks
-    input_mapping:
-      eirini: repository-updated
-    config: #@ testing.run_static_checks()
+    config: #@ testing.run_static_checks("repository-updated")
   - put: eirini
     params:
       repository: repository-updated

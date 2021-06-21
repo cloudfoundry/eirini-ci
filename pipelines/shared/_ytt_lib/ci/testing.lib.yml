@@ -2,17 +2,18 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _apply_eirini_crds():
+#@ def _apply_eirini_crds(crds_repository):
 platform: linux
 caches:
 - path: /root/.cache/go-build
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
 inputs:
-- name: crds-repository
+- name: #@ crds_repository
 - name: kube
 params:
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
   KUBECONFIG: kube/config
+  CRDS_REPO: #@ crds_repository
 run: #@ task_script("apply-eirini-crds.sh")
 #@ end
 
@@ -126,7 +127,7 @@ inputs:
 run: #@ task_script("cloud-controller-rubocop.sh")
 #@ end
 
-#@ def _run_shellcheck(input_name="eirini"):
+#@ def _run_shellcheck():
 platform: linux
 image_resource: #@ image_resource("koalaman/shellcheck-alpine", "stable")
 inputs:
@@ -147,23 +148,27 @@ image_resource: #@ image_resource("eirini/ci")
 run: #@ task_script("format-shell.sh")
 #@ end
 
-#@ def _run_static_checks():
+#@ def _run_static_checks(input_name):
 platform: linux
 caches:
 - path: /root/.cache/go-build
 image_resource: #@ image_resource("golangci/golangci-lint")
 inputs:
-- name: eirini
+- name: #@ input_name
+params:
+  REPO_PATH: #@ input_name
 run: #@ task_script("run-static-checks.sh")
 #@ end
 
-#@ def _run_unit_tests(input_name="eirini"):
+#@ def _run_unit_tests(input_name):
 platform: linux
 caches:
 - path: /root/.cache/go-build
 inputs:
-- name: eirini
+- name: #@ input_name
 image_resource: #@ image_resource("eirini/ci")
+params:
+  REPO_PATH: #@ input_name
 run: #@ task_script("run-unit-tests.sh")
 #@ end
 

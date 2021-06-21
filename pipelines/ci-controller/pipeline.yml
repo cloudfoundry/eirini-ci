@@ -54,13 +54,9 @@ jobs:
     - get: ci-resources
   - in_parallel:
     - task: run-unit-tests
-      input_mapping:
-        eirini: eirini-controller
-      config: #@ testing.run_unit_tests()
+      config: #@ testing.run_unit_tests("eirini-controller")
     - task: run-static-checks
-      input_mapping:
-        eirini: eirini-controller
-      config: #@ testing.run_static_checks()
+      config: #@ testing.run_static_checks("eirini-controller")
   public: true
 
 - name: run-integration-tests
@@ -75,9 +71,7 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
-    input_mapping:
-      crds-repository: eirini-controller
-    config: #@ testing.apply_eirini_crds()
+    config: #@ testing.apply_eirini_crds("eirini-controller")
     params:
       CRDS_PATH: deployment/helm/templates/core
   - task: run-integration-tests
