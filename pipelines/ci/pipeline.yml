@@ -77,6 +77,8 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
+    input_mapping:
+      crds-repository: eirini-release
     config: #@ testing.apply_eirini_crds()
     params:
       CRDS_PATH: helm/templates/core
@@ -203,6 +205,8 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
+    input_mapping:
+      crds-repository: eirini-release
     config: #@ testing.apply_eirini_crds()
     params:
       CRDS_PATH: helm/templates/core
