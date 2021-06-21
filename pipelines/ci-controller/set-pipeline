@@ -40,7 +40,6 @@ dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirini_controller=$(pass eirini/github/eirini-controller/ssh-key)
 private_keys_eirini_private_config=$(pass eirini/github/private-config/ssh-key)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
-wiremock_keystore_pass=$(pass eirini/ci/wiremock-keystore-password)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --ignore-unknown-comments \
