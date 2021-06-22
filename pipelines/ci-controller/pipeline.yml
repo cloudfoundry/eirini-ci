@@ -22,6 +22,7 @@ groups:
   jobs:
   - run-tests
   - run-integration-tests
+  - build-and-deploy
 ##@ for component in data.values.components:
 #  - #@ "create-" + component + "-docker-image"
 ##@ end
@@ -89,13 +90,15 @@ jobs:
   plan:
   - in_parallel:
     - get: eirini-controller
-      passed: run-integration-tests
+      passed:
+      - run-integration-tests
       trigger: true
     - get: ci-resources
   - task: build-images-and-generate-values
+    privileged: true
     config: #@ testing.build_eirini_controller()
   - in_parallel:
-#@ for channel in eats_clusters.values():
+    #@ for channel in eats_clusters.values():
     - do:
       - task: #@ "download-" + channel + "-kubeconfig"
         config: #@ clusters.download_kubeconfig("eats-" + channel)
@@ -103,32 +106,32 @@ jobs:
         config: #@ testing.cleanup_controller_deployment()
       - task: #@ "deploy-eirini-yamls-on-" + channel
         config: #@ testing.deploy_eirini_controller_yamls()
-#@ end
+    #@ end
 
-#@ for channel in eats_clusters.values():
-- name: #@ "run-eats-tests-" + channel
-  on_failure: #@ notify_slack()
-  plan:
-  - in_parallel:
-    - get: eirini-controller
-      passed:
-      - build-and-deploy
-      trigger: true
-    - get: eirini
-      passed:
-      - #@ "deploy-eirini-yamls-" + channel
-      trigger: true
-    - get: ci-resources
-  - task: download-kubeconfig
-    config: #@ clusters.download_kubeconfig("eats-"+channel)
-  - task: run-eats-tests
-    privileged: true
-    config: #@ testing.run_eats_tests()
-  public: true
-  serial: true
-  serial_groups:
-  - #@ channel
-#@ end
+# #@ for channel in eats_clusters.values():
+# - name: #@ "run-eats-tests-" + channel
+#   on_failure: #@ notify_slack()
+#   plan:
+#   - in_parallel:
+#     - get: eirini-controller
+#       passed:
+#       - build-and-deploy
+#       trigger: true
+#     - get: eirini
+#       passed:
+#       - #@ "deploy-eirini-yamls-" + channel
+#       trigger: true
+#     - get: ci-resources
+#   - task: download-kubeconfig
+#     config: #@ clusters.download_kubeconfig("eats-"+channel)
+#   - task: run-eats-tests
+#     privileged: true
+#     config: #@ testing.run_eats_tests()
+#   public: true
+#   serial: true
+#   serial_groups:
+#   - #@ channel
+# #@ end
 
 # - name: bump-go-modules-eirini
 #   on_failure: #@ notify_slack()

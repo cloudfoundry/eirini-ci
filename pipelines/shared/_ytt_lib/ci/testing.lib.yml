@@ -177,9 +177,13 @@ caches:
 - path: /root/.cache/go-build
 inputs:
 - name: eirini-controller
+  path: eirini-controller-built
 outputs:
 - name: eirini-controller-built
-image_resource: #@ image_resource("eirini/ci")
+params:
+  DOCKERHUB_USER: #@ data.values.dockerhub.username
+  DOCKERHUB_PASS: #@ data.values.dockerhub.password
+image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-dind")
 run: #@ task_script("build-eirini-controller.sh")
 #@ end
 
