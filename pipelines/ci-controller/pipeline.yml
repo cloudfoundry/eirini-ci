@@ -8,14 +8,14 @@
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
 
 #@ eats_clusters={
-#@  "eats-rapid": "rapid",
-#@  "eats-regular": "regular",
-#@  "eats-stable": "stable",
+#@  "controller-eats-rapid": "rapid",
+#@  "controller-eats-regular": "regular",
+#@  "controller-eats-stable": "stable",
 #@ }
 
 #@ ci_clusters = {}
 #@ ci_clusters.update(eats_clusters)
-#@ ci_clusters["integration"] = "regular"
+#@ ci_clusters["controller-integration"] = "regular"
 
 groups:
 - name: main
@@ -85,28 +85,23 @@ jobs:
   serial_groups:
   - integration
 
-- name: build-and-deploy
+- name: build-and-generate-values
   on_failure: #@ notify_slack()
   plan:
   - in_parallel:
     - get: eirini-controller
-      passed:
-      - run-integration-tests
+      # passed:
+      # - run-integration-tests
       trigger: true
     - get: ci-resources
   - task: build-images-and-generate-values
     privileged: true
     config: #@ testing.build_eirini_controller()
-  - in_parallel:
-    #@ for channel in eats_clusters.values():
-    - do:
-      - task: #@ "download-" + channel + "-kubeconfig"
-        config: #@ clusters.download_kubeconfig("eats-" + channel)
-      - task: #@ "cleanup-" + channel + "-deployment"
-        config: #@ testing.cleanup_controller_deployment()
-      - task: #@ "deploy-eirini-yamls-on-" + channel
-        config: #@ testing.deploy_eirini_controller_yamls()
-    #@ end
+  - task: update-values
+    config: #@ testing.update_controller_values()
+  - put: cluster-state
+    params:
+      repository: state-modified
 
 # #@ for channel in eats_clusters.values():
 # - name: #@ "run-eats-tests-" + channel
@@ -201,6 +196,7 @@ resources:
 - #@ resources.slack()
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini-controller", "cloudfoundry-incubator/eirini-controller", branch=data.values.repo_branches.eirini_controller, private_key=data.values.private_keys.eirini_controller)
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
 # - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
 # - #@ resources.eirini_registry_image("eirini-controller")
