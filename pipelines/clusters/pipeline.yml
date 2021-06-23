@@ -1,0 +1,90 @@
+#@ load("@ytt:data", "data")
+
+#@ load("@ci:notifications.lib.yml", "notify_slack")
+#@ load("@ci:resources.lib.yml", "resources")
+#@ load("@ci:testing.lib.yml", "testing")
+#@ load("@ci:clusters.lib.yml", "clusters")
+#@ load("@ci:release_management.lib.yml", "release_management")
+#@ load("@ci:ci_automation.lib.yml", "ci_automation")
+
+#@ eats_clusters={
+#@  "eats-rapid": "rapid",
+#@  "eats-regular": "regular",
+#@  "eats-stable": "stable",
+#@  "controller-eats-rapid": "rapid",
+#@  "controller-eats-regular": "regular",
+#@  "controller-eats-stable": "stable",
+#@ }
+
+#@ integration_clusters={
+#@  "integration": "regular",
+#@  "controller-integration": "regular",
+#@ }
+
+#@ ci_clusters = {}
+#@ ci_clusters.update(integration_clusters)
+#@ ci_clusters.update(eats_clusters)
+
+groups:
+- name: main
+  jobs:
+#@ for cluster in ci_clusters.keys():
+  - #@ "delete-cluster-" + cluster
+  - #@ "create-cluster-" + cluster
+#@ end
+
+jobs:
+#@ for cluster, channel in ci_clusters.items():
+- name: #@ "delete-cluster-" + cluster
+  on_failure: #@ notify_slack()
+  plan:
+  - get: delete-timer
+    trigger: true
+  - get: ci-resources
+  - #@ clusters.delete_kubernetes_cluster(cluster)
+  - get: cluster-state
+  - #@ clusters.delete_values_file(cluster)
+  - #@ clusters.delete_disks(cluster)
+  - put: cluster-state
+    params:
+      merge: true
+      repository: state-modified
+  serial: true
+  serial_groups:
+  - #@ cluster
+
+- name: #@ "create-cluster-" + cluster
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+  - get: cluster-state
+    passed:
+    - #@ "delete-cluster-" + cluster
+    trigger: true
+  - #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
+  - put: #@ "cluster-" + cluster + "-staging-event-created"
+    params:
+      bump: major
+  serial: true
+  serial_groups:
+  - #@ cluster
+#@ end
+
+resource_types:
+- #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
+
+resources:
+#@ for cluster in ci_clusters.keys():
+- #@ resources.cluster_event_created(cluster)
+#@ end
+- #@ resources.slack()
+- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
+- name: delete-timer
+  source:
+    days:
+    - Saturday
+    start: 12:00 PM
+    stop: 1:00 AM
+  type: time
+  icon: bomb

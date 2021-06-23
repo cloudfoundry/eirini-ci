@@ -14,7 +14,6 @@ wiremock_keystore_pass:
 private_keys:
   eirini:
   eirini_release:
-  eirini_private_config:
 components:
   - api
   - eirini-controller

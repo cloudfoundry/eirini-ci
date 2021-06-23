@@ -34,12 +34,6 @@ groups:
 - name: bumps
   jobs:
   - bump-go-modules-eirini
-- name: gke-clusters
-  jobs:
-#@ for cluster in ci_clusters.keys():
-  - #@ "delete-cluster-" + cluster
-  - #@ "create-cluster-" + cluster
-#@ end
 - name: cloud-controller
   jobs:
   - cloud-controller-tests
@@ -236,46 +230,10 @@ jobs:
       repository: repository-updated
   public: true
 
-#@ for cluster, channel in ci_clusters.items():
-- name: #@ "delete-cluster-" + cluster
-  on_failure: #@ notify_slack()
-  plan:
-  - get: delete-timer
-    trigger: true
-  - get: ci-resources
-  - task: delete-kubernetes-cluster
-    config: #@ clusters.delete_kubernetes_cluster(cluster)
-  - task: delete-disks
-    config: #@ clusters.delete_disks(cluster)
-  serial: true
-  serial_groups:
-  - #@ cluster
-
-- name: #@ "create-cluster-" + cluster
-  on_failure: #@ notify_slack()
-  plan:
-  - get: ci-resources
-  - get: delete-timer
-    passed:
-    - #@ "delete-cluster-" + cluster
-    trigger: true
-  - task: create-kubernetes-cluster
-    config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
-  - put: #@ "cluster-" + cluster + "-staging-event-created"
-    params:
-      bump: major
-  serial: true
-  serial_groups:
-  - #@ cluster
-#@ end
-
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-#@ for cluster in ci_clusters.keys():
-- #@ resources.cluster_event_created(cluster)
-#@ end
 - #@ resources.slack()
 - #@ resources.git("cloud_controller_ng", "eirini-forks/cloud_controller_ng", branch="pr-lrp-crds")
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
@@ -291,14 +249,6 @@ resources:
 - #@ resources.eirini_registry_image("migration")
 - #@ resources.eirini_registry_image("resource-validator")
 - #@ resources.eirini_registry_image("task-reporter")
-- name: delete-timer
-  source:
-    days:
-    - Saturday
-    start: 12:00 AM
-    stop: 1:00 AM
-  type: time
-  icon: bomb
 - name: bump-day
   source:
     days:
