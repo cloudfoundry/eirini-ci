@@ -104,6 +104,21 @@ params:
 run: #@ task_script("run-eats-tests.sh")
 #@ end
 
+#@ def _run_controller_eats_tests():
+platform: linux
+caches:
+- path: /root/.cache/go-build
+image_resource: #@ image_resource("eirini/telepresence")
+inputs:
+- name: eirini-controller
+- name: kube
+params:
+  EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
+  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
+  KUBECONFIG: kube/config
+run: #@ task_script("run-controller-eats-tests.sh")
+#@ end
+
 #@ def _run_integration_tests():
 platform: linux
 caches:
@@ -200,6 +215,7 @@ run: #@ task_script("build-eirini-controller.sh")
 #@   deploy_eirini_controller=_deploy_eirini_controller,
 #@   run_cc_tests=_run_cc_tests,
 #@   run_eats_tests=_run_eats_tests,
+#@   run_controller_eats_tests=_run_controller_eats_tests,
 #@   run_integration_tests=_run_integration_tests,
 #@   run_rubocop=_run_rubocop,
 #@   run_shellcheck=_run_shellcheck,

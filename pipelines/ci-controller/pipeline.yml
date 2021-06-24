@@ -26,7 +26,7 @@ groups:
   - build-and-generate-values
 #@ for channel in eats_clusters.values():
   - #@ "deploy-eirini-controller-" + channel
-  #! - #@ "run-eats-tests-" + channel
+  - #@ "run-eats-tests-" + channel
 #@ end
 #- name: bumps
 #  jobs:
@@ -123,30 +123,26 @@ jobs:
     config: #@ testing.deploy_eirini_controller()
 #@ end
 
-# #@ for channel in eats_clusters.values():
-# - name: #@ "run-eats-tests-" + channel
-#   on_failure: #@ notify_slack()
-#   plan:
-#   - in_parallel:
-#     - get: eirini-controller
-#       passed:
-#       - build-and-deploy
-#       trigger: true
-#     - get: eirini
-#       passed:
-#       - #@ "deploy-eirini-yamls-" + channel
-#       trigger: true
-#     - get: ci-resources
-#   - task: download-kubeconfig
-#     config: #@ clusters.download_kubeconfig("eats-"+channel)
-#   - task: run-eats-tests
-#     privileged: true
-#     config: #@ testing.run_eats_tests()
-#   public: true
-#   serial: true
-#   serial_groups:
-#   - #@ channel
-# #@ end
+#@ for channel in eats_clusters.values():
+- name: #@ "run-eats-tests-" + channel
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      passed:
+      - #@ "deploy-eirini-controller-" + channel
+      trigger: true
+    - get: ci-resources
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("controller-eats-" + channel)
+  - task: run-eats-tests
+    privileged: true
+    config: #@ testing.run_controller_eats_tests()
+  public: true
+  serial: true
+  serial_groups:
+  - #@ channel
+#@ end
 
 # - name: bump-go-modules-eirini
 #   on_failure: #@ notify_slack()
