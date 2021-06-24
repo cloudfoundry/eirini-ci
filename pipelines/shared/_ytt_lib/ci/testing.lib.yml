@@ -177,9 +177,10 @@ caches:
 - path: /root/.cache/go-build
 inputs:
 - name: eirini-controller
-  path: eirini-controller-built
+- name: cluster-state
+  path: state-modified
 outputs:
-- name: eirini-controller-built
+- name: state-modified
 params:
   DOCKERHUB_USER: #@ data.values.dockerhub.username
   DOCKERHUB_PASS: #@ data.values.dockerhub.password
@@ -187,17 +188,7 @@ image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-dind")
 run: #@ task_script("build-eirini-controller.sh")
 #@ end
 
-#@ def _update_controller_values():
-platform: linux
-image_resource: #@ image_resource("eirini/ci")
-inputs:
-- name: eirini-controller-built
-- name: cluster-state
-  path: state-modified
-outputs:
-- name: state-modified
-run: #@ task_script("update-controller-values.sh")
-#@ end
+
 
 #@ testing = struct.make(
 #@   apply_eirini_crds=_apply_eirini_crds,
@@ -214,5 +205,4 @@ run: #@ task_script("update-controller-values.sh")
 #@   run_static_checks=_run_static_checks,
 #@   run_unit_tests=_run_unit_tests,
 #@   build_eirini_controller=_build_eirini_controller,
-#@   update_controller_values=_update_controller_values,
 #@ )

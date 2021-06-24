@@ -6,6 +6,7 @@
 #@ load("@ci:clusters.lib.yml", "clusters")
 #@ load("@ci:release_management.lib.yml", "release_management")
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
+#@ load("@ci:common.lib.yml", "git_commit")
 
 #@ eats_clusters={
 #@  "controller-eats-rapid": "rapid",
@@ -22,7 +23,7 @@ groups:
   jobs:
   - run-tests
   - run-integration-tests
-  - build-and-deploy
+  - build-and-generate-values
 ##@ for component in data.values.components:
 #  - #@ "create-" + component + "-docker-image"
 ##@ end
@@ -93,15 +94,16 @@ jobs:
       # passed:
       # - run-integration-tests
       trigger: true
+    - get: cluster-state
     - get: ci-resources
-  - task: build-images-and-generate-values
+  - task: build-and-generate-values
     privileged: true
     config: #@ testing.build_eirini_controller()
-  - task: update-values
-    config: #@ testing.update_controller_values()
+  - task: commit-values
+    config: #@ git_commit("state-modified", "state-committed", "Update eirini-controller values")
   - put: cluster-state
     params:
-      repository: state-modified
+      repository: state-committed
 
 # #@ for channel in eats_clusters.values():
 # - name: #@ "run-eats-tests-" + channel

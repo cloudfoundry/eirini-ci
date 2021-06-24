@@ -15,3 +15,18 @@ args:
 - -c
 - #@ data.read("tasks/" + filename)
 #@ end
+
+#@ def git_commit(repo, repo_modified, message, add_path="."):
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: #@ repo
+outputs:
+- name: #@ repo_modified
+params:
+  REPO: #@ repo
+  REPO_MODIFIED: #@ repo_modified
+  COMMIT_MSG: #@ message
+  ADD_PATH: #@ add_path
+run: #@ task_script("git-commit.sh")
+#@ end
