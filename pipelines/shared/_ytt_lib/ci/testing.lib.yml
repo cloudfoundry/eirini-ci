@@ -57,17 +57,19 @@ run:
   path: eirini-release/scripts/deploy.sh
 #@ end
 
-#@ def _deploy_eirini_controller_yamls():
+#@ def _deploy_eirini_controller():
 platform: linux
-image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
+image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: eirini-controller-built
+- name: eirini-controller
+- name: cluster-state
 - name: kube
 params:
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
   KUBECONFIG: kube/config
+  HELM_VALUES: cluster-state/eirini-controller/values.yaml
 run:
-  path: eirini-controller-built/deployment/scripts/deploy-only.sh
+  path: eirini-controller/deployment/scripts/deploy-only.sh
 #@ end
 
 #@ def _run_cc_tests():
@@ -195,7 +197,7 @@ run: #@ task_script("build-eirini-controller.sh")
 #@   cleanup_deployment=_cleanup_deployment,
 #@   cleanup_controller_deployment=_cleanup_controller_deployment,
 #@   deploy_eirini_yamls=_deploy_eirini_yamls,
-#@   deploy_eirini_controller_yamls=_deploy_eirini_controller_yamls,
+#@   deploy_eirini_controller=_deploy_eirini_controller,
 #@   run_cc_tests=_run_cc_tests,
 #@   run_eats_tests=_run_eats_tests,
 #@   run_integration_tests=_run_integration_tests,

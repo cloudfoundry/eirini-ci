@@ -24,14 +24,10 @@ groups:
   - run-tests
   - run-integration-tests
   - build-and-generate-values
-##@ for component in data.values.components:
-#  - #@ "create-" + component + "-docker-image"
-##@ end
-#  - update-eirini-version-files
-##@ for channel in eats_clusters.values():
-#  - #@ "deploy-eirini-yamls-" + channel
-#  - #@ "run-eats-tests-" + channel
-##@ end
+#@ for channel in eats_clusters.values():
+  - #@ "deploy-eirini-controller-" + channel
+  #! - #@ "run-eats-tests-" + channel
+#@ end
 #- name: bumps
 #  jobs:
 #  - bump-go-modules-eirini
@@ -91,6 +87,7 @@ jobs:
   plan:
   - in_parallel:
     - get: eirini-controller
+      # TODO: bring back past constraint
       # passed:
       # - run-integration-tests
       trigger: true
@@ -104,6 +101,27 @@ jobs:
   - put: cluster-state
     params:
       repository: state-committed
+
+#@ for channel in eats_clusters.values():
+- name: #@ "deploy-eirini-controller-" + channel
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: eirini-controller
+      passed:
+      - build-and-generate-values
+      trigger: true
+    - get: cluster-state
+      passed:
+      - build-and-generate-values
+    - get: ci-resources
+  - task: download-kubeconfig
+    config: #@ clusters.download_kubeconfig("controller-eats-" + channel)
+  - task: cleanup-controller-deployment
+    config: #@ testing.cleanup_controller_deployment()
+  - task: deploy-eirini-controller
+    config: #@ testing.deploy_eirini_controller()
+#@ end
 
 # #@ for channel in eats_clusters.values():
 # - name: #@ "run-eats-tests-" + channel
