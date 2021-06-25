@@ -16,16 +16,19 @@ image_resource: #@ image_resource("eirini/golangci-lint")
 run: #@ task_script("check-golangci-linters.sh")
 #@ end
 
-#@ def _bump_go_modules():
+#@ def _bump_go_modules(repository, repository_updated):
 platform: linux
 caches:
 - path: /root/.cache/go-build
 image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: repository
+- name: #@ repository
 - name: golang-image
 outputs:
-- name: repository-updated
+- name: #@ repository_updated
+params:
+  REPO_PATH: #@ repository
+  REPO_UPDATED_PATH: #@ repository_updated
 run: #@ task_script("bump-go-packages.sh")
 #@ end
 

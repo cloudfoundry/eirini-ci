@@ -28,15 +28,9 @@ groups:
   - #@ "deploy-eirini-controller-" + channel
   - #@ "run-eats-tests-" + channel
 #@ end
-#- name: bumps
-#  jobs:
-#  - bump-go-modules-eirini
-#- name: gke-clusters
-#  jobs:
-##@ for cluster in ci_clusters.keys():
-#  - #@ "delete-cluster-" + cluster
-#  - #@ "create-cluster-" + cluster
-##@ end
+- name: bumps
+  jobs:
+  - bump-go-modules-eirini-controller
 
 jobs:
 - name: run-tests
@@ -143,93 +137,43 @@ jobs:
   - #@ channel
 #@ end
 
-# - name: bump-go-modules-eirini
-#   on_failure: #@ notify_slack()
-#   plan:
-#   - in_parallel:
-#     - get: bump-day
-#       trigger: true
-#     - get: golang-image
-#     - get: eirinin
-#   - task: bump-go-modules
-#     input_mapping:
-#       repository: eirini
-#     config: #@ ci_automation.bump_go_modules()
-#   - task: run-unit-tests
-#     input_mapping:
-#       eirini: repository-updated
-#     config: #@ testing.run_unit_tests()
-#   - task: run-static-checks
-#     input_mapping:
-#       eirini: repository-updated
-#     config: #@ testing.run_static_checks()
-#   - put: eirini
-#     params:
-#       repository: repository-updated
-#   public: true
-
-##@ for cluster, channel in ci_clusters.items():
-#- name: #@ "delete-cluster-" + cluster
-#  on_failure: #@ notify_slack()
-#  plan:
-#  - get: delete-timer
-#    trigger: true
-#  - get: ci-resources
-#  - task: delete-kubernetes-cluster
-#    config: #@ clusters.delete_kubernetes_cluster(cluster)
-#  - task: delete-disks
-#    config: #@ clusters.delete_disks(cluster)
-#  serial: true
-#  serial_groups:
-#  - #@ cluster
-
-#- name: #@ "create-cluster-" + cluster
-#  on_failure: #@ notify_slack()
-#  plan:
-#  - get: ci-resources
-#  - get: delete-timer
-#    passed:
-#    - #@ "delete-cluster-" + cluster
-#    trigger: true
-#  - task: create-kubernetes-cluster
-#    config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
-#  - put: #@ "cluster-" + cluster + "-staging-event-created"
-#    params:
-#      bump: major
-#  serial: true
-#  serial_groups:
-#  - #@ cluster
-##@ end
+- name: bump-go-modules-eirini-controller
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: bump-day
+      trigger: true
+    - get: golang-image
+    - get: eirini-controller
+  - task: bump-go-modules
+    config: #@ ci_automation.bump_go_modules("eirini-controller", "eirini-controller-bumped")
+  - in_parallel:
+    - task: run-unit-tests
+      config: #@ testing.run_unit_tests("eirini-controller-bumped")
+    - task: run-static-checks
+      config: #@ testing.run_static_checks("eirini-controller-bumped")
+  - task: commit-bump
+    config: #@ git_commit("eirini-controller-bumped", "eirini-controller-committed", "Bump go packages")
+  - put: eirini-controller
+    params:
+      repository: eirini-controller-committed
+  public: true
 
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-##@ for cluster in ci_clusters.keys():
-#- #@ resources.cluster_event_created(cluster)
-##@ end
 - #@ resources.slack()
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini-controller", "cloudfoundry-incubator/eirini-controller", branch=data.values.repo_branches.eirini_controller, private_key=data.values.private_keys.eirini_controller)
 - #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
-# - #@ resources.registry_image("golang-image", "golang")
+- #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
-# - #@ resources.eirini_registry_image("eirini-controller")
-# - #@ resources.eirini_registry_image("instance-index-env-injector")
-# - #@ resources.eirini_registry_image("resource-validator")
-# - name: delete-timer
-#   source:
-#     days:
-#     - Saturday
-#     start: 12:00 AM
-#     stop: 1:00 AM
-#   type: time
-#   icon: bomb
-# - name: bump-day
-#   source:
-#     days:
-#     - Wednesday
-#     start: 12:00 AM
-#     stop: 11:59 PM
-#   type: time
-#   icon: timetable
+- name: bump-day
+  source:
+    days:
+    - Friday
+    start: 12:00 AM
+    stop: 11:59 PM
+  type: time
+  icon: timetable

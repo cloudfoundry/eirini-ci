@@ -6,6 +6,7 @@
 #@ load("@ci:clusters.lib.yml", "clusters")
 #@ load("@ci:release_management.lib.yml", "release_management")
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
+#@ load("@ci:common.lib.yml", "git_commit")
 
 #@ eats_clusters={
 #@  "eats-rapid": "rapid",
@@ -218,16 +219,17 @@ jobs:
     - get: golang-image
     - get: eirini
   - task: bump-go-modules
-    input_mapping:
-      repository: eirini
-    config: #@ ci_automation.bump_go_modules()
-  - task: run-unit-tests
-    config: #@ testing.run_unit_tests("repository-updated")
-  - task: run-static-checks
-    config: #@ testing.run_static_checks("repository-updated")
+    config: #@ ci_automation.bump_go_modules("eirini", "eirini-bumped")
+  - in_parallel:
+    - task: run-unit-tests
+      config: #@ testing.run_unit_tests("eirini-bumped")
+    - task: run-static-checks
+      config: #@ testing.run_static_checks("eirini-bumped")
+  - task: commit-bump
+    config: #@ git_commit("eirini-bumped", "eirini-committed", "Bump go packages")
   - put: eirini
     params:
-      repository: repository-updated
+      repository: eirini-committed
   public: true
 
 resource_types:

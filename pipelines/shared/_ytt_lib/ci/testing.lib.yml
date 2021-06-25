@@ -192,6 +192,7 @@ run: #@ task_script("run-unit-tests.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: cache
 inputs:
 - name: eirini-controller
 - name: cluster-state
