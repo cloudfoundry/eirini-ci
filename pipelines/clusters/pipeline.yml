@@ -41,10 +41,13 @@ jobs:
   - get: delete-timer
     trigger: true
   - get: ci-resources
-  - #@ clusters.delete_kubernetes_cluster(cluster)
+  - task: delete-kubernetes-cluster
+    config: #@ clusters.delete_kubernetes_cluster(cluster)
   - get: cluster-state
-  - #@ clusters.delete_values_file(cluster)
-  - #@ clusters.delete_disks(cluster)
+  - task: delete-values-file
+    config: #@ clusters.delete_values_file(cluster)
+  - task: delete-disks
+    config: #@ clusters.delete_disks(cluster)
   - put: cluster-state
     params:
       merge: true
@@ -61,7 +64,8 @@ jobs:
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
-  - #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
+  - task: create-kubernetes-cluster
+    config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
   - put: #@ "cluster-" + cluster + "-staging-event-created"
     params:
       bump: major
