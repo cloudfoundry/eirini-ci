@@ -1,6 +1,8 @@
 #!/bin/bash
 
-pushd $REPO
+set -euo pipefail
+
+pushd "$REPO"
 {
   if git status --porcelain | grep .; then
     echo "Repo is dirty"
