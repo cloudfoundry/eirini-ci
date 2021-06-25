@@ -87,9 +87,8 @@ jobs:
   plan:
   - in_parallel:
     - get: eirini-controller
-      # TODO: bring back past constraint
-      # passed:
-      # - run-integration-tests
+      passed:
+      - run-integration-tests
       trigger: true
     - get: cluster-state
     - get: ci-resources
