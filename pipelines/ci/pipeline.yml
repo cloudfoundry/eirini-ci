@@ -35,9 +35,6 @@ groups:
 - name: bumps
   jobs:
   - bump-go-modules-eirini
-- name: cloud-controller
-  jobs:
-  - cloud-controller-tests
 
 jobs:
 - name: run-tests
@@ -187,29 +184,6 @@ jobs:
       repository: eirini-release
     put: eirini-release-master
 
-- name: cloud-controller-tests
-  on_failure: #@ notify_slack()
-  plan:
-  - in_parallel:
-    - get: cloud_controller_ng
-      trigger: true
-    - get: eirini-release
-    - get: ci-resources
-  - task: download-kubeconfig
-    config: #@ clusters.download_kubeconfig("integration")
-  - task: apply-eirini-crds
-    config: #@ testing.apply_eirini_crds("eirini-release")
-    params:
-      CRDS_PATH: helm/templates/core
-  - task: run-rubocop
-    config: #@ testing.run_rubocop()
-  - task: run-cc-tests
-    config: #@ testing.run_cc_tests()
-  public: true
-  serial: true
-  serial_groups:
-  - cc-tests
-
 - name: bump-go-modules-eirini
   on_failure: #@ notify_slack()
   plan:
@@ -237,7 +211,6 @@ resource_types:
 
 resources:
 - #@ resources.slack()
-- #@ resources.git("cloud_controller_ng", "eirini-forks/cloud_controller_ng", branch="pr-lrp-crds")
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini", branch=data.values.repo_branches.eirini, private_key=data.values.private_keys.eirini)
 - #@ resources.git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirini_release)

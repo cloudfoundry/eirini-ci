@@ -72,21 +72,6 @@ run:
   path: eirini-controller/deployment/scripts/deploy-only.sh
 #@ end
 
-#@ def _run_cc_tests():
-platform: linux
-caches:
-- path: /root/.cache/go-build
-image_resource: #@ image_resource("eirini/capi-tests")
-inputs:
-- name: cloud_controller_ng
-- name: kube
-outputs:
-- name: output
-params:
-  GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
-run: #@ task_script("cloud-controller-tests.sh")
-#@ end
-
 #@ def _run_eats_tests():
 platform: linux
 caches:
@@ -133,14 +118,6 @@ params:
   EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
 run: #@ task_script("run-integration-tests.sh")
-#@ end
-
-#@ def _run_rubocop():
-platform: linux
-image_resource: #@ image_resource("eirini/capi-tests")
-inputs:
-- name: cloud_controller_ng
-run: #@ task_script("cloud-controller-rubocop.sh")
 #@ end
 
 #@ def _run_shellcheck():
@@ -214,11 +191,9 @@ run: #@ task_script("build-eirini-controller.sh")
 #@   cleanup_controller_deployment=_cleanup_controller_deployment,
 #@   deploy_eirini_yamls=_deploy_eirini_yamls,
 #@   deploy_eirini_controller=_deploy_eirini_controller,
-#@   run_cc_tests=_run_cc_tests,
 #@   run_eats_tests=_run_eats_tests,
 #@   run_controller_eats_tests=_run_controller_eats_tests,
 #@   run_integration_tests=_run_integration_tests,
-#@   run_rubocop=_run_rubocop,
 #@   run_shellcheck=_run_shellcheck,
 #@   run_shfmt=_run_shfmt,
 #@   run_static_checks=_run_static_checks,
