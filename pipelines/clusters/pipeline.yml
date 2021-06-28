@@ -43,15 +43,11 @@ jobs:
   - get: ci-resources
   - task: delete-kubernetes-cluster
     config: #@ clusters.delete_kubernetes_cluster(cluster)
-  - get: cluster-state
-  - task: delete-values-file
-    config: #@ clusters.delete_values_file(cluster)
   - task: delete-disks
     config: #@ clusters.delete_disks(cluster)
-  - put: cluster-state
+  - put: #@ "semver-event-" + cluster
     params:
-      merge: true
-      repository: state-modified
+      bump: major
   serial: true
   serial_groups:
   - #@ cluster
@@ -60,15 +56,12 @@ jobs:
   on_failure: #@ notify_slack()
   plan:
   - get: ci-resources
-  - get: cluster-state
+  - get: #@ "semver-event-" + cluster
     passed:
     - #@ "delete-cluster-" + cluster
     trigger: true
   - task: create-kubernetes-cluster
     config: #@ clusters.create_kubernetes_cluster(cluster, channel.upper())
-  - put: #@ "cluster-" + cluster + "-staging-event-created"
-    params:
-      bump: major
   serial: true
   serial_groups:
   - #@ cluster
@@ -78,17 +71,14 @@ resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
-#@ for cluster in ci_clusters.keys():
-- #@ resources.cluster_event_created(cluster)
-#@ end
 - #@ resources.slack()
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
-- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
+#@ for cluster in ci_clusters.keys():
+- #@ resources.semver_event(cluster)
+#@ end
 - name: delete-timer
   source:
     days:
     - Saturday
-    start: 12:00 PM
-    stop: 1:00 AM
   type: time
   icon: bomb

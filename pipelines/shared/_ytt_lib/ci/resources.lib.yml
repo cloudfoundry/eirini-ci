@@ -104,8 +104,22 @@ source:
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
+#@ def _semver_event(name):
+name: #@ "semver-event-" + name
+type: semver
+icon: check-decagram
+source:
+  branch: events
+  driver: git
+  file: #@ "semver-event-" + name
+  initial_version: 0.1.0
+  private_key: #@ data.values.private_keys.eirini_private_config
+  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
+#@ end
+
 #@ resources = struct.make(
 #@   cluster_event_created=_cluster_event_created,
+#@   semver_event=_semver_event,
 #@   eirini_release_semver=_eirini_release_semver,
 #@   github_release=_github_release,
 #@   git=_git,
