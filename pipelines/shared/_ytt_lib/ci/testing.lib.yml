@@ -80,8 +80,6 @@ image_resource: #@ image_resource("eirini/telepresence")
 inputs:
 - name: eirini
 - name: kube
-outputs:
-- name: output
 params:
   EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
@@ -112,8 +110,6 @@ image_resource: #@ image_resource("eirini/telepresence")
 inputs:
 - name: eirini
 - name: kube
-outputs:
-- name: output
 params:
   EIRINIUSER_PASSWORD: #@ data.values.dockerhub.password
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
