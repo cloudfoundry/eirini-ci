@@ -64,4 +64,4 @@ fly --target "$target" \
   set-pipeline \
   "$noColor" \
   --config "$pipeline_yml" \
-  --pipeline ci
+  --pipeline eirini
