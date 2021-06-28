@@ -5,7 +5,7 @@ IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
-readonly excluded_pipelines=("cf4k8s/" "shared/" "fakes/" "ci-controller/")
+readonly excluded_pipelines=("cf4k8s/" "shared/" "fakes/")
 
 pushd "$SCRIPT_DIR"
 {
