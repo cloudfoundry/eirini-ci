@@ -217,13 +217,9 @@ resources:
 - #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirini_release)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
-- #@ resources.eirini_registry_image("api")
-- #@ resources.eirini_registry_image("eirini-controller")
-- #@ resources.eirini_registry_image("event-reporter")
-- #@ resources.eirini_registry_image("instance-index-env-injector")
-- #@ resources.eirini_registry_image("migration")
-- #@ resources.eirini_registry_image("resource-validator")
-- #@ resources.eirini_registry_image("task-reporter")
+#@ for component in data.values.components:
+- #@ resources.eirini_registry_image(component)
+#@ end
 - name: bump-day
   source:
     days:

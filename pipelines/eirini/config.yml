@@ -16,11 +16,9 @@ private_keys:
   eirini_release:
 components:
   - api
-  - eirini-controller
   - event-reporter
   - instance-index-env-injector
   - migration
-  - resource-validator
   - task-reporter
 repo_branches:
   eirini:
