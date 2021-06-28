@@ -228,7 +228,5 @@ resources:
   source:
     days:
     - Wednesday
-    start: 12:00 AM
-    stop: 11:59 PM
   type: time
   icon: timetable
