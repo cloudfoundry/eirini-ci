@@ -2,18 +2,17 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _apply_eirini_crds(crds_repository):
+#@ def _apply_eirini_crds():
 platform: linux
 caches:
 - path: /root/.cache/go-build
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
 inputs:
-- name: #@ crds_repository
+- name: eirini-controller
 - name: kube
 params:
   GOOGLE_APPLICATION_CREDENTIALS: kube/service-account.json
   KUBECONFIG: kube/config
-  CRDS_REPO: #@ crds_repository
 run: #@ task_script("apply-eirini-crds.sh")
 #@ end
 

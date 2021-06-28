@@ -63,9 +63,7 @@ jobs:
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
   - task: apply-eirini-crds
-    config: #@ testing.apply_eirini_crds("eirini-controller")
-    params:
-      CRDS_PATH: deployment/helm/templates/core
+    config: #@ testing.apply_eirini_crds()
   - task: run-integration-tests
     privileged: true
     input_mapping:

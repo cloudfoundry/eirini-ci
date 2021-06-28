@@ -68,10 +68,6 @@ jobs:
     - get: ci-resources
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("integration")
-  - task: apply-eirini-crds
-    config: #@ testing.apply_eirini_crds("eirini-release")
-    params:
-      CRDS_PATH: helm/templates/core
   - task: run-integration-tests
     privileged: true
     config: #@ testing.run_integration_tests()
