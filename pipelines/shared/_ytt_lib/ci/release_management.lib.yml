@@ -51,6 +51,20 @@ outputs:
 run: #@ task_script("create-release.sh")
 #@ end
 
+#@ def _create_controller_release():
+platform: linux
+image_resource: #@ image_resource("eirini/ci")
+inputs:
+- name: ci-resources
+- name: state
+- name: eirini-controller-version
+- name: eirini-controller
+outputs:
+- name: release-output
+- name: release-output-yaml
+run: #@ task_script("create-controller-release.sh")
+#@ end
+
 #@ def _update_version_files(components):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
@@ -73,5 +87,6 @@ run: #@ task_script("update-version-files.sh")
 #@   build_docker_image=_build_docker_image,
 #@   checkout_eirini_sha=_checkout_eirini_sha,
 #@   create_release=_create_release,
+#@   create_controller_release=_create_controller_release,
 #@   update_version_files=_update_version_files,
 #@ )

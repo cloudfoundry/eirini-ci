@@ -40,6 +40,7 @@ dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirini_controller=$(pass eirini/github/eirini-controller/ssh-key)
 private_keys_eirini_private_config=$(pass eirini/github/private-config/ssh-key)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
+access_tokens_eirini_ci=$(pass eirini/github/eirinici/access-token)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --ignore-unknown-comments \
@@ -51,6 +52,7 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="gcp.service_account_json=$gcp_service_account_json" \
   --data-value="gcp.worker_count=$worker_count" \
   --data-value="repo_branches.eirini_controller=$working_branch" \
+  --data-value="access_tokens.eirini_ci=$access_tokens_eirini_ci" \
   --data-value="repo_branches.eirini_ci=$ci_branch" \
   >"$pipeline_yml"
 

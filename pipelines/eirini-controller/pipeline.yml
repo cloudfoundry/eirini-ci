@@ -31,6 +31,11 @@ groups:
 - name: bumps
   jobs:
   - bump-go-modules-eirini-controller
+- name: publish-release
+  jobs:
+  - bump-minor-version
+  - bump-major-version
+  - publish-release
 
 jobs:
 - name: run-tests
@@ -124,6 +129,9 @@ jobs:
       - #@ "deploy-eirini-controller-" + channel
       trigger: true
     - get: ci-resources
+    - get: cluster-state
+      passed:
+      - #@ "deploy-eirini-controller-" + channel
   - task: download-kubeconfig
     config: #@ clusters.download_kubeconfig("controller-eats-" + channel)
   - task: run-eats-tests
@@ -157,6 +165,56 @@ jobs:
       repository: eirini-controller-committed
   public: true
 
+- name: bump-major-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-controller-version
+    params:
+      bump: major
+  - put: eirini-controller-version
+    params:
+      file: eirini-controller-version/version
+
+- name: bump-minor-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-controller-version
+    params:
+      bump: minor
+    passed:
+    - publish-release
+    trigger: true
+  - put: eirini-controller-version
+    params:
+      file: eirini-controller-version/version
+
+- name: publish-release
+  on_failure: #@ notify_slack()
+  plan:
+  - in_parallel:
+    - get: ci-resources
+    - get: state
+      passed:
+    #@ for channel in eats_clusters.values():
+      - #@ "run-eats-tests-" + channel
+    #@ end
+      resource: cluster-state
+    - get: eirini-controller
+      passed:
+    #@ for channel in eats_clusters.values():
+      - #@ "run-eats-tests-" + channel
+    #@ end
+    - get: eirini-controller-version
+  - task: create-release
+    config: #@ release_management.create_controller_release()
+  - put: eirini-controller-github-release
+    params:
+      globs:
+      - release-output/eirini-controller*.tgz
+      name: eirini-controller-version/version
+      tag: eirini-controller-version/version
+      tag_prefix: v
+
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
@@ -167,6 +225,9 @@ resources:
 - #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
+- #@ resources.github_release("eirini-controller-github-release", "cloudfoundry-incubator", "eirini-controller", None, None, data.values.access_tokens.eirini_ci, True)
+- #@ resources.eirini_controller_semver()
+
 - name: bump-day
   source:
     days:

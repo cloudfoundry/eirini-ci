@@ -91,6 +91,19 @@ source:
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
+#@ def _eirini_controller_semver():
+name: eirini-controller-version
+type: semver
+icon: counter
+source:
+  branch: master
+  driver: git
+  file: eirini-controller-version
+  initial_version: 0.1.0
+  private_key: #@ data.values.private_keys.eirini_private_config
+  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
+#@ end
+
 #@ def _cluster_event_created(cluster_name):
 name: #@ "cluster-" + cluster_name + "-staging-event-created"
 type: semver
@@ -121,6 +134,7 @@ source:
 #@   cluster_event_created=_cluster_event_created,
 #@   semver_event=_semver_event,
 #@   eirini_release_semver=_eirini_release_semver,
+#@   eirini_controller_semver=_eirini_controller_semver,
 #@   github_release=_github_release,
 #@   git=_git,
 #@   eirini_docker_image=_eirini_docker_image,

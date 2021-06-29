@@ -13,6 +13,8 @@ gcp:
 private_keys:
   eirini_controller:
   eirini_private_config:
+access_tokens:
+  eirini_ci:
 components:
   - eirini-controller
   - instance-index-env-injector
