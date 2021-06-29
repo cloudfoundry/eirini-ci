@@ -18,7 +18,7 @@ generate-eirini-controller-yamls() {
   local values_yaml="$PWD/state/eirini-controller/values.yaml"
   pushd eirini-controller/deployment/helm
   {
-    helm template eirini-controller . --namespace eirini-controller --values "$values_yaml" --output-dir=$RENDER_DIR
+    helm template eirini-controller . --namespace eirini-controller --values "$values_yaml" --output-dir="$RENDER_DIR"
   }
   popd
 }
