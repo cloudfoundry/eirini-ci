@@ -98,7 +98,7 @@ icon: counter
 source:
   branch: master
   driver: git
-  file: eirini-controller-version
+  file: eirini-controller/version
   initial_version: 0.1.0
   private_key: #@ data.values.private_keys.eirini_private_config
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"

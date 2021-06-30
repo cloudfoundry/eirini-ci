@@ -51,17 +51,18 @@ outputs:
 run: #@ task_script("create-release.sh")
 #@ end
 
-#@ def _create_controller_release():
+#@ def _create_controller_release(cluster_state, output):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: ci-resources
-- name: state
-- name: eirini-controller-version
+- name: #@ cluster_state
 - name: eirini-controller
+- name: eirini-controller-version
 outputs:
-- name: release-output
-- name: release-output-yaml
+- name: #@ output
+params:
+  VALUES_PATH: #@ cluster_state + "/eirini-controller/values.yaml"
+  OUTPUT: #@ output
 run: #@ task_script("create-controller-release.sh")
 #@ end
 

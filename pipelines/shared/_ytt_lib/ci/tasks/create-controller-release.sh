@@ -3,34 +3,26 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-RENDER_DIR=$(mktemp -d)
-readonly RENDER_DIR
+CHART_DIR=$(mktemp -d)
+readonly CHART_DIR
 
 # shellcheck disable=SC2064
-trap "rm -r $RENDER_DIR" EXIT
+trap "rm -r $CHART_DIR" EXIT
 
 main() {
-  generate-eirini-controller-yamls
-  zip-eirini-controller-yamls
+  compile-helm-chart
+  package-helm-chart
 }
 
-generate-eirini-controller-yamls() {
-  local values_yaml="$PWD/state/eirini-controller/values.yaml"
-  pushd eirini-controller/deployment/helm
-  {
-    helm template eirini-controller . --namespace eirini-controller --values "$values_yaml" --output-dir="$RENDER_DIR"
-  }
-  popd
+compile-helm-chart() {
+  cp -a eirini-controller/deployment/helm/* "$CHART_DIR"
+  cp "$VALUES_PATH" "$CHART_DIR/"
 }
 
-zip-eirini-controller-yamls() {
-  pushd "$RENDER_DIR"
-  {
-    tar -zcvf "eirini-controller.tgz" eirini-controller
-  }
-  popd
-
-  mv "$RENDER_DIR/eirini-controller.tgz" release-output
+package-helm-chart() {
+  local version
+  version=$(cat eirini-controller-version/version)
+  helm package "$CHART_DIR" --app-version "$version" --version "$version" -d "$OUTPUT"
 }
 
 main

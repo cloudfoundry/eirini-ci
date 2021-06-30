@@ -193,12 +193,11 @@ jobs:
   plan:
   - in_parallel:
     - get: ci-resources
-    - get: state
+    - get: cluster-state
       passed:
     #@ for channel in eats_clusters.values():
       - #@ "run-eats-tests-" + channel
     #@ end
-      resource: cluster-state
     - get: eirini-controller
       passed:
     #@ for channel in eats_clusters.values():
@@ -206,7 +205,7 @@ jobs:
     #@ end
     - get: eirini-controller-version
   - task: create-release
-    config: #@ release_management.create_controller_release()
+    config: #@ release_management.create_controller_release("cluster-state", "release-output")
   - put: eirini-controller-github-release
     params:
       globs:
