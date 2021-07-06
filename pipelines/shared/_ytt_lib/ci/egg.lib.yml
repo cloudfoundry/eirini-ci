@@ -2,13 +2,16 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _bump_eirinidotcf_dependencies():
+#@ def _bump_eirinidotcf_dependencies(repo, repo_modified):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: eirinidotcf
+- name: #@ repo
 outputs:
-- name: eirinidotcf-updated
+- name: #@ repo_modified
+params:
+  REPO: #@ repo
+  REPO_MODIFIED: #@ repo_modified
 run: #@ task_script("bump-yarn-packages.sh")
 #@ end
 

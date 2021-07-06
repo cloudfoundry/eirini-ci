@@ -4,6 +4,7 @@
 #@ load("@ci:resources.lib.yml", "resources")
 #@ load("@ci:clusters.lib.yml", "clusters")
 #@ load("@ci:egg.lib.yml", "egg")
+#@ load("@ci:common.lib.yml", "git_commit")
 
 jobs:
 - name: deploy-postfacto
@@ -66,10 +67,12 @@ jobs:
     trigger: true
   - get: eirinidotcf
   - task: bump-eirinidotcf-dependencies
-    config: #@ egg.bump_eirinidotcf_dependencies()
+    config: #@ egg.bump_eirinidotcf_dependencies("eirinidotcf", "eirinidotcf-updated")
+  - task: commit-values
+    config: #@ git_commit("eirinidotcf-updated", "eirinidotcf-committed", "Bump yarn packages", "web")
   - put: eirinidotcf
     params:
-      repository: eirinidotcf-updated
+      repository: eirinidotcf-committed
   serial: true
 
 - name: build-jefe
