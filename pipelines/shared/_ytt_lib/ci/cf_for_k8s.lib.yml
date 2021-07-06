@@ -2,17 +2,19 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _aggregate_cf4k8s_values(cluster_name):
+#@ def _aggregate_cf4k8s_values(cluster_name, cluster_state, cluster_state_modified):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: cluster-state
+- name: #@ cluster_state
 - name: default-values-file
 - name: loadbalancer-values-file
 outputs:
-- name: state-modified
+- name: #@ cluster_state_modified
 run: #@ task_script("aggregate-cf4k8s-values.sh")
 params:
+  CLUSTER_STATE: #@ cluster_state
+  CLUSTER_STATE_MODIFIED: #@ cluster_state_modified
   CLUSTER_NAME: #@ cluster_name
 #@ end
 

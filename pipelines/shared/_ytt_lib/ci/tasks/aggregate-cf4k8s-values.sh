@@ -3,28 +3,14 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-readonly CLUSTER_DIR="cluster-state/environments/kube-clusters/$CLUSTER_NAME"
-
-update-cluster-state-repo() {
-  pushd cluster-state || exit
-  if git status --porcelain | grep .; then
-    echo "Repo is dirty"
-    git add "environments/kube-clusters/$CLUSTER_NAME/*"
-    git config --global user.email "eirini@cloudfoundry.org"
-    git config --global user.name "Come-On Eirini"
-    git commit --all --message "update/add cf-for-k8s values files"
-  else
-    echo "Repo is clean"
-  fi
-  popd || exit
-
-  cp -r cluster-state/. state-modified/
-}
+readonly CLUSTER_DIR="$CLUSTER_STATE/environments/kube-clusters/$CLUSTER_NAME"
 
 aggregate-files() {
   mkdir -p "$CLUSTER_DIR"
   cp default-values-file/values.yml "$CLUSTER_DIR"/default-values.yml
   cp loadbalancer-values-file/values.yml "$CLUSTER_DIR"/loadbalancer-values.yml
+
+  cp -r "$CLUSTER_STATE/." "$CLUSTER_STATE_MODIFIED"
 }
 
 # cf-for-k8s does not support rotating the database password.
@@ -56,7 +42,6 @@ main() {
   fi
 
   aggregate-files
-  update-cluster-state-repo
 }
 
 main "$@"

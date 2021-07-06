@@ -4,6 +4,7 @@
 #@ load("@ci:resources.lib.yml", "resources")
 #@ load("@ci:clusters.lib.yml", "clusters")
 #@ load("@ci:cf_for_k8s.lib.yml", "cf_for_k8s")
+#@ load("@ci:common.lib.yml", "git_commit")
 
 groups:
 - name: all
@@ -80,11 +81,13 @@ jobs:
   - task: generate-loadbalancer-values
     config: #@ cf_for_k8s.generate_loadbalancer_values(data.values.gcp.cluster_name)
   - task: aggregate-cf4k8s-values
-    config: #@ cf_for_k8s.aggregate_cf4k8s_values(data.values.gcp.cluster_name)
+    config: #@ cf_for_k8s.aggregate_cf4k8s_values(data.values.gcp.cluster_name, "cluster-state", "state-modified")
+  - task: commit-values
+    config: #@ git_commit("state-modified", "state-committed", "update/add cf-for-k8s values files")
   - put: cluster-state
     params:
       merge: true
-      repository: state-modified
+      repository: state-committed
   public: true
   serial_groups:
   - #@ data.values.gcp.cluster_name
