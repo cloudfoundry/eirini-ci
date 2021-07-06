@@ -68,7 +68,7 @@ jobs:
   - get: eirinidotcf
   - task: bump-eirinidotcf-dependencies
     config: #@ egg.bump_eirinidotcf_dependencies("eirinidotcf", "eirinidotcf-updated")
-  - task: commit-values
+  - task: commit-bump
     config: #@ git_commit("eirinidotcf-updated", "eirinidotcf-committed", "Bump yarn packages", "web")
   - put: eirinidotcf
     params:
