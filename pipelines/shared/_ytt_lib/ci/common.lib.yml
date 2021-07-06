@@ -21,6 +21,9 @@ platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
 - name: #@ repo
+#@ if message.startswith("file://"):
+- name: #@ message.replace("file://", "")
+#@ end
 outputs:
 - name: #@ repo_modified
 params:
@@ -28,5 +31,8 @@ params:
   REPO_MODIFIED: #@ repo_modified
   COMMIT_MSG: #@ message
   ADD_PATH: #@ add_path
+#@ if message.startswith("file://"):
+  COMMIT_MSG_DIR: #@ message.replace("file://", "")
+#@ end
 run: #@ task_script("git-commit.sh")
 #@ end

@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+if [[ -d "${COMMIT_MSG_DIR:-}" ]]; then
+  COMMIT_MSG=$(cat "${COMMIT_MSG_DIR}/message")
+fi
+
 pushd "$REPO"
 {
   if git status --porcelain | grep .; then

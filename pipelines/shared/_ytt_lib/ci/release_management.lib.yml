@@ -66,20 +66,22 @@ params:
 run: #@ task_script("create-controller-release.sh")
 #@ end
 
-#@ def _update_version_files(components):
+#@ def _update_version_files(components, repo, repo_modified, commit_msg_path):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
 - name: eirini
-- name: eirini-release
+- name: #@ repo
 #@ for component in components:
 - name: #@ component + "-image"
 #@ end
 outputs:
-- name: eirini-release-updated
+- name: #@ repo_modified
+- name: #@ commit_msg_path
 params:
-  COMPONENT_NAME: eirini
-  COMPONENT_REPO: eirini
+  REPO: #@ repo
+  REPO_MODIFIED: #@ repo_modified
+  COMMIT_MSG_PATH: #@ commit_msg_path
   IMAGES: #@ " ".join(components)
 run: #@ task_script("update-version-files.sh")
 #@ end

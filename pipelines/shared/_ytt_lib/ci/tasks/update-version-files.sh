@@ -11,27 +11,6 @@ update-digest() {
   sed -i -e "s|eirini/${image_name}@sha256:.*$|eirini/${image_name}@${digest}|g" eirini-release/helm/values.yaml
 }
 
-commit-changes() {
-  local msg component repo
-  component="$1"
-  repo="$2"
-  msg=$(commit-message "$component" "$repo")
-  pushd eirini-release || exit
-  if git status --porcelain | grep .; then
-    echo "Repo is dirty"
-    git add helm/values.yaml
-    git --no-pager diff --staged
-    git config --global user.email "eirini@cloudfoundry.org"
-    git config --global user.name "Come-On Eirini"
-    git commit --all --message "$msg"
-  else
-    echo "Repo is clean"
-  fi
-  popd || exit
-
-  cp -r eirini-release/. eirini-release-updated
-}
-
 strip-signed-off() {
   local repo
   repo="$1"
@@ -39,21 +18,26 @@ strip-signed-off() {
   grep -v "Signed-off-by" "$repo/.git/commit_message"
 }
 
-commit-message() {
-  local ref component commit_msg repo
-  component="$1"
-  repo="$2"
-  ref=$(cat "./$repo/.git/ref")
-  commit_msg=$(strip-signed-off "$repo")
+generate-commit-message() {
+  local ref commit_msg commit_msg_path
+  commit_msg_path="$1"
+  ref=$(cat "./eirini/.git/ref")
+  commit_msg=$(strip-signed-off eirini)
 
-  echo -e "Update image versions\n"
-  echo "$component commit SHA: $ref"
-  echo "$component commit message:"
-  echo -e "$commit_msg\n"
+  echo -e "Update image versions\n" >"$commit_msg_path/message"
+  echo "eirini commit SHA: $ref" >>"$commit_msg_path/message"
+  echo "eirini commit message:" >>"$commit_msg_path/message"
+  echo -e "$commit_msg\n" >>"$commit_msg_path/message"
 }
 
-for image in $IMAGES; do
-  update-digest "${image}-image" "$image"
-done
+main() {
+  for image in $IMAGES; do
+    update-digest "${image}-image" "$image"
+  done
 
-commit-changes "$COMPONENT_NAME" "$COMPONENT_REPO"
+  generate-commit-message "$COMMIT_MSG_PATH"
+
+  cp -r "$REPO/." "$REPO_MODIFIED"
+}
+
+main

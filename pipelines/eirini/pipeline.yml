@@ -113,9 +113,11 @@ jobs:
       - #@ "create-" + component + "-docker-image"
     #@ end
   - task: update-version-files
-    config: #@ release_management.update_version_files(data.values.components)
+    config: #@ release_management.update_version_files(data.values.components, "eirini-release", "eirini-release-updated", "commit-msg")
+  - task: commmit-version-files
+    config: #@ git_commit("eirini-release-updated", "eirini-release-committed", "file://commit-msg")
   - params:
-      repository: eirini-release-updated
+      repository: eirini-release-committed
     put: eirini-release
   serial: true
 
