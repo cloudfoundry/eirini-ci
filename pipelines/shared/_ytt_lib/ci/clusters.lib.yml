@@ -43,14 +43,16 @@ params:
 run: #@ task_script("gcp-delete-cluster.sh")
 #@ end
 
-#@ def _delete_values_file(cluster_name):
+#@ def _delete_values_file(cluster_name, state, state_modified):
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
 inputs:
-- name: cluster-state
+- name: #@ state
 outputs:
-- name: state-modified
+- name: #@ state_modified
 params:
+  CLUSTER_STATE: #@ state
+  CLUSTER_STATE_MODIFIED: #@ state_modified
   CLUSTER_NAME: #@ _sanitize_cluster_name(cluster_name)
 run: #@ task_script("clean-up-cluster-config.sh")
 #@ end

@@ -3,16 +3,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-readonly CLUSTER_DIR="environments/kube-clusters/$CLUSTER_NAME"
-
 main() {
   remove-cluster-values
   copy-output
 }
 
 remove-cluster-values() {
-  pushd cluster-state
-  rm -rf "$CLUSTER_DIR"
+  pushd "$CLUSTER_STATE"
+  {
+    rm -rf "environments/kube-clusters/$CLUSTER_NAME"
+  }
   popd
 }
 
@@ -29,7 +29,7 @@ copy-output() {
   fi
   popd || exit
 
-  cp -r cluster-state/. state-modified/
+  cp -r "$CLUSTER_STATE/." "$CLUSTER_STATE_MODIFIED/"
 }
 
 main

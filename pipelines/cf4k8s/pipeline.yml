@@ -36,13 +36,15 @@ jobs:
     config: #@ clusters.delete_kubernetes_cluster(data.values.gcp.cluster_name)
   - get: cluster-state
   - task: delete-values-file
-    config: #@ clusters.delete_values_file(data.values.gcp.cluster_name)
-  - task: delete-disks
-    config: #@ clusters.delete_disks(data.values.gcp.cluster_name)
+    config: #@ clusters.delete_values_file(data.values.gcp.cluster_name, "cluster-state", "state-modified")
+  - task: commit-values-file-deletion
+    config: #@ git_commit("state-modified", "state-committed", "Delete values file for cluster " + data.values.gcp.cluster_name, "environments/kube-clusters/" + data.values.gcp.cluster_name)
   - put: cluster-state
     params:
       merge: true
-      repository: state-modified
+      repository: state-committed
+  - task: delete-disks
+    config: #@ clusters.delete_disks(data.values.gcp.cluster_name)
   serial: true
   serial_groups:
   - #@ data.values.gcp.cluster_name

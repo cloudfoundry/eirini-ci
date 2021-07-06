@@ -176,13 +176,15 @@ jobs:
     config: #@ clusters.delete_kubernetes_cluster("cf4k8s4a8e")
   - get: cluster-state
   - task: delete-values-file
-    config: #@ clusters.delete_values_file("cf4k8s4a8e")
-  - task: delete-disks
-    config: #@ clusters.delete_disks("cf4k8s4a8e")
+    config: #@ clusters.delete_values_file("cf4k8s4a8e", "cluster-state", "state-modified")
+  - task: commit-values-file-deletion
+    config: #@ git_commit("state-modified", "state-committed", "Delete values file for cluster cf4k8s4a8e", "environments/kube-clusters/cf4k8s4a8e")
   - put: cluster-state
     params:
       merge: true
-      repository: state-modified
+      repository: state-committed
+  - task: delete-disks
+    config: #@ clusters.delete_disks("cf4k8s4a8e")
   serial: true
   serial_groups:
   - cf4k8s4a8e
