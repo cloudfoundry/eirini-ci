@@ -25,8 +25,8 @@ RUN  apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # telepresence
-RUN curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | bash
-RUN apt-get install -y --no-install-recommends telepresence
+RUN curl -s https://packagecloud.io/install/repositories/datawireio/telepresence/script.deb.sh | os=debian dist=buster bash
+RUN apt install -y --no-install-recommends telepresence
 
 # kubectl
 RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
