@@ -81,7 +81,7 @@ resource "google_project_iam_custom_role" "eirini_dns" {
 
 resource "google_project_iam_binding" "erini_dns" {
   project = var.project-id
-  role    = "roles/${google_project_iam_custom_role.eirini_dns.role_id}"
+  role    = "projects/${var.project-id}/roles/${google_project_iam_custom_role.eirini_dns.role_id}"
 
   members = [
     "serviceAccount:${google_service_account.eirini.email}",
