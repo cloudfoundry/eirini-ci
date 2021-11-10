@@ -66,7 +66,7 @@ resource "google_service_account_key" "eirini" {
 }
 
 resource "google_project_iam_custom_role" "eirini_dns" {
-  role_id     = "${var.name}_dns_role"
+  role_id     = "${var.name}DnsRole"
   title       = "${var.name} DNS Role"
   permissions = [
     "dns.changes.create",
