@@ -26,8 +26,8 @@ RUN  apt-get update \
 
 # Golang
 RUN cd /tmp && \
-    wget https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz && \
-    tar -xvf go1.16.4.linux-amd64.tar.gz && \
+    wget https://dl.google.com/go/go1.17.linux-amd64.tar.gz && \
+    tar -xvf go1.17.linux-amd64.tar.gz && \
     mv go /usr/local
 
 ENV GOROOT=/usr/local/go
