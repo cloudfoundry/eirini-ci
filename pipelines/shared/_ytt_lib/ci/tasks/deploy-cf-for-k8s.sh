@@ -24,7 +24,9 @@ deploy-cf() {
   ) -y
 
   if [[ "$USE_CERT_MANAGER" == "true" ]]; then
-    kubectl get secret eirinidotcf-cert --namespace=cert-manager --export -o yaml | kubectl apply --namespace=istio-system -f -
+    kubectl get secret eirinidotcf-cert --namespace=cert-manager -o yaml |
+      yq 'del( .metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.selfLink, .metadata.namespace )' |
+      kubectl apply --namespace=istio-system -f -
   fi
 }
 
