@@ -9,9 +9,7 @@
 #@ load("@ci:common.lib.yml", "git_commit")
 
 #@ eats_clusters={
-#@  "eats-rapid": "rapid",
 #@  "eats-regular": "regular",
-#@  "eats-stable": "stable",
 #@ }
 
 #@ ci_clusters = {}

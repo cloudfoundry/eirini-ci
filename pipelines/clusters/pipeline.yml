@@ -8,12 +8,8 @@
 #@ load("@ci:ci_automation.lib.yml", "ci_automation")
 
 #@ eats_clusters={
-#@  "eats-rapid": "rapid",
 #@  "eats-regular": "regular",
-#@  "eats-stable": "stable",
-#@  "controller-eats-rapid": "rapid",
 #@  "controller-eats-regular": "regular",
-#@  "controller-eats-stable": "stable",
 #@ }
 
 #@ integration_clusters={
