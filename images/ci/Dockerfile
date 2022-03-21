@@ -40,8 +40,8 @@ RUN echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /
 RUN sudo apt-get update && sudo apt-get install -y cf7-cli
 
 # ginkgo && shfmt
-RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/...
-RUN GO111MODULE="on" go get -u mvdan.cc/sh/cmd/shfmt
+RUN go install github.com/onsi/ginkgo/ginkgo@latest
+RUN go install mvdan.cc/sh/cmd/shfmt@latest
 
 # goml
 RUN wget --quiet --output-document /usr/bin/goml https://github.com/JulzDiverse/goml/releases/download/v0.7.0/goml-linux-amd64 && chmod +x /usr/bin/goml
