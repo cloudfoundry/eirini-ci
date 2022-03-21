@@ -25,4 +25,5 @@ RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
 RUN cd /tmp && \
     wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz && \
     tar -xvf go${GO_VERSION}.linux-amd64.tar.gz && \
-    mv go /usr/local
+    mv go /usr/local && \
+    ln -s /usr/local/go/bin/go /usr/bin/go
