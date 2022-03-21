@@ -1,6 +1,7 @@
 FROM google/cloud-sdk
 
 ARG TERRAFORM_VERSION=0.15.4
+ARG GO_VERSION=1.18
 
 RUN apt-get update && \
     apt-get install --yes \
@@ -19,3 +20,9 @@ RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform
       && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
       && mv terraform /usr/local/bin/ \
       && rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+# Golang
+RUN cd /tmp && \
+    wget https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz && \
+    tar -xvf go${GO_VERSION}.linux-amd64.tar.gz && \
+    mv go /usr/local
