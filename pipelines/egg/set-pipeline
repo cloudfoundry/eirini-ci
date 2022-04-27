@@ -36,7 +36,7 @@ postfacto_mysql_password=$(pass show eirini/postfacto-cf4k8s4a8e/mysql-admin-pas
 jefe_github_oauth_client_id=$(pass eirini/jefe/client-id)
 jefe_github_oauth_client_secret=$(pass eirini/jefe/client-secret)
 jefe_db_password=$(pass eirini/jefe/dbuser-pass)
-jefe_db_address=$(gcloud sql instances describe jefe-db --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')
+jefe_db_address=$(gcloud --project cff-eirini-peace-pods sql instances describe jefe-db --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')
 jefe_admin_password=$(pass eirini/jefe/admin-pass)
 pairup_firebase_conf=$(pass eirini/pairup/conf.js)
 
