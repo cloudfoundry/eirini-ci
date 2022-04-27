@@ -107,7 +107,7 @@ resources:
 - #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
 - #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
 - #@ resources.git("jefe", "eirini-forks/jefe")
-- #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinidotcf)
+- #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinici)
 - #@ resources.git("pairup", "eirini-forks/pairup")
 - #@ resources.docker_image("docker-jefe", "eirini/jefe")
 - icon: alarm
