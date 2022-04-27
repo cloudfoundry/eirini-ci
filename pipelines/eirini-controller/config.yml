@@ -11,8 +11,7 @@ gcp:
   region: europe-west1
   worker_count:
 private_keys:
-  eirini_controller:
-  eirini_private_config:
+  eirinici:
 access_tokens:
   eirini_ci:
 components:

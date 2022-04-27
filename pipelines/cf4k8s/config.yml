@@ -7,7 +7,7 @@ dockerhub:
   username:
   password:
 private_keys:
-  eirini_private_config:
+  eirinici:
 gcp:
   service_account_json:
   dns_service_account_json:

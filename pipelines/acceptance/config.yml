@@ -8,9 +8,7 @@ dockerhub:
 access_tokens:
   eirini_ci:
 private_keys:
-  eirini:
-  eirini_release:
-  eirini_private_config:
+  eirinici:
 gcp:
   service_account_json:
   dns_service_account_json:
