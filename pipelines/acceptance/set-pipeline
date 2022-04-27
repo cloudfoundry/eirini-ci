@@ -31,7 +31,6 @@ slack_webhook=$(pass eirini/ci/slack-webhook)
 dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirinici=$(pass eirini/github/eirinici/ssh-key)
 private_keys_eirini_private_config=$(pass eirini/github/private-config/ssh-key)
-private_keys_eirini_release=$(pass eirini/github/eirini-release/ssh-key)
 access_tokens_eirini_ci=$(pass eirini/github/eirinici/access-token)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
 gcp_dns_service_account_json=$(pass eirini/gcp-ci-dns-admin-json-key)
@@ -42,7 +41,6 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="dockerhub.password=$dockerhub_password" \
   --data-value="private_keys.eirinici=$private_keys_eirinici" \
   --data-value="private_keys.eirini_private_config=$private_keys_eirini_private_config" \
-  --data-value="private_keys.eirini_release=$private_keys_eirini_release" \
   --data-value="access_tokens.eirini_ci=$access_tokens_eirini_ci" \
   --data-value="gcp.service_account_json=$gcp_service_account_json" \
   --data-value="gcp.dns_service_account_json=$gcp_dns_service_account_json" \

@@ -13,7 +13,6 @@ gcp:
 wiremock_keystore_pass:
 private_keys:
   eirinici:
-  eirini_release:
 components:
   - api
   - event-reporter

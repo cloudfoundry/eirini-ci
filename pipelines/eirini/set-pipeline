@@ -38,7 +38,6 @@ fi
 slack_webhook=$(pass eirini/ci/slack-webhook)
 dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirinici=$(pass eirini/github/eirinici/ssh-key)
-private_keys_eirini_release=$(pass eirini/github/eirini-release/ssh-key)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
 wiremock_keystore_pass=$(pass eirini/ci/wiremock-keystore-password)
 
@@ -47,7 +46,6 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="dockerhub.username=eiriniuser" \
   --data-value="dockerhub.password=$dockerhub_password" \
   --data-value="private_keys.eirinici=$private_keys_eirinici" \
-  --data-value="private_keys.eirini_release=$private_keys_eirini_release" \
   --data-value="gcp.service_account_json=$gcp_service_account_json" \
   --data-value="wiremock_keystore_pass=$wiremock_keystore_pass" \
   --data-value="gcp.worker_count=$worker_count" \

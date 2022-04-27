@@ -209,8 +209,8 @@ resources:
 - #@ resources.slack()
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini", branch=data.values.repo_branches.eirini, private_key=data.values.private_keys.eirinici)
-- #@ resources.git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirini_release)
-- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirini_release)
+- #@ resources.git("eirini-release-master", "cloudfoundry-incubator/eirini-release", private_key=data.values.private_keys.eirinici)
+- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", branch="develop", private_key=data.values.private_keys.eirinici)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
 #@ for component in data.values.components:

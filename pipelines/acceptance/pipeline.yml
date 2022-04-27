@@ -229,6 +229,6 @@ resources:
 - #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirini_private_config)
 - #@ resources.git("eirini", "cloudfoundry-incubator/eirini", "master", data.values.private_keys.eirinici)
 - #@ resources.github_release("eirini-github-release", "cloudfoundry-incubator", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
-- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirini_release)
+- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirinici)
 - #@ resources.cluster_event_created("cf4k8s4a8e")
 - #@ resources.eirini_release_semver()
