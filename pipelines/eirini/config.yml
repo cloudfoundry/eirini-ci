@@ -12,7 +12,7 @@ gcp:
   worker_count:
 wiremock_keystore_pass:
 private_keys:
-  eirini:
+  eirinici:
   eirini_release:
 components:
   - api
