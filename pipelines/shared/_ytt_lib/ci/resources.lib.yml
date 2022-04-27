@@ -78,63 +78,31 @@ check_every: #@ checkEvery
 icon: egg-easter
 #@ end
 
-#@ def _eirini_release_semver():
-name: eirini-release-version
+#@ def _semver(name, branch, file):
+name: #@ name
 type: semver
 icon: counter
 source:
-  branch: master
+  branch: #@ branch
   driver: git
-  file: release-version
+  file: #@ file
   initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirinici
-  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
-#@ end
-
-#@ def _eirini_controller_semver():
-name: eirini-controller-version
-type: semver
-icon: counter
-source:
-  branch: master
-  driver: git
-  file: eirini-controller/version
-  initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirinici
-  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
+  private_key: #@ data.values.private_keys.eirinici + "\n"
+  uri: git@github.com:cloudfoundry/eirini-private-config.git
 #@ end
 
 #@ def _cluster_event_created(cluster_name):
-name: #@ "cluster-" + cluster_name + "-staging-event-created"
-type: semver
-icon: check-decagram
-source:
-  branch: events
-  driver: git
-  file: #@ cluster_name + "-event-created"
-  initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirinici
-  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
+  #@  return _semver("cluster-" + cluster_name + "-staging-event-created", "events", cluster_name + "-event-created")
 #@ end
 
 #@ def _semver_event(name):
-name: #@ "semver-event-" + name
-type: semver
-icon: check-decagram
-source:
-  branch: events
-  driver: git
-  file: #@ "semver-event-" + name
-  initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirinici
-  uri: "git@github.com:cloudfoundry/eirini-private-config.git"
+  #@ return _semver("semver-event-" + name, "events", "semver-event-" + name)
 #@ end
 
 #@ resources = struct.make(
+#@   semver=_semver,
 #@   cluster_event_created=_cluster_event_created,
 #@   semver_event=_semver_event,
-#@   eirini_release_semver=_eirini_release_semver,
-#@   eirini_controller_semver=_eirini_controller_semver,
 #@   github_release=_github_release,
 #@   git=_git,
 #@   eirini_docker_image=_eirini_docker_image,

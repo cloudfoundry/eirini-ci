@@ -223,7 +223,7 @@ resources:
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
 - #@ resources.github_release("eirini-controller-github-release", "cloudfoundry-incubator", "eirini-controller", None, None, data.values.access_tokens.eirini_ci, True)
-- #@ resources.eirini_controller_semver()
+- #@ resources.semver("eirini-controller-version", "master", "eirini-controller/version")
 
 - name: bump-day
   source:

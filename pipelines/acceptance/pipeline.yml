@@ -231,4 +231,4 @@ resources:
 - #@ resources.github_release("eirini-github-release", "cloudfoundry-incubator", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
 - #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release", "master", data.values.private_keys.eirinici)
 - #@ resources.cluster_event_created("cf4k8s4a8e")
-- #@ resources.eirini_release_semver()
+- #@ resources.semver("eirini-release-version", "master", "release-version")
