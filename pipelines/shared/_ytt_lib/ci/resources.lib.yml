@@ -87,7 +87,7 @@ source:
   driver: git
   file: release-version
   initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirini_private_config
+  private_key: #@ data.values.private_keys.eirinici
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
@@ -100,7 +100,7 @@ source:
   driver: git
   file: eirini-controller/version
   initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirini_private_config
+  private_key: #@ data.values.private_keys.eirinici
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
@@ -113,7 +113,7 @@ source:
   driver: git
   file: #@ cluster_name + "-event-created"
   initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirini_private_config
+  private_key: #@ data.values.private_keys.eirinici
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 
@@ -126,7 +126,7 @@ source:
   driver: git
   file: #@ "semver-event-" + name
   initial_version: 0.1.0
-  private_key: #@ data.values.private_keys.eirini_private_config
+  private_key: #@ data.values.private_keys.eirinici
   uri: "git@github.com:cloudfoundry/eirini-private-config.git"
 #@ end
 

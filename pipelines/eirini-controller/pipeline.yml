@@ -219,7 +219,7 @@ resources:
 - #@ resources.slack()
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 - #@ resources.git("eirini-controller", "cloudfoundry-incubator/eirini-controller", branch=data.values.repo_branches.eirini_controller, private_key=data.values.private_keys.eirinici)
-- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirini_private_config)
+- #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", private_key=data.values.private_keys.eirinici)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
 - #@ resources.github_release("eirini-controller-github-release", "cloudfoundry-incubator", "eirini-controller", None, None, data.values.access_tokens.eirini_ci, True)

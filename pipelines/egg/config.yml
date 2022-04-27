@@ -7,7 +7,6 @@ dockerhub:
   password:
 private_keys:
   eirinici:
-  eirini_private_config:
 gcp:
   service_account_json:
   zone: europe-west1-b

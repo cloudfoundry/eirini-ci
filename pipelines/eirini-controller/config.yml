@@ -12,7 +12,6 @@ gcp:
   worker_count:
 private_keys:
   eirinici:
-  eirini_private_config:
 access_tokens:
   eirini_ci:
 components:

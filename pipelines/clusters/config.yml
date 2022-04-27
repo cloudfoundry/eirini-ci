@@ -10,7 +10,5 @@ gcp:
   zone: europe-west1-b
   region: europe-west1
   worker_count:
-private_keys:
-  eirini_private_config:
 repo_branches:
   eirini_ci:

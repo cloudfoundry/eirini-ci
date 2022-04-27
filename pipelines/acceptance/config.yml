@@ -9,7 +9,6 @@ access_tokens:
   eirini_ci:
 private_keys:
   eirinici:
-  eirini_private_config:
 gcp:
   service_account_json:
   dns_service_account_json:
