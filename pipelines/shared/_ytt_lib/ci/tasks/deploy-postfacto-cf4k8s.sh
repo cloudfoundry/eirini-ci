@@ -32,6 +32,8 @@ cf push -f eirini-private-config/postfacto-deployment/api/manifest-cf4k8s4a8e.ym
   --var mysql-password="$MYSQL_PASSWORD" \
   --no-start
 
-cf share-private-domain postfacto eirini.cf
+if ! cf domains | grep "^eirini.cf" >/dev/null 2>&1; then
+  cf create-domain postfacto eirini.cf
+fi
 cf map-route postfacto-api eirini.cf --hostname retro
 cf start postfacto-api
