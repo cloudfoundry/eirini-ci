@@ -25,19 +25,6 @@ jobs:
     config: #@ egg.deploy_postfacto()
   serial: true
 
-- name: deploy-jefe
-  on_failure: #@ notify_slack()
-  plan:
-  - in_parallel:
-    - get: docker-jefe
-      passed:
-      - build-jefe
-      trigger: true
-    - get: eirini-private-config
-  - task: deploy
-    config: #@ egg.deploy_jefe()
-  serial: true
-
 - name: deploy-eirinidotcf
   on_failure: #@ notify_slack()
   plan:
@@ -52,14 +39,6 @@ jobs:
     config: #@ egg.deploy_eirinidotcf()
   serial: true
 
-- name: unclaim-clusters
-  on_failure: #@ notify_slack()
-  plan:
-  - get: every-morning
-    trigger: true
-  - task: unclaim
-    config: #@ egg.unclaim_clusters()
-
 - name: bump-eirinidotcf-dependencies
   on_failure: #@ notify_slack()
   plan:
@@ -73,15 +52,6 @@ jobs:
   - put: eirinidotcf
     params:
       repository: eirinidotcf-committed
-  serial: true
-
-- name: build-jefe
-  plan:
-  - get: jefe
-    trigger: true
-  - put: docker-jefe
-    params:
-      build: jefe
   serial: true
 
 - name: deploy-pairup
@@ -106,16 +76,8 @@ resources:
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
 - #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirinici)
 - #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
-- #@ resources.git("jefe", "eirini-forks/jefe")
 - #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinici)
 - #@ resources.git("pairup", "eirini-forks/pairup")
-- #@ resources.docker_image("docker-jefe", "eirini/jefe")
-- icon: alarm
-  name: every-morning
-  source:
-    start: 5:00 AM
-    stop: 6:00 AM
-  type: time
 - icon: alarm
   name: every-week
   source:

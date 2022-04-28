@@ -32,11 +32,6 @@ private_keys_eirinici=$(pass eirini/github/eirinici/ssh-key)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
 postfacto_mysql_address=$(gcloud --project cff-eirini-peace-pods sql instances describe postfacto-cf4k8s4a8e --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')
 postfacto_mysql_password=$(pass show eirini/postfacto-cf4k8s4a8e/mysql-admin-password)
-jefe_github_oauth_client_id=$(pass eirini/jefe/client-id)
-jefe_github_oauth_client_secret=$(pass eirini/jefe/client-secret)
-jefe_db_password=$(pass eirini/jefe/dbuser-pass)
-jefe_db_address=$(gcloud --project cff-eirini-peace-pods sql instances describe jefe-db --format="json" | jq -r '.ipAddresses[] | select(.type=="PRIVATE").ipAddress')
-jefe_admin_password=$(pass eirini/jefe/admin-pass)
 pairup_firebase_conf=$(pass eirini/pairup/conf.js)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
@@ -47,11 +42,6 @@ ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="gcp.service_account_json=$gcp_service_account_json" \
   --data-value="postfacto.mysql.address=$postfacto_mysql_address" \
   --data-value="postfacto.mysql.password=$postfacto_mysql_password" \
-  --data-value="jefe.github_oauth.client_id=$jefe_github_oauth_client_id" \
-  --data-value="jefe.github_oauth.client_secret=$jefe_github_oauth_client_secret" \
-  --data-value="jefe.db.password=$jefe_db_password" \
-  --data-value="jefe.db.address=$jefe_db_address" \
-  --data-value="jefe.admin_password=$jefe_admin_password" \
   --data-value="pairup.firebase_conf=$pairup_firebase_conf" \
   >"$pipeline_yml"
 
