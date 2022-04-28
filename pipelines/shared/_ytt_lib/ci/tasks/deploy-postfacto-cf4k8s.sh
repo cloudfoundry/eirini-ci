@@ -12,7 +12,8 @@ cf_admin_password="$(goml get -f "$values" -p "cf_admin_password")"
 unzip postfacto/package.zip -d postfacto/
 cp eirini-private-config/postfacto-deployment/api/config.js postfacto/package/assets/client/
 
-sed -i "34igem 'mini_racer'" postfacto/package/assets/Gemfile
+sed -i "34i gem 'mini_racer'" postfacto/package/assets/Gemfile
+sed -i "329i \ \ x86_64-linux" postfacto/package/assets/Gemfile.lock
 
 cf api "api.$cf_domain" --skip-ssl-validation
 cf auth admin "$cf_admin_password"
