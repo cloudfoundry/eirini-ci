@@ -2,29 +2,6 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _bump_eirinidotcf_dependencies(repo, repo_modified):
-platform: linux
-image_resource: #@ image_resource("eirini/ci")
-inputs:
-- name: #@ repo
-outputs:
-- name: #@ repo_modified
-params:
-  REPO: #@ repo
-  REPO_MODIFIED: #@ repo_modified
-run: #@ task_script("bump-yarn-packages.sh")
-#@ end
-
-#@ def _deploy_eirinidotcf():
-platform: linux
-image_resource: #@ image_resource("eirini/ci")
-inputs:
-- name: ci-resources
-- name: eirinidotcf
-- name: eirini-private-config
-run: #@ task_script("deploy-eirinidotcf.sh")
-#@ end
-
 #@ def _deploy_pairup():
 platform: linux
 image_resource: #@ image_resource("eirini/ci")
@@ -75,8 +52,6 @@ params:
 #@ end
 
 #@ egg = struct.make(
-#@   bump_eirinidotcf_dependencies=_bump_eirinidotcf_dependencies,
-#@   deploy_eirinidotcf=_deploy_eirinidotcf,
 #@   deploy_pairup=_deploy_pairup,
 #@   deploy_postfacto=_deploy_postfacto,
 #@   get_redis_credentials=_get_redis_credentials,

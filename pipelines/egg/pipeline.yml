@@ -25,35 +25,6 @@ jobs:
     config: #@ egg.deploy_postfacto()
   serial: true
 
-- name: deploy-eirinidotcf
-  on_failure: #@ notify_slack()
-  plan:
-  - in_parallel:
-    - get: ci-resources
-    - get: eirinidotcf
-      trigger: true
-    - get: eirini-private-config
-  - task: download-kubeconfig
-    config: #@ clusters.download_kubeconfig("cf4k8s4a8e")
-  - task: deploy-web
-    config: #@ egg.deploy_eirinidotcf()
-  serial: true
-
-- name: bump-eirinidotcf-dependencies
-  on_failure: #@ notify_slack()
-  plan:
-  - get: every-week
-    trigger: true
-  - get: eirinidotcf
-  - task: bump-eirinidotcf-dependencies
-    config: #@ egg.bump_eirinidotcf_dependencies("eirinidotcf", "eirinidotcf-updated")
-  - task: commit-bump
-    config: #@ git_commit("eirinidotcf-updated", "eirinidotcf-committed", "Bump yarn packages", "web")
-  - put: eirinidotcf
-    params:
-      repository: eirinidotcf-committed
-  serial: true
-
 - name: deploy-pairup
   on_failure: #@ notify_slack()
   plan:
@@ -76,7 +47,6 @@ resources:
 - #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
 - #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirinici)
 - #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
-- #@ resources.git("eirinidotcf", "eirini-forks/eirinidotcf", "master", data.values.private_keys.eirinici)
 - #@ resources.git("pairup", "eirini-forks/pairup")
 - icon: alarm
   name: every-week
