@@ -9,7 +9,7 @@ main() {
   # Catch invalid configuration or linters that no longer exist. Errors are printed to stderr
   golangci-lint linters >/dev/null
 
-  cd eirini
+  cd eirini-controller
   config_file=.golangci.yml
   unknown_linters="$(comm -3 <(yq eval '.linters.intentionally-disabled[].name' $config_file | sort) <(golangci-lint linters | awk -F ':' '{ if (disabled==1) print $1 }; /Disabled by your/ { disabled=1 }' | sort))"
   if [[ -z "$unknown_linters" ]]; then

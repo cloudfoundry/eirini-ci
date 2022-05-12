@@ -11,7 +11,7 @@ run: #@ task_script("check-wip-branches.sh")
 #@ def _check_golangci_linters():
 platform: linux
 inputs:
-- name: eirini
+- name: eirini-controller
 image_resource: #@ image_resource("eirini/golangci-lint")
 run: #@ task_script("check-golangci-linters.sh")
 #@ end
