@@ -174,7 +174,14 @@ outputs:
 params:
   DOCKERHUB_USER: #@ data.values.dockerhub.username
   DOCKERHUB_PASS: #@ data.values.dockerhub.password
-image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-dind")
+image_resource:
+  type: docker-image
+  source:
+    repository: cloudfoundry/cf-for-k8s-dind
+    username: #@ data.values.dockerhub.username
+    password: #@ data.values.dockerhub.password
+  version:
+    digest: 'sha256:4b4b57d412454fef40b6061412860d1d44ada9c806ff55f5c73b7846853711f1'
 run: #@ task_script("build-eirini-controller.sh")
 #@ end
 
