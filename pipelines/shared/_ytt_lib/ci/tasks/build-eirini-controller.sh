@@ -2,8 +2,6 @@
 
 set -e
 
-trap "pkill dockerd" EXIT
-
 export KUBECONFIG="$PWD/kube/config"
 export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
 
