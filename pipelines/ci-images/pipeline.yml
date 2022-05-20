@@ -95,5 +95,5 @@ resources:
     branch: master
     paths:
     - #@ "images/" + image + "/Dockerfile"
-    uri: https://github.com/cloudfoundry-incubator/eirini-ci
+    uri: https://github.com/cloudfoundry/eirini-ci
 #@ end

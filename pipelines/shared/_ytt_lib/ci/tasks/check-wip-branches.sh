@@ -37,7 +37,7 @@ main() {
   for repo in "${repos[@]}"; do
     echo "Checking for aging wip branches in $repo"
 
-    git clone "https://github.com/cloudfoundry-incubator/${repo}"
+    git clone "https://github.com/cloudfoundry/${repo}"
 
     pushd "$repo" || exit 1
     {

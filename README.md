@@ -1,6 +1,6 @@
 # Eirini CI
 
-CI Resources for [eirini-release](https://github.com/cloudfoundry-incubator/eirini-release). The pipeline is deployed at [GCP](https://jetson.eirini.cf-app.com/teams/main/pipelines/ci).
+CI Resources for [eirini-release](https://github.com/cloudfoundry/eirini-release). The pipeline is deployed at [GCP](https://jetson.eirini.cf-app.com/teams/main/pipelines/ci).
 
 ## Development
 
@@ -16,7 +16,9 @@ $ pipelines/<pipeline-name>/set-pipeline
 ```
 
 ## Eirini.cf certificates
+
 The certificates for the [eirini.cf](eirini.cf) website are generated using letsencrypt and [cert-manager](https://cert-manager.io/) via the dns01 challenge. To do this the pipeline requires several things to be set up:
+
 1. The dns provider for the eirini.cf domain should point to the GCP dns servers and a corresponding entry should be created in GCP.
 1. In GCS's CloudDNS console, the `eirini.cf` domain should point to the external IP of the Istio Gateway.
 1. The [Issuer](https://cert-manager.io/docs/concepts/issuer/) should be configured to generate with [the ACME challenge](https://cert-manager.io/docs/configuration/acme/dns01/) with a GCP service account that has permissions to create and delete CloudDNS entries. Additionaly a [Certificate](https://cert-manager.io/docs/concepts/certificate/) should be created for the eirini.cf domain using this Issuer.

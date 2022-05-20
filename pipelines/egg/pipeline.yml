@@ -44,7 +44,7 @@ resource_types:
 
 resources:
 - #@ resources.slack()
-- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("ci-resources", "cloudfoundry/eirini-ci")
 - #@ resources.git("eirini-private-config", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirinici)
 - #@ resources.github_release("postfacto", "pivotal", "postfacto", "package.zip", "12h0m0s")
 - #@ resources.git("pairup", "eirini-forks/pairup")

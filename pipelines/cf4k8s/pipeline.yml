@@ -161,9 +161,9 @@ resources:
 - #@ resources.slack()
 - #@ resources.git("cf-for-k8s", "eirini-forks/cf-for-k8s", "develop", data.values.private_keys.eirinici)
 - #@ resources.git("cf-k8s-prometheus", "cloudfoundry/cf-k8s-prometheus", "main")
-- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci")
+- #@ resources.git("ci-resources", "cloudfoundry/eirini-ci")
 - #@ resources.git("cluster-state", "cloudfoundry/eirini-private-config", "master", data.values.private_keys.eirinici)
-- #@ resources.git("eirini-release", "cloudfoundry-incubator/eirini-release")
+- #@ resources.git("eirini-release", "cloudfoundry/eirini-release")
 - #@ resources.cluster_event_created(data.values.gcp.cluster_name)
 
 #@ if data.values.enable_cf4k8s_redeploy == "true":

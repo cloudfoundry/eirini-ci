@@ -68,7 +68,7 @@ resource_types:
 
 resources:
 - #@ resources.slack()
-- #@ resources.git("ci-resources", "cloudfoundry-incubator/eirini-ci", branch=data.values.repo_branches.eirini_ci)
+- #@ resources.git("ci-resources", "cloudfoundry/eirini-ci", branch=data.values.repo_branches.eirini_ci)
 #@ for cluster in ci_clusters.keys():
 - #@ resources.semver_event(cluster)
 #@ end
