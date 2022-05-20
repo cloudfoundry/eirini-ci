@@ -4,14 +4,13 @@ set -e
 
 trap "pkill dockerd" EXIT
 
-run_docker_daemon() {
-  start-docker &
+export KUBECONFIG="$PWD/kube/config"
+export GOOGLE_APPLICATION_CREDENTIALS="$PWD/kube/service-account.json"
 
-  echo 'until docker info; do sleep 5; done' >/usr/local/bin/wait_for_docker
-  chmod +x /usr/local/bin/wait_for_docker
-  timeout 300 wait_for_docker
-
-  docker <<<"$DOCKERHUB_PASS" login --username "$DOCKERHUB_USER" --password-stdin
+create_buildkit_secret() {
+  kubectl delete secret buildkit --ignore-not-found=true
+  kubectl create secret docker-registry buildkit \
+    --docker-username="$DOCKERHUB_USER" --docker-password="$DOCKERHUB_PASS"
 }
 
 generate_values() {
@@ -26,5 +25,5 @@ generate_values() {
   cp "$values_source_path" "$values_dest_path"
 }
 
-run_docker_daemon
+create_buildkit_secret
 generate_values

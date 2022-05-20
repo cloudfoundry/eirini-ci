@@ -87,6 +87,8 @@ jobs:
       trigger: true
     - get: cluster-state
     - get: ci-resources
+  - task: get-kubeconfig
+    config: #@ clusters.download_kubeconfig("integration")
   - task: build-and-generate-values
     privileged: true
     config: #@ testing.build_eirini_controller()
