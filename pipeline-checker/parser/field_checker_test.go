@@ -1,7 +1,7 @@
 package parser_test
 
 import (
-	. "github.com/onsi/ginkgo/extensions/table"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/eirini-forks/pipelinechecker/parser"
