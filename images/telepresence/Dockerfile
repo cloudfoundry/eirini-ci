@@ -45,7 +45,7 @@ RUN apt-get update
 RUN apt-get install -y kubectl
 
 # ginkgo
-RUN go get -u github.com/onsi/ginkgo/ginkgo github.com/onsi/gomega/...
+RUN go get -u github.com/onsi/ginkgo/v2/ginkgo github.com/onsi/gomega/...
 
 # Gcloud cli
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list && \

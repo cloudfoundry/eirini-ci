@@ -43,7 +43,7 @@ RUN echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /
 RUN sudo apt-get update && sudo apt-get install -y cf7-cli
 
 # ginkgo && shfmt
-RUN go install github.com/onsi/ginkgo/ginkgo@latest
+RUN go install github.com/onsi/ginkgo/v2/ginkgo@latest
 RUN go install mvdan.cc/sh/cmd/shfmt@latest
 
 # goml
