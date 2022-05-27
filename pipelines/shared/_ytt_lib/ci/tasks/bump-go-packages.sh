@@ -13,7 +13,7 @@ bump() {
 
 verify-compilability() {
   pushd "$REPO_PATH"
-  ginkgo -mod=vendor -dryRun -r
+  go run github.com/onsi/ginkgo/v2/ginkgo --mod=vendor --dry-run -r
   go build -mod=vendor ./...
   popd
 }
