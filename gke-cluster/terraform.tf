@@ -153,15 +153,11 @@ resource "google_container_node_pool" "node_pool" {
     auto_repair = true
     auto_upgrade = true
   }
-  autoscaling {
-    min_node_count = var.node-count-per-zone
-    max_node_count = 12
-  }
   initial_node_count = var.node-count-per-zone
 
   node_config {
     disk_size_gb = 200
-    disk_type = "pd-ssd"
+    disk_type = "pd-balanced"
     machine_type = var.node-machine-type
     image_type = "COS_CONTAINERD"
 
