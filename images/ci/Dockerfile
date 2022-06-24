@@ -1,7 +1,6 @@
 FROM golang:latest
 
 ARG BUILDKIT_CLI_VERSION="v0.1.5"
-ARG KBLD_VERSION="v0.33.0"
 
 ENV PATH="$GOPATH/bin:${PATH}"
 
@@ -69,10 +68,8 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0 \
 # helm
 RUN wget --quiet https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz && tar xfz helm-v3.5.3-linux-amd64.tar.gz && mv linux-amd64/helm /usr/bin/ && chmod +x /usr/bin/helm
 
-# kbld
-RUN curl -sL "https://github.com/vmware-tanzu/carvel-kbld/releases/download/${KBLD_VERSION}/kbld-linux-amd64" -o /usr/local/bin/kbld && \
-  chmod +x /usr/local/bin/kbld
-
 # buildkit kubectl cli
 RUN curl -sL https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/${BUILDKIT_CLI_VERSION}/linux-${BUILDKIT_CLI_VERSION}.tgz | \
   tar -C /usr/local/bin -xzf -
+
+RUN curl -L https://k14s.io/install.sh | bash
