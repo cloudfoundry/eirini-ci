@@ -72,4 +72,4 @@ RUN wget --quiet https://get.helm.sh/helm-v3.5.3-linux-amd64.tar.gz && tar xfz h
 RUN curl -sL https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/${BUILDKIT_CLI_VERSION}/linux-${BUILDKIT_CLI_VERSION}.tgz | \
   tar -C /usr/local/bin -xzf -
 
-RUN curl -L https://k14s.io/install.sh | bash
+RUN curl -L https://carvel.dev/install.sh | bash
