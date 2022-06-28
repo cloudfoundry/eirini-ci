@@ -2,11 +2,18 @@
 
 set -euxo pipefail
 
+modVendor=
+if [[ -d "$REPO_PATH/vendor" ]]; then
+  modVendor="-mod=vendor"
+fi
+
 bump() {
   pushd "$REPO_PATH"
   go get -t -u ./...
   go mod tidy
-  go mod vendor
+  if [[ -n "$modVendor" ]]; then
+    go mod vendor
+  fi
   go generate ./...
   popd
 }
@@ -14,7 +21,7 @@ bump() {
 verify-compilability() {
   pushd "$REPO_PATH"
   go run github.com/onsi/ginkgo/v2/ginkgo --mod=vendor --dry-run -r
-  go build -mod=vendor ./...
+  go build "$modVendor" ./...
   popd
 }
 
