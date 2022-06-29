@@ -17,6 +17,7 @@ params:
   WINDOWS_POOL: "false"
   WORKER_COUNT: #@ data.values.gcp.worker_count
   RELEASE_CHANNEL: #@ channel
+  MACHINE_TYPE: #@ data.values.gcp.machine_type
 run: #@ task_script("gcp-create-cluster.sh")
 #@ end
 

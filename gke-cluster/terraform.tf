@@ -88,8 +88,8 @@ resource "google_project_iam_binding" "erini_dns" {
   ]
 }
 
-resource "local_file" "private_service_account_key" {
-  sensitive_content     = google_service_account_key.eirini.private_key
+resource "local_sensitive_file" "private_service_account_key" {
+  content     = google_service_account_key.eirini.private_key
   filename = "sa-private-key.json"
 }
 

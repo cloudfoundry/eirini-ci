@@ -9,7 +9,7 @@ install-cert-manager() {
     kubectl create namespace "$CERT_MANAGER_NAMESPACE"
   fi
 
-  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.1.0/cert-manager.yaml
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
 
   deployments="$(kubectl get deployments \
     --namespace cert-manager \

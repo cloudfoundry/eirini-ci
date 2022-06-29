@@ -16,4 +16,5 @@ gcp:
   region: europe-west1
   worker_count:
   project_id: cff-eirini-peace-pods
+  machine_type: e2-custom-8-16384
 use_cert_manager: true
