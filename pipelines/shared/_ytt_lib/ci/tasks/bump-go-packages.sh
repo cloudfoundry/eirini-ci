@@ -20,7 +20,7 @@ bump() {
 
 verify-compilability() {
   pushd "$REPO_PATH"
-  go run github.com/onsi/ginkgo/v2/ginkgo --mod=vendor --dry-run -r
+  go run github.com/onsi/ginkgo/v2/ginkgo $modVendor --dry-run -r
   go build "$modVendor" ./...
   popd
 }
