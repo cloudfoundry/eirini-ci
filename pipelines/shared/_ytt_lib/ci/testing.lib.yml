@@ -4,8 +4,6 @@
 
 #@ def _apply_eirini_crds():
 platform: linux
-caches:
-- path: /root/.cache/go-build
 image_resource: #@ image_resource("cloudfoundry/cf-for-k8s-ci")
 inputs:
 - name: eirini-controller
@@ -75,6 +73,7 @@ run:
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 image_resource: #@ image_resource("eirini/telepresence")
 inputs:
 - name: eirini
@@ -90,6 +89,7 @@ run: #@ task_script("run-eats-tests.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 image_resource: #@ image_resource("eirini/telepresence")
 inputs:
 - name: eirini-controller
@@ -105,6 +105,7 @@ run: #@ task_script("run-controller-eats-tests.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 image_resource: #@ image_resource("eirini/telepresence")
 inputs:
 - name: eirini
@@ -140,6 +141,7 @@ run: #@ task_script("format-shell.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 image_resource: #@ image_resource("golangci/golangci-lint")
 inputs:
 - name: #@ input_name
@@ -152,6 +154,7 @@ run: #@ task_script("run-static-checks.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 inputs:
 - name: #@ input_name
 image_resource: #@ image_resource("eirini/ci")
@@ -164,6 +167,7 @@ run: #@ task_script("run-unit-tests.sh")
 platform: linux
 caches:
 - path: /root/.cache/go-build
+- path: /go/pkg/mod
 - path: cache
 inputs:
 - name: eirini-controller
