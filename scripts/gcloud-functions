@@ -1,5 +1,10 @@
 #!/bin/bash
 
+gcloudBin="$(which gcloud)"
+gcloud() {
+  $gcloudBin --project "cff-eirini-peace-pods" "$@"
+}
+
 # Loop forever until the status of the cluster $1 equals to $2
 # In Concourse, use timeout to limit waiting https://concourse-ci.org/timeout-step-modifier.html
 wait-for-state() {
