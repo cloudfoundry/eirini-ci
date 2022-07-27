@@ -9,7 +9,7 @@ readonly pipeline_yml
 # shellcheck disable=SC2064
 trap "rm $pipeline_yml" EXIT
 
-target="${1:-eirini}"
+target="${1:-korifi}"
 readonly target
 
 worker_count=${2:-"3"}
@@ -64,4 +64,5 @@ fly --target "$target" \
   set-pipeline \
   "$noColor" \
   --config "$pipeline_yml" \
+  --team zzz_eirini \
   --pipeline eirini

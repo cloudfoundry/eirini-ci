@@ -9,7 +9,7 @@ readonly pipeline_yml
 # shellcheck disable=SC2064
 trap "rm $pipeline_yml" EXIT
 
-target="${1:-eirini}"
+target="${1:-korifi}"
 readonly target
 
 if ! fly -t "$target" status &>/dev/null; then
@@ -42,6 +42,7 @@ fi
 
 fly --target "$target" \
   set-pipeline \
+  --team zzz_eirini \
   "$noColor" \
   --config "$pipeline_yml" \
   --pipeline ci-images
