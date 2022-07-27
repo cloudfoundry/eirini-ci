@@ -41,19 +41,6 @@ jobs:
     params:
       build: telepresence-image-source/images/telepresence
 
-- name: update-capi-tests-image
-  on_failure: #@ notify_slack()
-  plan:
-  - get: capi-ruby-units-image
-    trigger: true
-  - get: capi-tests-image-source
-    trigger: true
-  - put: capi-tests-image
-    get_params:
-      skip_download: true
-    params:
-      build: capi-tests-image-source/images/capi-tests
-
 - name: update-golangci-lint-image
   on_failure: #@ notify_slack()
   plan:
@@ -73,9 +60,6 @@ resource_types:
 resources:
 - #@ resources.slack()
 
-- #@ resources.docker_image("capi-ruby-units-image", "cloudfoundry/capi", "ruby-units")
-- #@ resources.eirini_docker_image("capi-tests")
-
 - #@ resources.docker_image("golang-image", "golang")
 - #@ resources.eirini_docker_image("ci")
 
@@ -87,7 +71,7 @@ resources:
 
 - #@ resources.eirini_docker_image("telepresence")
 
-#@ for image in ["capi-tests", "ci", "gcloud", "golangci-lint", "telepresence"]:
+#@ for image in ["ci", "gcloud", "golangci-lint", "telepresence"]:
 - name: #@ image + "-image-source"
   type: git
   icon: git

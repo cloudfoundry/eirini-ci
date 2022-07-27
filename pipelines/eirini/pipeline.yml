@@ -30,6 +30,11 @@ groups:
   - #@ "run-eats-tests-" + channel
 #@ end
   - fast-forward-release
+- name: release
+  jobs:
+  - bump-major-version
+  - bump-minor-version
+  - publish-release
 - name: bumps
   jobs:
   - bump-go-modules-eirini
@@ -202,6 +207,64 @@ jobs:
       repository: eirini-committed
   public: true
 
+- name: publish-release
+  on_failure: #@ notify_slack()
+  plan:
+  - get: ci-resources
+  - get: eirini-release
+    passed:
+    - fast-forward-release
+  - get: eirini-release-version
+  - task: create-release
+    config: #@ release_management.create_release()
+  - get: eirini
+  - put: eirini-release
+    params:
+      repository: eirini-release
+      tag: eirini-release-version/version
+      tag_prefix: v
+      only_tag: true
+      branch: master
+  - put: eirini-github-release
+    params:
+      globs:
+      - release-output/eirini*.tgz
+      name: eirini-release-version/version
+      tag: eirini-release-version/version
+      tag_prefix: v
+  - task: checkout-eirini-sha
+    privileged: true
+    config: #@ release_management.checkout_eirini_sha()
+  - put: eirini
+    params:
+      repository: eirini-stable
+      tag: eirini-release-version/version
+      only_tag: true
+
+- name: bump-major-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release-version
+    params:
+      bump: major
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
+
+- name: bump-minor-version
+  on_failure: #@ notify_slack()
+  plan:
+  - get: eirini-release-version
+    params:
+      bump: minor
+    passed:
+    - publish-release
+    trigger: true
+  - put: eirini-release-version
+    params:
+      file: eirini-release-version/version
+
+
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
@@ -213,6 +276,8 @@ resources:
 - #@ resources.git("eirini-release", "cloudfoundry/eirini-release", branch="develop", private_key=data.values.private_keys.eirinici)
 - #@ resources.registry_image("golang-image", "golang")
 - #@ resources.registry_image("golang-lint", "golangci/golangci-lint")
+- #@ resources.github_release("eirini-github-release", "cloudfoundry", "eirini-release", None, None, data.values.access_tokens.eirini_ci, True)
+- #@ resources.semver("eirini-release-version", "master", "release-version")
 #@ for component in data.values.components:
 - #@ resources.eirini_registry_image(component)
 #@ end

@@ -5,6 +5,8 @@ slack:
 dockerhub:
   username:
   password:
+access_tokens:
+  eirini_ci:
 gcp:
   service_account_json:
   zone: europe-west1-b
