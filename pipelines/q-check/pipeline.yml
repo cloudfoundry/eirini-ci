@@ -9,9 +9,7 @@ groups:
 - jobs:
   - check-shell
   - format-shell
-  - check-wip-branches
   - check-golangci-linters
-  - check-pipelines-are-applied-from-git
   name: checkers
 
 jobs:
@@ -29,13 +27,6 @@ jobs:
     trigger: true
   - task: run-shfmt
     config: #@ testing.run_shfmt()
-- name: check-wip-branches
-  on_failure: #@ notify_slack()
-  plan:
-  - get: every-morning
-    trigger: true
-  - task: check-wip-branches
-    config: #@ ci_automation.check_wip_branches()
 - name: check-golangci-linters
   on_failure: #@ notify_slack()
   plan:
@@ -45,15 +36,6 @@ jobs:
     trigger: true
   - task: check-golangci-linters
     config: #@ ci_automation.check_golangci_linters()
-- name: check-pipelines-are-applied-from-git
-  on_failure: #@ notify_slack()
-  plan:
-  - get: ci-resources
-    trigger: true
-  - get: every-morning
-    trigger: true
-  - task: check-pipelines-are-applied
-    config: #@ ci_automation.check_pipelines_are_applied()
 
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
@@ -63,9 +45,3 @@ resources:
 - #@ resources.git("eirini-controller", "cloudfoundry/eirini-controller")
 - #@ resources.git("ci-resources", "cloudfoundry/eirini-ci")
 - #@ resources.eirini_docker_image("golangci-lint")
-- icon: alarm
-  name: every-morning
-  source:
-    start: 5:00 AM
-    stop: 6:00 AM
-  type: time

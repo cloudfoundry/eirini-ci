@@ -28,12 +28,10 @@ fi
 
 slack_webhook=$(pass eirini/ci/slack-webhook)
 dockerhub_password=$(pass eirini/docker-hub)
-concourse_password=$(pass eirini/concourse/ci-user/password)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
   --data-value="slack.webhook=$slack_webhook" \
   --data-value="dockerhub.password=$dockerhub_password" \
-  --data-value="concourse.password=$concourse_password" \
   >"$pipeline_yml"
 
 noColor=
