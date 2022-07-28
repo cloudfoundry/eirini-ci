@@ -7,7 +7,7 @@ name: slack
 type: slack-notification
 icon: slack
 source:
-  url: #@ data.values.slack.webhook
+  url: ((slack-notification.uri))
 #@ end
 
 #@ def _image_source(repository, tag="latest"):

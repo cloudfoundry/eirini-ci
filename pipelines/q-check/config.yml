@@ -1,7 +1,5 @@
 #@data/values
 ---
-slack:
-  webhook:
 dockerhub:
   username: eiriniuser
   password:
