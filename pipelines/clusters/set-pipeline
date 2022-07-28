@@ -32,11 +32,13 @@ fi
 # This is a giant gotcha with shell scripts!
 # http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_09_01
 
+slack_webhook=$(pass eirini/ci/slack-webhook)
 dockerhub_password=$(pass eirini/docker-hub)
 private_keys_eirinici=$(pass eirini/github/eirinici/ssh-key)
 gcp_service_account_json=$(pass eirini/gcs-eirini-ci-terraform-json-key)
 
 ytt -f "$SCRIPT_DIR" -f "$SCRIPT_DIR/../shared" \
+  --data-value="slack.webhook=$slack_webhook" \
   --data-value="dockerhub.username=eiriniuser" \
   --data-value="dockerhub.password=$dockerhub_password" \
   --data-value="private_keys.eirinici=$private_keys_eirinici" \
