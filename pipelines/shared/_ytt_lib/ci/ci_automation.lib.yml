@@ -5,7 +5,7 @@
 #@ def _check_golangci_linters():
 platform: linux
 inputs:
-- name: eirini-controller
+- name: eirini
 image_resource: #@ image_resource("eirini/golangci-lint")
 run: #@ task_script("check-golangci-linters.sh")
 #@ end

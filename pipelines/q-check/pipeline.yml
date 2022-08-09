@@ -32,7 +32,7 @@ jobs:
   plan:
   - get: golangci-lint-image
     trigger: true
-  - get: eirini-controller
+  - get: eirini
     trigger: true
   - task: check-golangci-linters
     config: #@ ci_automation.check_golangci_linters()
@@ -42,6 +42,6 @@ resource_types:
 
 resources:
 - #@ resources.slack()
-- #@ resources.git("eirini-controller", "cloudfoundry/eirini-controller")
+- #@ resources.git("eirini", "cloudfoundry/eirini")
 - #@ resources.git("ci-resources", "cloudfoundry/eirini-ci")
 - #@ resources.eirini_docker_image("golangci-lint")
