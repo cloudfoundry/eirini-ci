@@ -9,12 +9,10 @@
 
 #@ eats_clusters={
 #@  "eats-regular": "regular",
-#@  "controller-eats-regular": "regular",
 #@ }
 
 #@ integration_clusters={
 #@  "integration": "regular",
-#@  "controller-integration": "regular",
 #@ }
 
 #@ ci_clusters = {}
