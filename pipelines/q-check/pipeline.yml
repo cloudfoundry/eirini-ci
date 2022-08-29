@@ -9,7 +9,6 @@ groups:
 - jobs:
   - check-shell
   - format-shell
-  - check-golangci-linters
   name: checkers
 
 jobs:
@@ -27,21 +26,10 @@ jobs:
     trigger: true
   - task: run-shfmt
     config: #@ testing.run_shfmt()
-- name: check-golangci-linters
-  on_failure: #@ notify_slack()
-  plan:
-  - get: golangci-lint-image
-    trigger: true
-  - get: eirini
-    trigger: true
-  - task: check-golangci-linters
-    config: #@ ci_automation.check_golangci_linters()
 
 resource_types:
 - #@ resources.registry_image_type("slack-notification", "cfcommunity/slack-notification-resource")
 
 resources:
 - #@ resources.slack()
-- #@ resources.git("eirini", "cloudfoundry/eirini")
 - #@ resources.git("ci-resources", "cloudfoundry/eirini-ci")
-- #@ resources.eirini_docker_image("golangci-lint")

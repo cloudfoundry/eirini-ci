@@ -2,14 +2,6 @@
 #@ load("@ytt:struct", "struct")
 #@ load("common.lib.yml", "image_resource", "task_script")
 
-#@ def _check_golangci_linters():
-platform: linux
-inputs:
-- name: eirini
-image_resource: #@ image_resource("eirini/golangci-lint")
-run: #@ task_script("check-golangci-linters.sh")
-#@ end
-
 #@ def _bump_go_modules(repository, repository_updated):
 platform: linux
 caches:
@@ -27,6 +19,5 @@ run: #@ task_script("bump-go-packages.sh")
 #@ end
 
 #@ ci_automation = struct.make(
-#@   check_golangci_linters=_check_golangci_linters,
 #@   bump_go_modules=_bump_go_modules,
 #@ )
